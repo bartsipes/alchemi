@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -35,7 +36,7 @@ namespace Alchemi.Core
         int _Id = -1;
         bool _Failed = false;
         [NonSerialized] GApplication _Application = null; // local
-        [NonSerialized] int _Priority = 0; // local
+        [NonSerialized] int _Priority = 5; // local
         [NonSerialized] string _WorkingDirectory = ""; // remote
         //Exception _RemoteExecutionException = null;
 
