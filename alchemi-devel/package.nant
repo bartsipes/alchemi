@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<project name="Alchemi" default="build">
+
+  <target name="build">
+    <property name="project.version" value="0.7.0" />
+
+    <property name="build.dir" value="${nant.project.basedir}/build/" />
+    <property name="out.basename" value="${nant.project.name}-${project.version}"/>
+    <property name="out.base" value = "${build.dir}\${out.basename}" />
+
+    <delete dir="build" failonerror="false" />
+
+    <!-- package msi -->
+    <copy tofile="${build.dir}/Alchemi.Manager-${project.version}.msi" file="src/Alchemi.Setup/ManagerSetup/Release/ManagerSetup.msi" />
+    <copy tofile="${build.dir}/Alchemi.Executor-${project.version}.msi" file="src/Alchemi.Setup/ExecutorSetup/Release/ExecutorSetup.msi" />
+    <copy tofile="${build.dir}/Alchemi.XPManager-${project.version}.msi" file="src/Alchemi.Setup/XPManagerSetup/Release/XPManagerSetup.msi" />
+
+    <!-- package sdk -->
+    <copy todir="${out.base}-sdk/bin">
+      <fileset basedir="bin/SDK">
+        <includes name="**/**" />
+      </fileset>
+    </copy>
+    <copy todir="${out.base}-sdk/examples/">
+      <fileset basedir="examples/">
+        <includes name="**/**" />
+        <!-- exclude vs.net stuff -->
+        <!-- <excludes name="**/*.user" /> -->
+        <!-- <excludes name="**/bin/**" /> -->
+        <!-- <excludes name="**/Release/**" /> -->
+        <!-- <excludes name="**/Debug/**" /> -->
+        <!-- <excludes name="**/obj/**" /> -->
+      </fileset>
+    </copy>
+    <zip zipfile="${build.dir}/${out.basename}-sdk.zip">
+      <fileset basedir="${out.base}-sdk">
+        <includes name="**/**"/>
+      </fileset>
+    </zip>
+
+    <!-- package src -->
+    <!--
+    <copy todir="${out.base}-src/bin">
+      <fileset basedir="bin">
+        <includes name="**/**" />
+      </fileset>
+    </copy>
+    -->
+    <copy todir="${out.base}-src">
+      <fileset>
+        <includes name="src/**" />
+        <includes name="examples/**" />
+        <includes name="sql/**" />
+        <includes name="graphics/**" />
+        <includes name="lib/**" />
+        <includes name="package.nant" />
+        <includes name="license.rtf" />
+        <includes name="doc/**" />
+        <!-- exclude vs.net stuff -->
+        <!-- <excludes name="**/*.user" /> -->
+        <excludes name="**/bin/**" />
+        <excludes name="**/Release/**" />
+        <excludes name="**/Debug/**" />
+        <excludes name="**/obj/**" />
+      </fileset>
+    </copy>
+    <zip zipfile="${build.dir}/${out.basename}-src.zip">
+      <fileset basedir="${out.base}-src">
+        <includes name="**/**"/>
+      </fileset>
+    </zip>
+
+  </target>
+
+
+
+</project>

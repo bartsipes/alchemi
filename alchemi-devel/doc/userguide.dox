@@ -1,0 +1,925 @@
+/*! \page index
+
+\ref ud_concepts\n
+\ref ud_constructing \n
+\ref ud_installation \n
+\ref ud_programming \n
+<!-- \ref ud_sc2003 \n -->
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+<hr>
+
+\section ud_concepts 1. Introduction & Concepts
+
+This documentation shows you how to use the Alchemi .NET Grid Computing Framework to:
+
+- Construct grids
+- Develop software to run on them
+
+This chapter gives you an introduction to how Alchemi implements the concept of grid computing and discusses concepts required for using Alchemi. Some key features of the framework are highlighted along the way. 
+
+<h2>What is a Grid?</h2>
+
+Here is a definition from http://www.gridcomputing.com: 
+
+\par
+A grid is a type of parallel and distributed system that enables the sharing, selection, and aggregation of geographically distributed "autonomous" resources dynamically at runtime depending on their availability, capability, performance, cost, and users' quality-of-service requirements. 
+
+Thus, at the most basic level, a \b grid can be viewed as an aggregation of multiple machines (each with one or more CPUs) abstracted to behave as one "virtual" machine <i>with multiple CPUs</i>.
+
+Grid implementations differ in the way they implement this abstraction. One of the key differentiating features of Alchemi is the way it abstracts the grid, with the aim to make the process of developing grid software as easy as possible. The next section expands on this.
+
+<h2>Developing Grid Software</h2>
+
+Generally speaking, software suited to grid computing has the following features:
+
+- It is computationally intensive
+- It can be "parallelised"
+
+<h3>Course-Grained Abstraction : Grid Jobs</h3>
+Traditional grid implementations have only offered a high-level abstraction of the "virtual machine", where the smallest unit of parallel execution is a <i>process</i> (typically referred to as a job, with many jobs constituting a task).
+
+In this scenario, writing software to run on a grid involves dealing with <i>processes</i>, an approach that can be complicated and inflexible.
+
+<h3>Fine-Grained Abstraction : Grid Threads</h3>
+
+Alchemi on the other hand, primarily offers a more low-level (and hence more powerful) abstraction of the underlying grid by providing a programming model that is <b>object-oriented</b> and that <b>imitates traditional multi-threaded programming</b>.
+
+The smallest unit of parallel execution in this case is a <b>grid thread</b> (object), where a grid thread is very similar to a "normal" thread. A <b>grid application</b> is defined simply as an application that is to be executed on a grid and that consists of a number of grid threads executing in parallel.
+
+\b Note: Hereafter, applications and threads can be taken to mean grid applications and grid threads respectively, unless stated otherwise.
+
+The developer deals only with application and thread objects and any other custom objects, allowing him/her to concentrate on the application itself without worrying about the "plumbing" details. Furthermore, abstraction at this level allows the use of programming language constructs such as events between local and remote code.
+
+All of this is offered via the Alchemi API. 
+
+The fact that a) objects are much easier to deal with than processes combined with b) a programming model that is familiar to developers and c) the use of language constructs across local and remote code makes this a superior approach to the one described in the previous section.
+
+The additional benefit of this approach is that it does not limit the developer to applications that are completely or "embarrassingly" parallel. Indeed, it allows development of grid applications where inter-thread communication is required. 
+
+\b Note: While Alchemi currently only supports completely parallel threads, support for inter-thread communication is planned for future releases.
+
+<h3>Grids Jobs vs. Grid Threads</h3>
+
+While Alchemi supports the execution of grid jobs, this support is present for the following reasons:
+
+- Cross-platform support
+- Grid-enabling existing applications
+
+Development via the Alchemi API is preferred due to its ease of use, power and flexibility and should be used for all new applications, while the "grid job" model should be used for grid-enabling existing applications or writing cross-platform applications.
+
+<h3>The ".NET" in ".NET Grid Computing Framework" & Cross-Platform Support</h3>
+
+Alchemi is written for the .NET CLR. Hence all machines running any Alchemi software component must have the .NET Framework installed. 
+\b Note: While Alchemi has only been tested on Windows, it is conceivable that it could run on <a href="http://www.go-mono.com/">Unix-class operating systems</a> as well.
+
+Additionally, the Alchemi API is closely tied in with the .NET CLR and thus can only be used by .NET applications.
+
+However, as mentioned previously, Alchemi does offer support for execution of cross-platform applications via web services. Thus, using the "grid job" model one can write:
+
+- Grid middleware that leverages Alchemi on any platform that supports web services (e.g. <a href="http://www.gridbus.org">Gridbus Grid Server Broker</a>)
+- Grid applications that use the "grid job" model (a Java API is under development and will be released soon)
+
+
+<h2>Grid Components</h2>
+
+Grids are constructed using three types of <i>distributed</i> components (or nodes).  (I refer to distributed in the context of standard distributed systems i.e. usually, but not necessarily residing in separate machines.)  These are named according to their roles with respect to a grid application. All components are installed using Windows installers.
+
+<h3>Manager</h3>
+
+The Manager manages the execution of grid applications and provides services associated with managing thread execution. It is deployed as an executable.
+
+An optional sub-component of the Manager is the Cross Platform Manager, which is deployed as a web service.
+
+<h3>Executor</h3>
+
+The Executor executes individual grid threads and provides services associated with executing threads. It is deployed as an executable.
+
+An Executor can be configured to be \b dedicated (meaning the Manager initiates thread execution directly) or \b non-dedicated (meaning that thread execution is initiated by the Executor on a volunteer basis via a screen saver or some other user-defined options.)
+
+<h3>Owner</h3>
+
+The Owner owns an application and provides services associated with the ownership of an application (and its constituent threads).
+
+The Owner is implicitly created by the Alchemi API. 
+
+<h2>Traditional Multiple-Processor Paradigm vs. Grid Paradigm</h2>
+
+To clarify the concepts discussed so far, consider the following analogies between traditional multithreaded programming and grid programming:
+
+<table border="1" align="center" bordercolordark="#cccccc" bordercolorlight="#cccccc" bordercolor="#cccccc" cellpadding="5" cellspacing="0">
+  <tr>
+    <td><b>Multiprocessor Machine</b></td>
+    <td><b>Grid</b></td>
+  </tr>
+  <tr>
+    <td>Operating System</td>
+    <td>Alchemi</td>
+  </tr>
+  <tr>
+    <td>Processor</td>
+    <td>Executor</td>
+  </tr>
+  <tr>
+    <td>OS Services (High-Level)</td>
+    <td>Owner</td>
+  </tr>
+  <tr>
+    <td>OS Services (Low-Level)</td>
+    <td>Manager</td>
+  </tr>
+  <tr>
+    <td>Process</td>
+    <td>Grid Application</td>
+  </tr>
+  <tr>
+    <td>Thread</td>
+    <td>Grid Thread</td>
+  </tr>
+  <tr>
+    <td>System API</td>
+    <td>Alchemi API</td>
+  </tr>
+</table>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+<hr>
+
+\section ud_constructing 2. Constructing Grids
+
+<h2>Uni-Level Grids</h2>
+
+The simplest grid consists of one Manager. Multiple Executors are configured to connect to the Manager. One or more Owners can execute applications on the grid by connecting to the Manager.
+
+<img src="img/cg1.gif">
+<center>Fig 2.1. A uni-level grid deployment.</center>
+
+<h2>Multi-Level Grids</h2>
+
+Multi-level grids are created by connecting Managers hierarchically. The key to accomplishing this is in Alchemi's inherent architecture, <b><i>which allows a Manager to behave like an Executor towards a higher level Manager</i></b>. 
+
+<img src="img/cg2.gif">
+<center>Fig 2.2. A multi-level grid deployment.</center>
+
+The higher-level Owner has access to the entire computing power of the grid, while the lower-level Owner only has access to the computing power managed by the lower-level Manager.
+
+Grids can be scaled to an infinite number of levels in this fashion.
+
+<h2>Cross Platform Grids</h2>
+
+Alchemi provides a cross-platform web service interface to the Manager. This can be used by software written on other platforms to extend Alchemi grids.
+
+<img src="img/cg3.gif">
+<center>Fig 2.3. A cross platform grid deployment.</center>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+<hr>
+
+\section ud_installation 3. Installation, Configuration & Operation
+
+<h2>Common Requirements</h2>
+
+- Microsoft .NET Framework 1.0 or <a href="http://msdn.microsoft.com/netframework/technologyinfo/howtoget/default.aspx">.NET Framework 1.1</a>
+
+<h2>Manager</h2>
+
+The Manager should be installed on a stable and reasonably capable machine. The Manager requires:
+
+- SQL Server 2000 or MSDE 2000
+
+\b Note: SQL Server / MSDE do not necessarily need to installed be on the same machine as the Manager.
+
+If using SQL Server, ensure that SQL Server authentication is enabled. Otherwise, follow <a href="http://www.asp.net/msde/default.aspx?tabindex=0&tabid=1">these instructions</a> to install and prepare MSDE 2000 for Alchemi.
+
+Make a note of the system administrator (sa) password in either case.
+
+<h3>Installation</h3>
+
+- Install the Manager via the <a href="default.aspx?content_id=downloads">Manager installer</a>. Use the sa password noted previously to install the database during the installation:
+
+<img src="img/mgr0.gif">
+
+<center>Fig 3.1. Database installation during Manager installation.</center>
+
+<h3>Configuration</h3>
+
+The Manager is configured from the application itself.
+
+The Manager can be run from the desktop or Start -> Programs -> Alchemi -> Alchemi Manager. The database configuration settings used during installation automatically appear when the Manager is first started.
+
+For a <b>stand-alone Manager</b> (for a uni-level grid or the highest-level multi-level grid Manager) you only need to designate the "OwnPort" setting, which is the port that Manager listens on for all communication:
+
+<img src="img/mgr1.gif">
+
+<center>Fig 3.2. Stand-alone Manager configuration.</center>
+
+For an <b>intermediate (lower-level) Manager that is part of a multi-level grid</b> you need to check the "Intermediate" box and specify the higher-level Manager's host and port. 
+
+Since the Manager behaves like an Executor towards the higher-level Manager, you also need to specify whether it is a dedicated or non-dedicated "Executor" by checking/uncheckig the "Dedicated" box.
+
+<img src="img/mgr2.gif">
+
+<center>Fig 3.3. Intermediate Manager configuration.</center>
+
+<h3>Operation</h3>
+
+Click the "Start" button to start the Manager.
+
+<img src="img/mgr3.gif">
+
+<center>Fig 3.4. Manager operation.</center>
+
+<h2>Cross Platform Manager</h2>
+
+The Cross Platform Manager (XPManager) requires:
+
+- Internet Information Services (IIS)
+- ASP.NET
+
+<h3>Installation</h3>
+
+- Install the XPManager web service via the <a href="default.aspx?content_id=downloads">Cross Platform Manager installer</a>.
+
+<h3>Configuration</h3>
+
+If the XPManager is installed on a different machine that the Manager, or if the default port of the Manager is changed, the web service's configuration must be modified. The XPManager is configured via the ASP.NET \c Web.config file located in the installation directory (\c wwwroot\\Alchemi\\CrossPlatformManager by default):
+
+\code
+ <appSettings>
+   <add key="ManagerUri" value="tcp://localhost:9000/Alchemi_Node" />
+ </appSettings>
+\endcode
+
+<h3>Operation</h3>
+
+The XPManager web service URL is of the format:
+
+<code>
+http://[host_name]/[installation_path]
+</code>
+
+The default is therefore:
+
+<code>
+http://[host_name]/Alchemi/CrossPlatformManager
+</code>
+
+The web service communicates with the Manager. The Manager must therefore be running and started for the web service to work.
+
+
+<h2>Executor</h2>
+
+<h3>Installation</h3>
+
+- Install the Executor via the <a href="default.aspx?content_id=downloads">Executor installer</a>.
+- The Executor comes with a scree nsaver, which automatically activates the Executor. During instllation, the "Screen Saver" properties are displayed with the screen saver selected.
+
+<img src="img/ex1.gif">
+
+<center>Fig 3.5. Alchemi screen saver.</center>
+
+<h3>Configuration</h3>
+
+The Executor is configured from the application itself.
+
+The Executor can be run from the desktop or Start -> Programs -> Alchemi -> Alchemi Executor.
+
+<img src="img/ex2.gif">
+
+<center>Fig 3.5. Executor configuration.</center>
+
+You need to configure 2 aspects of the Executor:
+
+- The host and port of the Manager to connect to.
+- Dedicated / non-dedicated execution. A non-dedicated Executor executes grid threads on a voluntary basis (it requests threads to execute from the Manager), while a dedicated Executor is always executing grid threads (it is directly provided grid threads to execute by the Manager). 
+
+<h3>Operation</h3>
+
+- Click the "Connect" button to connect the Executor to the Manager.
+
+<img src="img/ex3.gif">
+
+<center>Fig 3.5. Executor connected to a Manager.</center>
+
+- If the Executor is configured for non-dedicated execution, you can start executing by clicking the "Start Executing" button in the "Manage Execution" tab. \b Note: When the Alchemi screen saver is activated, it automatically "presses" this button. 
+
+<img src="img/ex4.gif">
+
+<center>Fig 3.6. Non-dedicated execution.</center>
+
+<h2>Verifying Grid Installation</h2>
+
+You can verify successful setup of a grid by running a sample application on it. The <a href="default.aspx?content_id=downloads">Alchemi SDK</a> contains a sample application "PiCalculator" that calculates the value of Pi to 100 digits.
+
+Configure PiCalculator to point to a Manager: 
+- \c Examples\\PiCalculator\\PiCalculatorExec\\bin\\debug\\PiCalculator.exe.config
+
+Run it: 
+- \c Examples\\PiCalculator\\PiCalculatorExec\\bin\\debug\\PiCalculator.exe
+
+<img src="img/picalc.gif"></img>
+
+<center>Fig 3.6. "PiCalculator" running on a grid.</center>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+<hr>
+
+\section ud_programming 4. Grid Programming
+
+<h2>Introduction</h2>
+
+Certain types of software are more suited to a grid environment than others. In order to design and develop effective grid applications, one must appreciate some aspects of grid software.
+
+Firstly, the application should be able to be broken up into a <b>number of parallel threads</b> (i.e. threads that do not require constant communication among themselves). Having said that, it should be noted that limited synchronisation mechanisms are indeed available.
+
+Secondly, the application must be <b>computationally intensive</b> with a high 'compute time' vs. 'communication time' ratio.
+
+Reasons for these should be clear to the reader, given the nature of grids.
+
+Grid applications typically employ the parameter sweep model. Examples of applications are (<a href="http://www.cs.mu.oz.au/~raj/grids/papers/vpm.pdf">source</a>):
+
+- molecular biologist (drug designer) looking for compounds in large
+chemical data sets that best dock with a particular protein
+- geologist looking at the change in the density and depth of ore-body and the
+overlying rock’s density to optimise cost and production
+- aerospace engineer understanding the role of geometry parameters in the
+aerodynamic design and optimization process
+- high energy physicist investigating the origin of mass by analysing
+petabytes of data generated by high-energy accelerators such as the LHC
+(Large Hadron Collider)
+- neuroscientist performing brain activity analysis by conducting pair-wise
+cross co-relation analysis of MEG (Magneto-EncephaloGraphy) sensors data
+
+<h3>Grid Application Performance</h3>
+
+A key decision in designing a grid application is how the application will be parallelised in order to maximise performance (minimise execution time). i.e. the number of threads vs. the workload of each thread.
+
+There is a certain amount of overhead in running a grid thread (network data transfer, setting up and destroying threads etc.) as opposed to running a "normal" thread. Clearly, total overhead can be minimised by having a low number of threads with high computational workload.
+
+On the other hand, a high number of threads running in parallel will result in better utilisation of the grid, leading to faster total execution time for the application.
+
+Given these two opposing factors, one needs to find a balance between the number of threads and each thread's workload. Some specific factors that will affect this decision are a) the size of the grid and b) importance of performance.
+
+<h2>Development Environment</h2>
+
+Follow these steps to set up a development environment:
+
+- Download the <a href="default.aspx?content_id=downloads"> Alchemi SDK</a> and extract to a convenient location
+- Construct a minimal grid (1 Manager and 1 Executor) on the development machine and test it by running PiCalculator (see \ref ud_installation)
+- Locate \c Alchemi.Core.dll for referencing in applications
+
+<h2>Grid Programming Tutorial</h2>
+
+This tutorial provides a basic introduction to grid programming. Familiarity with VS.NET and C# is assumed.
+
+Let's pretend that multiplying two integers is a very computationally intensive process. Since we need to multiply ten sets of integers, we decide to write a grid application.
+
+To start off,
+
+- Create a new console application project, "Tutorial"
+- Add a reference to \c Alchemi.Core.dll (\c Alchemi.Core.dll must be referenced by any projects using the Alchemi API)
+
+There are essentially two parts to a grid application:
+
+- "Grid Code": Code that will get executed remotely on the grid i.e. a grid thread class (plus any other classes used by the grid thread class).
+- "Local Code": Code that creates a grid application and runs threads (instances of the grid thread class) in it.
+
+The grid code can be compiled separately from the local code as one or more .dlls or it can be compiled as part of the local code executable. In the tutorial, all code is in one file, \c Tutorial.cs. 
+
+<h3>Grid Thread Class</h3>
+
+To write a grid thread class, we derive a new class from the <b>\c Alchemi.Core.GThread</b> class and override the <b><code>void Start()</code></b> method. We must also add the <b>\c Serializable</b> attribute to it:
+
+\code
+    [Serializable]
+    public class MultiplierThread : GThread
+    {
+        public override void Start()
+        {
+        }
+    }
+\endcode
+
+<center>Listing 4.1. Grid thread skeleton</center>
+
+We now add the following bits to make the grid thread perform a multiplication between two integers:
+- private variables
+- constructor
+- \c Result property
+- implementation of the <code>void Start()</code> method
+
+\code
+using System;
+using Alchemi.Core;
+
+namespace Alchemi.Examples.Tutorial
+{
+    [Serializable]
+    public class MultiplierThread : GThread
+    {
+        private int _A;
+        private int _B;
+        private int _Result;
+    
+        public int Result
+        {
+            get { return _Result; }
+        }
+
+        public MultiplierThread(int a, int b)
+        {
+            _A = a;
+            _B = b;
+        }
+
+        public override void Start()
+        {
+            _Result = _A * _B;
+        }
+    }
+    
+    ...
+\endcode
+
+<center>Listing 4.2. Grid thread implementation</center>
+
+<h3>Create Grid Application</h3>
+
+The \c Main() method of the console application is as follows:
+
+\code
+    ...
+    
+    class MultiplierApplication
+    {
+        static GApplication ga;
+        
+        [STAThread]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("[enter] to start grid application ...");
+            Console.ReadLine();
+      
+            // create grid application
+            ga = new GApplication("localhost", 9099);
+
+            // add GridThread module (this executable) as a dependency
+            ga.Manifest.Add(new ModuleDependency(typeof(MultiplierThread).Module));
+
+            // create and add 10 threads to the application
+            for (int i=0; i<10; i++)
+            {
+                // create thread
+                MultiplierThread thread = new MultiplierThread(i, i+1);
+
+                // set the thread finish callback method
+                thread.FinishCallback = new GThreadFinish(ThreadFinished);
+        
+                // add thread to application
+                ga.Threads.Add(thread);
+            }
+
+            // set the application finish callback method
+            ga.FinishCallback = new GApplicationFinish(ApplicationFinished);
+
+            // start application
+            ga.Start();
+
+            Console.ReadLine();
+        }
+    
+        ...         
+\endcode
+
+<center>Listing 4.3. Grid application \c Main() method</center>
+
+First, a <b><code>GApplication</code></b> object is created. The Alchemi Manager host and port are supplied in the constructor. Next, a <b><code>ModuleDepencency</code></b> using the module (.dll) of the grid thread is created and added to the <b><code>Manifest</code></b> of the application, signaling it as a dependency for all threads.
+
+Ten threads are then created. A \c <b><code>ThreadFinished</code></b> delegate is set for each thread (this delegate is called when the thread finishes executing) and the thread is added to the application.
+
+Finally, the <b><code>ApplicationFinished</code></b> delegate is set for the application (this delegate is called when the application finishes executing), and the application is started.
+
+We can now add the two delegate (callback) methods:
+
+\code
+        ...
+    
+        static void ThreadFinished(GThread th)
+        {
+            // cast GThread back to MultiplierThread
+            MultiplierThread thread = (MultiplierThread) th;
+
+            if (thread.RemoteExecutionException == null)
+            {
+                // thread executed OK
+                Console.WriteLine(
+                    "thread # {0} finished with result '{1}'",
+                    thread.Id,
+                    thread.Result);
+            }
+            else
+            {
+                // an exception occured
+                Console.WriteLine(
+                    "thread # {0} finished with error '{1}'",
+                    thread.Id,
+                    thread.RemoteExecutionException);
+            }
+
+        }
+
+        static void ApplicationFinished()
+        {
+            Console.WriteLine("\napplication finished");
+            Console.WriteLine("\n[enter] to continue ...");
+        }
+    }
+}
+
+\endcode
+
+<center>Listing 4.4. Grid application delegates</center>
+
+<h3>Run It</h3>
+
+- You can now run your newly created grid application.
+
+<img src="img/prog1.gif">
+
+<center>Fig 4.1. Tutorial grid application</center>
+
+- The source code for this tutorial can be found in the \c Examples\\Tutorial directory. \b Note: To recompile it, you must replace the reference to \c Alchemi.Core.dll with a new reference pointing to your copy of \c Alchemi.Core.dll
+
+<h2>Advanced Grid Programming</h2>
+
+The tutorial only demonstrates basic features of the Alchemi API. This section contains some notes on other features.
+
+<h3>Multiple Classes & Dependencies</h3>
+
+The tutorial demonstrates only one module dependency (\c GridThread.dll) containing only one class (\c MultiplierThread). You can have multiple <code>GThread</code>-inherited classes. The <code>GThread</code>-inherited class(es) can use other classes as well. 
+
+You need only ensure that all modules are added to the \c Manifest as dependencies.
+
+<h3>Multiple Thread Delegates</h3>
+
+The tutorial only uses one \c ThreadFinished delegate for all threads, but you can specify a different one for each thread.
+
+<h3>On-The-Fly Execution</h3>
+
+In the tutorial, all threads are added to the application and it is then started. An optional scenario is <b>on-the-fly</b> execution. This is useful for real-time or "service" applications where information about all threads to be executed is not known beforehand. Please note the following for using on-the-fly execution.
+
+- Call \c GApplication.Start() after all dependencies have been set
+- Call \c GApplication.StartThread(..) to execute a thread on-the-fly
+- You \b must call \c GApplication.Stop() once no more threads need to be executed. (This is not required if setting the \c GApplication.ApplicationFinished delegate, but setting this delegate usually does not make sense for on-the-fly execution.)
+- \c Examples\\Tutorial_OTF contains a version of the tutorial application modified to demonstrate on-the-fly execution (\b Note: To recompile it, you must replace the reference to \c Alchemi.Core.dll with a new reference pointing to your copy of \c Alchemi.Core.dll) :
+
+<img src="img/prog2.gif">
+
+<center>Fig. 4.2. Example of on-the-fly execution</center>
+
+<h3>Thread Priorities</h3>
+
+You can request a priority by setting the \c Priority property for a thread before it is executed. The highest priority is 0 (default) with larger integers denoted lower priorities. \b Note: The requested priority is not guaranteed to be met.
+
+<h3>Thread Synchronisation</h3>
+
+Even though inter-thread communication is not possible (in this version), limited thread synchronisation - using the results of a thread for a subsequent thread - can still be coded into the \c ThreadFinish and/or \c AppliationFinish callback methods. It should be clear to the reader how this could be achieved.
+
+
+<h2>Grid Job Model : Grid-Enabling Existing Applications</h2>
+
+Alchemi supports the traditional job model i.e. jobs within tasks, where each job is a process with input and output files.
+
+It should be noted that in Alchemi:
+- a task is just another name for a grid application and
+- a job is an instance of the \c GJob class which inherits from the \c GThread class (i.e. a job is actually just a specialised grid thread)
+
+This means that any tools or code that work with grid applications and grid threads will also work with taks and jobs respectively.
+
+There are two options available for grid-enabling, running and monitoring existing applications:
+
+- Programmatically via the API
+- Declaratively via the Manager Console Interface"
+
+<h2>Using the Alchemi API for 'Job Model' Applications</h2>
+
+The JobAPI example (<code>[SDK]\\Examples\\JobAPI</code> example demonstrates the use of the Alchemi API for tasks/jobs. The solution contains two projects: \c Reverse (a simple console application that reverses the text of a file specified as a command-line argument and displays the results) and \c GridReverser (a console application that demonstrates the grid-enabling of \c Reverse).
+
+Here is the complete listing of \c GridReverser.cs:
+
+\code
+using System;
+using System.Xml;
+using System.IO;
+using Alchemi.Core;
+using Alchemi.Core.Utility;
+
+namespace Alchemi.Examples.CrossPlatformDemo
+{
+    class GridReverser
+    {
+        static GApplication ga;
+        
+        [STAThread]
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Press [enter] to start ...");
+            Console.ReadLine();
+
+            try
+            {
+                ga = new GApplication("localhost", 9099);
+                ga.Manifest.Add(new EmbeddedFileDependency("Reverse.exe", @"..\..\..\Reverse\bin\Debug\Reverse.exe"));
+
+                GJob job1 = new GJob();
+                job1.InputFiles.Add(new EmbeddedFileDependency("input1.txt", @"..\..\input1.txt"));
+                job1.RunCommand = "Reverse input1.txt";
+                job1.OutputFiles.Add(new EmbeddedFileDependency("out.txt"));
+                ga.AddThread(job1, 0, new GThreadFinish(JobFinished));
+                ga.Start();
+                ga.FinishCallback = new GApplicationFinish(ApplicationFinished);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            Console.WriteLine("Started .. Waiting for jobs to finish ..\n");
+            Console.ReadLine();
+        }
+
+        public static void JobFinished(GThread thread)
+        {
+            GJob job = (GJob) thread;
+            Console.WriteLine("Finished job {0}", job.Id);
+
+            foreach (FileDependency fd in job.OutputFiles)
+            {
+                Directory.CreateDirectory("job_" + job.Id);
+                fd.UnPack(Path.Combine("job_" + job.Id, fd.FileName));
+                Console.WriteLine("Unpacked file {0} for job {1}", fd.FileName, job.Id);
+            }
+        }
+
+        public static void ApplicationFinished()
+        {
+            ga.Stop();
+        }
+    }
+}
+\endcode
+
+<center>Listing 4.5. GridReverser</center>
+
+<h2>The Manager Console Interface (MCI)</h2>
+
+The MCI is a console application (<code>[SDK]\\alchemi_mci.exe</code>) that can be used to monitor grid applications/threads. It can also be used to submit tasks/jobs and retrieve their results.
+
+Its use is demonstrated here by a simple example. The files required for this example can be found in <code>[SDK]\\Examples\\MCIUsage</code>.
+
+The file \c test.xml contains an example representation of a task:
+
+\code
+<task>
+  <manifest>
+    <embedded_file name="Reverse.exe" location="Reverse.exe" />
+  </manifest>
+  <job id="0">
+    <input>
+      <embedded_file name="input1.txt" location="input1.txt" />
+    </input> 
+    <work run_command="Reverse.exe input1.txt > result1.txt" />
+    <output>
+      <embedded_file name="result1.txt"/>
+    </output>  
+  </job>
+
+  <job id="1">
+    <input>
+      <embedded_file name="input2.txt" location="input2.txt" />
+    </input> 
+    <work run_command="Reverse input2.txt > result2.txt" />
+    <output>
+      <embedded_file name="result2.txt"/>
+    </output>  
+  </job>
+</task>  
+\endcode
+
+<center>Listing 4.6. Example task representation.</center>
+
+The MCI must be started with the host and port of an Alchemi Manager:
+
+<img src="img/mci_1.gif">
+
+The following screenshot shows how the MCI can be used to submit a task, monitor its jobs and retrieve results:
+
+<img src="img/mci_2.gif">
+
+There are other commands you can use as well; invoke \c alchemi_mci.exe without any arguments for help.
+
+<h2>The Mandelbrot Set Generator Example</h2>
+
+The Mandelbrot set generator example can be found in <code>[SDK]\\Examples\\Mandelbrot</code>:
+
+<img src="img/mandel.gif">
+
+<h2>Cross-Platform Development : The Cross-Platform Manager Web Service</h2>
+
+[todo]
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+\section ud_sc2003 5. Alchemi @ SC2003: The Global Data-Intensive Grid Collaboration
+
+<h2>Options</h2>
+
+You may participate by volunteering your computing resources in one of 2 ways:
+
+- <b>Option A - Standalone Machine</b>: If you only wish to volunteer a few machines (1 - 3)
+- <b>Option B - Grid</b>: If you have more than 3 machines that you wish to volunteer
+
+<img src="img/options.gif">
+
+<h2>Option A - Standalone Machine</h2>
+
+Repeat the following process for each machine that you wish to volunteer.
+
+<h3>Requirements</h3>
+
+- Microsoft .NET Framework 1.0 or <a href="http://msdn.microsoft.com/netframework/technologyinfo/howtoget/default.aspx">.NET Framework 1.1</a> [ <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=262D25E3-F589-4842-8157-034D1E7CF3A3&displaylang=en">download</a> ]
+
+<h3>Installation</h3>
+
+- Download and install the <a href="content/downloads/Alchemi.Executor-0.5.1.msi">Alchemi Executor</a>.
+
+<h3>Configuration</h3>
+
+- Start the Executor from the desktop or Start -> Programs -> Alchemi -> Alchemi Executor.
+- Change the "Host / IP Address" of the Manager Node to \c maggie.cs.mu.oz.au as shown below.
+
+<img src="img/opta_1.gif">
+
+- Click the "Connect" button.
+- In the "Manage Execution" tab, click the "Start Executing" button.
+
+<img src="img/opta_2.gif">
+
+<H3>Join Us</H3>
+
+Please email the following details to <a href="mailto:jiayu@cs.mu.OZ.AU">Jia Yu</a>:
+
+- Your details for http://gridbus.cs.mu.oz.au/sc2003/participants.html
+  - Name
+  - Email Address
+  - Place (city and country)
+
+- Your machine details for http://gridbus.cs.mu.oz.au/sc2003/list.html
+  - CPU model .. (Intel / AMD)
+  - Hostname / IP Address
+  - Windows version .. (2000 / XP / .NET Server)
+
+That's it! Thank you for participating.
+
+<H2>Option B - Grid</H2>
+
+You will need to designate one machine as a Manager and others as Executors.
+
+<H3>Requirements - Manager Machine</H3>
+
+- Microsft Windows 2000 / Windows XP / Windows .NET Server
+- Microsoft .NET Framework 1.0 or <a href="http://msdn.microsoft.com/netframework/technologyinfo/howtoget/default.aspx">.NET Framework 1.1</a> [ <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=262D25E3-F589-4842-8157-034D1E7CF3A3&displaylang=en">download</a> ]
+- Internet Information Services (IIS). Please ensure that any firewalls allow access to port \c 80.
+- SQL Server 2000 or MSDE 2000
+
+If using SQL Server, ensure that SQL Server authentication is enabled. Otherwise, follow <a href="http://www.asp.net/msde/default.aspx?tabindex=0&tabid=1">these instructions</a> to install and prepare MSDE 2000 for Alchemi.
+
+Make a note of the system administrator (sa) password in either case.
+
+<H3>Installation - Manager Machine</H3>
+
+- Download and install the <a href="content/downloads/Alchemi.Manager-0.5.1.msi">Alchemi Manager</a>. Use the sa password noted previously to install the database during the Manager installation.
+- Download and install the <a href="content/downloads/Alchemi.XPManager-0.5.1.msi">Alchemi Cross Platform Manager</a>. 
+
+<H3>Configuration - Manager Machine</H3>
+- Start the Manager from the desktop or Start -> Programs -> Alchemi -> Alchemi Manager.
+
+<img src="img/manager.gif">
+
+- Click the "Start" button.
+
+<H3>Installation & Configuration - Executor Machines</H3>
+
+- Follow the instructions in Option A above for each Executor machine. However, instead of using \c maggie.cs.mu.oz.au, use the hostname of your Manager machine in the configuration of the Executors.
+
+<H3>Verify Setup</H3>
+- Download the <a href="content/downloads/Alchemi-0.5.1-sdk.zip">Alchemi SDK</a> and execute the PiCalculator example (\c examples\\PiCalculator\\PiCalculator.exe) - to verify proper setup of your Alchemi grid.
+
+<H3>Post-Installation</H3>
+- <a href="mailto:akshay@eartling.net; rajiv_ranjans@yahoo.com; raj@cs.mu.OZ.AU">Send us an email</a> with the URL of the Alchemi Cross Platform Manager web service. This should be \c http://manager-machine-hostname/Alchemi/CrossPlatformManager if you installed it in the default location.
+
+<H3>Join Us</H3>
+
+Please email the following details to <a href="mailto:jiayu@cs.mu.OZ.AU">Jia Yu</a>:
+
+- Your details for http://gridbus.cs.mu.oz.au/sc2003/participants.html
+  - Name
+  - Email Address
+  - Place (city and country)
+
+- Your machine details for http://gridbus.cs.mu.oz.au/sc2003/list.html
+  - Number of Executors
+  - CPU model .. (Intel / AMD)
+  - Hostname / IP Address of Manager
+  - Windows version of Manager .. (2000 / XP / .NET Server)
+
+That's it! Thank you for participating.
+
+
+<H2>Help</H2>
+
+Please <a href="mailto:akshay@eartling.net; rajiv_ranjans@yahoo.com; raj@cs.mu.OZ.AU">send us an email</a> if you encounter any problems.
+-->
+
+*/
