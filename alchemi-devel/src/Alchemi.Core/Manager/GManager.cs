@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -29,142 +30,19 @@ using System.Data.SqlClient;
 using System.Collections;
 using System.Runtime.Remoting;
 using System.Threading;
+using System.Runtime.CompilerServices;
 using Alchemi.Core;
 using Alchemi.Core.Utility;
 
+
 namespace Alchemi.Core.Manager
 {
-    public delegate void LogEventHandler(string s);
-
-    public class GManager : GNode, IManager
+    public class GManager : MarshalByRefObject, IManager
     {
-        //----------------------------------------------------------------------------------------------- 
-        // member variables
-        //----------------------------------------------------------------------------------------------- 
 
-        string _Id;
-        bool _Dedicated;
-
-        Thread _DedicatedSchedulerThread;
-        Thread _WatchDogThread;
-        ManualResetEvent _DedicatedSchedulerActive = new ManualResetEvent(true);
-
-        MExecutorCollection _Executors;
-        MApplicationCollection _Applications;
-
-        IScheduler _Scheduler; 
-
-        //----------------------------------------------------------------------------------------------- 
-        // properties
-        //----------------------------------------------------------------------------------------------- 
-
-        public string Id
-        {
-            get { return _Id; }
-        }
-
-        public bool Dedicated
-        {
-            get { return _Dedicated; }
-        }
-
-        public static event LogEventHandler Log;
-    
-        //----------------------------------------------------------------------------------------------- 
-        // constructors
-        //----------------------------------------------------------------------------------------------- 
-
-        public GManager(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, string sqlConnStr) : base(managerEP, ownEP, null)
-        {
-            try
-            {
-                _Dedicated = dedicated;
-                _Id = id;
-
-                // TODO: hierarchical grids ignored until after v1.0.0
-                /*
-                if (Manager != null)
-                {
-                    if (_Id == "")
-                    {
-                        Log("Registering new executor ...");
-                        _Id = Manager.Executor_RegisterNewExecutor(null, new ExecutorInfo);
-                        Log("New ExecutorID = " + _Id);
-                    }
-
-                    try
-                    {
-                        try
-                        {
-                            ConnectToManager();
-                        }
-                        catch (InvalidExecutorException)
-                        {
-                            Log("Invalid executor! Registering new executor ...");
-                            _Id = Manager.Executor_RegisterNewExecutor(null, new ExecutorInfo);
-                            Log("New ExecutorID = " + _Id);
-                            ConnectToManager();
-                        }
-                    }
-                    catch (ConnectBackException)
-                    {
-                        Log("Couldn't connect as dedicated executor. Reverting to non-dedicated executor.");
-                        _Dedicated = false;
-                        ConnectToManager();
-                    }
-                }
-                */
-      
-                string datDir = string.Format("{0}\\dat", Environment.CurrentDirectory);
-                if (!Directory.Exists(datDir))
-                {
-                    Directory.CreateDirectory(datDir);
-                }
-                InternalShared common = InternalShared.GetInstance(
-                    new SqlServer(sqlConnStr),
-                    string.Format("{0}\\dat", Environment.CurrentDirectory)
-                    );
-
-                _Applications = new MApplicationCollection();
-                _Executors = new MExecutorCollection();
-                _Executors.Init();
-                _Scheduler = new DefaultScheduler();
-                _Scheduler.Executors = _Executors;
-                _Scheduler.Applications = _Applications;
-
-                _DedicatedSchedulerThread = new Thread(new ThreadStart(ScheduleDedicated));
-                _DedicatedSchedulerThread.Start();
-                _WatchDogThread = new Thread(new ThreadStart(Watchdog));
-                _WatchDogThread.Start();
-            }
-            catch (Exception e)
-            {
-                Stop();
-                throw e;
-            }
-        }
-
-        //----------------------------------------------------------------------------------------------- 
-        // public methods
-        //----------------------------------------------------------------------------------------------- 
-
-        public void Stop()
-        {
-            if (_DedicatedSchedulerThread != null)
-            {
-                _DedicatedSchedulerThread.Abort();
-                _DedicatedSchedulerThread.Join();
-            }
-            if (_WatchDogThread != null)
-            {
-                _WatchDogThread.Abort();
-                _WatchDogThread.Join();
-            }
-            UnRemoteSelf();
-        }
-
-        //-----------------------------------------------------------------------------------------------          
-
+        MApplicationCollection _Applications = new MApplicationCollection();
+        MExecutorCollection _Executors = new MExecutorCollection();
+        
         public void PingManager()
         {
             // for testing communication
@@ -181,7 +59,6 @@ namespace Alchemi.Core.Manager
 
         public void AuthenticateUser(SecurityCredentials sc)
         {
-            
             string result = InternalShared.Instance.Database.ExecSql_Scalar("User_Authenticate '{0}', '{1}'", sc.Username, sc.Password).ToString();
 
             if (result == "0")
@@ -207,6 +84,7 @@ namespace Alchemi.Core.Manager
             AuthenticateUser(sc);
             ApplicationAuthorizationCheck(sc, appId);
 
+
             _Applications[appId].Manifest = manifest;
         }
 
@@ -219,9 +97,10 @@ namespace Alchemi.Core.Manager
 
             MThread t = _Applications[ti.ApplicationId][ti.ThreadId];
             t.Value = thread;
-            t.Priority = ti.Priority;
             t.Init(true);
-            _DedicatedSchedulerActive.Set();
+            t.Priority = ti.Priority;
+            
+            InternalShared.Instance.DedicatedSchedulerActive.Set();
         }
 
         //-----------------------------------------------------------------------------------------------       
@@ -234,36 +113,11 @@ namespace Alchemi.Core.Manager
             MThread thread = _Applications[ti.ApplicationId][ti.ThreadId];
             
             thread.State = ThreadState.Dead;
+            
             // if running on an executor, ask it to abort the thread
             if (thread.State == ThreadState.Started | thread.State == ThreadState.Scheduled)
             {
-                Log("aborting thread "+ ti.ApplicationId + "."+ ti.ThreadId);
-                string executorId = thread.CurrentExecutorId;
-                MExecutor me;
-                if (executorId == null)
-                {
-                    // TODO: decide whether we should do anything here, like throwing an exception
-                }
-                else
-                {
-                    me = new MExecutor(executorId);
-                    if (me.RemoteRef == null)
-                    {
-                        // TODO: decide if we should do anything here
-                    }
-                    else
-                    {
-                        try
-                        {
-                            me.RemoteRef.Manager_AbortThread(ti);
-                            Log("aborted thread "+ ti.ApplicationId + "."+ ti.ThreadId);
-                        }
-                        catch (ExecutorCommException ece)
-                        {
-                            _Executors[ece.ExecutorId].Disconnect();
-                        }
-                    }
-                }
+                AbortThread(ti);
             }
         }
         
@@ -305,12 +159,7 @@ namespace Alchemi.Core.Manager
             ApplicationAuthorizationCheck(sc, appId);
 
             MApplication a = _Applications[appId];
-            DataTable dt = a.ThreadList.Tables[0];
-            foreach (DataRow thread in dt.Rows)
-            {
-                Owner_AbortThread(sc, new ThreadIdentifier(appId, int.Parse(thread["thread_id"].ToString())));
-            }
-            //a.State = ApplicationState.Stopped;
+            a.Stop();
         }
         
         //-----------------------------------------------------------------------------------------------          
@@ -354,11 +203,11 @@ namespace Alchemi.Core.Manager
             try
             {
                 _Executors[executorId].ConnectDedicated(executorEP);
-                _DedicatedSchedulerActive.Set();
+                InternalShared.Instance.DedicatedSchedulerActive.Set();
             }
             catch (ExecutorCommException ece)
             {
-                throw new ConnectBackException("Couldn't connect back to the supplied Executor", ece);
+                throw new ConnectBackException("Couldn't connect back to the supplied Executor", null);
             }
         }
 
@@ -382,16 +231,24 @@ namespace Alchemi.Core.Manager
             bool scheduled = false;
             ThreadIdentifier ti;
             
+            // critical section .. don't want to schedule same thread on multiple executors
+            Monitor.Enter(InternalShared.Instance);
+
             // try and get a local thread
-            ti = _Scheduler.ScheduleNonDedicated(executorId);
+            ti = InternalShared.Instance.Scheduler.ScheduleNonDedicated(executorId);
             if (ti != null)
             {
                 scheduled = true;
             }
+            else
+            {
+                // no thread, so can release lock immediately
+                Monitor.Exit(InternalShared.Instance);
+            }
+            // TODO: hierarchical grids ignored until after v1.0.0
+            /*
             else if ((ti == null) & (Manager != null))
             {
-                // TODO: hierarchical grids ignored until after v1.0.0
-                /*
                 // no local threads .. request thread from next manager and "simulate" the fact that it was scheduled locally
                 ti = Manager.Executor_GetNextScheduledThreadIdentifier(null, _Id);
                 
@@ -402,14 +259,16 @@ namespace Alchemi.Core.Manager
                     t.Init(false);
                     t.Priority = ti.Priority + 1;
                 }
-                */
             }
+            */
 
             if (scheduled)
             {
                 MThread t = new MThread(ti);
                 t.State = ThreadState.Scheduled;
                 t.CurrentExecutorId = executorId;
+                // finished scheduling thread, can release lock
+                Monitor.Exit(InternalShared.Instance);
             }
 
             return ti;
@@ -427,7 +286,7 @@ namespace Alchemi.Core.Manager
             // TODO: hierarchical grids ignored until after v1.0.0
             //if (a.IsPrimary)
             //{
-                return a.Manifest;
+            return a.Manifest;
             //}
             //else
             //{
@@ -451,7 +310,7 @@ namespace Alchemi.Core.Manager
             // TODO: hierarchical grids ignored until after v1.0.0
             //if (_Applications[ti.ApplicationId].IsPrimary)
             //{
-                retval = t.Value;
+            retval = t.Value;
             //}
             //else
             //{
@@ -485,7 +344,7 @@ namespace Alchemi.Core.Manager
             }
 
             t.State = ThreadState.Finished;
-            _DedicatedSchedulerActive.Set();
+            InternalShared.Instance.DedicatedSchedulerActive.Set();
         }
 
         //-----------------------------------------------------------------------------------------------          
@@ -515,7 +374,7 @@ namespace Alchemi.Core.Manager
             MThread t = _Applications[ti.ApplicationId][ti.ThreadId];
             t.Init(false);
             t.Priority = ti.Priority + 1;
-            _DedicatedSchedulerActive.Set();
+            InternalShared.Instance.DedicatedSchedulerActive.Set();
         }
 
         //-----------------------------------------------------------------------------------------------          
@@ -634,47 +493,7 @@ namespace Alchemi.Core.Manager
     
         //-----------------------------------------------------------------------------------------------    
     
-        private void ScheduleDedicated()
-        {
-            try
-            {
-                // TODO: allow scheduling of multiple threads in one go
-                while (true)
-                {
-                    _DedicatedSchedulerActive.WaitOne(1000, false);
 
-                    DedicatedSchedule ds = _Scheduler.ScheduleDedicated();
-
-                    if (ds == null)
-                    {
-                        _DedicatedSchedulerActive.Reset();
-                        continue;
-                    }
-
-                    MExecutor me = _Executors[ds.ExecutorId];
-                    MThread mt = new MThread(ds.TI);
-                    
-                    try          
-                    {
-                        // update thread state
-                        mt.CurrentExecutorId = ds.ExecutorId;
-                        mt.State = ThreadState.Scheduled;
-                        // dispatch thread
-                        me.RemoteRef.Manager_ExecuteThread(ds.TI);
-                    }
-                    catch
-                    {
-                        // remove executor and reset thread so it can be rescheduled
-                        me.Disconnect();
-                        mt.Reset(); // this should happen as part of the the disconnection
-                    }
-                }
-            }
-            catch (ThreadAbortException)
-            {
-                Thread.ResetAbort();
-            }
-        }
 
         //-----------------------------------------------------------------------------------------------          
 
@@ -715,47 +534,35 @@ namespace Alchemi.Core.Manager
         
         //-----------------------------------------------------------------------------------------------          
 
-        private void Watchdog()
+        internal static void AbortThread(ThreadIdentifier ti, string executorId)
         {
+            if (executorId == null)
+            {
+                // not being executed on any executor
+                return;
+            }
+            MExecutor me = new MExecutor(executorId);
+            if (me.RemoteRef == null)
+            {
+                // not being executed on a dedicated executor .. so can't abort
+                return;
+            }
             try
             {
-                while (true)
-                {
-                    Thread.Sleep(10000);
-
-                    // ping dedicated executors running threads and reset executor and thread if can't ping
-                    DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Executors_SelectDedicatedRunningThreads");
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        MExecutor me = _Executors[dr["executor_id"].ToString()];
-                        try
-                        {
-                            me.RemoteRef.PingExecutor();
-                        }
-                        catch
-                        {
-                            me.Disconnect();
-                            new MThread(dr["application_id"].ToString(), (int) dr["thread_id"]).Reset();
-                        }
-                    }
-
-                    // disconnect nde if not recd alive notification in the last 10 seconds
-                    // TODO: make time interval configurable ...................................V
-                    InternalShared.Instance.Database.ExecSql("Executors_DiscoverDisconnectedNDE 10");
-                    // reset threads whose executors have been disconnected
-                    
-                    dt = InternalShared.Instance.Database.ExecSql_DataTable("Threads_SelectLostNDE");
-                    foreach (DataRow thread in dt.Rows)
-                    {
-                        new MThread(thread["application_id"].ToString(), (int) thread["thread_id"]).Reset();
-                        new MExecutor(thread["executor_id"].ToString()).Disconnect();
-                    }
-                }
+                me.RemoteRef.Manager_AbortThread(ti);
             }
-            catch (ThreadAbortException)
+            catch (ExecutorCommException)
             {
-                Thread.ResetAbort();
+                me.Disconnect();
             }
+        }
+
+        //-----------------------------------------------------------------------------------------------          
+
+        private void AbortThread(ThreadIdentifier ti)
+        {
+            MThread t = new MThread(ti);
+            AbortThread(ti, t.CurrentExecutorId);
         }
     }
 }
