@@ -1,0 +1,66 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossPlatformManager", "http://localhost/Alchemi.CrossPlatformManager/CrossPlatformManager.csproj", "{B3EDA024-7864-4335-9817-67A78064C360}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorExec", "Alchemi.ExecutorExec\ExecutorExec.csproj", "{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerExec", "Alchemi.ManagerExec\ManagerExec.csproj", "{11F1CF0B-5526-4534-9784-0543E29D4292}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbInstaller", "Alchemi.ManagerUtils\DbInstaller\DbInstaller.csproj", "{42DCE75A-228B-456A-8E8F-721EC276B6E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Alchemi.SDK\Console\Console.csproj", "{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{B3EDA024-7864-4335-9817-67A78064C360}.Debug.ActiveCfg = Debug|.NET
+		{B3EDA024-7864-4335-9817-67A78064C360}.Debug.Build.0 = Debug|.NET
+		{B3EDA024-7864-4335-9817-67A78064C360}.Release.ActiveCfg = Release|.NET
+		{B3EDA024-7864-4335-9817-67A78064C360}.Release.Build.0 = Release|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.ActiveCfg = Debug|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.Build.0 = Debug|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.ActiveCfg = Release|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.Build.0 = Release|.NET
+		{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}.Debug.ActiveCfg = Debug|.NET
+		{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}.Debug.Build.0 = Debug|.NET
+		{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}.Release.ActiveCfg = Release|.NET
+		{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}.Release.Build.0 = Release|.NET
+		{11F1CF0B-5526-4534-9784-0543E29D4292}.Debug.ActiveCfg = Debug|.NET
+		{11F1CF0B-5526-4534-9784-0543E29D4292}.Debug.Build.0 = Debug|.NET
+		{11F1CF0B-5526-4534-9784-0543E29D4292}.Release.ActiveCfg = Release|.NET
+		{11F1CF0B-5526-4534-9784-0543E29D4292}.Release.Build.0 = Release|.NET
+		{42DCE75A-228B-456A-8E8F-721EC276B6E6}.Debug.ActiveCfg = Debug|.NET
+		{42DCE75A-228B-456A-8E8F-721EC276B6E6}.Debug.Build.0 = Debug|.NET
+		{42DCE75A-228B-456A-8E8F-721EC276B6E6}.Release.ActiveCfg = Release|.NET
+		{42DCE75A-228B-456A-8E8F-721EC276B6E6}.Release.Build.0 = Release|.NET
+		{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}.Debug.ActiveCfg = Debug|.NET
+		{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}.Debug.Build.0 = Debug|.NET
+		{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}.Release.ActiveCfg = Release|.NET
+		{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
