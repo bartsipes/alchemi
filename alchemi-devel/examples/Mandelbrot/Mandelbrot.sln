@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mandelbrot", "Mandelbrot.csproj", "{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Debug.ActiveCfg = Debug|.NET
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Debug.Build.0 = Debug|.NET
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Release.ActiveCfg = Release|.NET
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

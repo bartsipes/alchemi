@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reverse", "Reverse\Reverse.csproj", "{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridReverser", "GridReverser\GridReverser.csproj", "{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Debug.ActiveCfg = Debug|.NET
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Debug.Build.0 = Debug|.NET
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Release.ActiveCfg = Release|.NET
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Release.Build.0 = Release|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Debug.ActiveCfg = Debug|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Debug.Build.0 = Debug|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Release.ActiveCfg = Release|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
