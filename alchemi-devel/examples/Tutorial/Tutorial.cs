@@ -22,7 +22,7 @@ namespace Alchemi.Examples.Tutorial
         public override void Start()
         {
             if (Id == 0) { int x = 5/Id; } // divide by zero
-            _Result = _A * _B;
+            _Result = _A * _B * _A;
         }
     }
     
