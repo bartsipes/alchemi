@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -34,7 +35,7 @@ using Alchemi.Core;
 
 namespace Alchemi.Core.Executor
 {
-    public delegate void LogEventHandler(string s);
+    public delegate void LogEventHandler(object sender, string s);
     public delegate void NonDedicatedExecutingStatusChangedEventHandler();
     public delegate void GotDisconnectedEventHandler();
  
@@ -54,10 +55,11 @@ namespace Alchemi.Core.Executor
         private ThreadIdentifier _CurTi;
         private Hashtable _GridAppDomains;
         private ManualResetEvent _ReadyToExecute = new ManualResetEvent(true);
+        private string _BaseDir;
         
         private int _HeartbeatInterval = 2; // TODO: make heartbeat time configurable
 
-        public static event LogEventHandler Log;
+        public static event LogEventHandler LogEvent;
         public static event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
         public static event GotDisconnectedEventHandler GotDisconnected;
 
@@ -94,13 +96,28 @@ namespace Alchemi.Core.Executor
             }
         }
 
+        public string BaseDir
+        {
+            get
+            {
+                return _BaseDir;
+            }
+        }
+
         //----------------------------------------------------------------------------------------------- 
         // constructors
         //----------------------------------------------------------------------------------------------- 
         
-        public GExecutor(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, SecurityCredentials sc) : base(managerEP, ownEP, sc)
+        public GExecutor(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, SecurityCredentials sc, string baseDir) : base(managerEP, ownEP, sc)
         {
-            string datDir = string.Format("{0}\\dat", Environment.CurrentDirectory);
+            _BaseDir = baseDir;
+            if (_BaseDir == "")
+            {
+                _BaseDir = Environment.CurrentDirectory;
+            }
+
+            string datDir = string.Format("{0}\\dat", _BaseDir);
+            
             if (!Directory.Exists(datDir))
             {
                 Directory.CreateDirectory(datDir);
@@ -144,6 +161,11 @@ namespace Alchemi.Core.Executor
                 _HeartbeatThread = new Thread(new ThreadStart(Heartbeat));
                 _HeartbeatThread.Start();
             }
+        }
+
+        private void Log(string s)
+        {
+            LogEvent(this, s);
         }
 
 
@@ -300,11 +322,11 @@ namespace Alchemi.Core.Executor
 
         private void ExecuteThreadInAppDomain()
         {
-            try
+            //try
             {
                 Log(string.Format("executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
 
-                string appDir = string.Format("{0}\\dat\\application_{1}", Environment.CurrentDirectory, _CurTi.ApplicationId);
+                string appDir = string.Format("{0}\\dat\\application_{1}", _BaseDir, _CurTi.ApplicationId);
 
                 if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
                 {
@@ -353,21 +375,19 @@ namespace Alchemi.Core.Executor
                     Manager.Executor_SetFinishedThread(Credentials, _CurTi, finishedThread, null);
                     Log(string.Format("finished executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
                 }
+                catch (ThreadAbortException)
+                {
+                    Log(string.Format("aborted grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
+                    Thread.ResetAbort();
+                }
                 catch (Exception e)
                 {
                     Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
-                    Log(string.Format("grid thread # {0}.{1} failed", _CurTi.ApplicationId, _CurTi.ThreadId));
+                    Log(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()));
                 }
-                
+
                 _CurTi = null;
                 _ReadyToExecute.Set();
-            }
-            catch (ThreadAbortException)
-            {
-                Log(string.Format("aborted grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
-                _CurTi = null;
-                _ReadyToExecute.Set();
-                Thread.ResetAbort();
             }
         }
 
