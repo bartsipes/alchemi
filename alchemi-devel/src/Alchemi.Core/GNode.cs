@@ -192,7 +192,11 @@ namespace Alchemi.Core
                             }
                             catch (Exception e)
                             {
-                                if ((e.Message == "The channel tcp is already registered.") || (e.Message == "Only one usage of each socket address (protocol/network address/port) is normally permitted"))
+                                if (
+                                    object.ReferenceEquals(e.GetType(), typeof(System.Runtime.Remoting.RemotingException)) /* assuming: "The channel tcp is already registered." */
+                                    |
+                                    object.ReferenceEquals(e.GetType(), typeof(System.Net.Sockets.SocketException)) /* assuming: "Only one usage of each socket address (protocol/network address/port) is normally permitted" */
+                                    )
                                 {
                                     _ChannelRegistered = true;
                                 }
