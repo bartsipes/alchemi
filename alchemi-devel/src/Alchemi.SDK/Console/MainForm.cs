@@ -22,6 +22,9 @@
 */
 #endregion
 
+// Julio Martinez (jumaga2015@users.sourceforge.net)
+//  - Using open source "ScPl" charting control instead of "Dundas Chart"
+
 using System;
 using System.Drawing;
 using System.Collections;
@@ -30,7 +33,7 @@ using System.Windows.Forms;
 using System.Data;
 using System.Diagnostics;
 using Alchemi.Core;
-using Dundas.Charting.WinControl;
+using scpl;
 
 namespace Alchemi.Console
 {
@@ -55,7 +58,6 @@ namespace Alchemi.Console
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lbUnfinishedThreads;
         private System.Windows.Forms.Label label8;
-        private Dundas.Charting.WinControl.Chart chPower;
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem mmConnect;
@@ -78,8 +80,12 @@ namespace Alchemi.Console
         private System.Windows.Forms.Button btStopApps;
         private System.Windows.Forms.ToolBarButton toolBarButton1;
         private System.Windows.Forms.ToolBarButton toolBarButton2;
+        private scpl.Windows.PlotSurface2D plotSurface;
         
         ConsoleNode console;
+
+        private LinePlot lineAvail = new LinePlot();
+        private LinePlot lineUsage = new LinePlot();
         
         public MainForm()
         {
@@ -113,13 +119,10 @@ namespace Alchemi.Console
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Dundas.Charting.WinControl.ChartArea chartArea1 = new Dundas.Charting.WinControl.ChartArea();
-            Dundas.Charting.WinControl.Series series1 = new Dundas.Charting.WinControl.Series();
-            Dundas.Charting.WinControl.Series series2 = new Dundas.Charting.WinControl.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.chPower = new Dundas.Charting.WinControl.Chart();
+            this.plotSurface = new scpl.Windows.PlotSurface2D();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbTotalPowerUsage = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -159,7 +162,6 @@ namespace Alchemi.Console
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chPower)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgApps)).BeginInit();
@@ -200,7 +202,7 @@ namespace Alchemi.Console
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
                 | System.Windows.Forms.AnchorStyles.Left) 
                 | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.chPower);
+            this.groupBox2.Controls.Add(this.plotSurface);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.groupBox2.Location = new System.Drawing.Point(8, 8);
             this.groupBox2.Name = "groupBox2";
@@ -208,56 +210,28 @@ namespace Alchemi.Console
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             // 
-            // chPower
+            // plotSurface
             // 
-            this.chPower.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.plotSurface.AllowSelection = false;
+            this.plotSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
                 | System.Windows.Forms.AnchorStyles.Left) 
                 | System.Windows.Forms.AnchorStyles.Right)));
-            this.chPower.BackColor = System.Drawing.SystemColors.Control;
-            this.chPower.BorderLineColor = System.Drawing.Color.Black;
-            this.chPower.BorderSkin.FrameBackGradientEndColor = System.Drawing.Color.White;
-            this.chPower.BorderSkin.PageColor = System.Drawing.SystemColors.Control;
-            chartArea1.Area3DStyle.Light = Dundas.Charting.WinControl.LightStyle.Realistic;
-            chartArea1.AxisX.LabelStyle.Format = "G0";
-            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.Transparent;
-            chartArea1.AxisX.MajorGrid.LineStyle = Dundas.Charting.WinControl.ChartDashStyle.Dot;
-            chartArea1.AxisX.MajorTickMark.Style = Dundas.Charting.WinControl.TickMarkStyle.Cross;
-            chartArea1.AxisX.Margin = false;
-            chartArea1.AxisX.Maximum = 0;
-            chartArea1.AxisX.Minimum = -60;
-            chartArea1.AxisY.LabelStyle.Format = "P0";
-            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.FromArgb(((System.Byte)(172)), ((System.Byte)(168)), ((System.Byte)(153)));
-            chartArea1.AxisY.MajorGrid.LineStyle = Dundas.Charting.WinControl.ChartDashStyle.Dot;
-            chartArea1.AxisY.MajorTickMark.Style = Dundas.Charting.WinControl.TickMarkStyle.Cross;
-            chartArea1.AxisY.Maximum = 100;
-            chartArea1.AxisY.Minimum = 0;
-            chartArea1.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.BorderStyle = Dundas.Charting.WinControl.ChartDashStyle.Solid;
-            chartArea1.Name = "Default";
-            this.chPower.ChartAreas.Add(chartArea1);
-            this.chPower.ChartData = "";
-            this.chPower.Legend.BackColor = System.Drawing.Color.White;
-            this.chPower.Legend.BorderColor = System.Drawing.Color.Black;
-            this.chPower.Legend.Docking = Dundas.Charting.WinControl.LegendDocking.Bottom;
-            this.chPower.Legend.LegendStyle = Dundas.Charting.WinControl.LegendStyle.Row;
-            this.chPower.Location = new System.Drawing.Point(8, 16);
-            this.chPower.Name = "chPower";
-            series1.BorderColor = System.Drawing.Color.Black;
-            series1.BorderWidth = 2;
-            series1.ChartType = "Line";
-            series1.Color = System.Drawing.Color.SteelBlue;
-            series1.Name = "avail";
-            series2.BorderColor = System.Drawing.Color.Black;
-            series2.BorderWidth = 2;
-            series2.ChartType = "Line";
-            series2.Color = System.Drawing.Color.Crimson;
-            series2.Name = "usage";
-            this.chPower.Series.Add(series1);
-            this.chPower.Series.Add(series2);
-            this.chPower.Size = new System.Drawing.Size(472, 350);
-            this.chPower.TabIndex = 15;
-            this.chPower.Title = "CPU Power - Availability & Usage";
-            this.chPower.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.plotSurface.BackColor = System.Drawing.SystemColors.Control;
+            this.plotSurface.Legend = null;
+            this.plotSurface.Location = new System.Drawing.Point(8, 16);
+            this.plotSurface.Name = "plotSurface";
+            this.plotSurface.Padding = 10;
+            this.plotSurface.PlotBackColor = System.Drawing.SystemColors.Control;
+            this.plotSurface.ShowCoordinates = false;
+            this.plotSurface.Size = new System.Drawing.Size(472, 352);
+            this.plotSurface.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.plotSurface.TabIndex = 16;
+            this.plotSurface.Title = "";
+            this.plotSurface.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.plotSurface.XAxis1 = null;
+            this.plotSurface.XAxis2 = null;
+            this.plotSurface.YAxis1 = null;
+            this.plotSurface.YAxis2 = null;
             // 
             // groupBox1
             // 
@@ -603,7 +577,6 @@ namespace Alchemi.Console
             this.tabControl1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chPower)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgApps)).EndInit();
@@ -618,7 +591,51 @@ namespace Alchemi.Console
 
         private void MainForm_Load(object sender, System.EventArgs e)
         {
+            InitializePlotSurface();
             RefreshUI();
+        }
+
+        private void InitializePlotSurface()
+        {
+            plotSurface.Clear();
+
+            plotSurface.Add( lineAvail );
+            plotSurface.Add( lineUsage );
+
+            plotSurface.PlotBackColor = plotSurface.BackColor;
+
+            plotSurface.Title = "CPU Power - Availability & Usage";
+            plotSurface.TitleFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
+
+            plotSurface.XAxis1.WorldMin = -60.0f;
+            plotSurface.XAxis1.WorldMax = 0.0f;
+            plotSurface.XAxis1.Label = "Seconds";
+            plotSurface.XAxis1.LabelFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
+            plotSurface.XAxis1.TickTextFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
+
+            plotSurface.YAxis1.WorldMin = 0.0;
+            plotSurface.YAxis1.WorldMax= 100.0;
+            plotSurface.YAxis1.Label = "Power [%]";
+            plotSurface.YAxis1.LabelFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
+            plotSurface.YAxis1.TickTextFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
+
+            scpl.Grid gridPlotSurface = new scpl.Grid();
+            gridPlotSurface.HorizontalGridType = scpl.Grid.GridType.None;
+            gridPlotSurface.VerticalGridType = scpl.Grid.GridType.Fine;
+            gridPlotSurface.MajorGridPen.Color = Color.DarkGray;
+            plotSurface.Add(gridPlotSurface);
+
+            plotSurface.Legend = new scpl.Legend();
+            plotSurface.Legend.NeverShiftAxes = false;
+            plotSurface.Legend.AttachTo( PlotSurface2D.XAxisPosition.Bottom , PlotSurface2D.YAxisPosition.Left);
+            plotSurface.Legend.HorizontalEdgePlacement = scpl.Legend.Placement.Inside;
+            plotSurface.Legend.VerticalEdgePlacement = scpl.Legend.Placement.Inside;
+
+            lineAvail.Label = "avail";
+            lineAvail.Pen   = new Pen(Color.Crimson, 2.0f);
+
+            lineUsage.Label = "usage";
+            lineUsage.Pen   = new Pen(Color.SteelBlue, 2.0f);
         }
 
         private void btSave_Click(object sender, System.EventArgs e)
@@ -718,16 +735,7 @@ namespace Alchemi.Console
             this.lbUnfinishedThreads.Text = summary.Rows[0]["unfinished_threads"].ToString();
             
             x++;
-            
-            // ***
-            /*
-            if (chPower.Series["avail"].Points.Count > 29)
-            {
-                this.chPower.Series["avail"].Points.RemoveAt(0);
-                //this.chPower.Series["usage"].Points.RemoveAt(0);
-            }
-            */
-            
+           
             x1.Add(x);
 
             y1.Add(Convert.ToDouble(summary.Rows[0]["power_usage"]));
@@ -739,18 +747,28 @@ namespace Alchemi.Console
                 y1.RemoveAt(0);
                 y2.RemoveAt(0);
             }
-
-            chPower.Series["usage"].Points.Clear();
-            chPower.Series["avail"].Points.Clear();
+          
+        
+            int npt=31;
+            int []xTime  = new int[npt];
+            double []yAvail = new double[npt];
+            double []yUsage = new double[npt];
 
             for (int i=0; i<x1.Count; i++)
             {
                 int x2 = ((((31 - x1.Count) + i)) * 2) - 60;
-                this.chPower.Series["usage"].Points.AddXY(Convert.ToDouble(x2), y1[i]);
-                this.chPower.Series["avail"].Points.AddXY(Convert.ToDouble(x2), y2[i]);
+                xTime[i] = x2;
+                yAvail[i] = (double) y1[i];
+                yUsage[i] = (double) y2[i];
             }
-        
-            this.chPower.Invalidate();
+
+            lineAvail.AbscissaData = xTime;
+            lineAvail.ValueData = yAvail;
+
+            lineUsage.AbscissaData = xTime;
+            lineUsage.ValueData = yUsage;
+
+            plotSurface.Refresh();
         }
 
         private void tmRefreshGraph_Tick(object sender, System.EventArgs e)
@@ -919,7 +937,7 @@ namespace Alchemi.Console
                     }
                 }
                 else if(dataGrid.DataSource.GetType() == typeof(DataTable)) //the datagrid just has a DataTable
-                {				
+                {               
                     tableStyle = new DataGridTableStyle();
                     DataTable dataTable = (DataTable)dataGrid.DataSource;
 

@@ -104,6 +104,11 @@
                     AssemblyName = "DundasWinChart"
                     HintPath = "..\..\..\lib\DundasWinChart.dll"
                 />
+                <Reference
+                    Name = "scpl"
+                    AssemblyName = "scpl"
+                    HintPath = "..\..\..\lib\scpl.dll"
+                />
             </References>
         </Build>
         <Files>
