@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -535,7 +536,7 @@ namespace Alchemi.ExecutorExec
             */
       
             // subscribe to events
-            GExecutor.Log += new LogEventHandler(this.Log);
+            GExecutor.LogEvent += new LogEventHandler(this.Log);
             GExecutor.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(this.RefreshUIControls);
             GExecutor.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
       
@@ -684,7 +685,6 @@ namespace Alchemi.ExecutorExec
                 RemotingMechanism.TcpBinary
                 );
             
-        
             OwnEndPoint oep = new OwnEndPoint(
                 Config.OwnPort,
                 RemotingMechanism.TcpBinary
@@ -693,7 +693,7 @@ namespace Alchemi.ExecutorExec
             try
             {
                 // connect to manager
-                Executor = new GExecutor(rep, oep, Config.Id, Config.Dedicated, new SecurityCredentials(Config.Username, Config.Password));
+                Executor = new GExecutor(rep, oep, Config.Id, Config.Dedicated, new SecurityCredentials(Config.Username, Config.Password), "");
                 Log("Connected successfully.");
 
                 Config.ConnectVerified = true;
@@ -780,6 +780,11 @@ namespace Alchemi.ExecutorExec
             {
                 txLog.AppendText(s + Environment.NewLine);
             }
+        }
+
+        private void Log(object sender, string s)
+        {
+            Log(s);
         }
 
         //-----------------------------------------------------------------------------------------------            

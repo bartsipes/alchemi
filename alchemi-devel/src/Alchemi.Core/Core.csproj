@@ -111,7 +111,7 @@
                 />
                 <File
                     RelPath = "Connection.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -156,7 +156,7 @@
                 />
                 <File
                     RelPath = "GApplication.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -166,7 +166,7 @@
                 />
                 <File
                     RelPath = "GConnection.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -176,7 +176,7 @@
                 />
                 <File
                     RelPath = "GConnectionDialog.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -186,7 +186,7 @@
                 />
                 <File
                     RelPath = "GConnectionDialogForm.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
@@ -201,7 +201,7 @@
                 />
                 <File
                     RelPath = "GNode.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -291,7 +291,7 @@
                 />
                 <File
                     RelPath = "Executor\GExecutor.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File
@@ -331,6 +331,11 @@
                 />
                 <File
                     RelPath = "Manager\IScheduler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Manager\ManagerContainer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

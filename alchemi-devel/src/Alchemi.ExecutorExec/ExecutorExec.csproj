@@ -115,7 +115,7 @@
                 />
                 <File
                     RelPath = "SplashScreen.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File

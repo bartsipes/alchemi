@@ -106,7 +106,7 @@
                 <File
                     RelPath = "CrossPlatformManager.asmx.cs"
                     DependentUpon = "CrossPlatformManager.asmx"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File

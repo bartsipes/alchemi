@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -198,7 +199,7 @@ namespace Alchemi.Core
                                 else
                                 {
                                     UnRemoteSelf();
-                                    throw new RemotingException("Could not register channel while trying to remote self.", e);
+                                    throw new RemotingException("Could not register channel while trying to remote self: " + e.Message, e);
                                 }
                             }
                         }
