@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -41,9 +42,9 @@ namespace Alchemi.DevTools
         static void Main(string[] args)
         {
             Console.WriteLine("\nAlchemi [.NET Grid Computing Framework]");
-            Console.WriteLine("Job Submitter v{0}", Utils.AssemblyVersion);
-            Console.WriteLine("Copyright (c) 2002-2004 Akshay Luther");
             Console.WriteLine("http://www.alchemi.net\n");
+
+            Console.WriteLine("Job Submitter v{0}", Utils.AssemblyVersion);
 
             IManager manager;
             SecurityCredentials sc;
@@ -73,12 +74,12 @@ namespace Alchemi.DevTools
             string[] cmd;
             bool interactive;
 
-            if (args.Length > 2)
+            if (args.Length > 4)
             {
-                cmd = new string[args.Length - 2];
-                for (int i=0; i<args.Length - 2; i++)
+                cmd = new string[args.Length - 4];
+                for (int i=0; i<args.Length - 4; i++)
                 {
-                    cmd[i] = args[i+2];
+                    cmd[i] = args[i+4];
                 }
                 interactive = false;
             }
@@ -104,18 +105,20 @@ namespace Alchemi.DevTools
 
                     switch (cmd[0])
                     {
+                        case "st":
                         case "submittask": // taskXmlFile
                             string task = EmbedFiles(Utils.ReadStringFromFile(cmd[1]));
-                            appId = CrossPlatformHelper.CreateTask(manager, task);
+                            appId = CrossPlatformHelper.CreateTask(manager, sc, task);
                             WriteLine("Task submitted (alias = {1}).", appId, aliases.NewAlias(appId));
                             break;
 
+                        case "gfj":
                         case "getfinishedjobs": // alias, (directory, default=".")
                             appId = (string) aliases.Table[cmd[1]];
 
                             string taskDir = cmd.Length > 2 ? cmd[2] : ".";
 
-                            string taskXml = CrossPlatformHelper.GetFinishedJobs(manager, appId);
+                            string taskXml = CrossPlatformHelper.GetFinishedJobs(manager, sc, appId);
                             XmlDocument fin = new XmlDocument();
                             fin.LoadXml(taskXml);
 
@@ -140,11 +143,14 @@ namespace Alchemi.DevTools
                             break;
                         
                             // TODO: (allow option to specify alias)
+                        case "ct":
                         case "createtask": // no arguments
-                            appId = manager.Owner_CreateApplication(null);
+                            appId = manager.Owner_CreateApplication(sc);
+                            WriteLine(appId);
                             WriteLine("Task created (alias = {1}).", appId, aliases.NewAlias(appId));
                             break;
 
+                        case "aj":
                         case "addjob": // alias, jobXml, jobId, (priority, default=0)
                             appId = (string) aliases.Table[cmd[1]];
                             int priority = 0;
@@ -152,10 +158,11 @@ namespace Alchemi.DevTools
                             {
                                 priority = int.Parse(cmd[4]);
                             }
-                            CrossPlatformHelper.AddJob(manager, appId, int.Parse(cmd[3]), priority, EmbedFiles(Utils.ReadStringFromFile(cmd[2])));
+                            CrossPlatformHelper.AddJob(manager, sc, appId, int.Parse(cmd[3]), priority, EmbedFiles(Utils.ReadStringFromFile(cmd[2])));
                             WriteLine("Job added.");
                             break;
 
+                        /*
                         case "listapps": // no arguments
                             DataTable apps = manager.Owner_GetLiveApplicationList(null).Tables[0];
                             apps.Columns.Add("alias", typeof(string));
@@ -206,11 +213,13 @@ namespace Alchemi.DevTools
                             WriteLine("Thread aborted.");
                             break;
 
-                        case "stopapp": // alias
+                        case "stoptask": // alias
                             appId = (string) aliases.Table[cmd[1]];
                             manager.Owner_StopApplication(null, appId);
-                            WriteLine("Application stopped.");
+                            WriteLine("Task stopped.");
                             break;
+                            
+                         */        
 
                         case "h":
                         case "help":
@@ -225,6 +234,8 @@ namespace Alchemi.DevTools
                             }
                             break;
                         
+                        case "quit":
+                        case "q":
                         case "exit":
                         case "x":
                             return;
@@ -276,20 +287,20 @@ namespace Alchemi.DevTools
         public static void Usage()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine("\talchemi_mci <manager_host> <manager_port>");
+            Console.WriteLine("\talchemi_jsub <manager_host> <manager_port> <username> <password>");
             Console.WriteLine("\t  Connects to the specified Alchemi Manager and starts in interactive\n\t  mode.");
-            Console.WriteLine("\n\talchemi_mci <manager_host> <manager_port> [cmd]");
+            Console.WriteLine("\n\talchemi_jsub <manager_host> <manager_port> <username> <password> [cmd]");
             Console.WriteLine("\t  Connects to the specified Alchemi Manager, executes the specified\n\t  command and exits.");
             Console.WriteLine("\nCommands:");
-            Console.WriteLine("\tabortthread"); 
             Console.WriteLine("\taddjob");
             Console.WriteLine("\tcreatetask");
             Console.WriteLine("\tgetfinishedjobs");
-            Console.WriteLine("\tgetthreadstate");
+            //Console.WriteLine("\tgetthreadstate");
             Console.WriteLine("\thelp");
-            Console.WriteLine("\tlistapps");
-            Console.WriteLine("\tlistthreads");
-            Console.WriteLine("\tstopapp");
+            //Console.WriteLine("\tlistapps");
+            //Console.WriteLine("\tlistthreads");
+            //Console.WriteLine("\tabortthread");
+            //Console.WriteLine("\tstoptask");
             Console.WriteLine("\tsubmittask");
             Console.WriteLine("\texit");
             Console.WriteLine("\nUse 'help <command>' for help on a particular command.");
@@ -309,31 +320,38 @@ namespace Alchemi.DevTools
                     Console.WriteLine("\tgetfinishedjobs <alias>");
                     Console.WriteLine("\t  Gets finished jobs for a task.");
                     break;
+                /*
                 case "abortthread":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\tabortthread <alias> <thread_id>");
                     Console.WriteLine("\t  Aborts a thread.");
                     break;
+                */    
+                
                 case "addjob":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\taddjob <alias> <job_xml> <job_id> [priority]");
                     Console.WriteLine("\t  Adds a job to a task.");
                     break;
+
                 case "createtask":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\tcreatetask");
-                    Console.WriteLine("\t  Creates a task.");
+                    Console.WriteLine("\t  Creates a task (to which jobs can be added).");
                     break;
+                /*
                 case "getthreadstate":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\tgetthreadstate <alias> <thread_id>");
                     Console.WriteLine("\t  Gets the state of a thread.");
                     break;
+                */
                 case "help":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\thelp [command]");
                     Console.WriteLine("\t  Shows help.");
                     break;
+                /*
                 case "listapps":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\tlistapps");
@@ -349,6 +367,7 @@ namespace Alchemi.DevTools
                     Console.WriteLine("\tstopapp <alias>");
                     Console.WriteLine("\tStops an application.");
                     break;
+                    */
                 case "exit":
                     Console.WriteLine("Usage:");
                     Console.WriteLine("\texit");
@@ -519,7 +538,7 @@ namespace Alchemi.DevTools
 
         private void Error(string message, Exception e)
         {
-            Console.WriteLine("{0} ({1} : {2})", message, e.GetType, e.Message);
+            Console.WriteLine("{0} ({1} : {2})", message, e.GetType(), e.Message);
         }
 
     }

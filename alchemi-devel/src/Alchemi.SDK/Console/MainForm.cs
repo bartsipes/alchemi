@@ -1,3 +1,27 @@
+#region Alchemi copyright notice
+/*
+  Alchemi [.NET Grid Computing Framework]
+  http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+---------------------------------------------------------------------------
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+#endregion
+
 using System;
 using System.Drawing;
 using System.Collections;
@@ -51,6 +75,9 @@ namespace Alchemi.Console
         bool connected = false;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem mmAbout;
+        private System.Windows.Forms.Button btStopApps;
+        private System.Windows.Forms.ToolBarButton toolBarButton1;
+        private System.Windows.Forms.ToolBarButton toolBarButton2;
         
         ConsoleNode console;
         
@@ -107,6 +134,7 @@ namespace Alchemi.Console
             this.lbUnfinishedThreads = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.btStopApps = new System.Windows.Forms.Button();
             this.btLoadApps = new System.Windows.Forms.Button();
             this.dgApps = new System.Windows.Forms.DataGrid();
             this.dataGridTableStyle1 = new System.Windows.Forms.DataGridTableStyle();
@@ -123,9 +151,11 @@ namespace Alchemi.Console
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.mmConnect = new System.Windows.Forms.MenuItem();
             this.mmDisconnect = new System.Windows.Forms.MenuItem();
-            this.statusBar = new System.Windows.Forms.StatusBar();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.mmAbout = new System.Windows.Forms.MenuItem();
+            this.statusBar = new System.Windows.Forms.StatusBar();
+            this.toolBarButton1 = new System.Windows.Forms.ToolBarButton();
+            this.toolBarButton2 = new System.Windows.Forms.ToolBarButton();
             this.tabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -356,6 +386,7 @@ namespace Alchemi.Console
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.btStopApps);
             this.tabPage4.Controls.Add(this.btLoadApps);
             this.tabPage4.Controls.Add(this.dgApps);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -364,11 +395,20 @@ namespace Alchemi.Console
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Applications";
             // 
+            // btStopApps
+            // 
+            this.btStopApps.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btStopApps.Location = new System.Drawing.Point(608, 368);
+            this.btStopApps.Name = "btStopApps";
+            this.btStopApps.TabIndex = 6;
+            this.btStopApps.Text = "Stop";
+            this.btStopApps.Click += new System.EventHandler(this.btStopApps_Click);
+            // 
             // btLoadApps
             // 
             this.btLoadApps.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btLoadApps.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btLoadApps.Location = new System.Drawing.Point(8, 366);
+            this.btLoadApps.Location = new System.Drawing.Point(8, 368);
             this.btLoadApps.Name = "btLoadApps";
             this.btLoadApps.Size = new System.Drawing.Size(104, 23);
             this.btLoadApps.TabIndex = 5;
@@ -529,13 +569,6 @@ namespace Alchemi.Console
             this.mmDisconnect.Text = "Disconnect";
             this.mmDisconnect.Click += new System.EventHandler(this.mmDisconnect_Click);
             // 
-            // statusBar
-            // 
-            this.statusBar.Location = new System.Drawing.Point(0, 433);
-            this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(718, 22);
-            this.statusBar.TabIndex = 1;
-            // 
             // menuItem2
             // 
             this.menuItem2.Index = 1;
@@ -548,6 +581,13 @@ namespace Alchemi.Console
             this.mmAbout.Index = 0;
             this.mmAbout.Text = "About";
             this.mmAbout.Click += new System.EventHandler(this.mmAbout_Click);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 433);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(718, 22);
+            this.statusBar.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -971,6 +1011,36 @@ namespace Alchemi.Console
         private void mmAbout_Click(object sender, System.EventArgs e)
         {
             MessageBox.Show("Alchemi Console v" + Alchemi.Core.Utility.Utils.AssemblyVersion);
+        }
+
+        private void btStopApps_Click(object sender, System.EventArgs e)
+        {
+            ArrayList rows = GetSelectedRows(dgApps);
+            string msg = "";
+            foreach (object row in rows)
+            {
+                string appId = dgApps[(int) row, 0].ToString();
+                this.console.Manager.Owner_StopApplication(console.Credentials, appId);
+                msg += appId + Environment.NewLine;
+            }
+            if (msg != "")
+            {
+                msg = "Stopped the following applications:" + Environment.NewLine + msg;
+                MessageBox.Show(msg);
+            }
+        }
+
+        private ArrayList GetSelectedRows(DataGrid dg) 
+        { 
+            ArrayList al = new ArrayList(); 
+ 
+            CurrencyManager cm = (CurrencyManager)this.BindingContext[dg.DataSource, dg.DataMember]; 
+            DataView dv = (DataView)cm.List; 
+            for(int i = 0; i < dv.Count; ++i) 
+            { 
+                if (dg.IsSelected(i)) al.Add(i); 
+            }
+            return al; 
         }
     }
 }

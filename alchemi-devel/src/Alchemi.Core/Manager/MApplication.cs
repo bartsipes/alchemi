@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -133,6 +134,15 @@ namespace Alchemi.Core.Manager
                     ).ToString();
 
                 return (primary == "0") ? false : true;
+            }
+        }
+
+        public void Stop()
+        {
+            DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Application_Stop '{0}'", _Id);
+            foreach (DataRow thread in dt.Rows)
+            {
+                GManager.AbortThread(new ThreadIdentifier(_Id, int.Parse(thread["thread_id"].ToString())), thread["executor_id"].ToString());
             }
         }
     }

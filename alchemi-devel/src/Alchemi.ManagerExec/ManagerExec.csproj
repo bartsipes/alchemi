@@ -104,6 +104,10 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "App.config"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "CommonAssemblyInfo.cs"
                     Link = "..\CommonAssemblyInfo.cs"
                     SubType = "Code"
@@ -111,7 +115,7 @@
                 />
                 <File
                     RelPath = "ManagerMainForm.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
@@ -121,7 +125,7 @@
                 />
                 <File
                     RelPath = "SplashScreen.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File

@@ -1,6 +1,10 @@
 set quoted_identifier  OFF 
 GO
 
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Application_Stop]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Application_Stop]
+GO
+
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Cleanup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Cleanup]
 GO
@@ -61,12 +65,12 @@ if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_Verif
 drop procedure [dbo].[User_VerifyApplicationCreator]
 GO
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_VerifyPermission]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[User_VerifyPermission]
-GO
-
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_GetUserList]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Admon_GetUserList]
+GO
+
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_VerifyPermission]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[User_VerifyPermission]
 GO
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_Applications]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
@@ -125,16 +129,16 @@ if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]')
 drop table [dbo].[grp_prm]
 GO
 
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[usr]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+drop table [dbo].[usr]
+GO
+
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[grp]
 GO
 
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[prm]
-GO
-
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[usr]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-drop table [dbo].[usr]
 GO
 
 if not exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
@@ -167,6 +171,34 @@ END
 GO
 
 
+if not exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+ BEGIN
+CREATE TABLE [dbo].[grp_prm] (
+	[grp_id] [int] NOT NULL ,
+	[prm_id] [int] NOT NULL ,
+	CONSTRAINT [PK_grp_prm] PRIMARY KEY  CLUSTERED 
+	(
+		[grp_id],
+		[prm_id]
+	)  ON [PRIMARY] ,
+	CONSTRAINT [FK_grp_prm_grp] FOREIGN KEY 
+	(
+		[grp_id]
+	) REFERENCES [dbo].[grp] (
+		[grp_id]
+	),
+	CONSTRAINT [FK_grp_prm_prm] FOREIGN KEY 
+	(
+		[prm_id]
+	) REFERENCES [dbo].[prm] (
+		[prm_id]
+	)
+) ON [PRIMARY]
+END
+
+GO
+
+
 if not exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[usr]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
  BEGIN
 CREATE TABLE [dbo].[usr] (
@@ -176,7 +208,13 @@ CREATE TABLE [dbo].[usr] (
 	CONSTRAINT [PK_usr] PRIMARY KEY  CLUSTERED 
 	(
 		[usr_name]
-	)  ON [PRIMARY] 
+	)  ON [PRIMARY] ,
+	CONSTRAINT [FK_usr_grp] FOREIGN KEY 
+	(
+		[grp_id]
+	) REFERENCES [dbo].[grp] (
+		[grp_id]
+	)
 ) ON [PRIMARY]
 END
 
@@ -230,34 +268,6 @@ CREATE TABLE [dbo].[executor] (
 		[usr_name]
 	) REFERENCES [dbo].[usr] (
 		[usr_name]
-	)
-) ON [PRIMARY]
-END
-
-GO
-
-
-if not exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
- BEGIN
-CREATE TABLE [dbo].[grp_prm] (
-	[grp_id] [int] NOT NULL ,
-	[prm_id] [int] NOT NULL ,
-	CONSTRAINT [PK_grp_prm] PRIMARY KEY  CLUSTERED 
-	(
-		[grp_id],
-		[prm_id]
-	)  ON [PRIMARY] ,
-	CONSTRAINT [FK_grp_prm_grp] FOREIGN KEY 
-	(
-		[grp_id]
-	) REFERENCES [dbo].[grp] (
-		[grp_id]
-	),
-	CONSTRAINT [FK_grp_prm_prm] FOREIGN KEY 
-	(
-		[prm_id]
-	) REFERENCES [dbo].[prm] (
-		[prm_id]
 	)
 ) ON [PRIMARY]
 END
@@ -762,6 +772,48 @@ GO
 
 
 
+CREATE          PROCEDURE User_VerifyPermission
+(
+  @usr_name varchar(50),
+  @prm_id int
+)
+
+AS
+
+select count(*) as permitted from usr
+inner join grp on grp.grp_id = usr.grp_id
+inner join grp_prm on grp_prm.grp_id = grp.grp_id
+inner join prm on prm.prm_id = grp_prm.prm_id
+where usr.usr_name = @usr_name and prm.prm_id = @prm_id
+
+
+
+
+GO
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -864,7 +916,7 @@ GO
 SET ANSI_NULLS ON 
 GO
 
-SET QUOTED_IDENTIFIER ON 
+SET QUOTED_IDENTIFIER OFF 
 GO
 SET ANSI_NULLS OFF 
 GO
@@ -881,23 +933,29 @@ GO
 
 
 
+CREATE            PROCEDURE 
 
-
-CREATE          PROCEDURE User_VerifyPermission
+Application_Stop
 (
-  @usr_name varchar(50),
-  @prm_id int
+  @application_id uniqueidentifier
 )
 
 AS
 
-select count(*) as permitted from usr
-inner join grp on grp.grp_id = usr.grp_id
-inner join grp_prm on grp_prm.grp_id = grp.grp_id
-inner join prm on prm.prm_id = grp_prm.prm_id
-where usr.usr_name = @usr_name and prm.prm_id = @prm_id
+set nocount on
 
+create table #de_threads
+(
+  thread_id int,
+  executor_id uniqueidentifier,
+)
 
+insert into #de_threads
+select thread_id, executor_id from thread where state <> 4
+
+update thread set state = 4 where application_id = @application_id
+
+select * from #de_threads where executor_id <> null
 
 
 GO
@@ -1133,7 +1191,10 @@ GO
 
 
 
-CREATE                             PROCEDURE Thread_Schedule
+
+
+
+CREATE                                PROCEDURE Thread_Schedule
 (
   @executor_id uniqueidentifier -- optional (only supplied for non-dedicated scheduling)
 )
@@ -1172,6 +1233,9 @@ end else begin
     select application_id, thread_id, priority, @executor_id as executor_id from thread where internal_thread_id = @internal_thread_id
   end
 end
+
+
+
 
 
 

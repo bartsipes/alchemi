@@ -120,7 +120,7 @@
                 />
                 <File
                     RelPath = "ConsoleNode.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File

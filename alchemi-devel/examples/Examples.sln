@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial_OTF", "Tutorial_OT
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimeNumberGenerator", "PrimeNumberGenerator\PrimeNumberGenerator.csproj", "{1A92EB8A-4C50-4389-93F1-772EE4A077AF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -61,6 +65,10 @@ Global
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Debug.Build.0 = Debug|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.ActiveCfg = Release|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.Build.0 = Release|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Debug.ActiveCfg = Debug|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Debug.Build.0 = Debug|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Release.ActiveCfg = Release|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

@@ -36,7 +36,6 @@ namespace Alchemi.Examples.Mandelbrot
         {
             _map = new Bitmap(_width, _height);
 
-
             for (double x=0; x<_width; x++)
             {
                 for (double y=0; y<_height; y++)

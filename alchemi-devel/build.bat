@@ -1,5 +1,8 @@
 @echo off
 
+echo [deleting *.dat files]
+del *.dat /s /q
+
 echo [generating sql scripts]
 scptxfr /s horowitz /d AlchemiMaster /P secret /A /r /H /f sql\Alchemi_structure.sql
 

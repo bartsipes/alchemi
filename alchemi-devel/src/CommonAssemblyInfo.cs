@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -34,5 +35,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("0.7.0.*")]
-[assembly: AssemblyInformationalVersion("0.7.0")]
+[assembly: AssemblyVersion("0.8.0.*")]
+[assembly: AssemblyInformationalVersion("0.8.0")]

@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -67,14 +68,14 @@ namespace Alchemi.ManagerExec
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem mmAbout;
         
-        private GManager Manager = null;
+        private ManagerContainer _container = null;
         private Configuration Config;
 
         public ManagerMainForm()
         {
             InitializeComponent();
       
-            GManager.Log += new LogEventHandler(Log);
+            ManagerContainer.Log += new LogEventHandler(Log);
         }
 
         /// <summary>
@@ -532,7 +533,7 @@ namespace Alchemi.ManagerExec
                     Config.DbName
                     );
 
-                Manager = new GManager(
+                _container = new ManagerContainer(
                     remoteEP,
                     ownEP,
                     Config.Id,
@@ -543,13 +544,13 @@ namespace Alchemi.ManagerExec
 
                 if (Config.Intermediate)
                 {
-                    Config.Id = Manager.Id;
-                    Config.Dedicated = Manager.Dedicated;
+                    //Config.Id = Manager.Id;
+                    //Config.Dedicated = Manager.Dedicated;
                 }
             }
             catch (Exception ex)
             {
-                Manager = null;
+                _container = null;
                 string errorMsg = string.Format("Could not start Manager. Reason: {0}{1}", Environment.NewLine, ex.Message);
                 if (ex.InnerException != null)
                 {
@@ -584,10 +585,10 @@ namespace Alchemi.ManagerExec
     
         private void Stop()
         {
-            if (Manager != null)
+            if (_container != null)
             {
-                Manager.Stop();
-                Manager = null;
+                _container.Stop();
+                _container = null;
                 Log("Manager stopped.");
             }
         }
@@ -641,7 +642,7 @@ namespace Alchemi.ManagerExec
             txId.Text = Config.Id;
             cbIntermediate.Checked = Config.Intermediate;
       
-            bool started = Manager == null ? false : true;
+            bool started = _container == null ? false : true;
 
             btStart.Enabled = !started;
             btReset.Enabled = !started;
@@ -662,7 +663,7 @@ namespace Alchemi.ManagerExec
         private void btStop_Click(object sender, System.EventArgs e)
         {
             Stop();
-            Manager = null;
+            _container = null;
             RefreshUIControls();
         }
 

@@ -1,8 +1,9 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
   http://www.alchemi.net
+  
+  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -23,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 
 namespace Alchemi.Core.Manager
 {
@@ -30,15 +32,20 @@ namespace Alchemi.Core.Manager
     {
         public readonly SqlServer Database;
         public readonly string DataRootDirectory;
+        public ManualResetEvent DedicatedSchedulerActive;
+        public readonly IScheduler Scheduler;
+
         /*
         public readonly MApplicationCollection Applications;
         public readonly MExecutorCollection Executors;
         */
 
-        private InternalShared(SqlServer database, string dataRootDirectory/*, MApplicationCollection applications, MExecutorCollection executors*/)
+        private InternalShared(SqlServer database, string dataRootDirectory, IScheduler scheduler/*, MApplicationCollection applications, MExecutorCollection executors*/)
         {
             Database = database;
             DataRootDirectory = dataRootDirectory;
+            DedicatedSchedulerActive = new ManualResetEvent(true);
+            Scheduler = scheduler;
             /*
             Applications = applications;
             Executors = executors;
@@ -47,7 +54,7 @@ namespace Alchemi.Core.Manager
 
         public static InternalShared Instance;
         
-        public static InternalShared GetInstance(SqlServer database, string dataRootDirectory/*, MApplicationCollection applications, MExecutorCollection executors*/)
+        public static InternalShared GetInstance(SqlServer database, string dataRootDirectory, IScheduler scheduler/*, MApplicationCollection applications, MExecutorCollection executors*/)
         {
             if (Instance == null)
             {
@@ -55,7 +62,7 @@ namespace Alchemi.Core.Manager
                 {
                     Directory.CreateDirectory(dataRootDirectory);
                 }
-                Instance = new InternalShared(database, dataRootDirectory/*, applications, executors*/);
+                Instance = new InternalShared(database, dataRootDirectory, scheduler/*, applications, executors*/);
             }
             return Instance;
         }

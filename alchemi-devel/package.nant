@@ -2,7 +2,7 @@
 <project name="Alchemi" default="build">
 
   <target name="build">
-    <property name="project.version" value="0.7.0" />
+    <property name="project.version" value="0.8.0" />
 
     <property name="build.dir" value="${nant.project.basedir}/build/" />
     <property name="out.basename" value="${nant.project.name}-${project.version}"/>

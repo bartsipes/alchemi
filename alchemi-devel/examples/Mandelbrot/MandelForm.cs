@@ -376,6 +376,8 @@ namespace Alchemi.Examples.Mandelbrot
                 ga.Stop();
             }
 
+            startTime = DateTime.Now;
+
             for (int mapNumX=0; mapNumX<totalHorzMaps; mapNumX++)
             {
                 for (int mapNumY=0; mapNumY<totalVertMaps; mapNumY++)
@@ -395,8 +397,6 @@ namespace Alchemi.Examples.Mandelbrot
                     ga.Threads.Add(mandel);
                 }
             }
-
-            startTime = DateTime.Now;
 
             pb.Minimum = 0;
             pb.Value = 0;
