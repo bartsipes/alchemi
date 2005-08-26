@@ -116,7 +116,7 @@
                 />
                 <File
                     RelPath = "ConsoleNode.cs"
-                    SubType = "Component"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

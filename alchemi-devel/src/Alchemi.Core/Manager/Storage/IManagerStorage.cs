@@ -44,21 +44,22 @@ namespace Alchemi.Core.Manager.Storage
 	/// </summary>
 	public interface IManagerStorage
 	{
-		public object GetLiveApplicationList(SecurityCredentials sc);
+		/*
+		object GetLiveApplicationList(SecurityCredentials sc);
 
-		public object GetUserApplicationList(SecurityCredentials sc);
+		object GetUserApplicationList(SecurityCredentials sc);
 
-		public object GetThreadList(SecurityCredentials sc, string appId);
+		object GetThreadList(SecurityCredentials sc, string appId);
 
-		public object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
+		object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
-		public object GetUserList(SecurityCredentials sc);
+		object GetUserList(SecurityCredentials sc);
 
-		public object GetGroups(SecurityCredentials sc);
+		object GetGroups(SecurityCredentials sc);
 
-		public object UpdateUsers(SecurityCredentials sc, object updates);
+		object UpdateUsers(SecurityCredentials sc, object updates);
 
-		public object AddUsers(SecurityCredentials sc, object users);
+		object AddUsers(SecurityCredentials sc, object users);
 
 		/// <summary>
 		/// Get system summary information from the storage.
@@ -66,9 +67,9 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns>
 		/// An object with the summary information or null if the storage does not implement system summary.
 		/// </returns>
-		public object GetSystemSummary();
+		object GetSystemSummary();
 
-		public object GetExecutors(SecurityCredentials sc);
+		object GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
 		/// Check if a permisison is set.
@@ -76,13 +77,14 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="sc">Security credentials to use in the check.</param>
 		/// <param name="perm">Permission to check for</param>
 		/// <returns>true if the permission is set, false otherwise</returns>
-		public bool CheckPermission(SecurityCredentials sc, Permission perm);
+		bool CheckPermission(SecurityCredentials sc, Permission perm);
 
 		/// <summary>
 		/// Authenticate a user's security credentials
 		/// </summary>
 		/// <param name="sc">Security credentials to authenticate</param>
 		/// <returns>True if the authentication is successful, false otherwise.</returns>
-		public bool AuthenticateUser(SecurityCredentials sc);
+		bool AuthenticateUser(SecurityCredentials sc);
+		*/
 	}
 }
