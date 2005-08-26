@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -32,27 +35,45 @@ using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Threading;
 using Alchemi.Core;
+using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 namespace Alchemi.Core.Manager
 {
+	/// <summary>
+	/// Represents a thread on the manager node.
+	/// </summary>
     public class MThread
     {
         private string _AppId;
         private int _Id;
         
+		/// <summary>
+		/// Creates a new instance of an MThread
+		/// </summary>
+		/// <param name="appId">id of the application, this thread belongs to</param>
+		/// <param name="id">id of this thread</param>
         public MThread(string appId, int id)
         {
             _AppId = appId;
             _Id = id;
         }
         
+		/// <summary>
+		/// Creates a new instance of an MThread
+		/// </summary>
+		/// <param name="ti">ThreadIdentifier for this thread</param>
         public MThread(ThreadIdentifier ti)
         {
             _AppId = ti.ApplicationId;
             _Id = ti.ThreadId;
         }
 
+		/// <summary>
+		/// Initializes this thread.
+		/// </summary>
+		/// <param name="primary">specifies if this thread is a primary thread. A thread is primary if it is created and scheduled by the same manager</param>
         public void Init(bool primary)
         {
             if (primary)
@@ -67,6 +88,9 @@ namespace Alchemi.Core.Manager
             }
         }
         
+		/// <summary>
+		/// Gets or sets the byte array representing the serialized thread
+		/// </summary>
         public byte[] Value
         {
             set
@@ -79,6 +103,9 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets or sets the exception that occurred during the thread execution
+		/// </summary>
         public Exception FailedThreadException
         {
             set
@@ -98,6 +125,9 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets or sets the thread priority
+		/// </summary>
         public int Priority
         {
             set 
@@ -128,6 +158,9 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets or sets the thread state
+		/// </summary>
         public ThreadState State
         {
             get 
@@ -163,13 +196,20 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Resets this MThread so it can be rescheduled.
+		/// </summary>
         public void Reset()
         {
+			//the reset stored-procedure takes care that only threads that are not already aborted.
             InternalShared.Instance.Database.ExecSql(
                 string.Format("Thread_Reset '{0}', {1}", _AppId, _Id)
                 );
         }
 
+		/// <summary>
+		/// Gets or sets the id of the executor
+		/// </summary>
         public string CurrentExecutorId
         {
             set 

@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -22,18 +25,17 @@
 */
 #endregion
 
-using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Alchemi")]
 [assembly: AssemblyDescription(".NET Grid Computing Framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("http://www.alchemi.net")]
 [assembly: AssemblyProduct("Alchemi")]
-[assembly: AssemblyCopyright("Copyright (c) 2002-2004 Akshay Luther")]
+[assembly: AssemblyCopyright("Copyright (c) 2002-2004 Akshay Luther & 2003-2005 Rajkumar Buyya, GRIDS Lab, The University of Melbourne, Australia.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("0.8.0.*")]
-[assembly: AssemblyInformationalVersion("0.8.0")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyInformationalVersion("1.0.0")]
+

@@ -89,17 +89,31 @@
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
                 />
-                <Reference
-                    Name = "Alchemi.Core"
-                    AssemblyName = "Alchemi.Core"
-                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
-                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.cs"
+                    RelPath = "Alchemi_data.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Alchemi_database.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Alchemi_structure.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "CommonAssemblyInfo.cs"
+                    Link = "..\..\CommonAssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration.cs"
+                    Link = "..\..\Alchemi.Core\Manager\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

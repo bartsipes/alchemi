@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -23,16 +26,24 @@
 #endregion
 
 using System;
-using System.Net;
+using System.ComponentModel;
+using System.Net.Sockets;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
-using System.Runtime.Remoting.Lifetime;
+using Alchemi.Core.Owner;
 
 namespace Alchemi.Core
 {
-    public abstract class GNode : System.ComponentModel.Component
+	/// <summary>
+	/// Represents a grid node
+	/// </summary>
+    public abstract class GNode : Component
     {
+
+		// Create a logger for use in this class
+		private static readonly Logger logger = new Logger();
+
         //----------------------------------------------------------------------------------------------- 
         // member variables
         //----------------------------------------------------------------------------------------------- 
@@ -51,26 +62,41 @@ namespace Alchemi.Core
         // properties
         //----------------------------------------------------------------------------------------------- 
     
+		/// <summary>
+		/// Gets the manager
+		/// </summary>
         public IManager Manager
         {
             get { return _Manager; }
         }
     
+		/// <summary>
+		/// Gets the manager end point
+		/// </summary>
         public RemoteEndPoint ManagerEP
         {
             get { return _ManagerEP; }
         }
 
+		/// <summary>
+		/// Gets the node end point
+		/// </summary>
         public OwnEndPoint OwnEP
         {
             get { return _OwnEP; }
         }
 
+		/// <summary>
+		/// Gets the security credentials
+		/// </summary>
         public SecurityCredentials Credentials
         {
             get { return _Credentials; }
         }
 
+		/// <summary>
+		/// Gets or sets the GConnection
+		/// </summary>
         public GConnection Connection
         {
             get
@@ -93,8 +119,17 @@ namespace Alchemi.Core
         // constructors
         //----------------------------------------------------------------------------------------------- 
 
+		/// <summary>
+		/// Creates a new instance of the GConnection class
+		/// </summary>
         public GNode() {}
         
+		/// <summary>
+		/// Creates a new instance of the GConnection class
+		/// </summary>
+		/// <param name="managerEP">manager end point</param>
+		/// <param name="ownEP">own end point</param>
+		/// <param name="credentials"></param>
         public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials)
         {
             _OwnEP = ownEP;
@@ -103,6 +138,10 @@ namespace Alchemi.Core
             Init();
         }
 
+		/// <summary>
+		/// Creates a new instance of the GConnection class
+		/// </summary>
+		/// <param name="connection"></param>
         public GNode(GConnection connection)
         {
             Connection = connection;
@@ -113,6 +152,9 @@ namespace Alchemi.Core
         // public methods
         //----------------------------------------------------------------------------------------------- 
 
+		/// <summary>
+		/// Initialised the remoted "node"
+		/// </summary>
         protected void Init()
         {
             if (_Initted)
@@ -133,6 +175,11 @@ namespace Alchemi.Core
         
         //----------------------------------------------------------------------------------------------- 
         
+		/// <summary>
+		/// Gets the reference to the remote node
+		/// </summary>
+		/// <param name="remoteEP">end point of the remote node</param>
+		/// <returns>Node reference</returns>
         public static GNode GetRemoteRef(RemoteEndPoint remoteEP)
         {
             switch (remoteEP.RemotingMechanism)
@@ -147,6 +194,11 @@ namespace Alchemi.Core
         
         //-----------------------------------------------------------------------------------------------          
         
+		/// <summary>
+		/// Gets the reference to a remote manager
+		/// </summary>
+		/// <param name="remoteEP">end point of the remote manager</param>
+		/// <returns>Manager reference</returns>
         public static IManager GetRemoteManagerRef(RemoteEndPoint remoteEP)
         {
             IManager manager;
@@ -166,6 +218,10 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------          
         
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
         public override object InitializeLifetimeService()
         {
             return null;
@@ -175,6 +231,12 @@ namespace Alchemi.Core
         // private methods
         //----------------------------------------------------------------------------------------------- 
 
+		/*
+		 * RemoteSelf:
+		 * - if the own end point is valid: 
+		 *	- register a new channel, if not already done.
+		 *	- if successful, then marshal this GNode object over the remoting channel
+		 */ 
         private void RemoteSelf()
         {
             if (_OwnEP != null)
@@ -187,7 +249,7 @@ namespace Alchemi.Core
                             try
                             {
                                 _Channel = new TcpChannel(_OwnEP.Port);
-                                ChannelServices.RegisterChannel(_Channel);
+                            	ChannelServices.RegisterChannel(_Channel);
                                 _ChannelRegistered = true;
                             }
                             catch (Exception e)
@@ -195,7 +257,7 @@ namespace Alchemi.Core
                                 if (
                                     object.ReferenceEquals(e.GetType(), typeof(System.Runtime.Remoting.RemotingException)) /* assuming: "The channel tcp is already registered." */
                                     |
-                                    object.ReferenceEquals(e.GetType(), typeof(System.Net.Sockets.SocketException)) /* assuming: "Only one usage of each socket address (protocol/network address/port) is normally permitted" */
+                                    object.ReferenceEquals(e.GetType(), typeof(SocketException)) /* assuming: "Only one usage of each socket address (protocol/network address/port) is normally permitted" */
                                     )
                                 {
                                     _ChannelRegistered = true;
@@ -212,7 +274,7 @@ namespace Alchemi.Core
                         {
                             try
                             {
-                                RemotingServices.Marshal(this, RemoteObjPrefix);
+                            	RemotingServices.Marshal(this, RemoteObjPrefix);
                             }
                             catch (Exception e)
                             {
@@ -237,6 +299,9 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------          
 
+		/// <summary>
+		/// Unregister channel and disconnect remoting
+		/// </summary>
         protected void UnRemoteSelf()
         {
             if (_OwnEP != null)
@@ -252,6 +317,7 @@ namespace Alchemi.Core
                         RemotingServices.Disconnect(this);
                         break;
                 }
+				logger.Debug("Unremoting self...done");
             }
         }
     }

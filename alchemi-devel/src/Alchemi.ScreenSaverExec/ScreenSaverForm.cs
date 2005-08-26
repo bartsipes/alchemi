@@ -1,8 +1,11 @@
 #region Alchemi copyright notice
 /*
   Alchemi [.NET Grid Computing Framework]
-  Copyright (c) 2002-2004 Akshay Luther
-  http://www.alchemi.net
+  http://www.alchemi.net 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify

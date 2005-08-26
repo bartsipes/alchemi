@@ -1,15 +1,12 @@
 using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Web;
-using System.Web.SessionState;
 
 namespace CrossPlatformManager 
 {
 	/// <summary>
 	/// Summary description for Global.
 	/// </summary>
-	public class Global : System.Web.HttpApplication
+	public class Global : HttpApplication
 	{
 		public Global()
 		{

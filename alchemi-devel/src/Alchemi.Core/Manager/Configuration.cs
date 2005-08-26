@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -25,40 +28,93 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
-using Alchemi.Core;
 
 namespace Alchemi.Core.Manager
 {
+	/// <summary>
+	/// This class stores the configuration information for the Alchemi Manager
+	/// This includes information such as database details, own port,
+	/// and in case of a Heirarchical system structure, 
+	/// the manager host and port to connect to, whether this node(which is both a manager and executor if in a hierarchy) is dedicated or not.
+	/// </summary>
     public class Configuration
     {
         [NonSerialized] private string ConfigFile = "";
         private const string ConfigFileName = "Alchemi.Manager.config.xml";
-
-        public string DbServer = "xxx";
+		
+		/// <summary>
+		/// Database server host name
+		/// </summary>
+        public string DbServer = "localhost";
+		/// <summary>
+		/// Database server username
+		/// </summary>
         public string DbUsername = "sa";
-        public string DbPassword = "xxx";
+		/// <summary>
+		/// Database password
+		/// </summary>
+        public string DbPassword = "xxxx";
+		/// <summary>
+		/// Database name
+		/// </summary>
         public string DbName = "Alchemi";
+		/// <summary>
+		/// Manager id (valid only if the Manager is also an Executor)
+		/// </summary>
         public string Id = "";
+		/// <summary>
+		/// Host name of the Manager to connect to. (valid only if the Manager is also an Executor)
+		/// </summary>
         public string ManagerHost = "";
+		/// <summary>
+		/// Port of the Manager to connect to. (valid only if the Manager is also an Executor)
+		/// </summary>
         public int ManagerPort = 0;
+		/// <summary>
+		/// Port on which the Manager sends/recieves messages to/from the Executors.
+		/// </summary>
         public int OwnPort = 9000;
+		/// <summary>
+		/// Specifies if the connection parameters have been verified. 
+		/// The parameters are verified if the Manager has been able to connect sucessfully using the current parameter values.
+		/// </summary>
         public bool ConnectVerified = false;
+		/// <summary>
+		/// 
+		/// </summary>
         public bool InUse = false;
+		/// <summary>
+		/// Specifies if this Manager is an "intermediate" Manager...ie. if it is performing the role of an Executor also.
+		/// </summary>
         public bool Intermediate = false;
+		/// <summary>
+		/// Specifies if the Manager is Dedicated.(valid only if the Manager is also an Executor)
+		/// </summary>
         public bool Dedicated = false;
 
         //-----------------------------------------------------------------------------------------------
-
+		
+		/// <summary>
+		/// Returns the configuration read from the xml file: "Alchemi.Manager.config.xml"
+		/// </summary>
+		/// <returns>Configuration object</returns>
         public static Configuration GetConfiguration()
         {
-            return DeSlz(ConfigFileName);
+			return DeSlz(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName));
         }
 
+		/// <summary>
+		/// Default constructor. ConfigFileName is set to "Alchemi.Manager.config.xml"
+		/// </summary>
         public Configuration()
         {
-            ConfigFile = ConfigFileName;
-        }
+			ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName);
+		}
 
+		/// <summary>
+		/// This Constructor for the Configuration class sets the ConfigFileName to the given location and "Alchemi.Manager.Congif.xml"
+		/// </summary>
+		/// <param name="location">Location of the config file</param>
         public Configuration(string location)
         {
             ConfigFile = location + ConfigFileName;
@@ -66,7 +122,9 @@ namespace Alchemi.Core.Manager
 
         //-----------------------------------------------------------------------------------------------    
 
-        // serialises configuration
+        /// <summary>
+        ///  Serialises and saves the configuration to an xml file
+        /// </summary>
         public void Slz()
         {
             XmlSerializer xs = new XmlSerializer(typeof(Configuration));
@@ -77,9 +135,11 @@ namespace Alchemi.Core.Manager
 
         //-----------------------------------------------------------------------------------------------
 
-        //
-        // deserialises configuration
-        //
+        /// <summary>
+        /// Deserialises and reads the configuration from the given xml file
+        /// </summary>
+        /// <param name="file">Name of the config file</param>
+        /// <returns>Configuration object</returns>
         private static Configuration DeSlz(string file)
         {
             XmlSerializer xs = new XmlSerializer(typeof(Configuration));

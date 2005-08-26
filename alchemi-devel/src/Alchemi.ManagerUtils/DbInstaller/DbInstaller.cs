@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -23,34 +26,33 @@
 #endregion
 
 using System;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
-using System.Windows.Forms;
-using System.Data;
 using System.Diagnostics;
-using System.Text;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Windows.Forms;
 using Alchemi.Core.Manager;
 
 namespace Alchemi.ManagerUtils.DbInstaller
 {
-    public class DbInstaller : System.Windows.Forms.Form
+    public class DbInstaller : Form
     {
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txServer;
-        private System.Windows.Forms.TextBox txAdminPwd;
-        private System.Windows.Forms.Button btInstall;
-        private System.Windows.Forms.Button btFinish;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txUsername;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox txLog;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button btSkip;
-        private System.ComponentModel.Container components = null;
+        private Label label1;
+        private Label label2;
+        private GroupBox groupBox1;
+        private TextBox txServer;
+        private TextBox txAdminPwd;
+        private Button btInstall;
+        private Button btFinish;
+        private Label label3;
+        private TextBox txUsername;
+        private GroupBox groupBox2;
+        private TextBox txLog;
+        private Label label4;
+        private PictureBox pictureBox1;
+        private Button btSkip;
+        private Container components = null;
         private string InstallLocation = "";
 
         public DbInstaller(string installLocation)
@@ -58,13 +60,23 @@ namespace Alchemi.ManagerUtils.DbInstaller
             InitializeComponent();
 
             btFinish.Enabled = false;
-            txServer.Text = System.Net.Dns.GetHostName();
+            txServer.Text = Dns.GetHostName();
             if (installLocation == "")
             {
-                InstallLocation = Environment.CurrentDirectory + "\\";
+                InstallLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
             }
             else
             {
+				//remove invalid characters from the path
+				char[] invalidchars = Path.InvalidPathChars;
+				foreach (char c in invalidchars)
+				{
+					int index = installLocation.IndexOf(c);
+					if (index>=0)
+					{
+						installLocation = installLocation.Remove(index,1);
+					}
+				}
                 InstallLocation = installLocation;
             }
         }
@@ -292,9 +304,9 @@ namespace Alchemi.ManagerUtils.DbInstaller
             Application.Run(new DbInstaller(installLocation));
         }
 
-        private void btInstall_Click(object sender, System.EventArgs e)
+        private void btInstall_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
+        	Process process = new Process();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
@@ -306,8 +318,9 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText("[ Creating Database ] ... ");
             try
             {
-                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -i \"{2}Alchemi_database.sql\" -n", txServer.Text, txAdminPwd.Text, InstallLocation);
-                process.Start();
+				string scriptPath = Path.Combine(InstallLocation,"Alchemi_database.sql");
+                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -i \"{2}\" -n", txServer.Text, txAdminPwd.Text, scriptPath);
+				process.Start();
                 process.WaitForExit();
                 outputText = process.StandardOutput.ReadToEnd();
             }
@@ -341,7 +354,8 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText("[ Creating Database Structure ] ... ");
             try
             {
-                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -d Alchemi -i \"{2}Alchemi_structure.sql\" -n", txServer.Text, txAdminPwd.Text, InstallLocation);
+				string scriptPath = Path.Combine(InstallLocation,"Alchemi_structure.sql");
+                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -d Alchemi -i \"{2}\" -n", txServer.Text, txAdminPwd.Text, scriptPath);
                 process.Start();
                 process.WaitForExit();
                 outputText = process.StandardOutput.ReadToEnd();
@@ -369,7 +383,8 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText("[ Inserting Default Data ] ... ");
             try
             {
-                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -d Alchemi -i \"{2}Alchemi_data.sql\" -n", txServer.Text, txAdminPwd.Text, InstallLocation);
+				string scriptPath = Path.Combine(InstallLocation,"Alchemi_data.sql");
+                process.StartInfo.Arguments = string.Format("-S {0} -U sa -P {1} -d Alchemi -i \"{2}\" -n", txServer.Text, txAdminPwd.Text, scriptPath);
                 process.Start();
                 process.WaitForExit();
                 outputText = process.StandardOutput.ReadToEnd();
@@ -398,7 +413,7 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText("[ Creating Configuration File ] ... ");
             try
             {
-                Configuration config = new Configuration(InstallLocation);
+            	Configuration config = new Configuration(InstallLocation);
                 config.DbServer = txServer.Text;
                 config.DbUsername = "sa";
                 config.DbPassword = txAdminPwd.Text;
@@ -424,12 +439,12 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText(s + Environment.NewLine);
         }
 
-        private void btFinish_Click(object sender, System.EventArgs e)
+        private void btFinish_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btSkip_Click(object sender, System.EventArgs e)
+        private void btSkip_Click(object sender, EventArgs e)
         {
             Close();
         }

@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -24,21 +27,28 @@
 
 using System;
 using System.Xml;
+using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
 namespace Alchemi.Core
 {
+	//TODO: include advanced functions here, like reading the xml and giving a list of inputs, outputs and tasks that the job will do.
+
     /// <summary>
     /// Provides helper methods for working with tasks and jobs on a Manager. This class is used by the X-Platform Manager
     /// and should be used by any client tools providing task/job support.
     /// </summary>
     public class CrossPlatformHelper
     {
-        /// <summary>
-        /// Creates an empty task on a Manager and returns its Id.
-        /// </summary>
-        /// <param name="manager"></param>
-        /// <returns></returns>
+		// Create a logger for use in this class
+		private static readonly Logger logger = new Logger();
+
+		/// <summary>
+		/// Creates an empty task on a Manager and returns its Id.
+		/// </summary>
+		/// <param name="manager"></param>
+		/// <param name="sc">Security Credentials</param>
+		/// <returns>application id</returns>
         public static string CreateTask(IManager manager, SecurityCredentials sc)
         {
             return manager.Owner_CreateApplication(sc);
@@ -50,8 +60,9 @@ namespace Alchemi.Core
         /// Creates a task on the Manager from the provided XML task representation and returns its Id. 
         /// </summary>
         /// <param name="manager"></param>
-        /// <param name="taskXml"></param>
-        /// <returns></returns>
+		/// <param name="sc">Security Credentials</param>
+		/// <param name="taskXml"></param>
+        /// <returns>application id</returns>
         public static string CreateTask(IManager manager, SecurityCredentials sc, string taskXml)
         {
             // TODO: validate against schema
@@ -59,13 +70,15 @@ namespace Alchemi.Core
 
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(taskXml);
-            
+            logger.Debug("Loaded taskXML:" + taskXml);
+			
             FileDependencyCollection manifest = new FileDependencyCollection();
             foreach (XmlNode manifestFile in doc.SelectNodes("task/manifest/embedded_file"))
             {
-                EmbeddedFileDependency dep = new EmbeddedFileDependency(manifestFile.Attributes["name"].Value);
+            	EmbeddedFileDependency dep = new EmbeddedFileDependency(manifestFile.Attributes["name"].Value);
                 dep.Base64EncodedContents = manifestFile.InnerText;
                 manifest.Add(dep);
+				logger.Debug("Added dependency to manifest: "+dep.FileName);
             }
             manager.Owner_SetApplicationManifest(sc, taskId, manifest);
 
@@ -76,6 +89,7 @@ namespace Alchemi.Core
                 
                 // TODO: allow setting of priority in xml file
                 AddJob(manager, sc, taskId, jobId, 0, jobXml.OuterXml);
+				logger.Debug("Added job to manager: "+jobId);
             }
 
             return taskId;
@@ -83,6 +97,15 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------            
 
+		/// <summary>
+		/// Adds a job to the manager
+		/// </summary>
+		/// <param name="manager"></param>
+		/// <param name="sc">security credentials used to perform this operation</param>
+		/// <param name="taskId"></param>
+		/// <param name="jobId"></param>
+		/// <param name="priority"></param>
+		/// <param name="jobXml"></param>
         public static void AddJob(IManager manager, SecurityCredentials sc, string taskId, int jobId, int priority, string jobXml)
         {
             manager.Owner_SetThread(
@@ -94,6 +117,14 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------            
 
+		/// <summary>
+		/// Gets the status of the given job
+		/// </summary>
+		/// <param name="manager"></param>
+		/// <param name="sc">security credentials used to perform this operation</param>
+		/// <param name="taskId"></param>
+		/// <param name="jobId"></param>
+		/// <returns>job status</returns>
         public static int GetJobState(IManager manager, SecurityCredentials sc, string taskId, int jobId)
         {
             return Convert.ToInt32(manager.Owner_GetThreadState(sc, new ThreadIdentifier(taskId, jobId)));
@@ -101,6 +132,13 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------            
 
+		/// <summary>
+		/// Gets the finished jobs as an xml string
+		/// </summary>
+		/// <param name="manager"></param>
+		/// <param name="sc">security credentials used to perform this operation</param>
+		/// <param name="taskId"></param>
+		/// <returns>XML string representing the job</returns>
         public static string GetFinishedJobs(IManager manager, SecurityCredentials sc, string taskId)
         {
             byte[][] FinishedThreads = manager.Owner_GetFinishedThreads(sc, taskId);
@@ -113,6 +151,7 @@ namespace Alchemi.Core
             {
                 GJob job = (GJob) Utils.DeserializeFromByteArray(FinishedThreads[i]);
                 xsw.Writer.WriteRaw("\n" + CrossPlatformHelper.XmlFromJob(job) + "\n");
+				logger.Debug("Writing thread:"+job.Id);
             }
             xsw.Writer.WriteEndElement(); // close job
       
@@ -121,6 +160,7 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------
 
+		//Gets the GJob object from the given xml
         private static GJob JobFromXml(int jobId, string jobXml)
         {
             // TODO: validate against schema
@@ -131,26 +171,32 @@ namespace Alchemi.Core
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(jobXml);
 
+			logger.Debug("Getting JobFromXML...");
             foreach (XmlNode inputFile in doc.SelectNodes("job/input/embedded_file"))
             {
                 EmbeddedFileDependency dep = new EmbeddedFileDependency(inputFile.Attributes["name"].Value);
                 dep.Base64EncodedContents = inputFile.InnerText;
-                job.InputFiles.Add(dep);
+                job.InputFiles.Add(dep);			
+				logger.Debug("adding input filedep:"+dep.FileName);
             }
 
             job.RunCommand = doc.SelectSingleNode("job/work").Attributes["run_command"].Value;
+
+			logger.Debug("Job run command="+job.RunCommand);
 
             foreach (XmlNode outputFile in doc.SelectNodes("job/output/embedded_file"))
             {
                 EmbeddedFileDependency dep = new EmbeddedFileDependency(outputFile.Attributes["name"].Value);
                 job.OutputFiles.Add(dep);
+				logger.Debug("adding output filedep:"+dep.FileName);
             }
-            
-            return job;
+
+			return job;
         }
 
         //-----------------------------------------------------------------------------------------------    
 
+		//Gets the XML representing a job
         private static string XmlFromJob(GJob job)
         {
             XmlStringWriter xsw = new XmlStringWriter();
@@ -158,17 +204,17 @@ namespace Alchemi.Core
             xsw.Writer.WriteStartElement("job");
             xsw.Writer.WriteAttributeString("id", job.Id.ToString());
             xsw.Writer.WriteStartElement("input");
-            xsw.Writer.WriteEndElement(); // close input
+            xsw.Writer.WriteFullEndElement(); // close input
             xsw.Writer.WriteStartElement("work");
-            xsw.Writer.WriteEndElement(); // close work
+            xsw.Writer.WriteFullEndElement(); // close work
             xsw.Writer.WriteStartElement("output");
-      
+
             foreach (EmbeddedFileDependency fileDep in job.OutputFiles)
             {
                 xsw.Writer.WriteStartElement("embedded_file");
                 xsw.Writer.WriteAttributeString("name", fileDep.FileName);
                 xsw.Writer.WriteString(fileDep.Base64EncodedContents);
-                xsw.Writer.WriteEndElement(); // close file
+                xsw.Writer.WriteFullEndElement(); // close embedded_file element
             }
       
             xsw.Writer.WriteEndElement(); // close output

@@ -15,32 +15,20 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0B7FA6DB493B40EEA3C02A7F9843A288"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_17C52F1E11504CF9B5E93D5FDD0FC791"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_41A71901112F4F0E9C23E7A11F3EBEF2"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_64B972DA441141EF8B844577ADFA98C0"
+        "OwnerKey" = "8:_91DDF41AEA184ED796C3725901C42B47"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5CF9ECD7639D4BFFB319BE4479DA1CFE"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7E7B4F89BFF843899D5EFA1A47565A93"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_64B972DA441141EF8B844577ADFA98C0"
+        "OwnerKey" = "8:_F0011874943E5B3947698C3AD1C55181"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,38 +39,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9EF349DE23FD4BE2986B5A3A2C38159B"
+        "MsmKey" = "8:_91DDF41AEA184ED796C3725901C42B47"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BCA6EE975E9343A5990D4FDBD3E7BF86"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E0405EF702053393880B604306523D1A"
-        "OwnerKey" = "8:_BCA6EE975E9343A5990D4FDBD3E7BF86"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E1E90C54541E439BBF945058081AB831"
-        "OwnerKey" = "8:_E0405EF702053393880B604306523D1A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E1E90C54541E439BBF945058081AB831"
-        "OwnerKey" = "8:_BCA6EE975E9343A5990D4FDBD3E7BF86"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_E54D8F2D449E4512806114FDB1B5769E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F0011874943E5B3947698C3AD1C55181"
+        "OwnerKey" = "8:_91DDF41AEA184ED796C3725901C42B47"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -150,26 +120,6 @@
         }
         "File"
         {
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_0B7FA6DB493B40EEA3C02A7F9843A288"
-            {
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\CrossPlatformManager.asmx"
-            "TargetName" = "8:CrossPlatformManager.asmx"
-            "Tag" = "8:"
-            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_17C52F1E11504CF9B5E93D5FDD0FC791"
             {
             "SourcePath" = "8:..\\..\\..\\graphics\\XPManagerSetup_banner.bmp"
@@ -187,66 +137,6 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_41A71901112F4F0E9C23E7A11F3EBEF2"
-            {
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\Web.config"
-            "TargetName" = "8:Web.config"
-            "Tag" = "8:"
-            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_5CF9ECD7639D4BFFB319BE4479DA1CFE"
-            {
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\Global.asax.resx"
-            "TargetName" = "8:Global.asax.resx"
-            "Tag" = "8:"
-            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_7E7B4F89BFF843899D5EFA1A47565A93"
-            {
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\Global.asax"
-            "TargetName" = "8:Global.asax"
-            "Tag" = "8:"
-            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -270,88 +160,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{A582A373-4685-4296-BEFE-614B80A702C3}:_9EF349DE23FD4BE2986B5A3A2C38159B"
-            {
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\CrossPlatformManager.asmx.resx"
-            "TargetName" = "8:CrossPlatformManager.asmx.resx"
-            "Tag" = "8:"
-            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_BCA6EE975E9343A5990D4FDBD3E7BF86"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CrossPlatformManager, Version=0.0.0.0, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_BCA6EE975E9343A5990D4FDBD3E7BF86"
-                    {
-                    "Name" = "8:CrossPlatformManager.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\Alchemi.CrossPlatformManager\\bin\\CrossPlatformManager.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_151FFB7228BD4B52B12C5B86781671A5"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_E0405EF702053393880B604306523D1A"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=0.0.0.0, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_E0405EF702053393880B604306523D1A"
-                    {
-                    "Name" = "8:Alchemi.Core.DLL"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Alchemi.Core.DLL"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_151FFB7228BD4B52B12C5B86781671A5"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{A582A373-4685-4296-BEFE-614B80A702C3}:_E54D8F2D449E4512806114FDB1B5769E"
             {
             "SourcePath" = "8:..\\..\\..\\license.rtf"
@@ -370,6 +178,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_F0011874943E5B3947698C3AD1C55181"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=0.8.2.0, Culture=neutral"
+                "ScatterAssemblies"
+                {
+                    "_F0011874943E5B3947698C3AD1C55181"
+                    {
+                    "Name" = "8:Alchemi.Core.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Alchemi.Core.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_151FFB7228BD4B52B12C5B86781671A5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -459,12 +298,12 @@
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "ProductVersion" = "8:1.7.0"
-        "Manufacturer" = "8:Akshay Luther"
+        "Manufacturer" = "8:Krishna Nadiminti"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Alchemi Cross Platform Manager Setup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Akshay Luther"
+        "ARPCONTACT" = "8:Krishna Nadiminti"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -947,7 +786,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_E1E90C54541E439BBF945058081AB831"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_64B972DA441141EF8B844577ADFA98C0"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -964,6 +803,62 @@
         }
         "ProjectOutput"
         {
+            "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_91DDF41AEA184ED796C3725901C42B47"
+            {
+            "SourcePath" = "8:C:\\Documents and Settings\\krishna\\VSWebCache\\KRISH\\Alchemi.CrossPlatformManager\\obj\\Debug\\Alchemi.CrossPlatformManager.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{B3EDA024-7864-4335-9817-67A78064C360}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_929B68FEF2A14C5CA34FBC58D00D8C82"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_251923BEC59D4444A11EFF2C2D9805DA"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{B3EDA024-7864-4335-9817-67A78064C360}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
         }
     }
 }

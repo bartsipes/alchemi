@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -26,12 +29,26 @@ using System;
 
 namespace Alchemi.Core
 {
+	/// <summary>
+	/// Represents the credentials required to authenticate to a node
+	/// </summary>
 	[Serializable]
     public class SecurityCredentials
 	{
+		/// <summary>
+		/// Username
+		/// </summary>
 		public readonly string Username;
+		/// <summary>
+		/// Password
+		/// </summary>
         public string Password;
         
+		/// <summary>
+		/// Creates an instance of the SecurityCredentials class
+		/// </summary>
+		/// <param name="username"></param>
+		/// <param name="password"></param>
         public SecurityCredentials(string username, string password)
         {
             Username = username;

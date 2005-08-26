@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\akshay\dev\Alchemi\bin\;C:\akshay\dev\Alchemi\src\Core\bin\Debug\;C:\akshay\dev\Alchemi\lib\;c:\program files\dundas software\charting\wincontrol\bin\;C:\akshay\dev\Alchemi\project\bin\" >
+            <Settings ReferencePath = "D:\Downloads\Alchemi v.1.0 beta\Alchemi-1.0.beta-src\lib\;D:\Projects\Personal\Alchemi\Latest\lib\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

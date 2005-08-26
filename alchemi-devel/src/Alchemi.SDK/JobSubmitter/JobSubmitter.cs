@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -41,6 +44,8 @@ namespace Alchemi.DevTools
         [STAThread]
         static void Main(string[] args)
         {
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(DefaultErrorHandler);
+
             Console.WriteLine("\nAlchemi [.NET Grid Computing Framework]");
             Console.WriteLine("http://www.alchemi.net\n");
 
@@ -109,7 +114,14 @@ namespace Alchemi.DevTools
                         case "submittask": // taskXmlFile
                             string task = EmbedFiles(Utils.ReadStringFromFile(cmd[1]));
                             appId = CrossPlatformHelper.CreateTask(manager, sc, task);
-                            WriteLine("Task submitted (alias = {1}).", appId, aliases.NewAlias(appId));
+							string newAlias = aliases.NewAlias(appId);
+							try
+							{
+								WriteLine("Task submitted (alias = {1}).", appId, aliases.NewAlias(appId));
+							}
+							catch
+							{
+							}
                             break;
 
                         case "gfj":
@@ -123,22 +135,26 @@ namespace Alchemi.DevTools
                             fin.LoadXml(taskXml);
 
                             WriteLine("Got {0} job(s).", fin.SelectNodes("task/job").Count);
+							Console.WriteLine("Job XML: \n" + taskXml);
 
                             foreach (XmlNode outputFileNode in fin.SelectNodes("task/job/output/embedded_file"))
                             {
                                 //string jobDir = string.Format("{0}\\job_{1}", taskDir, outputFileNode.ParentNode.ParentNode.Attributes["id"].Value);
                                 string jobDir = taskDir;
-                                Directory.CreateDirectory(jobDir);
+								if (!Directory.Exists(jobDir))
+								{
+									Directory.CreateDirectory(jobDir);
+								}
 
-                                if (outputFileNode.InnerText != "")
-                                {
+                                //if (outputFileNode.InnerText != "")
+                                //{
                                     string filePath = string.Format("{0}\\{1}", jobDir, outputFileNode.Attributes["name"].Value);
                                     Utils.WriteBase64EncodedToFile(
                                         filePath,
                                         outputFileNode.InnerText
                                         );
                                     WriteLine("Wrote file {0} for job {1}.", filePath, outputFileNode.ParentNode.ParentNode.Attributes["id"].Value);
-                                }
+                               // }
                             }
                             break;
                         
@@ -258,7 +274,12 @@ namespace Alchemi.DevTools
 
         }
 
-        private static string EmbedFiles(string xml)
+    	private static void DefaultErrorHandler(object sender, UnhandledExceptionEventArgs e)
+    	{
+    		Console.Error.WriteLine("An unexpected error occured. It may be possible to continue after the error." + Environment.NewLine + e.ExceptionObject.ToString());
+    	}
+
+    	private static string EmbedFiles(string xml)
         {
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(xml);

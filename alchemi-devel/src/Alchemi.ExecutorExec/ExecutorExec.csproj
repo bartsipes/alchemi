@@ -90,16 +90,45 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll"
                 />
                 <Reference
-                    Name = "Alchemi.Core"
-                    AssemblyName = "Alchemi.Core"
-                    HintPath = "..\..\bin\Alchemi.Core.dll"
+                    Name = "System.ServiceProcess"
+                    AssemblyName = "System.ServiceProcess"
+                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.ServiceProcess.dll"
+                />
+                <Reference
+                    Name = "Updater"
+                    Project = "{0B88ED59-656E-4982-B402-A3448A81D84B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\..\lib\log4net.dll"
+                />
+                <Reference
+                    Name = "Core"
+                    Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
-                    RelPath = "AssemblyInfo.cs"
+                    RelPath = "App.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "AppStart.config"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "CommonAssemblyInfo.cs"
+                    Link = "..\CommonAssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorExecStart.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

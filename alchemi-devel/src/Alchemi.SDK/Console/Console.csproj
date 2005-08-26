@@ -7,7 +7,7 @@
     >
         <Build>
             <Settings
-                ApplicationIcon = "App.ico"
+                ApplicationIcon = "..\..\..\graphics\Manager (multiformat).ico"
                 AssemblyKeyContainerName = ""
                 AssemblyName = "Alchemi.Console"
                 AssemblyOriginatorKeyFile = ""
@@ -95,28 +95,19 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Design.dll"
                 />
                 <Reference
-                    Name = "Alchemi.Core"
-                    AssemblyName = "Alchemi.Core"
-                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
-                />
-                <Reference
-                    Name = "DundasWinChart"
-                    AssemblyName = "DundasWinChart"
-                    HintPath = "..\..\..\lib\DundasWinChart.dll"
-                />
-                <Reference
                     Name = "scpl"
                     AssemblyName = "scpl"
                     HintPath = "..\..\..\lib\scpl.dll"
+                />
+                <Reference
+                    Name = "Core"
+                    Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
         <Files>
             <Include>
-                <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
                 <File
                     RelPath = "CommonAssemblyInfo.cs"
                     Link = "..\..\CommonAssemblyInfo.cs"
@@ -127,10 +118,6 @@
                     RelPath = "ConsoleNode.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "licenses.licx"
-                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "MainForm.cs"

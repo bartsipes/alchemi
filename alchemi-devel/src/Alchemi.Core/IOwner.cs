@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -24,8 +27,10 @@
 
 namespace Alchemi.Core
 {
-  public interface IOwner
-  {
-    
-  }
+	/// <summary>
+	/// Defines the functions / services that should be provided by an "owner" node. (i.e the node which creates/starts an application).
+	/// </summary>
+	public interface IOwner
+	{
+	}
 }

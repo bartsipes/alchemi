@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -22,29 +25,36 @@
 */
 #endregion
 
-using System;
-using System.IO;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Runtime.Remoting;
-using System.Threading;
-using Alchemi.Core;
+using System.Data;
+using System.IO;
+using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Manager
 {
+	/// <summary>
+	/// Represents an Application on the manager.
+	/// </summary>
     public class MApplication
     {
+		// Create a logger for use in this class
+		private static readonly Logger logger = new	Logger();
+
         private string _Id;
         
+		/// <summary>
+		/// Creates an instance of MApplication
+		/// </summary>
+		/// <param name="id">id of the application</param>
         public MApplication(string id)
         {
             _Id = id;
         }
         
+		/// <summary>
+		/// Returns the MThread whose threadId is passed in
+		/// </summary> //this is an indexer
         public MThread this[int threadId]
         {
             get
@@ -53,11 +63,14 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets or sets the application manifest which is a collection of fileDependencies
+		/// </summary>
         public FileDependencyCollection Manifest
         {
             set 
             {
-                Utils.SerializeToFile(value, Path.Combine(DataDir, "manifest.dat"));
+            	Utils.SerializeToFile(value, Path.Combine(DataDir, "manifest.dat"));
                 this.State = ApplicationState.Ready;
             }
 
@@ -76,13 +89,16 @@ namespace Alchemi.Core.Manager
             }
         }
         
+		/// <summary>
+		/// Gets the finished threads as a byte array
+		/// </summary>
         public byte[][] FinishedThreads
         {
             get
             {
-                ArrayList finishedThreads = new ArrayList();
+            	ArrayList finishedThreads = new ArrayList();
 
-                DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable(
+            	DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable(
                     string.Format("Threads_UpdateStateAndSelect '{0}', {1}, {2}", _Id, (int) ThreadState.Finished, (int) ThreadState.Dead)
                     );
 
@@ -96,11 +112,39 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets the count threads with the given thread-state.
+		/// </summary>
+		/// <param name="ts"></param>
+		/// <returns>Thread count</returns>
+		public int ThreadCount(ThreadState ts)
+		{
+			object totCount;
+
+			string sql = string.Format("SELECT count(thread_id) FROM Thread WHERE application_id='{0}' AND [state]={1};",_Id,(int)ts);
+			totCount = InternalShared.Instance.Database.ExecSql_Scalar(sql);
+
+			if (totCount==null)
+			{
+				return 0;
+			}
+			else
+			{
+				return (int)totCount;
+			}
+		}
+
+		/// <summary>
+		/// Creates the data directory
+		/// </summary>
         public void CreateDataDirectory()
         {
             Directory.CreateDirectory(DataDir);
         }
 
+		/// <summary>
+		/// Gets or sets the application state
+		/// </summary>
         public ApplicationState State
         {
             get
@@ -116,14 +160,31 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Gets the list of threads from the database, for this application.
+		/// </summary>
         public DataSet ThreadList
         {
             get
             {
-                return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished from thread where application_id = '{0}' order by thread_id", _Id));
+                return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' order by thread_id", _Id));
             }
         }
 
+		/// <summary>
+		/// Gets the list of  threads with the given thread-state
+		/// </summary>
+		/// <param name="status"></param>
+		/// <returns>Dataset with thread info.</returns>
+		public DataSet GetThreadList(ThreadState status)
+		{
+			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));			
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the manager is at the top of the hierarchy.
+		/// If true, this node is a primary manager.
+		/// </summary>
         public bool IsPrimary
         {
             get 
@@ -137,6 +198,9 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Stops an application.
+		/// </summary>
         public void Stop()
         {
             DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Application_Stop '{0}'", _Id);
@@ -144,6 +208,7 @@ namespace Alchemi.Core.Manager
             {
                 GManager.AbortThread(new ThreadIdentifier(_Id, int.Parse(thread["thread_id"].ToString())), thread["executor_id"].ToString());
             }
+			logger.Debug("Stopped the current application."+_Id);
         }
     }
 }

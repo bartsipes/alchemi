@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -27,6 +30,10 @@ using System.Net;
 
 namespace Alchemi.Core
 {
+	/// <summary>
+	/// Represents the end point of the local node
+	/// </summary>
+	[Serializable]
     public class OwnEndPoint
     {
         private int _Port;
@@ -34,12 +41,18 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------    
 
+		/// <summary>
+		/// Gets or sets the port number of the connection to this node
+		/// </summary>
         public int Port
         {
             get { return _Port; }
             set { _Port = value; }
         }
     
+		/// <summary>
+		/// Gets or sets the remoting mechanism used to connect to this node
+		/// </summary>
         public RemotingMechanism RemotingMechanism
         {
             get { return _RemotingMechanism; }
@@ -48,6 +61,11 @@ namespace Alchemi.Core
     
         //-----------------------------------------------------------------------------------------------    
     
+		/// <summary>
+		/// Creates an instance of the OwnEndPoint
+		/// </summary>
+		/// <param name="port"></param>
+		/// <param name="remotingMechanism"></param>
         public OwnEndPoint(int port, RemotingMechanism remotingMechanism)
         {
             _Port = port;
@@ -56,6 +74,9 @@ namespace Alchemi.Core
 
         //-----------------------------------------------------------------------------------------------    
 
+		/// <summary>
+		/// Creates an instance of the OwnEndPoint
+		/// </summary>
         public RemoteEndPoint ToRemoteEndPoint()
         {
             return new RemoteEndPoint(Dns.GetHostName(), this._Port, this._RemotingMechanism);

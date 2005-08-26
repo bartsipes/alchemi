@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -28,6 +31,9 @@ using System.IO;
 
 namespace Alchemi.Core.Utility
 {
+	/// <summary>
+	/// This class is used to read in / write out XML data from / in memory.
+	/// </summary>
     public class XmlStringWriter
     {
         private MemoryStream _Ms;
@@ -35,6 +41,9 @@ namespace Alchemi.Core.Utility
 
         //-----------------------------------------------------------------------------------------------    
 
+		/// <summary>
+		/// Creates an instance of the XML writer capable of writing text
+		/// </summary>
         public XmlTextWriter Writer
         {
             get { return _Writer; } 
@@ -42,6 +51,9 @@ namespace Alchemi.Core.Utility
 
         //-----------------------------------------------------------------------------------------------    
 
+		/// <summary>
+		/// Creates an instance of an XML writer capable of writing ASCII text with indented format.
+		/// </summary>
         public XmlStringWriter()
         {
             _Ms = new MemoryStream();
@@ -52,6 +64,10 @@ namespace Alchemi.Core.Utility
     
         //-----------------------------------------------------------------------------------------------    
     
+		/// <summary>
+		///	Returns the XML written to memory (so far) by the writer.
+		/// </summary>
+		/// <returns></returns>
         public string GetXmlString()
         {
             _Writer.Flush();

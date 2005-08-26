@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -22,24 +25,21 @@
 */
 #endregion
 
-using System;
-using System.IO;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Runtime.Remoting;
-using System.Threading;
-using Alchemi.Core;
-using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Manager
 {
+	/// <summary>
+	/// Represents a collection of the MExecutor objects held by the manager
+	/// </summary>
     public class MExecutorCollection
     {
-        private Hashtable _DedicatedExecutors = new Hashtable();
+		// Create a logger for use in this class
+		private static readonly Logger logger = new Logger();
 
+		/// <summary>
+		/// Gets the MExecutor object with the given executorId
+		/// </summary>
         public MExecutor this[string executorId]
         {
             get
@@ -48,28 +48,51 @@ namespace Alchemi.Core.Manager
             }
         }
 
+		/// <summary>
+		/// Registers a new executor with the manager
+		/// </summary>
+		/// <param name="sc">security credentials used to perform this operation.</param>
+		/// <param name="cpuPower">cpu power of the executor</param>
+		/// <returns></returns>
         public string RegisterNew(SecurityCredentials sc, int cpuPower)
         {
             string executorId = InternalShared.Instance.Database.ExecSql_Scalar("Executor_Insert 0, '{0}', {1}", sc.Username, cpuPower).ToString();
-            return executorId;
+            logger.Debug("Registered new executor id="+executorId);
+			return executorId;
         }
 
+		/// <summary>
+		/// Initialise the properties of this executor collection.
+		/// This involves verfiying  the connection to all the dedicated executors in the database.
+		/// </summary>
         public void Init()
         {
-            DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("select * from executor where is_dedicated = 1");
+			logger.Debug("Init-ing executor collection from db");
 
+			DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("select * from executor where is_dedicated = 1");
+
+			logger.Debug("# of dedicated executors = " + dt.Rows.Count);
             foreach (DataRow dr in dt.Rows)
             {
                 string executorId = dr["executor_id"].ToString();
                 RemoteEndPoint ep = new RemoteEndPoint((string) dr["host"], (int) dr["port"], RemotingMechanism.TcpBinary);
                 try
                 {
+					logger.Debug("Creating a MExecutor and connecting-dedicated to it");
                     new MExecutor(executorId).ConnectDedicated(ep);
                 }
-                catch (ExecutorCommException) {}
+                catch
+				{
+					//logger.Error("ExecutorCommException while init-ing exec.collection",ece);
+				}
             }
+
+			logger.Debug("Executor collection init done");
         }
 
+		/// <summary>
+		/// Gets a DataTable containing all the available dedicated executors.
+		/// </summary>
         public DataTable AvailableDedicatedExecutors
         {
             get 

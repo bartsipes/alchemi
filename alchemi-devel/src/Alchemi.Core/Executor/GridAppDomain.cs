@@ -3,7 +3,10 @@
   Alchemi [.NET Grid Computing Framework]
   http://www.alchemi.net
   
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
+  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
+  GRIDS Lab, The University of Melbourne, Australia.
+  
+  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
 ---------------------------------------------------------------------------
 
   This program is free software; you can redistribute it and/or modify
@@ -27,6 +30,9 @@ using System.Reflection;
 
 namespace Alchemi.Core.Executor
 {
+	/// <summary>
+	/// This class is a container for the AppDomainExecutor and AppDomain.
+	/// </summary>
     public class GridAppDomain
     {
         private AppDomain _Domain;
@@ -34,11 +40,17 @@ namespace Alchemi.Core.Executor
 
         //----------------------------------------------------------------------------------------------- 
   
+		/// <summary>
+		/// Gets the AppDomain
+		/// </summary>
         public AppDomain Domain
         {
             get { return _Domain; }
         }
 
+		/// <summary>
+		/// Gets the AppDommainExecutor
+		/// </summary>
         public AppDomainExecutor Executor
         {
             get { return _Executor; }
@@ -46,6 +58,11 @@ namespace Alchemi.Core.Executor
 
         //----------------------------------------------------------------------------------------------- 
 
+		/// <summary>
+		/// Initialises a new instance of the GridAppDomain with the given AppDomain and AppDomainExecutor
+		/// </summary>
+		/// <param name="domain"></param>
+		/// <param name="executor"></param>
         public GridAppDomain(AppDomain domain, AppDomainExecutor executor)
         {
             _Domain = domain;

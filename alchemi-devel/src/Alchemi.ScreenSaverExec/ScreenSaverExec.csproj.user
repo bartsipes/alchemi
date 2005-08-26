@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "c:\windows\assembly\gac\crystaldecisions.reportsource\9.1.3300.0__692fbea5521e1304\;c:\windows\assembly\gac\crystaldecisions.crystalreports.engine\9.1.3300.0__692fbea5521e1304\;c:\windows\assembly\gac\crystaldecisions.shared\9.1.3300.0__692fbea5521e1304\;c:\windows\assembly\gac\system.web.services\1.0.3300.0__b03f5f7f11d50a3a\;C:\akshay\dev\Alchemi\bin\" >
+            <Settings ReferencePath = "" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"
@@ -32,7 +32,7 @@
                     StartProgram = ""
                     StartURL = ""
                     StartWorkingDirectory = ""
-                    StartWithIE = "true"
+                    StartWithIE = "false"
                 />
             </Settings>
         </Build>

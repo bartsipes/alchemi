@@ -23,15 +23,12 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Web;
-using System.Web.Services;
 using System.Configuration;
+using System.Data;
+using System.Web.Services;
 using Alchemi.Core;
-using Alchemi.Core.Utility;
+using Alchemi.Core.Owner;
 
 namespace Alchemi.Manager
 {
@@ -134,6 +131,24 @@ namespace Alchemi.Manager
         {
             return null;
         }
+
+		[WebMethod]
+		public int GetApplicationState(string username, string password, string taskId)
+		{
+			return Convert.ToInt32(Manager.Owner_GetApplicationState(new SecurityCredentials(username,password),taskId));
+		}
+
+		[WebMethod]
+		public void AbortTask(string username, string password, string taskId)
+		{
+			Manager.Owner_StopApplication(new SecurityCredentials(username,password),taskId);
+		}
+
+		[WebMethod]
+		public void AbortJob(string username, string password, string taskId, int jobId)
+		{
+			Manager.Owner_AbortThread(new SecurityCredentials(username,password),new ThreadIdentifier(taskId,jobId));
+		}
 
     }
 }
