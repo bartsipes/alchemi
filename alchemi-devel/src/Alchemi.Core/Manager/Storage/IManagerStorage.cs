@@ -61,13 +61,6 @@ namespace Alchemi.Core.Manager.Storage
 
 		object AddUsers(SecurityCredentials sc, object users);
 
-		/// <summary>
-		/// Get system summary information from the storage.
-		/// </summary>
-		/// <returns>
-		/// An object with the summary information or null if the storage does not implement system summary.
-		/// </returns>
-		object GetSystemSummary();
 
 		object GetExecutors(SecurityCredentials sc);
 
@@ -86,5 +79,14 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns>True if the authentication is successful, false otherwise.</returns>
 		bool AuthenticateUser(SecurityCredentials sc);
 		*/
+
+		/// <summary>
+		/// Get system summary information from the storage.
+		/// </summary>
+		/// <returns>
+		/// An object with the summary information or null if the storage does not implement system summary.
+		/// </returns>
+		SystemSummary GetSystemSummary();
+
 	}
 }

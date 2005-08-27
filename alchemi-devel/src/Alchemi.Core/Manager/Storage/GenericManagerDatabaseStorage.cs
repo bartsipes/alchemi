@@ -13,5 +13,16 @@ namespace Alchemi.Core.Manager.Storage
 			// TODO: Add constructor logic here
 			//
 		}
+
+		#region IManagerStorage Members
+
+		public SystemSummary GetSystemSummary()
+		{
+			throw new Exception("Not implemented");
+			// TODO:  Add GenericManagerDatabaseStorage.GetSystemSummary implementation
+			return null;
+		}
+
+		#endregion
 	}
 }
