@@ -114,6 +114,11 @@
                     AssemblyName = "ByteFX.MySqlClient"
                     HintPath = "..\..\lib\ByteFX.MySqlClient.dll"
                 />
+                <Reference
+                    Name = "ICSharpCode.SharpZipLib"
+                    AssemblyName = "ICSharpCode.SharpZipLib"
+                    HintPath = "..\..\lib\ICSharpCode.SharpZipLib.dll"
+                />
             </References>
         </Build>
         <Files>
