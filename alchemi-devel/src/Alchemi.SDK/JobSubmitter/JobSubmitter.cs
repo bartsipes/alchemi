@@ -117,7 +117,7 @@ namespace Alchemi.DevTools
 							string newAlias = aliases.NewAlias(appId);
 							try
 							{
-								WriteLine("Task submitted (alias = {1}).", appId, aliases.NewAlias(appId));
+								WriteLine("Task submitted (alias = {1}).", appId, newAlias);
 							}
 							catch
 							{

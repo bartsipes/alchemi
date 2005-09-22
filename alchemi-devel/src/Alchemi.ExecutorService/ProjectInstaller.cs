@@ -90,6 +90,7 @@ namespace Alchemi.ExecutorService
 			// 
 			// serviceInstaller1
 			// 
+			this.serviceInstaller1.DisplayName = "Alchemi Executor Service";
 			this.serviceInstaller1.ServiceName = "Alchemi Executor Service";
 			this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
 			// 

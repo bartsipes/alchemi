@@ -1,10 +1,7 @@
- using System;
-using System.Threading;
-using System.Windows.Forms;
-using System.Reflection;
-using System.IO;
-using System.Diagnostics;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Alchemi.Updater
 {

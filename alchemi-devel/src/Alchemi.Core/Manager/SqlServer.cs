@@ -56,20 +56,6 @@ namespace Alchemi.Core.Manager
             this.ExecSql("VerifyConnection");
         }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		~SqlServer()
-		{
-//			try
-//			{
-//				_ConnStr = null;
-//				conn.Dispose();
-//				conn = null;
-//			}
-//			catch{}
-		}
-
         //-----------------------------------------------------------------------------------------------        
    
 		/// <summary>

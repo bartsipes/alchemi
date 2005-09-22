@@ -3,6 +3,7 @@ using System.Threading;
 using System.Reflection;
 using System.Text;
 using Alchemi.Core;
+using Alchemi.Core.Owner;
 
 namespace Alchemi.Examples.PiCalculator
 {
@@ -45,6 +46,8 @@ namespace Alchemi.Examples.PiCalculator
             }
 
             _Result = temp.ToString().Substring(0, _NumDigits);
+
+			for (int i = 0; i < int.MaxValue; i++);
         }
     }
 }

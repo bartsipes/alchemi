@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Web;
 using System.Xml;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
@@ -68,6 +69,9 @@ namespace Alchemi.Core
             // TODO: validate against schema
             string taskId = manager.Owner_CreateApplication(sc);
 
+			//Html decode the xml
+			taskXml = HttpUtility.HtmlDecode(taskXml);
+
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(taskXml);
             logger.Debug("Loaded taskXML:" + taskXml);
@@ -108,6 +112,9 @@ namespace Alchemi.Core
 		/// <param name="jobXml"></param>
         public static void AddJob(IManager manager, SecurityCredentials sc, string taskId, int jobId, int priority, string jobXml)
         {
+			//Html decode the xml
+			jobXml = HttpUtility.HtmlDecode(jobXml);
+
             manager.Owner_SetThread(
                 sc,
                 new ThreadIdentifier(taskId, jobId, priority),
@@ -158,6 +165,24 @@ namespace Alchemi.Core
             return xsw.GetXmlString();
         }
 
+		
+		public static int GetApplicationState(IManager manager, SecurityCredentials sc, string taskId)
+		{
+			return Convert.ToInt32(manager.Owner_GetApplicationState(sc,taskId));
+		}
+
+		
+		public static void AbortTask(IManager manager, SecurityCredentials sc, string taskId)
+		{
+			manager.Owner_StopApplication(sc,taskId);
+		}
+
+		
+		public static void AbortJob(IManager manager, SecurityCredentials sc, ThreadIdentifier ti)
+		{
+			manager.Owner_AbortThread(sc,ti);
+		}
+
         //-----------------------------------------------------------------------------------------------
 
 		//Gets the GJob object from the given xml
@@ -194,7 +219,12 @@ namespace Alchemi.Core
 			return job;
         }
 
-        //-----------------------------------------------------------------------------------------------    
+     	public static string GetFailedThreadException(IManager manager, SecurityCredentials sc, ThreadIdentifier ti)
+    	{
+    		return manager.Owner_GetFailedThreadException(sc, ti).ToString();
+    	}
+		
+		//-----------------------------------------------------------------------------------------------    
 
 		//Gets the XML representing a job
         private static string XmlFromJob(GJob job)
@@ -222,6 +252,8 @@ namespace Alchemi.Core
       
             return xsw.GetXmlString();
         }
+
+
     }
 }
 

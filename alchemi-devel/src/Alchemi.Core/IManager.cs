@@ -184,7 +184,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="executorId"></param>
-		void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId);
+		void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP);
         
 		/// <summary>
 		/// Disconnects an Executor from the Manager.

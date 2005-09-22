@@ -25,7 +25,10 @@
 */
 #endregion
 
+using System;
 using System.Data;
+using Alchemi.Core.Executor;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Manager
 {
@@ -52,11 +55,24 @@ namespace Alchemi.Core.Manager
 		/// Registers a new executor with the manager
 		/// </summary>
 		/// <param name="sc">security credentials used to perform this operation.</param>
-		/// <param name="cpuPower">cpu power of the executor</param>
+		/// <param name="info">information about the executor (see ExecutorInfo)</param>
 		/// <returns></returns>
-        public string RegisterNew(SecurityCredentials sc, int cpuPower)
+        public string RegisterNew(SecurityCredentials sc, ExecutorInfo info)
         {
-            string executorId = InternalShared.Instance.Database.ExecSql_Scalar("Executor_Insert 0, '{0}', {1}", sc.Username, cpuPower).ToString();
+			//NOTE: when registering, all executors are initially set to non-dedicated.non-connected.
+			//once they connect and can be pinged back, then these values are set accordingly.
+			/** Stored procedure params.
+																											0 @is_dedicated bit,
+																											1 @usr_name varchar(50),
+																											2 @hostname varchar(30),
+																											3 @cpu_max int,
+																											4 @mem_max float,
+																											5 @disk_max float,
+																											6 @num_cpus int,
+																											7 @os varchar(15),
+																											8 @arch varchar(15)
+			 **/
+            string executorId = InternalShared.Instance.Database.ExecSql_Scalar("Executor_Insert {0}, '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}'", 0, sc.Username, info.Hostname, info.MaxCpuPower, info.MaxMemory, info.MaxDiskSpace, info.Number_of_CPUs, info.OS, info.Architecture).ToString();
             logger.Debug("Registered new executor id="+executorId);
 			return executorId;
         }
@@ -76,14 +92,15 @@ namespace Alchemi.Core.Manager
             {
                 string executorId = dr["executor_id"].ToString();
                 RemoteEndPoint ep = new RemoteEndPoint((string) dr["host"], (int) dr["port"], RemotingMechanism.TcpBinary);
-                try
+                MExecutor me = new MExecutor(executorId);
+				try
                 {
 					logger.Debug("Creating a MExecutor and connecting-dedicated to it");
-                    new MExecutor(executorId).ConnectDedicated(ep);
+                    me.ConnectDedicated(ep);
                 }
-                catch
+                catch (Exception ex)
 				{
-					//logger.Error("ExecutorCommException while init-ing exec.collection",ece);
+					logger.Debug("Exception while init-ing exec.collection. Continuing with other executors...",ex);
 				}
             }
 

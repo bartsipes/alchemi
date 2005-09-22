@@ -147,7 +147,6 @@ namespace Alchemi.Updater
 					{	
 						ServerManifest SM = new ServerManifest();
 						SM.Load(AppMan.UpdateUrl);
-
 						//download from the web and desserialise it into the object
 						AppMan.Manifest.State.DownloadSource = SM.ApplicationUrl;
 
@@ -203,7 +202,7 @@ namespace Alchemi.Updater
 				if (AppMan.Manifest.State.Phase == UpdatePhases.Finalizing)
 				{
 					Debug.WriteLine("APPMANAGER:  Finalizing update");
-					FinalizeUpdate();						
+					FinalizeUpdate();				
 				}
 
 				//Reset Update State
@@ -627,7 +626,7 @@ namespace Alchemi.Updater
 			{
 				char[] MyChar={'\\'};
 				Config.AppFolderName = Path.GetFileName(AppMan.Manifest.State.NewVersionDirectory.TrimEnd(MyChar));
-				Config.Udpate();
+				Config.Update();
 			} 
 			catch (Exception e)
 			{

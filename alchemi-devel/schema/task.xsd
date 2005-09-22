@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2005 sp2 U (http://www.altova.com) by Krishna (GRIDS lab, CSS Dept. Melb. Uni.) -->
+<xs:schema xmlns="http://alchemi.org/XMLSchema.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://alchemi.org/XMLSchema.xsd" elementFormDefault="qualified">
+	<xs:element name="task">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="manifest" type="embedded_files" minOccurs="0"/>
+				<xs:element name="job" type="job" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="embedded_files">
+		<xs:sequence>
+			<xs:element name="embedded_file" type="embedded_file" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="job">
+		<xs:all>
+			<xs:element name="input" type="embedded_files"/>
+			<xs:element name="work">
+				<xs:complexType>
+					<xs:attribute name="run_command" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="output" type="embedded_files"/>
+		</xs:all>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="embedded_file">
+		<xs:simpleContent>
+			<xs:extension base="xs:decimal">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+			</xs:extension>
+			<!-- base64Binary -->
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

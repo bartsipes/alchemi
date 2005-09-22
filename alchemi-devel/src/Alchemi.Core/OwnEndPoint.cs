@@ -81,5 +81,17 @@ namespace Alchemi.Core
         {
             return new RemoteEndPoint(Dns.GetHostName(), this._Port, this._RemotingMechanism);
         }
+
+		/// <summary>
+		/// Returns  the host name of this end point.
+		/// </summary>
+		public string Host
+		{
+			get
+			{
+				return Dns.GetHostName();
+			}
+		}
+
     }
 }

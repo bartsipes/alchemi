@@ -57,6 +57,7 @@ namespace Alchemi.ManagerService
 			// 
 			// serviceInstaller1
 			// 
+			this.serviceInstaller1.DisplayName = "Alchemi Manager Service";
 			this.serviceInstaller1.ServiceName = "Alchemi Manager Service";
 			this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
 			// 

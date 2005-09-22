@@ -62,6 +62,26 @@
                     TreatWarningsAsErrors = "false"
                     WarningLevel = "4"
                 />
+                <Config
+                    Name = "ServiceRelease"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "..\..\bin\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
             </Settings>
             <References>
                 <Reference
@@ -108,7 +128,6 @@
                 />
                 <File
                     RelPath = "AppStartConfig.cs"
-                    Link = "..\Alchemi.AppStart\AppStartConfig.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -123,7 +142,8 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "AssemblyInfo.cs"
+                    RelPath = "CommonAssemblyInfo.cs"
+                    Link = "..\CommonAssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -139,6 +159,11 @@
                 />
                 <File
                     RelPath = "ServerPoller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ServiceUpdaterConfig.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

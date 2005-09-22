@@ -94,6 +94,11 @@ namespace Alchemi.Core.Executor
 		/// Maximum number of times to retry connecting
 		/// </summary>
 		public int RetryMax = 3; //try reconnecting max 3 times
+
+//		/// <summary>
+//		/// Specifies whether to revert to non-dedicated executor mode, if the Manager cannot be contacted in dedicatd mode.
+//		/// </summary> 
+//		public bool RevertToNDE = false; //not needed?
     
         //-----------------------------------------------------------------------------------------------
     

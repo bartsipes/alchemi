@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace Alchemi.Core
 {
@@ -84,9 +85,27 @@ namespace Alchemi.Core
 			string member = "";
 			try
 			{
-				if (LogHandler == null)
-					return;
 
+				if (LogHandler == null)
+				{
+//					try
+//					{
+//						TextWriter tw = File.CreateText("alchemiLog.txt");
+//						tw.WriteLine(msg);
+//						if (ex!=null)
+//							tw.WriteLine(ex.ToString());
+//	
+//						tw.Flush();
+//						tw.Close();
+//						tw = null;
+//					}
+//					catch
+//					{
+//						//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
+//						//throw new Exception("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender,e);
+//					}
+					return;
+				}
 
 				//make sure two stackframes above, we have the actually call to the logger! otherwise we get the wrong name!
 				//for this, make sure the RaiseLogEvent method is private..and is called by all other logger.XXXX methods

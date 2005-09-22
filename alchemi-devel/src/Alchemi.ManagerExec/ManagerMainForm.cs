@@ -892,6 +892,14 @@ namespace Alchemi.ManagerExec
 
 			}
 
+			try
+			{
+				if (updater!=null)
+				{
+					updater.Dispose();	
+				}
+			}catch {}
+			
 			RefreshUIControls();
 
 		}
@@ -1209,7 +1217,7 @@ namespace Alchemi.ManagerExec
 			else //If the update failed....
 			{
 				handleUpdaterError(e.ErrorMessage,e.FailureException);
-			}		
+			}
 		}
 
 		private void updateManager()

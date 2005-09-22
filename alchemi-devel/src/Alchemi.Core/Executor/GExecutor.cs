@@ -70,6 +70,7 @@ namespace Alchemi.Core.Executor
 		private bool _stopHeartBeat = false;
 		private bool _stopNonDedicatedMonitor = false;
 
+		//TODO: check what is this : using this for counting # of times CleanUP App is called?! why?
 		private int ca = 0;
 
 		/// <summary>
@@ -78,7 +79,8 @@ namespace Alchemi.Core.Executor
         public static event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
 		
 		/// <summary>
-		/// This event is raised only when a non-dedicated Executor gets disconnected from the Manager.
+		/// This event is raised only when a Executor loses connection to the Manager.
+		/// (This can happen in both non-dedicated and dedicated modes.
 		/// </summary>
         public static event GotDisconnectedEventHandler GotDisconnected;
 
@@ -114,15 +116,28 @@ namespace Alchemi.Core.Executor
         {
             get 
             {
+				//TODO need to see how executor info. is passed to manager, when and how things are updated.
+				//TODO need to discover/report these properly
                 ExecutorInfo info = new ExecutorInfo();
+				//info.Dedicated = this._Dedicated;
+				info.Hostname = this.OwnEP.Host;
+				info.OS = Environment.OSVersion.ToString();
+				info.Number_of_CPUs = 1; //default for now
+				info.MaxDiskSpace = 0; //need to fix
+				info.MaxMemory = 0; //need to fix
+
+				//here we can better catch the error, since it is not a show-stopper. just informational.
 				try
 				{
+					//need to find a better way to do these things.
 					RegistryKey hklm = Registry.LocalMachine;
 					hklm = hklm.OpenSubKey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0");
 					info.MaxCpuPower = int.Parse(hklm.GetValue("~MHz").ToString());
+					info.Architecture = hklm.GetValue("Identifier","x86").ToString(); //CPU arch.
+					hklm.Close();
 				}catch (Exception e)
 				{
-					logger.Debug("Error getting executorInfo...",e);
+					logger.Debug("Error getting executorInfo. Continuing...",e);
 				}
 
                 return info;
@@ -172,7 +187,7 @@ namespace Alchemi.Core.Executor
         public GExecutor(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, SecurityCredentials sc, string baseDir) : base(managerEP, ownEP, sc)
         {
             _BaseDir = baseDir;
-            if (_BaseDir == "")
+            if (_BaseDir == "" || _BaseDir==null)
             {
                 _BaseDir = AppDomain.CurrentDomain.BaseDirectory;
             }
@@ -197,8 +212,15 @@ namespace Alchemi.Core.Executor
                 _Id = Manager.Executor_RegisterNewExecutor(Credentials, Info);
 				logger.Info("Successfully Registered new executor:"+_Id);
             }
+			else
+            {
+            	logger.Debug("Id is "+_Id);
+            }
 
-            try
+			//handle exception since we want to connect to the manager 
+			//even if it doesnt succeed the first time.
+			//that is, we need to handle InvalidExecutor and ConnectBack Exceptions.
+            try 
             {
                 try
                 {
@@ -221,6 +243,7 @@ namespace Alchemi.Core.Executor
                 ConnectToManager();
             }
 
+			//for non-dedicated mode, the heart-beat thread will be started 
             if (_Dedicated)
             {
 				logger.Debug("Dedicated mode: starting heart-beat thread");
@@ -232,11 +255,13 @@ namespace Alchemi.Core.Executor
 		{
 			_stopHeartBeat = false;
             _HeartbeatThread = new Thread(new ThreadStart(Heartbeat));
+			_HeartbeatThread.Name = "HeartBeat-Thread";
             _HeartbeatThread.Start();
 		}
 
 		private void CleanUpApps()
 		{
+			//handle errors since clean up shouldnt hold up the other actions.
 			try
 			{
 				logger.Debug("Cleaning up all apps before disconnect...");
@@ -244,6 +269,7 @@ namespace Alchemi.Core.Executor
 				string[] dirs = Directory.GetDirectories(datDir);
 				foreach(string s in dirs)
 				{
+					//handle error since clean up shouldnt hold up the other actions.
 					try
 					{
 						Directory.Delete(s,true);
@@ -254,7 +280,7 @@ namespace Alchemi.Core.Executor
 			}
 			catch (Exception e)
 			{
-				logger.Debug("Clean up error : " + e.Message);
+				logger.Debug("Clean up error. Continuing...", e);
 			}
 		}
 
@@ -278,44 +304,46 @@ namespace Alchemi.Core.Executor
 				logger.Debug("HeartBeat stopped.");
             }
 
+			//handle disconnection error, since we dont want that to hold up the disconnect process.
 			try
 			{
 				Manager.Executor_DisconnectExecutor(Credentials, _Id);
+				logger.Debug("Disconnected executor");
 			}
-			catch (SocketException) {}
-			catch (System.Runtime.Remoting.RemotingException) {}
-			catch (Exception){}
-
+			catch (SocketException se)
+			{
+				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",se);
+			}
+			catch (System.Runtime.Remoting.RemotingException re)
+			{
+				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",re);
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",ex);
+			}
 
             UnRemoteSelf();
 
             RelinquishIncompleteThreads();
             
-			//clean up all apps
-			CleanUpApps();
-
 			logger.Debug("Unloading AppDomains on this executor...");
             foreach (object gad in _GridAppDomains.Values)
             {
+				//handle error while unloading appDomain and continue...
 				try
 				{
 					AppDomain.Unload(((GridAppDomain) gad).Domain);
 				}
 				catch (Exception e)
 				{
-					logger.Error("Error unloading appDomain:",e);
+					logger.Error("Error unloading appDomain. Continuing disconnection process...",e);
 				}
             }
             _GridAppDomains.Clear();
 
-			//raise disconnected event
-			logger.Debug("Raising event: Executor GotDisconnected.");
-			try
-			{	//raise the event for non-dedicated mode only.
-				if (!Dedicated)
-					GotDisconnected();
-			}
-			catch {} //in case of no subscribers, there is a nullpointerexception
+			//clean up all apps
+			CleanUpApps();
         }
 
         //-----------------------------------------------------------------------------------------------    
@@ -332,15 +360,14 @@ namespace Alchemi.Core.Executor
                 _EmptyThreadInterval = emptyThreadInterval;
 				_stopNonDedicatedMonitor = false;
                 _NonDedicatedMonitorThread = new Thread(new ThreadStart(NonDedicatedMonitor));
+				_NonDedicatedMonitorThread.Name = "NonDedicatedMonitor-thread";
                 _NonDedicatedMonitorThread.Start();
 
                 _ExecutingNonDedicated = true;
+
 				//raise an event to indicate the status change into non-dedicated execution mode.
-				try
-				{
+				if (NonDedicatedExecutingStatusChanged!=null)
 					NonDedicatedExecutingStatusChanged();
-				}
-				catch{}
 
 				//start the heartbeat thread.
 				logger.Debug("Starting heart-beat thread: non-dedicated mode");
@@ -377,16 +404,13 @@ namespace Alchemi.Core.Executor
 				}
 				catch (Exception e)
 				{
-					logger.Error("Error trying to abort NonDedicatedMonitor thread.",e);
+					logger.Error("Error trying to abort NonDedicatedMonitor thread. Continuing to stop non-dedicated executor...",e);
 				}
 
                 _ExecutingNonDedicated = false;
 				logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
-				try
-				{
+				if (NonDedicatedExecutingStatusChanged!=null)
 					NonDedicatedExecutingStatusChanged();
-				}
-				catch {}
             }
         }
 
@@ -414,6 +438,7 @@ namespace Alchemi.Core.Executor
             _ReadyToExecute.Reset();
             _CurTi = ti;
             _ThreadExecutorThread = new Thread(new ThreadStart(ExecuteThreadInAppDomain));
+			_ThreadExecutorThread.Name = "ExecuteThreadInAppDomain-thread";
             _ThreadExecutorThread.Priority = ThreadPriority.Lowest;
             _ThreadExecutorThread.Start();
 			logger.Debug("Started thread for executing GridThread:"+ti.ThreadId);
@@ -478,7 +503,7 @@ namespace Alchemi.Core.Executor
             else
             {
 				logger.Debug("Connecting to Manager NON-dedicated...");
-                Manager.Executor_ConnectNonDedicatedExecutor(Credentials, _Id);
+                Manager.Executor_ConnectNonDedicatedExecutor(Credentials, _Id, OwnEP.ToRemoteEndPoint());
             }
         }
 
@@ -487,6 +512,7 @@ namespace Alchemi.Core.Executor
         private void NonDedicatedMonitor()
         {
             bool gotDisconnected = false;
+			logger.Info("NonDedicatedMonitor Thread Started.");
 			try
 			{
 				while (!gotDisconnected && !_stopNonDedicatedMonitor)
@@ -524,19 +550,23 @@ namespace Alchemi.Core.Executor
 
 				// got disconnected
 				_ExecutingNonDedicated = false;
-				//raise status changed event
-				logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
-				try
+
+				if (NonDedicatedExecutingStatusChanged!=null)
 				{
+					//raise status changed event
+					logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
 					NonDedicatedExecutingStatusChanged();
 				}
-				catch {}
 
 				logger.Debug("Non-dedicated executor: Unremoting self");
 				UnRemoteSelf();
-				//				//raise disconnected event ..let us do this for both dedicated, and non-dedicated
-				//                logger.Debug("Raising event: GotDisconnected");
-				//				GotDisconnected();
+
+				//raise the event for non-dedicated mode only.
+				if (!Dedicated && GotDisconnected!=null)
+				{
+					GotDisconnected();
+					logger.Debug("Raising event: Executor GotDisconnected.");
+				}
 			}
 			catch (ThreadAbortException)
 			{
@@ -548,12 +578,16 @@ namespace Alchemi.Core.Executor
 			{
 				logger.Error("Error in non-dedicated monitor: "+e.Message,e);
 			}
+
+			logger.Info("NonDedicatedMonitor Thread Exited.");
         }
 
         //-----------------------------------------------------------------------------------------------    
 
         private void ExecuteThreadInAppDomain()
         {
+			logger.Info("Started ExecuteThreadInAppDomain...");
+
 			logger.Info(string.Format("executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
 
             string appDir = Path.Combine(_BaseDir,string.Format("dat\\application_{0}",_CurTi.ApplicationId));
@@ -569,8 +603,12 @@ namespace Alchemi.Core.Executor
                     foreach (FileDependency dep in manifest)
                     {
 						logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
-                        dep.UnPack(appDir + "\\" + dep.FileName);
+                        dep.UnPack(Path.Combine(appDir,dep.FileName));
                     }
+                }
+				else
+                {
+					logger.Warn("Executor_GetApplicationManifest from the Manager returned null");	
                 }
 
                 AppDomainSetup info = new AppDomainSetup();
@@ -598,21 +636,22 @@ namespace Alchemi.Core.Executor
 				//Code edited by Rodrigo Assirati Dias
 				//Original code was:
 				//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
-				AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(AppDomain.CurrentDomain.BaseDirectory + "Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
+				AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Core.dll"), "Alchemi.Core.Executor.AppDomainExecutor");
 
                 _GridAppDomains.Add(
                     _CurTi.ApplicationId,
                     new GridAppDomain(domain, executor)
                     );
 
-				logger.Debug("-------------- Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
+				logger.Info("Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
             }
 
 			//get thread from manager
-            byte[] rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
-            GridAppDomain gad = (GridAppDomain) _GridAppDomains[_CurTi.ApplicationId];
+            byte[] rawThread = null;
             try
             {
+				GridAppDomain gad = (GridAppDomain) _GridAppDomains[_CurTi.ApplicationId];
+				rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
 				//execute it
                 byte[] finishedThread = gad.Executor.ExecuteThread(rawThread);
 				//set its status to finished
@@ -628,11 +667,13 @@ namespace Alchemi.Core.Executor
             catch (Exception e)
             {
                 Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
-				logger.Warn(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()));
+				logger.Warn(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()),e);
             }
 
             _CurTi = null;
             _ReadyToExecute.Set();
+
+			logger.Info("Exited ExecuteThreadInAppDomain...");
         }
 
         //-----------------------------------------------------------------------------------------------    
@@ -659,6 +700,9 @@ namespace Alchemi.Core.Executor
         {
 			int pingFailCount=0;
 
+			logger.Info("HeartBeat Thread Started.");
+
+			//heart-beat thread handles its own errors.
 			try
 			{
 				HeartbeatInfo info = new HeartbeatInfo();
@@ -711,30 +755,28 @@ namespace Alchemi.Core.Executor
 					{
 						if (e is SocketException || e is System.Runtime.Remoting.RemotingException)
 						{
-							try
+							pingFailCount++;
+							//we disconnect the executor if the manager cant be pinged three times
+							if (pingFailCount >= 3)
 							{
-								logger.Debug("Error during heartbeat: " +e.Message + " ...trying to PingManager...failCount="+pingFailCount);
-								Manager.PingManager();
+								logger.Error("Failed to contact manager "+pingFailCount+" times...",e);
+								
+								//if we call the disconnect here should be started off on a seperate thread because:
+								//disconnect itself waits for HeartBeatThread to stop. If the method call
+								//to disconnect from HeartBeat wont return immediately, then there is a deadlock
+								//with disconnect waiting for the HeartBeatThread to stop and the HeartBeatThread waiting
+								//for the call to disconnect to return.
+
+								//raise the event to indicate that the Executor has got disconnected.
+								if (GotDisconnected!=null)
+									GotDisconnected();
+
+								//new Thread(new ThreadStart(Disconnect)).Start();
 							}
-							catch
-							{
-								pingFailCount++;
-								//we disconnect the executor if the manager cant be pinged three times
-								if (pingFailCount == 3)
-								{
-									logger.Error("Disconnecting from Manager...Cannot contact manager.",e);
-									try
-									{
-										//the disconnect here should be started off on a seperate thread because:
-										//disconnect itself waits for HeartBeatThread to stop. If the method call
-										//to disconnect from HeartBeat wont return immediately, then there is a deadlock
-										//with disconnect waiting for the HeartBeatThread to stop and the HeartBeatThread waiting
-										//for the call to disconnect to return.
-										new Thread(new ThreadStart(Disconnect)).Start();
-									}
-									catch{}
-								}
-							}
+						}
+						else
+						{
+							logger.Debug("Error during heartbeat. Continuing after error...",e);
 						}
 					}
 
@@ -748,8 +790,10 @@ namespace Alchemi.Core.Executor
 			}
 			catch (Exception e) 
 			{
-				logger.Error("HeartBeat Exception : " + e.Message,e);
+				logger.Error("HeartBeat Exception. Heartbeat thread stopping...",e);
 			}
+
+			logger.Info("HeartBeat Thread Exited.");
         }
 
         //-----------------------------------------------------------------------------------------------
@@ -768,7 +812,7 @@ namespace Alchemi.Core.Executor
 			}
 			catch (Exception e)
 			{
-				logger.Warn("Error aborting thread: " + ti.ThreadId + " Error= " + e.Message);
+				logger.Warn("Error aborting thread: " + ti.ThreadId + ". Continuing...",e);
 			}
 		}
 	}

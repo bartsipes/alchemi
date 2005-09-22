@@ -1,8 +1,7 @@
 using System;
-using System.Xml;
 using System.IO;
 using Alchemi.Core;
-using Alchemi.Core.Utility;
+using Alchemi.Core.Owner;
 
 namespace Alchemi.Examples.CrossPlatformDemo
 {
@@ -57,7 +56,7 @@ namespace Alchemi.Examples.CrossPlatformDemo
 
             foreach (FileDependency fd in job.OutputFiles)
             {
-                Directory.CreateDirectory("job_" + job.Id);
+            	Directory.CreateDirectory("job_" + job.Id);
                 fd.UnPack(Path.Combine("job_" + job.Id, fd.FileName));
                 Console.WriteLine("Unpacked file {0} for job {1}", fd.FileName, job.Id);
             }

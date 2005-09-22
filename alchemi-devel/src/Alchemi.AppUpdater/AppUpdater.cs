@@ -29,7 +29,7 @@ namespace Alchemi.Updater
 		private Control EventControl;
 		
 		internal AppManifest Manifest;
-	
+
 		//Handles downloading & applying the update
 		private AppDownloader _Downloader;
 		[TypeConverter(typeof(ExpandableObjectConverter))]
@@ -63,6 +63,11 @@ namespace Alchemi.Updater
 		{
 			get {return _UpdateUrl;}
 			set {_UpdateUrl = value;}
+		}
+
+		public string NewVersionDirectory()
+		{
+			return Manifest.State.NewVersionDirectory;
 		}
 
 		//Indicates the mechanism to check for updates
@@ -237,7 +242,6 @@ namespace Alchemi.Updater
 
 			Downloader.OnDownloadProgress += new Alchemi.Updater.AppDownloader.DownloadProgressEventHandler(Downloader_OnDownloadProgress);
 			Downloader.OnUpdateComplete += new Alchemi.Updater.AppDownloader.UpdateCompleteEventHandler(Downloader_OnUpdateComplete);
-			//Downloader.OnUpdateComplete += new AppDownloader.UpdateCompleteEventHandler(OnDownloaderComplete);
 			Application.ApplicationExit += new EventHandler(OnApplicationExit);
 
 			EventControl = new Control();
@@ -263,7 +267,7 @@ namespace Alchemi.Updater
 			Downloader.Start();
 		}
 
-		public void StartUpdateChesking()
+		public void StartUpdateChecking()
 		{
 			if (Poller != null)
 				Poller.Start();
@@ -485,9 +489,15 @@ namespace Alchemi.Updater
 		//**************************************************************
 		private void OnApplicationExit(Object sender, EventArgs args)
 		{
-			//stop the poller thread if it isn't already.
-			Poller.Stop();
-			Downloader.Stop();
+			if (Poller!=null)
+			{
+				//stop the poller thread if it isn't already.
+				Poller.Stop();
+			}
+			if (Downloader!=null)
+			{
+				Downloader.Stop();
+			}
 		}
 
 		//**************************************************************
@@ -576,8 +586,23 @@ namespace Alchemi.Updater
 
 			//EventControl.BeginInvoke(new UpdateCompleteEventHandler(UpdateCompleteOps),new object[] {sender, e});
 		}
+
+		public void StopUpdating()
+		{
+			if (Poller!=null)
+				Poller.Stop();
+
+			if (Downloader!=null)
+				Downloader.Stop();
+
+			Poller = null;
+			Downloader = null;
+		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class UpdateDetectedEventArgs:EventArgs
 	{
 		private bool updateDetected = false;

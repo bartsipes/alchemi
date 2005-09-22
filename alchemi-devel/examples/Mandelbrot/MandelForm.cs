@@ -2,14 +2,24 @@ using System;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Data;
 using Alchemi.Core;
+using Alchemi.Core.Owner;
+using log4net;
+
+// Configure log4net using the .config file
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
 
 namespace Alchemi.Examples.Mandelbrot
 {
+
     public class MandelForm : Form
     {
+		// Create a logger for use in this class
+		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.ComponentModel.IContainer components;
         private System.Windows.Forms.Button btZoomIn;
@@ -45,13 +55,15 @@ namespace Alchemi.Examples.Mandelbrot
         DateTime startTime;
         private System.Windows.Forms.ProgressBar pb;
         private System.Windows.Forms.StatusBar sb;
-        GApplication ga;
+    	GApplication ga;
 
         public MandelForm()
         {
             InitializeComponent();
             map = new Bitmap(500, 400);
             pictureBox1.Image = map;
+
+			Logger.LogHandler += new LogEventHandler(LogHandler);
         }
 
         protected override void Dispose( bool disposing )
@@ -333,7 +345,28 @@ namespace Alchemi.Examples.Mandelbrot
         {
             Application.EnableVisualStyles();
             Application.Run(new MandelForm());
+			
         }
+
+		private static void LogHandler(object sender, LogEventArgs e)
+		{
+			switch (e.Level)
+			{
+				case LogLevel.Debug:
+					string message = e.Source  + ":" + e.Member + " - " + e.Message;
+					logger.Debug(message,e.Exception);
+					break;
+				case LogLevel.Info:
+					logger.Info(e.Message);
+					break;
+				case LogLevel.Error:
+					logger.Error(e.Message,e.Exception);
+					break;
+				case LogLevel.Warn:
+					logger.Warn(e.Message);
+					break;
+			}
+		}
 
         private void Generate()
         {
@@ -354,7 +387,9 @@ namespace Alchemi.Examples.Mandelbrot
                 if (gcd.ShowDialog() == DialogResult.OK)
                 {
                     // initialise application
-                    ga = new GApplication(gcd.Connection);
+                    ga = new GApplication(true);
+					
+					ga.Connection = gcd.Connection;
                 }
                 else
                 {
@@ -367,6 +402,7 @@ namespace Alchemi.Examples.Mandelbrot
                 
                 // subscribe to events
                 ga.ThreadFinish += new GThreadFinish(UpdateBitmap);
+				ga.ApplicationFinish += new GApplicationFinish(AppDone);
 
                 initted = true;
             }
@@ -401,8 +437,20 @@ namespace Alchemi.Examples.Mandelbrot
             pb.Minimum = 0;
             pb.Value = 0;
             pb.Maximum = totalHorzMaps * totalVertMaps;
-            ga.Start();
+			try
+			{
+				ga.Start();
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(e.ToString());
+			}
         }
+
+		void AppDone()
+		{
+			MessageBox.Show("Application finished");
+		}
 
         void UpdateBitmap(GThread thread)
         {

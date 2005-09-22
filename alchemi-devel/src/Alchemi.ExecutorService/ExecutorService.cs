@@ -37,15 +37,17 @@ File: ExecutorService.cs for Alchemi Executor Service
 #endregion
 
 using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Configuration.Install;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
+using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Utility;
 using log4net;
+using log4net.Config;
 
 namespace Alchemi.ExecutorService
 {
@@ -59,25 +61,20 @@ namespace Alchemi.ExecutorService
 		private ExecutorContainer execContainer = null;
 
 		// Create a logger for use in this class
-		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		//The value that will be returned to appstart
-		private static int returnCode = 0;
+		private static ILog logger;
 
 		public ExecutorService()
 		{
-			// This call is required by the Windows.Forms Component Designer.
-			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(DefaultErrorHandler);
-
 			InitializeComponent();
 			execContainer = new ExecutorContainer();
 			// subscribe to events
 			ExecutorContainer.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
+		
+			Logger.LogHandler += new LogEventHandler(this.Log);
 		}
 
 		// The main entry point for the process
-		[STAThread]
-		static int Main(string[] args)
+		static void Main(string[] args)
 		{
 			ServiceBase[] ServicesToRun;
 
@@ -87,6 +84,14 @@ namespace Alchemi.ExecutorService
 
 			try
 			{
+				Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+				logger = LogManager.GetLogger(typeof(ExecutorService));
+				XmlConfigurator.Configure(new FileInfo(string.Format("{0}.config",Assembly.GetExecutingAssembly ().Location)));
+
+				//create directory and set permissions for dat directory...for logging.
+				string datDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"dat");
+				ServiceUtil.CreateDir(datDir,"SYSTEM");
+
 				string opt = null ;
 				if ( args.Length > 0)
 				{
@@ -123,12 +128,8 @@ namespace Alchemi.ExecutorService
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Unknown error in Alchemi Manager Service: " + ex.ToString());
 				HandleAllUnknownErrors("Error in Main: ",ex);
-				returnCode = 999; //some error code.
 			}
-
-			return returnCode;
 		}
 
 		/// <summary> 
@@ -152,7 +153,6 @@ namespace Alchemi.ExecutorService
 				{
 					components.Dispose();
 				}
-				execContainer = null;
 			}
 			base.Dispose( disposing );
 		}
@@ -164,13 +164,15 @@ namespace Alchemi.ExecutorService
 		{
 			try
 			{
+				logger.Info("Starting Alchemi Executor Service v."+Utils.AssemblyVersion);
 				ThreadStart ts = new ThreadStart(Start);
 				Thread t = new Thread(ts);
 				t.Start();
+				t.Join(25000);
 			}
 			catch (Exception e)
 			{
-				EventLog.WriteEntry("Error Starting Service " + e,System.Diagnostics.EventLogEntryType.Error);
+				logger.Error("Error Starting Alchemi Executor Service " , e);
 			}
 		}
 
@@ -179,14 +181,21 @@ namespace Alchemi.ExecutorService
 			//the executor service is for dedicated machines only
 			try
 			{
+				//this will cause the ExecutorContainer to read the config from the Alchemi.Executor.config.xml
 				execContainer.Start();
-				logger.Info("Service Started");
+				logger.Info("Executor Service Started");
 			}
 			catch (Exception e)
 			{
-				logger.Error ("Error while starting service:",e) ;
-				EventLog.WriteEntry("Error Stopping Service " + e,System.Diagnostics.EventLogEntryType.Error);
-				Stop();
+				logger.Warn("Exception starting Executor service...Reconnecting...",e);
+				try
+				{
+					execContainer.Reconnect();
+				}
+				catch (Exception ex1)
+				{
+					logger.Error("Error trying to reconnect: ",ex1);
+				}
 			}
 		}
 
@@ -194,8 +203,12 @@ namespace Alchemi.ExecutorService
 		{
 			try
 			{
-				execContainer.Stop();
-				logger.Info("Service Stopped");
+				if (execContainer!=null)
+					execContainer.Stop();
+				else
+					logger.Debug("execContainer was null.");
+
+				logger.Info("Executor Service Stopped");
 			}
 			catch (Exception e)
 			{
@@ -212,8 +225,27 @@ namespace Alchemi.ExecutorService
 		//just to follow the same model as the windows forms app
 		private static void HandleAllUnknownErrors(string sender, Exception e)
 		{
-			logger.Error("AlchemiExecutorService Unknown Error: " + sender,e);
-			//EventLog.WriteEntry("AlchemiExecutorService Unknown Error: " + e,System.Diagnostics.EventLogEntryType.Error);
+			if (logger!=null)
+			{
+				logger.Error("Unhandled Exception in Alchemi Executor Service: sender = "+sender,e);
+			}
+			else
+			{
+				try
+				{
+					TextWriter tw = File.CreateText("alchemiExecutorError.txt");
+					tw.WriteLine("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender);
+					tw.WriteLine(e.ToString());
+					tw.Flush();
+					tw.Close();
+					tw = null;
+				}
+				catch
+				{
+					//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
+					//throw new Exception("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender,e);
+				}
+			}		
 		}
 
 		/// <summary>
@@ -223,13 +255,15 @@ namespace Alchemi.ExecutorService
 		{
 			try
 			{
+				logger.Info("Stopping Executor Service...");
 				ThreadStart ts = new ThreadStart(Stop);
 				Thread t = new Thread(ts);
 				t.Start();
+				t.Join(25000);
 			}
 			catch (Exception e)
 			{
-				EventLog.WriteEntry("Error Stopping Service " + e,System.Diagnostics.EventLogEntryType.Error);
+				logger.Error("Error Stopping Service " ,e);
 			}
 		}
 
@@ -237,8 +271,12 @@ namespace Alchemi.ExecutorService
 		{
 			try
 			{
-				logger.Info("Got disconnected! Starting thread to try and reconnect.");
-				execContainer.Reconnect();
+				logger.Info("Got disconnected!");
+				if (this.execContainer.Config.Dedicated && this.execContainer.Config.RetryConnect)
+				{
+					logger.Info("Trying to reconnect.");
+					execContainer.Reconnect();					
+				}
 			}
 			catch (Exception e)
 			{
@@ -250,32 +288,32 @@ namespace Alchemi.ExecutorService
 		{
 			string path = string.Format ("/assemblypath={0}",Assembly.GetExecutingAssembly ().Location);
 			ServiceHelper.installService(new ProjectInstaller(),path);
-
-//			TransactedInstaller ti = new TransactedInstaller ();
-//			ProjectInstaller pi = new ProjectInstaller ();
-//			ti.Installers.Add (pi);
-//			string[] cmdline = {path};
-//			InstallContext ctx = new InstallContext ("Install.log", cmdline );
-//			ti.Context = ctx;
-//			ti.Install ( new Hashtable ());
-//					
-//			//this doesnt seem to appear on the console...why?
-//			Console.WriteLine("Alchemi Executor Service installed successfully.");
 		}
 
 		private static void uninstallService()
 		{
 			string path = string.Format ("/assemblypath={0}", Assembly.GetExecutingAssembly ().Location);
 			ServiceHelper.uninstallService(new ProjectInstaller(),path);
+		}
 
-//			TransactedInstaller ti = new TransactedInstaller ();
-//			ProjectInstaller pi = new ProjectInstaller ();
-//			ti.Installers.Add (pi);
-//			string[] cmdline = {path};
-//			InstallContext ctx = new InstallContext ("Uninstall.log", cmdline );
-//			ti.Context = ctx;
-//			ti.Uninstall ( null );
-//			Console.WriteLine("Alchemi Executor Service uninstalled successfully.");
+		private void Log(object sender, LogEventArgs e)
+		{
+			switch (e.Level)
+			{
+				case LogLevel.Debug:
+					string message = e.Source  + ":" + e.Member + " - " + e.Message;
+					logger.Debug(message,e.Exception);
+					break;
+				case LogLevel.Info:
+					logger.Info(e.Message);
+					break;
+				case LogLevel.Error:
+					logger.Error(e.Message,e.Exception);
+					break;
+				case LogLevel.Warn:
+					logger.Warn(e.Message);
+					break;
+			}
 		}
 	}
 }

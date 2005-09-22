@@ -127,7 +127,6 @@ namespace Alchemi.Core.Manager
 					ManagerStartEvent("Configuring remoting",10);
 
             	RemotingConfiguration.Configure(AppDomain.CurrentDomain.BaseDirectory+RemotingConfigFile);
-
 				//TODO: for hierarchical grids
 //				RemoteEndPoint managerEP = null;
 //				if (Config.Intermediate)
@@ -320,21 +319,23 @@ namespace Alchemi.Core.Manager
             if (_DedicatedSchedulerThread != null)
             {
 				logger.Info("Stopping the scheduler thread...");
-                //_DedicatedSchedulerThread.Abort();
 				_stopScheduler = true; //cleaner way of aborting
+				InternalShared.Instance.DedicatedSchedulerActive.Set();
+
+				_DedicatedSchedulerThread.Abort(); //still use abort?
                 _DedicatedSchedulerThread.Join();
             }
             if (_WatchDogThread != null)
             {
 				logger.Info("Stopping the watchdog thread...");
 				_stopWatchDog = true; //cleaner way of aborting.
-                //_WatchDogThread.Abort();
+                _WatchDogThread.Abort();
                 _WatchDogThread.Join();
             }
 
 			logger.Info("Cleaning up all apps...");
 			CleanUpApps();
-			
+
 			logger.Info("Unregistering the remoting channel...");
             ChannelServices.UnregisterChannel(_Chnl);
 
@@ -369,46 +370,65 @@ namespace Alchemi.Core.Manager
 			}
 		}
 
-        private void ScheduleDedicated()
-        {
-			try
+		private void ScheduleDedicated()
+		{
+			logger.Info("Scheduler thread started.");
+			try 
 			{
 				// TODO: allow scheduling of multiple threads in one go
 				while (!_stopScheduler)
 				{
-					//logger.Debug("WaitOne for 1000 millis on DedicatedSchedulerActive");
-					InternalShared.Instance.DedicatedSchedulerActive.WaitOne(1000, false);
-
-					//logger.Debug("Getting a dedicated schedule");
-					DedicatedSchedule ds = InternalShared.Instance.Scheduler.ScheduleDedicated();
-
-					if (ds == null)
+					try
 					{
-						InternalShared.Instance.DedicatedSchedulerActive.Reset();
-						//logger.Debug("Dedicatd schedule is null. Reset the DedicatedSchedulerActive waithandle");
-						continue;
-					}
+						//logger.Debug("WaitOne for 1000 millis on DedicatedSchedulerActive");
+						InternalShared.Instance.DedicatedSchedulerActive.WaitOne(1000, false);
 
-					MExecutor me = _Executors[ds.ExecutorId];
-					MThread mt = new MThread(ds.TI);
+						//logger.Debug("Getting a dedicated schedule");
+						DedicatedSchedule ds = InternalShared.Instance.Scheduler.ScheduleDedicated();
+
+						if (ds == null)
+						{
+							//to avoid blocking again if stop has been called.
+							if (!_stopScheduler)
+							{
+								InternalShared.Instance.DedicatedSchedulerActive.Reset();
+								//logger.Debug("Dedicatd schedule is null. Reset the DedicatedSchedulerActive waithandle");
+							}
+							
+							continue;
+						}
+
+						MExecutor me = _Executors[ds.ExecutorId];
+						MThread mt = new MThread(ds.TI);
                     
-					try          
+						try          
+						{
+							logger.Debug("Trying to schedule thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
+							// dispatch thread
+							me.ExecuteThread(ds.TI);
+							// update thread state 'after' it is dispatched. (kna changed this: aug19,05). to prevent the scheduler from hanging here.
+							mt.CurrentExecutorId = ds.ExecutorId;
+							mt.State = ThreadState.Scheduled;
+							logger.Debug("Scheduled thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
+						}
+						catch (Exception e)
+						{
+							logger.Error("Some error occured trying to schedule. Reset-ing the thread to be scheduled. Continuing...",e);
+							// remove executor and reset thread so it can be rescheduled
+							//me.Disconnect(); //Krishna Aug10, 05. let us not disconnect the Executor. perhaps it can do other threads.
+							mt.Reset(); // this should happen as part of the disconnection
+						}	
+					}
+					catch (ThreadAbortException)
 					{
-						logger.Debug("Scheduling thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
-						// update thread state
-						mt.CurrentExecutorId = ds.ExecutorId;
-						mt.State = ThreadState.Scheduled;
-						// dispatch thread
-						me.RemoteRef.Manager_ExecuteThread(ds.TI);
+						logger.Debug("Scheduler Thread aborting...");
+						Thread.ResetAbort();
 					}
 					catch (Exception e)
 					{
-						logger.Error("Some error occured trying to schedule. Disconnecting executor and reset-ing the thread to be scheduled.",e);
-						// remove executor and reset thread so it can be rescheduled
-						me.Disconnect();
-						mt.Reset(); // this should happen as part of the disconnection
+						logger.Error("ScheduleDedicated thread error. Continuing...",e);
 					}
-				}
+				} //while
 			}
 			catch (ThreadAbortException)
 			{
@@ -417,46 +437,61 @@ namespace Alchemi.Core.Manager
 			}
 			catch (Exception e)
 			{
-				logger.Error("ScheduleDedicated thread error",e);
+				logger.Error("ScheduleDedicated thread error. Scheduler thread stopped.",e);
 			}
-        }
+			logger.Info("Scheduler thread exited.");
+		}
 
         private void Watchdog()
-        {
+        {			
+			logger.Info("WatchDog thread started.");
 			try
 			{
 				while (!_stopWatchDog)
 				{
-					Thread.Sleep(10000);
-
-					// ping dedicated executors running threads and reset executor and thread if can't ping
-					DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Executors_SelectDedicatedRunningThreads");
-					foreach (DataRow dr in dt.Rows)
+					try
 					{
-						MExecutor me = _Executors[dr["executor_id"].ToString()];
-						try
-						{
-							me.RemoteRef.PingExecutor();
-						}
-						catch
-						{
-							me.Disconnect();
-							new MThread(dr["application_id"].ToString(), (int) dr["thread_id"]).Reset();
-						}
-					}
+						Thread.Sleep(7000);
 
-					// disconnect nde if not recd alive notification in the last 10 seconds
-					// TODO: make time interval configurable
-					InternalShared.Instance.Database.ExecSql("Executors_DiscoverDisconnectedNDE 10");
-					// reset threads whose executors have been disconnected
+						// ping dedicated executors running threads and reset executor and thread if can't ping
+						DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Executors_SelectDedicatedRunningThreads");
+						foreach (DataRow dr in dt.Rows)
+						{
+							MExecutor me = _Executors[dr["executor_id"].ToString()];
+							try
+							{
+								me.RemoteRef.PingExecutor();
+							}
+							catch
+							{
+								me.Disconnect();
+								new MThread(dr["application_id"].ToString(), (int) dr["thread_id"]).Reset();
+							}
+						}
+
+						// disconnect nde if not recd alive notification in the last 10 seconds
+						// TODO: make time interval configurable
+						InternalShared.Instance.Database.ExecSql("Executors_DiscoverDisconnectedNDE 10");
+						// reset threads whose executors have been disconnected
                     
-					dt = InternalShared.Instance.Database.ExecSql_DataTable("Threads_SelectLostNDE");
-					foreach (DataRow thread in dt.Rows)
-					{
-						new MThread(thread["application_id"].ToString(), (int) thread["thread_id"]).Reset();
-						new MExecutor(thread["executor_id"].ToString()).Disconnect();
+						dt = InternalShared.Instance.Database.ExecSql_DataTable("Threads_SelectLostNDE");
+						foreach (DataRow thread in dt.Rows)
+						{
+							new MThread(thread["application_id"].ToString(), (int) thread["thread_id"]).Reset();
+							new MExecutor(thread["executor_id"].ToString()).Disconnect();
+						}
+				
 					}
-				}
+					catch (ThreadAbortException)
+					{
+						logger.Debug("Watchdog thread aborting...");
+						Thread.ResetAbort();
+					}
+					catch (Exception ex)
+					{
+						logger.Debug("Error in WatchDog thread. Continuing after error...",ex);
+					}
+				} //while
 			}
 			catch (ThreadAbortException)
 			{
@@ -465,8 +500,10 @@ namespace Alchemi.Core.Manager
 			}
 			catch (Exception e)
 			{
-				logger.Error("WatchDog thread error ",e);
+				logger.Error("WatchDog thread error. WatchDog thread stopped.",e);
 			}
+
+			logger.Info("WatchDog thread exited.");
         }
     }
 }

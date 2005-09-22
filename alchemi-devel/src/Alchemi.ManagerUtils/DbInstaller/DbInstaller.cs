@@ -413,13 +413,16 @@ namespace Alchemi.ManagerUtils.DbInstaller
             txLog.AppendText("[ Creating Configuration File ] ... ");
             try
             {
-            	Configuration config = new Configuration(InstallLocation);
+				//get the manager install location. it is ../v.v.v
+				string mgrInstallDir = Path.Combine(Directory.GetParent(InstallLocation).FullName,Alchemi.Core.Utility.Utils.AssemblyVersion);
+				txLog.AppendText(" Writing Configuration to " + mgrInstallDir + Environment.NewLine);
+            	Configuration config = new Configuration(mgrInstallDir);
                 config.DbServer = txServer.Text;
                 config.DbUsername = "sa";
                 config.DbPassword = txAdminPwd.Text;
                 config.Slz();
                 txLog.AppendText("[ Done ]" + Environment.NewLine);
-                Log("wrote configuration file to " + InstallLocation);
+                Log("wrote configuration file to " + mgrInstallDir);
             }
             catch (Exception ex)
             {

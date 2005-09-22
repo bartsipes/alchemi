@@ -80,19 +80,28 @@
                     HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
                 />
                 <Reference
-                    Name = "Alchemi.Core"
-                    AssemblyName = "Alchemi.Core"
-                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
-                />
-                <Reference
                     Name = "PiCalculator"
                     Project = "{15A0F48C-183C-4170-AC37-8E3D6D329CEA}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\..\..\lib\log4net.dll"
+                />
+                <Reference
+                    Name = "Alchemi.Core"
+                    AssemblyName = "Alchemi.Core"
+                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
                 />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "App.config"
+                    BuildAction = "None"
+                />
                 <File
                     RelPath = "App.ico"
                     BuildAction = "Content"

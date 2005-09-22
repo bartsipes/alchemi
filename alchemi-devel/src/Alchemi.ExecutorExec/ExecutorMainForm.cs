@@ -101,6 +101,7 @@ namespace Alchemi.ExecutorExec
 		private NumericUpDown udReconnectInterval;
 		private ProgressBar pbar;
 		private MenuItem mnuUpdates;
+		private System.Windows.Forms.StatusBar statusBar;
 
 		private static bool silentMode = true;
 
@@ -113,7 +114,6 @@ namespace Alchemi.ExecutorExec
 		private const string updateExecURL = "http://www.alchemi.net/updates/executor/exec/ExecutorExecManifest.xml";
 		private const string updateServiceURL = "http://www.alchemi.net/updates/executor/service/ExecutorServiceManifest.xml";
 		private bool updating = false;
-		private System.Windows.Forms.StatusBar statusBar;
     	public int returnCode = 0;
 
     	public ExecutorMainForm(): this(false)
@@ -596,7 +596,7 @@ namespace Alchemi.ExecutorExec
 																	   1,
 																	   0,
 																	   0,
-																	   0});
+																	   -2147483648});
 			this.udMaxRetry.Name = "udMaxRetry";
 			this.udMaxRetry.Size = new System.Drawing.Size(52, 20);
 			this.udMaxRetry.TabIndex = 8;
@@ -1152,17 +1152,15 @@ namespace Alchemi.ExecutorExec
    
         private void Exit()
         {
-			try
+			if (!isService)
 			{
-				_container.Stop();
-				this.Close();
-				Application.Exit();
+				DisconnectExecutor();
 			}
-			catch (Exception ex)
-			{
-				logger.Error("Error in exit()",ex);
-				Log("Error in exit() method:" + ex.Message);
-			}
+			//we dont stop the service just because the serviceController is closed.
+
+			this.Close();
+			Application.Exit();
+
         }
     
         //-----------------------------------------------------------------------------------------------    

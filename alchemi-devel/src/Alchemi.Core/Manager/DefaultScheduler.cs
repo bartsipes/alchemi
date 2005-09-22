@@ -25,6 +25,7 @@
 */
 #endregion
 
+using System;
 using System.Data;
 using Alchemi.Core.Owner;
 
@@ -92,47 +93,73 @@ namespace Alchemi.Core.Manager
 		/// <returns>DedicatedSchedule</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
-            // non-optimised code for demonstration on how a custom scheduler might be written
-            /*
-            DataTable executors = _Executors.AvailableDedicatedExecutors;
-            if (executors.Rows.Count == 0)
-            {
-                return null;
-            }
-            string executorId = executors.Rows[0]["executor_id"].ToString();
-
-            
-            DataTable threads = _Applications.ReadyThreads;
-            if (threads.Rows.Count == 0)
-            {
-                return null;
-            }
-            ThreadIdentifier ti = new ThreadIdentifier(
-                threads.Rows[0]["application_id"].ToString(),
-                int.Parse(threads.Rows[0]["thread_id"].ToString()),
-                int.Parse(threads.Rows[0]["priority"].ToString())
-                );
-                */
-			//logger.Debug("Schedule dedicated...");
+			DedicatedSchedule dsched = null;
 			DataSet ds = InternalShared.Instance.Database.ExecSql_DataSet("Thread_Schedule null");
-            if (ds.Tables.Count == 0)
+            if (ds.Tables.Count != 0)
             {
-				//logger.Debug("no records returned for schedule-dedicated");
-                return null;
+				DataRow dr = ds.Tables[0].Rows[0];
+				string executorId = null;
+				if (dr["executor_id"] != DBNull.Value)
+				{
+					executorId = dr["executor_id"].ToString();
+				}
+					
+				string appid = null;
+				if (dr["application_id"] != DBNull.Value)
+				{
+					appid = dr["application_id"].ToString();
+				}
+					
+				int threadId = -1;
+				if (dr["thread_id"]!=DBNull.Value)
+				{
+					threadId = (int)dr["thread_id"];
+				}
+					
+				int priority = -1;
+				if (dr["priority"]!=DBNull.Value)
+				{
+					priority = (int) dr["priority"];
+				}
+				else
+				{
+					priority = 5; //DEFAULT PRIORITY - TODO: have to put this in some Constants.cs file or something...
+				}
+				dr = null;
+				
+				if (threadId!=-1 && appid!=null && executorId!=null)
+				{
+					ThreadIdentifier ti= new ThreadIdentifier(appid, threadId,priority);
+					logger.Debug("Schedule dedicated. app_id="+appid+",threadID="+threadId+", executor-id="+executorId);
+					dsched = new DedicatedSchedule(ti, executorId);
+				}
             }
-            DataRow dr = ds.Tables[0].Rows[0];
-            string executorId = dr["executor_id"].ToString();
-			string appid = dr["application_id"].ToString();
-			int threadId = (int)dr["thread_id"];
-			int priority = (int) dr["priority"];
-            ThreadIdentifier ti = new ThreadIdentifier(appid, threadId,priority);
-			
-			dr = null;
 			ds.Dispose();
 
-			logger.Debug("Schedule dedicated. app_id="+appid+",threadID="+threadId+", executor-id="+executorId);
-
-            return new DedicatedSchedule(ti, executorId);
+            return dsched;
         }
+
+		 
+		/*
+		 * //non-optimised code for demonstration on how a custom scheduler might be written
+			DataTable executors = _Executors.AvailableDedicatedExecutors;
+			if (executors.Rows.Count == 0)
+			{
+				return null;
+			}
+			string executorId = executors.Rows[0]["executor_id"].ToString();
+
+            
+			DataTable threads = _Applications.ReadyThreads;
+			if (threads.Rows.Count == 0)
+			{
+				return null;
+			}
+			ThreadIdentifier ti = new ThreadIdentifier(
+				threads.Rows[0]["application_id"].ToString(),
+				int.Parse(threads.Rows[0]["thread_id"].ToString()),
+				int.Parse(threads.Rows[0]["priority"].ToString())
+				);
+		*/
     }
 }

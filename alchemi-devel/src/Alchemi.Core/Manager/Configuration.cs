@@ -117,7 +117,7 @@ namespace Alchemi.Core.Manager
 		/// <param name="location">Location of the config file</param>
         public Configuration(string location)
         {
-            ConfigFile = location + ConfigFileName;
+            ConfigFile = Path.Combine(location, ConfigFileName);
         }
 
         //-----------------------------------------------------------------------------------------------    

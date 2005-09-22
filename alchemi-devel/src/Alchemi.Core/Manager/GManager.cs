@@ -216,7 +216,7 @@ namespace Alchemi.Core.Manager
             AuthenticateUser(sc);
             ApplicationAuthorizationCheck(sc, appId);
 
-			logger.Debug("getting finished thread for app:"+appId);
+			//logger.Debug("getting finished thread for app:"+appId);
             return _Applications[appId].FinishedThreads;
         }
 
@@ -231,7 +231,7 @@ namespace Alchemi.Core.Manager
 			AuthenticateUser(sc);
 			ApplicationAuthorizationCheck(sc, appId);
 
-			logger.Debug("Getting count of total finished threads for app: " + appId);
+			//logger.Debug("Getting count of total finished threads for app: " + appId);
 			int totCount = 0;
 
 			//get the count of threads which have the state "dead" in the database 
@@ -317,6 +317,7 @@ namespace Alchemi.Core.Manager
 					{
 						string executorId = dr["executor_id"].ToString();
 						MExecutor me = new MExecutor(executorId);
+						//do it for dedicated ones only.
 						if (me.RemoteRef!=null)
 							me.RemoteRef.Manager_CleanupApplication(appid);
 					}
@@ -367,7 +368,7 @@ namespace Alchemi.Core.Manager
             EnsurePermission(sc, Permission.ExecuteThread);
 
 			//logger.Debug("Registering new executor");
-            return _Executors.RegisterNew(sc, info.MaxCpuPower);
+            return _Executors.RegisterNew(sc, info);
         }
 
         //-----------------------------------------------------------------------------------------------          
@@ -379,13 +380,13 @@ namespace Alchemi.Core.Manager
 		/// <param name="sc">security credentials to verify if the executor has permission to perform this operation 
 		/// (i.e connect non-dedicated, which is associated with the ExecuteThread permission)</param>
 		/// <param name="executorId">executor id</param>
-        public void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId)
+        public void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP)
         {
             logger.Debug("Executor called: ConnectNonDedicated");
 			AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ExecuteThread);
 
-            _Executors[executorId].ConnectNonDedicated();
+            _Executors[executorId].ConnectNonDedicated(executorEP);
 
 			logger.Debug("Connected to executor non-dedicated: "+executorId);
             _Executors[executorId].HeartbeatUpdate(new HeartbeatInfo(0, 0, 0));
@@ -415,7 +416,7 @@ namespace Alchemi.Core.Manager
             catch (ExecutorCommException ece)
             {
 				logger.Error("Couldnt connect back to the supplied executor",ece);
-                throw new ConnectBackException("Couldn't connect back to the supplied Executor", null);
+                throw new ConnectBackException("Couldn't connect back to the supplied Executor", ece);
             }
         }
 
@@ -457,19 +458,19 @@ namespace Alchemi.Core.Manager
             // critical section .. don't want to schedule same thread on multiple executors
 			Monitor.Enter(InternalShared.Instance);
 
-			logger.Debug("Entering monitor...");
+			//logger.Debug("Entering monitor...");
             // try and get a local thread
             ti = InternalShared.Instance.Scheduler.ScheduleNonDedicated(executorId);
             if (ti != null)
             {
-				logger.Debug("Schedule-non-dedicated gave Ti:"+ti.ThreadId);
+				//logger.Debug("Schedule-non-dedicated gave Ti:"+ti.ThreadId);
                 scheduled = true;
             }
             else
             {
                 // no thread, so can release lock immediately
                 Monitor.Exit(InternalShared.Instance);
-				logger.Debug("No thread. so releasing lock immediately.");
+				//logger.Debug("No thread. so releasing lock immediately.");
             }
             // TODO: hierarchical grids ignored until after v1.0.0
             /*
@@ -704,8 +705,8 @@ namespace Alchemi.Core.Manager
 				//let us try ManageOwnApp
 				logger.Debug("User doesnot have permission for ManageAllApps, checking ManageOwnApp");
 				EnsurePermission(sc,Permission.ManageOwnApp);
-				logger.Debug("Getting list of live applications for user: "+sc.Username);
 				ds = _Applications.GetApplicationList(sc.Username);
+				logger.Debug("Getting list of live applications for user: "+sc.Username);
 			}
 
             return ds;
@@ -893,7 +894,6 @@ namespace Alchemi.Core.Manager
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
-			logger.Debug("Getting system summary from db.");
             return InternalShared.Instance.Database.ExecSql_DataTable("Admon_SystemSummary");
         }
 
@@ -975,6 +975,7 @@ namespace Alchemi.Core.Manager
 				logger.Debug("Null executorID passed in to AbortThread");
                 return;
             }
+
             MExecutor me = new MExecutor(executorId);
             if (me.RemoteRef == null)
             {
@@ -982,6 +983,7 @@ namespace Alchemi.Core.Manager
 				logger.Debug("AbortThread: not doing anything since the executor is not dedicated.");
                 return;
             }
+
 			try
 			{
 				logger.Debug("Aborting thread "+ ti.ThreadId +" on executor:"+executorId);
@@ -989,7 +991,7 @@ namespace Alchemi.Core.Manager
 			}
 			catch (ExecutorCommException ece)
 			{
-				logger.Error("ExecutorCommException...while aborting thread. Disconnecting...",ece);
+				logger.Error("ExecutorCommException...while aborting thread. Disconnecting executor...",ece);
 				me.Disconnect();
 			}
 			catch (Exception e)

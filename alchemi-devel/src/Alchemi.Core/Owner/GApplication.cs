@@ -194,7 +194,7 @@ namespace Alchemi.Core.Owner
 				{
 					Manager.Owner_CleanupApplication(Credentials,_Id);
 				}
-				catch {}
+				catch{}
 
 				if(components != null)
 				{
@@ -213,16 +213,19 @@ namespace Alchemi.Core.Owner
 		/// </summary>
 		public void Start()
 		{
-
+			logger.Debug("Start GApp..."+ _Id + " with " + _Threads.Count+" threads.");
 			if (_Running) return;
 
 			if (!_MultiUse)
 			{
+				logger.Debug("This is not a multi-use GApplication");
 				if (!firstuse) 
 					throw new InvalidOperationException("Cannot re-use a single-use GApplication.");
 			}
 
 			Init();
+
+			logger.Debug("Completed Init...for GApp");
 
 //			//stop the previous GetFinishedThread stuff,... in case the GApp is being re-used. to avoid it from accessing the collection
 //			if (_GetFinishedThreadsThread!=null && _GetFinishedThreadsThread.IsAlive)
@@ -235,7 +238,7 @@ namespace Alchemi.Core.Owner
 			//lock it to make doubly sure that the collection enumeration is sync-ed.
 			lock(_Threads)
 			{
-				logger.Debug("Start GApp..."+ _Id + " with " + _Threads.Count+" threads.");
+				logger.Debug("Enter Thread Lock...GApp " + _Id);
 				foreach (GThread thread in _Threads)
 				{
 					if (thread.Id == -1)
@@ -244,6 +247,7 @@ namespace Alchemi.Core.Owner
 					}
 				}
 			}
+			logger.Debug("Exit Thread Lock...GApp " + _Id);
 
 			StartGetFinishedThreads();
 
@@ -363,6 +367,7 @@ namespace Alchemi.Core.Owner
 		private void GetFinishedThreads()
 		{
 			bool appCleanedup = false;
+			logger.Info("GetFinishedThreads thread started.");
 			try
 			{
 				while (!_stopGetFinished)
@@ -391,23 +396,23 @@ namespace Alchemi.Core.Owner
                         
 							if (ex == null)
 							{
-								logger.Debug("Thread completed successfully:"+th.Id+ " raising thread finish event...");
-								try
+								logger.Debug("Thread completed successfully:"+th.Id);
+								//raise the thread finish event
+								if (ThreadFinish!=null)
 								{
-									//raise the thread finish event
+									logger.Debug("Raising thread finish event...");
 									ThreadFinish(th);
 								}
-								catch (NullReferenceException) {}
 							}
 							else
 							{
-								logger.Debug("Thread failed:"+th.Id+ " raising thread failed event ... ");
-								try
+								logger.Debug("Thread failed:"+th.Id);
+								//raise the thread failed event
+								if (ThreadFailed!=null)
 								{
-									//raise the thread failed event
-									ThreadFailed(th, ex);
+									logger.Debug("Raising thread failed event...");
+									ThreadFailed(th, ex);									
 								}
-								catch (NullReferenceException) {}
 							}
 						}
         
@@ -437,12 +442,18 @@ namespace Alchemi.Core.Owner
 					catch (SocketException se)
 					{
 						// lost connection to Manager
-						logger.Error("Lost connection to manager",se);
+						logger.Error("Lost connection to manager. Stopping GetFinishedThreads...",se);
+						break;
+					}
+					catch (RemotingException re)
+					{
+						// lost connection to Manager
+						logger.Error("Lost connection to manager. Stopping GetFinishedThreads...",re);
 						break;
 					}
 					catch (Exception e)
 					{
-						logger.Error("Error in GetFinishedThreads",e);
+						logger.Error("Error in GetFinishedThreads. Continuing to poll for finished threads...",e);
 					}
 				}
 			}
@@ -451,6 +462,12 @@ namespace Alchemi.Core.Owner
 				logger.Debug("GetFinishedThreads Thread aborted.");
 				Thread.ResetAbort();
 			}
+			catch (Exception e)
+			{
+				logger.Error("Error in GetFinishedThreads. GetFinishedThreads thread stopping...",e);
+			}
+
+			logger.Info("GetFinishedThreads thread exited..");
 		}
 
 		//----------------------------------------------------------------------------------------------- 

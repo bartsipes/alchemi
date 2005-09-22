@@ -31,29 +31,41 @@ namespace Alchemi.Core.Executor
 {
 	/// <summary>
 	/// Represents the static attributes of an executor.
+	/// 
 	/// </summary>
     [Serializable]
     public struct ExecutorInfo
     {
-		//these attributes are the max values for this executor.
 		/// <summary>
-		/// 
+		/// Gets or sets the Hostname of the Executor.
 		/// </summary>
-        public int MaxCpuPower; //in Ghz
+		public string Hostname;
 		/// <summary>
-		/// 
+		/// Gets or sets the maximum CPU power in the Executor hardware. (in Mhz)?Ghz
 		/// </summary>
-		public float TotalRAM; //in MB
+        public int MaxCpuPower;
 		/// <summary>
-		/// 
+		/// Gets or sets the maximum memory (RAM) in the Executor hardware. (in MB)
 		/// </summary>
-		public float TotalDisk; // in MB
+		public float MaxMemory; //in MB
 		/// <summary>
-		/// 
+		/// Gets or sets the maximum disk space in the Executor hardware. (in MB)
 		/// </summary>
-		public int numCPUs;
+		public float MaxDiskSpace; // in MB
+		/// <summary>
+		/// Gets or sets the total number of CPUs in the Executor hardware.
+		/// </summary>
+		public int Number_of_CPUs;
+		/// <summary>
+		/// Gets or sets the name of Operating system running on the Executor
+		/// </summary>
+		public string OS;
+		/// <summary>
+		/// Gets or sets the architecture of the processor/machine of the Executor (eg: x86, RISC etc)
+		/// </summary>
+		public string Architecture;
 
-		//these attributes are the limits set by the owner of the Executor node
+		//these attributes are the limits set by the owner/administrator of the Executor node
 		/// <summary>
 		/// 
 		/// </summary>
@@ -61,7 +73,7 @@ namespace Alchemi.Core.Executor
 		/// <summary>
 		/// 
 		/// </summary>
-		public float RAMLimit; //in MB
+		public float memLimit; //in MB
 		/// <summary>
 		/// 
 		/// </summary>
@@ -76,6 +88,10 @@ namespace Alchemi.Core.Executor
 		/// 
 		/// </summary>
 		public float CostPerThread;
+		/// <summary>
+		/// 
+		/// </summary>
+		public float CostPerDiskMB;
     }
 }
 

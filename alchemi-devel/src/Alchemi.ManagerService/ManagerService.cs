@@ -1,14 +1,15 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Configuration.Install;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
+using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Utility;
 using log4net;
+using log4net.Config;
 
 namespace Alchemi.ManagerService
 {
@@ -22,31 +23,48 @@ namespace Alchemi.ManagerService
 		private ManagerContainer _container = null;
 
 		// Create a logger for use in this class
-		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		//The value that will be returned to appstart
-		private static int returnCode=0;
+		private static ILog logger;
 
 		public ManagerService()
 		{
 			// This call is required by the Windows.Forms Component Designer.
 			InitializeComponent();
+			try
+			{
+				_container = new  ManagerContainer();
+				_container.RemotingConfigFile = "Alchemi.ManagerService.exe.config";
 
-			_container = new  ManagerContainer();
-			_container.RemotingConfigFile = "Alchemi.ManagerService.exe.config";
+				Logger.LogHandler += new LogEventHandler(this.Log);
+			}
+			catch (Exception ex)
+			{
+				HandleAllUnknownErrors(null,ex);
+			}
 		}
 
 		// The main entry point for the process
-		static int Main(string[] args)
+		static void Main(string[] args)
 		{
 			ServiceBase[] ServicesToRun;
 	
 			//the unhandled exception handler is set here as opposed to the constructor, since the Main does a lot more things that 
 			//can cause errors.
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(DefaultErrorHandler);
-
+			
 			try
 			{
+				string configFilePath = string.Format("{0}.config",Assembly.GetExecutingAssembly ().Location);
+
+				logger = LogManager.GetLogger(typeof(ManagerService));
+				XmlConfigurator.Configure(new FileInfo(configFilePath));
+				Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+				logger.Info("Set Env, logger. If it got here then logger should be ready...");
+				
+				//create directory and set permissions for dat directory...for logging.
+				string datDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"dat");
+				Alchemi.Core.Utility.ServiceUtil.CreateDir(datDir,"SYSTEM");
+
 				string opt = null ;
 				if ( args.Length > 0)
 				{
@@ -73,7 +91,7 @@ namespace Alchemi.ManagerService
 					ManagerService ms = new ManagerService();
 					if (!ServiceHelper.checkServiceInstallation(ms.ServiceName))
 					{
-						//installService();
+						installService();
 					}
 
 					ServicesToRun = new ServiceBase[] { ms };
@@ -83,11 +101,8 @@ namespace Alchemi.ManagerService
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine("Unknown error in Alchemi Manager Service: " + ex.ToString());
 				HandleAllUnknownErrors("Error in Main: ",ex);
-				returnCode = 999; //some error code.
 			}
-			return returnCode;
 		}
 
 		/// <summary> 
@@ -123,14 +138,17 @@ namespace Alchemi.ManagerService
 		{
 			try
 			{
+				logger.Info("Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);
 				ThreadStart ts = new ThreadStart(Start);
 				Thread t = new Thread(ts);
 				t.Start();
-				EventLog.WriteEntry("Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);
+
+				logger.Info("Completed Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);
+
 			}
 			catch (Exception e)
 			{
-				EventLog.WriteEntry("Error Starting Service: " + e,EventLogEntryType.Error);
+				logger.Error("Error Starting Service: ",e);
 			}
 		}
 
@@ -140,11 +158,30 @@ namespace Alchemi.ManagerService
 			HandleAllUnknownErrors(sender.ToString(),e);
 		}
 
-		//just to follow the same model as the windows forms app
+		//just to follow the same model as the manager windows forms app
 		private static void HandleAllUnknownErrors(string sender, Exception e)
 		{
-			logger.Error("AlchemiManagerService Unknown Error: " + sender,e);
-			//EventLog.WriteEntry("AlchemiManagerService Unknown Error: " + e,System.Diagnostics.EventLogEntryType.Error);
+			if (logger!=null)
+			{
+				logger.Error("Unhandled Exception in Alchemi Manager Service: sender = "+sender,e);
+			}
+			else
+			{
+				try
+				{
+					TextWriter tw = File.CreateText("alchemiManagerError.txt");
+					tw.WriteLine("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender);
+					tw.WriteLine(e.ToString());
+					tw.Flush();
+					tw.Close();
+					tw = null;
+				}
+				catch
+				{
+					//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
+					//throw new Exception("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender,e);
+				}
+			}
 		}
 
 		/// <summary>
@@ -160,7 +197,7 @@ namespace Alchemi.ManagerService
 			}
 			catch (Exception e)
 			{
-				EventLog.WriteEntry("Error Stopping Service " + e,EventLogEntryType.Error);
+				logger.Error("Error Stopping Alchemi Manager Service " , e);
 			}
 		}
 
@@ -173,8 +210,7 @@ namespace Alchemi.ManagerService
 			catch (Exception ex)
 			{
 				logger.Error("Error starting manager container",ex);
-				EventLog.WriteEntry("Error Stopping Service " + ex,EventLogEntryType.Error);
-				OnStop();
+				Stop();
 			}
 		}
 
@@ -183,11 +219,11 @@ namespace Alchemi.ManagerService
 			try
 			{
 				_container.Stop();	
+				logger.Info("Stopped Alchemi Manager Service");
 			}
 			catch (Exception ex)
 			{
 				logger.Error("Error stopping manager container",ex);
-				EventLog.WriteEntry("Error Stopping Service " + ex,EventLogEntryType.Error);
 			}
 			finally 
 			{
@@ -199,32 +235,32 @@ namespace Alchemi.ManagerService
 		{
 			string path = string.Format ("/assemblypath={0}",Assembly.GetExecutingAssembly ().Location);
 			ServiceHelper.installService(new ProjectInstaller(),path);
-
-//			TransactedInstaller ti = new TransactedInstaller ();
-//			ProjectInstaller pi = new ProjectInstaller ();
-//			ti.Installers.Add (pi);
-//			string[] cmdline = {path};
-//			InstallContext ctx = new InstallContext ("Install.log", cmdline );
-//			ti.Context = ctx;
-//			ti.Install ( new Hashtable ());
-//					
-//			//this doesnt seem to appear on the console...why?
-//			Console.WriteLine("Alchemi Manager Service installed successfully.");
 		}
 
 		private static void uninstallService()
 		{
 			string path = string.Format ("/assemblypath={0}", Assembly.GetExecutingAssembly ().Location);
 			ServiceHelper.uninstallService(new ProjectInstaller(),path);
+		}
 
-//			TransactedInstaller ti = new TransactedInstaller ();
-//			ProjectInstaller pi = new ProjectInstaller ();
-//			ti.Installers.Add (pi);
-//			string[] cmdline = {path};
-//			InstallContext ctx = new InstallContext ("Uninstall.log", cmdline );
-//			ti.Context = ctx;
-//			ti.Uninstall ( null );
-//			Console.WriteLine("Alchemi Manager Service uninstalled successfully.");
+		private void Log(object sender, LogEventArgs e)
+		{
+			switch (e.Level)
+			{
+				case LogLevel.Debug:
+					string message = e.Source  + ":" + e.Member + " - " + e.Message;
+					logger.Debug(message,e.Exception);
+					break;
+				case LogLevel.Info:
+					logger.Info(e.Message);
+					break;
+				case LogLevel.Error:
+					logger.Error(e.Message,e.Exception);
+					break;
+				case LogLevel.Warn:
+					logger.Warn(e.Message);
+					break;
+			}
 		}
 	}
 }

@@ -317,6 +317,7 @@ namespace Alchemi.Core
 
 	/// <summary>
 	/// Represents the login configuration information, to connect to a manager.
+	/// Used for GConnection Dialog
 	/// </summary>
     [Serializable]
     class Config
@@ -337,6 +338,7 @@ namespace Alchemi.Core
         {
             string file = Path.Combine(System.Windows.Forms.Application.StartupPath, filename);
             Config c;
+			//handle missing file exception and create a default config.
             try
             {
                 using (FileStream fs = new FileStream(file, FileMode.Open))

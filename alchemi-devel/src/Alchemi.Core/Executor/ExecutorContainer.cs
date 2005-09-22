@@ -64,7 +64,6 @@ namespace Alchemi.Core.Executor
 
 			// connect to manager
 			Executor = new GExecutor(rep, oep, Config.Id, Config.Dedicated, new SecurityCredentials(Config.Username, Config.Password), AppDomain.CurrentDomain.BaseDirectory);
-			//Executor.PingExecutor();
 			
 			if (ExecConnectEvent!=null)
 			{
@@ -90,39 +89,63 @@ namespace Alchemi.Core.Executor
 			logger.Info("Connected successfully.");
 		}
 
+		/// <summary>
+		/// Reconnect to the Manager.
+		/// </summary>
 		public void Reconnect()
 		{
-			//use default values
-			Reconnect(3,5000);
+			Reconnect(Config.RetryMax ,Config.RetryInterval);
 		}
 
+		/// <summary>
+		/// Try to Reconnect to the Manager.
+		///
+		/// </summary>
+		/// <param name="maxRetryCount">Maximum number of times to retry, if connection fails. -1 signifies: try forever.</param>
+		/// <param name="retryInterval">Retry connection after every 'retryInterval' seconds.</param>
 		public void Reconnect(int maxRetryCount, int retryInterval)
 		{
 			int retryCount = 0;
-			try
+			const int DEFAULT_RETRY_INTERVAL = 30; //30 seconds
+			while (true)
 			{
-				//Config.
-				while (retryCount < maxRetryCount)
+				if (maxRetryCount >= 0 && retryCount < maxRetryCount)
+					break;
+
+				logger.Debug ("Attempting to reconnect ... attempt: "+(retryCount+1));
+				retryCount++;
+				try //handle the error since we want to retry later.
 				{
-					logger.Debug ("Attempting to reconnect ... attempt: "+(retryCount+1));
-					retryCount++;
-					Connect();
-					if (Executor == null)
-					{
-						Thread.Sleep(retryInterval);
-					}
-					else
-					{
-						break;
-					}
+					Connect();						
 				}
-				if (!Executor.Dedicated)
+				catch{} //ignore the error. retry later.
+
+				if (!Connected)
+				{
+					//play safe.
+					if (retryInterval<0 || retryInterval>System.Int32.MaxValue)
+						retryInterval = DEFAULT_RETRY_INTERVAL;
+					Thread.Sleep(retryInterval*1000); //convert to milliseconds
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			//if Executor is null, then it is not Connected. The Connected property actually checks for that.
+			if (Executor!=null)
+			{
+				if (Executor.Dedicated)
+				{
+					logger.Debug("Reconnected successfully.[Dedicated mode.]");
+				}
+				else //not dedicated...
 				{
 					logger.Debug("Reconnected successfully.[Non-dedicated mode.]");
 					Executor.StartNonDedicatedExecuting(1000);
 				}
 			}
-			catch {}
 		}
 
 		public void Disconnect()
@@ -135,21 +158,28 @@ namespace Alchemi.Core.Executor
 			}
 		}
 
+		/// <summary>
+		/// Read the configuration file.
+		/// </summary>
+		/// <param name="useDefault"></param>
 		public void ReadConfig(bool useDefault)
 		{
 			if (!useDefault)
 			{
+				//handle the error and lets use default if the config cannot be found.
 				try
 				{
 					Config = Configuration.GetConfiguration();
 					logger.Debug("Using configuration from Alchemi.Executor.config.xml ...");
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
+					logger.Debug("Error getting existing config. Continuing with default config...",ex);
 					useDefault = true;
 				}
 			}
 
+			//this needs to be a seperate if-block, since we may have a problem getting existing config. then we use default
 			if (useDefault)
 			{
 				Config = new Configuration();
@@ -157,43 +187,47 @@ namespace Alchemi.Core.Executor
 			}
 		}
 
+		/// <summary>
+		/// Returns a value specifying whether the Connection has been verified previously.
+		/// </summary>
 		public bool ConnectVerified
 		{
 			get { return Config.ConnectVerified; }
 		}
 
+		/// <summary>
+		/// Stops the Executor Container
+		/// </summary>
 		public void Stop()
 		{
-			Config.Slz();
+			if (Config!=null)
+			{
+				Config.Slz();
+			}
 			if (Executor != null)
 			{
 				Disconnect();
 			}
 		}
 
+		/// <summary>
+		/// Starts the Executor Container
+		/// </summary>
 		public void Start()
 		{
-			try
+			logger.Debug("debug mode: curdir env="+Environment.CurrentDirectory + " app-base="+AppDomain.CurrentDomain.BaseDirectory);
+
+			ReadConfig(false);
+
+			if (ConnectVerified)
 			{
-				logger.Debug("debug mode: curdir env="+Environment.CurrentDirectory + " app-base="+AppDomain.CurrentDomain.BaseDirectory);
-
-				ReadConfig(false);
-
-				if (ConnectVerified)
-				{
-					logger.Info("Using last verified configuration ...");
-					Connect();
-				}
-				else
-				{
-					if (!Connected)
-						Connect();
-				}
+				logger.Info("Using last verified configuration ...");
+				Connect();
 			}
-			catch (Exception e)
+			else
 			{
-				logger.Error("Error starting exec-container.",e);
-				throw e;
+				if (!Connected)
+					Connect();
 			}
 		}
 

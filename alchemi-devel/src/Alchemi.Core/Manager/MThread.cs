@@ -201,7 +201,7 @@ namespace Alchemi.Core.Manager
 		/// </summary>
         public void Reset()
         {
-			//the reset stored-procedure takes care that only threads that are not already aborted.
+			//the reset stored-procedure takes care that only threads that are not already aborted are reset.
             InternalShared.Instance.Database.ExecSql(
                 string.Format("Thread_Reset '{0}', {1}", _AppId, _Id)
                 );

@@ -128,19 +128,13 @@ namespace Alchemi.Core.Utility
 
 		/// <summary>
 		/// Desserializes a file using the binary formatter to return the object after deserialization.
+		/// Throws an Exception if the File cannot be found / read.
 		/// </summary>
 		/// <param name="fileLocation">location of file to be deserialized</param>
 		/// <returns>result object after deserialization</returns>
         public static object DeserializeFromFile(string fileLocation)
         {
-            if (File.Exists(fileLocation))
-            {
-                return DeserializeFromByteArray(ReadByteArrayFromFile(fileLocation));
-            }
-            else
-            {
-                return null;
-            }
+			return DeserializeFromByteArray(ReadByteArrayFromFile(fileLocation));
         }
     
         //-----------------------------------------------------------------------------------------------    
@@ -158,6 +152,7 @@ namespace Alchemi.Core.Utility
 
 		/// <summary>
 		/// Writes the given base64-data  to a file
+		/// Throws an Exception if the File cannot written.
 		/// </summary>
 		/// <param name="fileLocation">filename to write the data to</param>
 		/// <param name="base64EncodedData">the base64-encoded data to be written into the file</param>

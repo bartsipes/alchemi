@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "C:\akshay\dev\Alchemi\src\Core\bin\Debug\;C:\akshay\dev\Alchemi\project\bin\" >
+            <Settings ReferencePath = "C:\akshay\dev\Alchemi\src\Core\bin\Debug\;C:\akshay\dev\Alchemi\project\bin\;E:\akshay\dev\Alchemi\project\bin\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

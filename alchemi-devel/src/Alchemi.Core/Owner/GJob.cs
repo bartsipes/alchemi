@@ -99,14 +99,15 @@ namespace Alchemi.Core.Owner
             process.StartInfo.RedirectStandardOutput = true;
 
 			logger.Debug("Starting a new process...");
-            process.StartInfo.FileName = _RunCommand; //"cmd";
-            //process.StartInfo.Arguments = "/C " + _RunCommand;
+            process.StartInfo.FileName = "cmd"; //_RunCommand; //
+            process.StartInfo.Arguments = "/C " + _RunCommand;
  
             process.Start();
             process.WaitForExit();
       
             foreach (EmbeddedFileDependency dep in _OutputFiles)
             {
+				//handle errors connected to missing output files.
                 try
                 {
                     dep.Pack(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
@@ -114,16 +115,24 @@ namespace Alchemi.Core.Owner
                 	File.Delete(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
 					logger.Debug("Packing output file: "+dep.FileName);
                 }
-                catch (FileNotFoundException)
+                catch (Exception ex)
                 {
                     dep.Base64EncodedContents = "";
+					logger.Debug("Error packing outputfile " + dep.FileName + ". Continuing with other files...",ex);
                 }
             }
 
             foreach (FileDependency dep in _InputFiles)
             {
                 // cleanup
-                File.Delete(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
+				try
+				{
+					File.Delete(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error deleting file " + dep.FileName + ". Continuing with other files...",ex);
+				}
             }
 
             AddStandardFile(process.StandardError, "stderr.txt");
@@ -142,7 +151,7 @@ namespace Alchemi.Core.Owner
                 encoding.GetBytes(reader.ReadToEnd())
                 );
             _OutputFiles.Add(fileDep);
-			logger.Debug("Adding/packing output file: " + name);
+			logger.Debug("Added/packed output file: " + name);
         }
     }
 }
