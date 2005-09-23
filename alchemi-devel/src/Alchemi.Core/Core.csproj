@@ -340,6 +340,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Manager\Storage\Group.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Manager\Storage\IManagerStorage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -371,6 +376,11 @@
                 />
                 <File
                     RelPath = "Manager\Storage\SystemSummary.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Manager\Storage\User.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
