@@ -1,5 +1,5 @@
 //
-// Alchemi.Core.Manager.Storage.IManagerStorageSetup.cs
+// Alchemi.Core.Manager.Storage.Group.cs
 //
 // Author:
 //   Tibor Biro (tb@tbiro.com)
@@ -25,27 +25,42 @@ using System;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Sets up a specific storage structure.
-	/// 
-	/// A storage should know how to set itself up. In the event that the 
-	/// storage detects that it is not setup it might decide to initialize
-	/// the required data structures automatically.
+	/// Storage view of a group object. 
+	/// Used to pass group related data to and from the storage layer 
 	/// </summary>
-	public interface IManagerStorageSetup
+	public class Group
 	{
-		/// <summary>
-		/// Create the basic storage structures
-		/// </summary>
-		void SetUpStorage();
 
-		/// <summary>
-		/// Add default storage data
-		/// </summary>
-		void InitializeStorageData();
+		#region "Private variables"
+		
+		private Int32 m_groupId; 
+		private String m_groupName;
 
-		/// <summary>
-		/// Remove the structures initialized by this storage
-		/// </summary>
-		void TearDownStorage();
+		#endregion
+
+		#region "Properties"
+		public String GroupName
+		{
+			get
+			{
+				return m_groupName;
+			}
+		}
+
+		public Int32 GroupId
+		{
+			get
+			{
+				return m_groupId;
+			}
+		}
+
+		#endregion
+
+		public Group(Int32 groupId, String groupName)
+		{
+			m_groupId = groupId;
+			m_groupName = groupName;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 //
-// Alchemi.Core.Manager.Storage.IManagerStorageSetup.cs
+// Alchemi.Core.Manager.Storage.User.cs
 //
 // Author:
 //   Tibor Biro (tb@tbiro.com)
@@ -25,27 +25,59 @@ using System;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Sets up a specific storage structure.
-	/// 
-	/// A storage should know how to set itself up. In the event that the 
-	/// storage detects that it is not setup it might decide to initialize
-	/// the required data structures automatically.
+	/// Storage view of a user object. 
+	/// Used to pass user related data to and from the storage layer 
 	/// </summary>
-	public interface IManagerStorageSetup
+	public class User
 	{
-		/// <summary>
-		/// Create the basic storage structures
-		/// </summary>
-		void SetUpStorage();
+		#region "Private variables"
+		
+		private String m_username;
+		private String m_password;
+		private Int32 m_groupId; 
 
-		/// <summary>
-		/// Add default storage data
-		/// </summary>
-		void InitializeStorageData();
+		#endregion
 
-		/// <summary>
-		/// Remove the structures initialized by this storage
-		/// </summary>
-		void TearDownStorage();
+		#region "Properties"
+		public String Username
+		{
+			get
+			{
+				return m_username;
+			}
+		}
+		
+		public String Password
+		{
+			get
+			{
+				return m_password;
+			}
+			set
+			{
+				m_password = value;
+			}
+		}
+
+		public Int32 GroupId
+		{
+			get
+			{
+				return m_groupId;
+			}
+			set
+			{
+				m_groupId = value;
+			}
+		}
+
+		#endregion
+
+		public User(String username, String password, Int32 groupId)
+		{
+			m_username = username;
+			m_password = password;
+			m_groupId = groupId; 
+		}
 	}
 }

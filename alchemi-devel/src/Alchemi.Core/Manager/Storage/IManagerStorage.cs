@@ -45,15 +45,6 @@ namespace Alchemi.Core.Manager.Storage
 
 		object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
-		object GetUserList(SecurityCredentials sc);
-
-		object GetGroups(SecurityCredentials sc);
-
-		object UpdateUsers(SecurityCredentials sc, object updates);
-
-		object AddUsers(SecurityCredentials sc, object users);
-
-
 		object GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
@@ -64,13 +55,32 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns>true if the permission is set, false otherwise</returns>
 		bool CheckPermission(SecurityCredentials sc, Permission perm);
 
+		*/
+
 		/// <summary>
 		/// Authenticate a user's security credentials
 		/// </summary>
 		/// <param name="sc">Security credentials to authenticate</param>
 		/// <returns>True if the authentication is successful, false otherwise.</returns>
 		bool AuthenticateUser(SecurityCredentials sc);
-		*/
+
+		/// <summary>
+		/// Add a list of users to the storage.
+		/// </summary>
+		/// <param name="users"></param>
+		void AddUsers(User[] users);
+
+		void UpdateUsers(User[] updates);
+
+		/// <summary>
+		/// Get an array with all the users found in the current storage
+		/// </summary>
+		/// <returns></returns>
+		User[] GetUserList();
+
+		void AddGroups(Group[] groups);
+		
+		Group[] GetGroups();
 
 		/// <summary>
 		/// Get system summary information from the storage.

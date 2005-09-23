@@ -44,25 +44,41 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			if (m_managerStorage == null)
 			{
-				m_managerStorage = GetManagerStorage();
+				m_managerStorage = CreateManagerStorage();
 			}
 
 			return m_managerStorage;
 		}
 
 		/// <summary>
+		/// Set the manager storage.
+		/// Used to control the current storage from the caller.
+		/// </summary>
+		/// <param name="managerStorage"></param>
+		public static void SetManagerStorage(IManagerStorage managerStorage)
+		{
+			m_managerStorage = managerStorage;
+		}
+
+		/// <summary>
 		/// Create the right manager storage object.
 		/// </summary>
 		/// <returns></returns>
-		private static IManagerStorage GetManagerStorage()
+		private static IManagerStorage CreateManagerStorage()
 		{
 			// TODO: implement different storages based on the current configuration file
+			// TODO: currently everything defaults to SQL Server
 
 			Configuration configuration = Configuration.GetConfiguration();
-
-			String connectionString = ""; // TODO: create this
+			
+			String connectionString = String.Format("adpprovider=MsSql;server={0};database={1};User ID={2};Password={3}", 
+				configuration.DbServer, 
+				configuration.DbName, 
+				configuration.DbUsername,
+				configuration.DbPassword); 
 
 			return new SqlServerManagerDatabaseStorage(connectionString);
 		}
+
 	}
 }

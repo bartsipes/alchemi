@@ -21,6 +21,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
 using System;
+using System.Collections;
 
 namespace Alchemi.Core.Manager.Storage
 {
@@ -32,6 +33,9 @@ namespace Alchemi.Core.Manager.Storage
 	/// </summary>
 	public class InMemoryManagerStorage : IManagerStorage
 	{
+		private ArrayList m_users;
+		private ArrayList m_groups;
+
 		public InMemoryManagerStorage()
 		{
 			//
@@ -43,8 +47,102 @@ namespace Alchemi.Core.Manager.Storage
 		public SystemSummary GetSystemSummary()
 		{
 			throw new Exception("Not implemented");
-			// TODO:  Add InMemoryManagerStorage.GetSystemSummary implementation
-			return null;
+		}
+
+		public void AddUsers(User[] users)
+		{
+			if (users == null)
+			{
+				return;
+			}
+
+			if (m_users == null)
+			{
+				m_users = new ArrayList();
+			}
+
+			m_users.AddRange(users);
+		}
+
+		public void UpdateUsers(User[] updates)
+		{
+			if (m_users == null || updates == null)
+			{
+				return;
+			}
+
+			for(int indexInList=0; indexInList<m_users.Count; indexInList++)
+			{
+				User userInList = (User)m_users[indexInList];
+
+				foreach(User userInUpdates in updates)
+				{
+					if (userInList.Username == userInUpdates.Username)
+					{
+						userInList.Password = userInUpdates.Password;
+						userInList.GroupId = userInUpdates.GroupId;
+					}
+				}
+			}
+		}
+
+		public void AddGroups(Group[] groups)
+		{
+			if (groups == null)
+			{
+				return;
+			}
+
+			if (m_groups == null)
+			{
+				m_groups = new ArrayList();
+			}
+
+			m_groups.AddRange(groups);
+		}
+		
+		public Group[] GetGroups()
+		{
+			if (m_groups == null)
+			{
+				return new Group[0];
+			}
+			else
+			{
+				return (Group[])m_groups.ToArray(typeof(Group));
+			}
+		}
+
+		public bool AuthenticateUser(SecurityCredentials sc)
+		{
+			if (sc == null || m_users == null)
+			{
+				return false;
+			}
+
+			for(int index=0; index<m_users.Count; index++)
+			{
+				User user = (User)m_users[index];
+
+				if (user.Username == sc.Username && user.Password == sc.Password)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public User[] GetUserList()
+		{
+			if (m_users == null)
+			{
+				return new User[0];
+			}
+			else
+			{
+				return (User[])m_users.ToArray(typeof(User));
+			}
 		}
 
 		#endregion

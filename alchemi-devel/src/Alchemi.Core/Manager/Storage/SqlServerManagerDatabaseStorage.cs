@@ -22,6 +22,7 @@
 
 using System;
 using System.Data;
+using System.Data.SqlClient;
 
 using Advanced.Data.Provider;
 
@@ -31,11 +32,11 @@ namespace Alchemi.Core.Manager.Storage
 	/// Override some generic database calls with SQL Server specific calls.
 	/// This is usually done for performance reasons.
 	/// </summary>
-	public class SqlServerManagerDatabaseStorage : GenericManagerDatabaseStorage
+	public class SqlServerManagerDatabaseStorage : GenericManagerDatabaseStorage, IManagerStorage, IManagerStorageSetup
 	{
 		private String m_connectionString;
 
-		public SqlServerManagerDatabaseStorage(String connectionString)
+		public SqlServerManagerDatabaseStorage(String connectionString) : base(connectionString)
 		{
 			m_connectionString = connectionString;
 		}
@@ -49,14 +50,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns></returns>
 		public new SystemSummary GetSystemSummary()
 		{
-			AdpConnection connection = new AdpConnection(m_connectionString);
-			AdpCommand command = new AdpCommand();
-
-			command.Connection = connection;
-			command.CommandText = "Admon_SystemSummary";
-			command.CommandType = CommandType.StoredProcedure;
-
-			using (AdpDataReader dataReader = command.ExecuteReader())
+			using (AdpDataReader dataReader = RunSpReturnDataReader("Admon_SystemSummary"))
 			{
 				if (dataReader.Read())
 				{
@@ -89,5 +83,36 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		#region IManagerStorageSetup Members
+
+		/// <summary>
+		/// Create the tables, stored procedures and other structures needed by this storage.
+		/// </summary>
+		public void SetUpStorage()
+		{
+			// TODO: load scripts from resources to do this
+			// TODO: it should also contain constrains
+
+			RunSql("CREATE TABLE dbo.usr (usr_name varchar(50),password varchar(50), grp_id int NOT NULL)");
+
+			RunSql("CREATE TABLE dbo.grp (grp_id int NOT NULL, grp_name varchar(50) NOT NULL)");
+
+			RunSql("CREATE PROCEDURE dbo.User_Authenticate(@usr_name varchar(50), @password varchar(50)) AS select count(*) as authenticated from usr where usr_name = @usr_name and password = @password");
+
+		}
+
+		public void InitializeStorageData()
+		{
+			// TODO:  Add SqlServerManagerDatabaseStorage.InitializeStorageData implementation
+		}
+
+		public void TearDownStorage()
+		{
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_Authenticate]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
+			RunSql("DROP TABLE dbo.usr");
+			RunSql("DROP TABLE dbo.grp");
+		}
+
+		#endregion
 	}
 }
