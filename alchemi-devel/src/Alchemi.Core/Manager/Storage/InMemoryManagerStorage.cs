@@ -23,6 +23,8 @@
 using System;
 using System.Collections;
 
+using Alchemi.Core.Executor;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -86,33 +88,6 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public void AddGroups(Group[] groups)
-		{
-			if (groups == null)
-			{
-				return;
-			}
-
-			if (m_groups == null)
-			{
-				m_groups = new ArrayList();
-			}
-
-			m_groups.AddRange(groups);
-		}
-		
-		public Group[] GetGroups()
-		{
-			if (m_groups == null)
-			{
-				return new Group[0];
-			}
-			else
-			{
-				return (Group[])m_groups.ToArray(typeof(Group));
-			}
-		}
-
 		public bool AuthenticateUser(SecurityCredentials sc)
 		{
 			if (sc == null || m_users == null)
@@ -144,6 +119,49 @@ namespace Alchemi.Core.Manager.Storage
 				return (User[])m_users.ToArray(typeof(User));
 			}
 		}
+
+		public void AddGroups(Group[] groups)
+		{
+			if (groups == null)
+			{
+				return;
+			}
+
+			if (m_groups == null)
+			{
+				m_groups = new ArrayList();
+			}
+
+			m_groups.AddRange(groups);
+		}
+		
+		public Group[] GetGroups()
+		{
+			if (m_groups == null)
+			{
+				return new Group[0];
+			}
+			else
+			{
+				return (Group[])m_groups.ToArray(typeof(Group));
+			}
+		}
+
+		public String AddExecutor(ExecutorInfo executor)
+		{
+			throw new Exception("Not implemented");
+		}
+
+		public void UpdateExecutor(ExecutorInfo executor)
+		{
+			throw new Exception("Not implemented");
+		}
+
+		public ExecutorInfo[] GetExecutors()
+		{
+			throw new Exception("Not implemented");
+		}
+
 
 		#endregion
 	}

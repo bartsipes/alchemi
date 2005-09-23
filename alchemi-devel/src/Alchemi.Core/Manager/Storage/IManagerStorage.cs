@@ -22,6 +22,8 @@
 
 using System;
 
+using Alchemi.Core.Executor;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -44,8 +46,6 @@ namespace Alchemi.Core.Manager.Storage
 		object GetThreadList(SecurityCredentials sc, string appId);
 
 		object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
-
-		object GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
 		/// Check if a permisison is set.
@@ -81,6 +81,13 @@ namespace Alchemi.Core.Manager.Storage
 		void AddGroups(Group[] groups);
 		
 		Group[] GetGroups();
+
+		String AddExecutor(ExecutorInfo executor);
+
+		void UpdateExecutor(ExecutorInfo executor);
+
+		ExecutorInfo[] GetExecutors();
+
 
 		/// <summary>
 		/// Get system summary information from the storage.

@@ -25,6 +25,8 @@ using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 
+using Alchemi.Core.Executor;
+
 using Advanced.Data.Provider;
 
 namespace Alchemi.Core.Manager.Storage
@@ -206,6 +208,20 @@ namespace Alchemi.Core.Manager.Storage
 			return (User[])userList.ToArray(typeof(User));
 		}
 
+		public bool AuthenticateUser(SecurityCredentials sc)
+		{
+			if (sc == null || sc.Username == null || sc.Password == null)
+			{
+				return false;
+			}
+
+			object userCount = RunSqlReturnScalar(String.Format("select count(*) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
+				sc.Username.Replace("'", "''"),
+				sc.Password.Replace("'", "''")));
+
+			return Convert.ToBoolean(userCount);
+		}
+
 		public void AddGroups(Group[] groups)
 		{
 			if (groups == null)
@@ -245,18 +261,19 @@ namespace Alchemi.Core.Manager.Storage
 			return (Group[])groupList.ToArray(typeof(Group));
 		}
 
-		public bool AuthenticateUser(SecurityCredentials sc)
+		public String AddExecutor(ExecutorInfo executor)
 		{
-			if (sc == null || sc.Username == null || sc.Password == null)
-			{
-				return false;
-			}
+			throw new Exception("Not implemented");
+		}
 
-			object userCount = RunSqlReturnScalar(String.Format("select count(*) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
-				sc.Username.Replace("'", "''"),
-				sc.Password.Replace("'", "''")));
+		public void UpdateExecutor(ExecutorInfo executor)
+		{
+			throw new Exception("Not implemented");
+		}
 
-			return Convert.ToBoolean(userCount);
+		public ExecutorInfo[] GetExecutors()
+		{
+			throw new Exception("Not implemented");
 		}
 
 		#endregion
