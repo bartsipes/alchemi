@@ -167,14 +167,40 @@ namespace Alchemi.Core.Manager.Storage
 			return executorId;
 		}
 
-		public void UpdateExecutor(Executor executor)
+		public void UpdateExecutor(Executor updatedExecutor)
 		{
-			throw new Exception("Not implemented");
+			if (m_executors == null || updatedExecutor == null)
+			{
+				return;
+			}
+
+			ArrayList newExecutorList = new ArrayList();
+
+			foreach(Executor executor in m_executors)
+			{
+				if (executor.ExecutorId == updatedExecutor.ExecutorId)
+				{
+					newExecutorList.Add(updatedExecutor);
+				}
+				else
+				{
+					newExecutorList.Add(executor);
+				}
+			}
+
+			m_executors = newExecutorList;
 		}
 
 		public Executor[] GetExecutors()
 		{
-			throw new Exception("Not implemented");
+			if (m_executors == null)
+			{
+				return new Executor[0];
+			}
+			else
+			{
+				return (Executor[])m_executors.ToArray(typeof(Executor));
+			}
 		}
 
 
