@@ -409,5 +409,148 @@ namespace Alchemi.Tester.Manager.Storage
 		
 		#endregion
 
+		#region "UpdateExecutor Tests"
+
+		/// <summary>
+		/// Add a new executor.
+		/// Change all values, run update
+		/// Get executors, confirm that the update worked.
+		/// </summary>
+		[Test]
+		public void UpdateExecutorTest1()
+		{
+			DateTime pingTime1 = DateTime.Now;
+			DateTime pingTime2 = DateTime.Now.AddDays(1);
+
+			String executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+
+			Executor updatedExecutor = new Executor(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
+
+			updatedExecutor.ExecutorId = executorId;
+
+			ManagerStorage.UpdateExecutor(updatedExecutor);
+			
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(1, executors.Length);
+			Assert.AreEqual(true, executors[0].Dedicated);
+			Assert.AreEqual(false, executors[0].Connected);
+			Assert.AreEqual(pingTime2, executors[0].PingTime);
+			Assert.AreEqual("test2", executors[0].HostName);
+			Assert.AreEqual(8888, executors[0].Port);
+			Assert.AreEqual("username2", executors[0].Username);
+			Assert.AreEqual(222, executors[0].MaxCpu);
+			Assert.AreEqual(456, executors[0].CpuUsage);
+			Assert.AreEqual(56, executors[0].AvailableCpu);
+			Assert.AreEqual(5.6, executors[0].TotalCpuUsage);
+			Assert.AreEqual(executorId, executors[0].ExecutorId);
+		}
+
+		/// <summary>
+		/// Run update without any values in there.
+		/// The executor list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateExecutorTest2()
+		{
+			DateTime pingTime2 = DateTime.Now.AddDays(1);
+
+			Executor updatedExecutor = new Executor(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
+
+			updatedExecutor.ExecutorId = "";
+
+			ManagerStorage.UpdateExecutor(updatedExecutor);
+			
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(0, executors.Length);
+		}
+
+		/// <summary>
+		/// Add a new executor
+		/// Run update with a null executor.
+		/// The executor list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateExecutorTest3()
+		{
+			DateTime pingTime1 = DateTime.Now;
+
+			String executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+
+			ManagerStorage.UpdateExecutor(null);
+			
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(1, executors.Length);
+		}
+
+		#endregion
+
+		#region "GetExecutors Tests"
+
+		/// <summary>
+		/// Add a new executor.
+		/// Get the executor list.
+		/// The list should only contain the newly added executor.
+		/// </summary>
+		[Test]
+		public void GetExecutorsTest1()
+		{
+			DateTime pingTime = DateTime.Now;
+
+			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(1, executors.Length);
+			Assert.AreEqual(false, executors[0].Dedicated);
+			Assert.AreEqual(true, executors[0].Connected);
+			Assert.AreEqual(pingTime, executors[0].PingTime);
+			Assert.AreEqual("test", executors[0].HostName);
+			Assert.AreEqual(9999, executors[0].Port);
+			Assert.AreEqual("username1", executors[0].Username);
+			Assert.AreEqual(111, executors[0].MaxCpu);
+			Assert.AreEqual(123, executors[0].CpuUsage);
+			Assert.AreEqual(34, executors[0].AvailableCpu);
+			Assert.AreEqual(3.4, executors[0].TotalCpuUsage);
+			Assert.AreEqual(executorId, executors[0].ExecutorId);
+		}
+
+		/// <summary>
+		/// Add 3 executors.
+		/// Get the executors list.
+		/// The list should contain 3 items.
+		/// </summary>
+		[Test]
+		public void GetExecutorsTest2()
+		{
+			DateTime pingTime = DateTime.Now;
+
+			String executorId1 = AddExecutor(false, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(3, executors.Length);
+		}
+
+		/// <summary>
+		/// Add no executors.
+		/// Get the executor list.
+		/// The list should be empty but not null. No error is expected
+		/// </summary>
+		[Test]
+		public void GetExecutorsTest3()
+		{
+			Executor[] executors = ManagerStorage.GetExecutors();
+
+			Assert.AreEqual(0, executors.Length);
+		}
+
+
+		#endregion
+
 	}
 }
