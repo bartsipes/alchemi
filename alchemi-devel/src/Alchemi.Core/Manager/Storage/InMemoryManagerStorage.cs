@@ -23,8 +23,6 @@
 using System;
 using System.Collections;
 
-using Alchemi.Core.Executor;
-
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -37,6 +35,7 @@ namespace Alchemi.Core.Manager.Storage
 	{
 		private ArrayList m_users;
 		private ArrayList m_groups;
+		private ArrayList m_executors;
 
 		public InMemoryManagerStorage()
 		{
@@ -147,17 +146,33 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public String AddExecutor(ExecutorInfo executor)
+		public String AddExecutor(Executor executor)
+		{
+			if (executor == null)
+			{
+				return null;
+			}
+
+			if (m_executors == null)
+			{
+				m_executors = new ArrayList();
+			}
+
+			String executorId = Guid.NewGuid().ToString();
+
+			executor.ExecutorId = executorId;
+
+			m_executors.Add(executor);
+
+			return executorId;
+		}
+
+		public void UpdateExecutor(Executor executor)
 		{
 			throw new Exception("Not implemented");
 		}
 
-		public void UpdateExecutor(ExecutorInfo executor)
-		{
-			throw new Exception("Not implemented");
-		}
-
-		public ExecutorInfo[] GetExecutors()
+		public Executor[] GetExecutors()
 		{
 			throw new Exception("Not implemented");
 		}

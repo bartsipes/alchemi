@@ -25,8 +25,6 @@ using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 
-using Alchemi.Core.Executor;
-
 using Advanced.Data.Provider;
 
 namespace Alchemi.Core.Manager.Storage
@@ -261,17 +259,50 @@ namespace Alchemi.Core.Manager.Storage
 			return (Group[])groupList.ToArray(typeof(Group));
 		}
 
-		public String AddExecutor(ExecutorInfo executor)
+		public String AddExecutor(Executor executor)
+		{
+			if (executor == null)
+			{
+				return null;
+			}
+
+			String executorId = Guid.NewGuid().ToString();
+
+			RunSql(String.Format("insert into executor(executor_id, is_dedicated, is_connected, usr_name) values ('{0}', {1}, {2}, '{3}')",
+				executorId,
+				Convert.ToInt16(executor.Dedicated),
+				Convert.ToInt16(executor.Connected),
+				executor.Username.Replace("'", "''")
+				));
+
+			// TODO: use timestamp escaping here
+//			RunSql(String.Format("update executor set ping_time={1} where executor_id='{0}'",
+//				executorId,
+//				executor.PingTime
+//				));
+
+			RunSql(String.Format("update executor set host='{1}', port={2} where executor_id='{0}'",
+				executorId,
+				executor.HostName.Replace("'", "''"),
+				executor.Port
+				));
+			RunSql(String.Format("update executor set cpu_max={1}, cpu_usage={2}, cpu_avail={3}, cpu_totalusage={4} where executor_id='{0}'",
+				executorId,
+				executor.MaxCpu,
+				executor.CpuUsage,
+				executor.AvailableCpu,
+				executor.TotalCpuUsage
+				));
+
+			return executorId;
+		}
+
+		public void UpdateExecutor(Executor executor)
 		{
 			throw new Exception("Not implemented");
 		}
 
-		public void UpdateExecutor(ExecutorInfo executor)
-		{
-			throw new Exception("Not implemented");
-		}
-
-		public ExecutorInfo[] GetExecutors()
+		public Executor[] GetExecutors()
 		{
 			throw new Exception("Not implemented");
 		}

@@ -22,8 +22,6 @@
 
 using System;
 
-using Alchemi.Core.Executor;
-
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -82,11 +80,11 @@ namespace Alchemi.Core.Manager.Storage
 		
 		Group[] GetGroups();
 
-		String AddExecutor(ExecutorInfo executor);
+		String AddExecutor(Executor executor);
 
-		void UpdateExecutor(ExecutorInfo executor);
+		void UpdateExecutor(Executor executor);
 
-		ExecutorInfo[] GetExecutors();
+		Executor[] GetExecutors();
 
 
 		/// <summary>

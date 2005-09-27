@@ -335,6 +335,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Manager\Storage\Executor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Manager\Storage\GenericManagerDatabaseStorage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

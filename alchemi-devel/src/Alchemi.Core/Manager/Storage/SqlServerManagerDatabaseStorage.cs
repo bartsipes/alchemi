@@ -99,6 +99,9 @@ namespace Alchemi.Core.Manager.Storage
 
 			RunSql("CREATE PROCEDURE dbo.User_Authenticate(@usr_name varchar(50), @password varchar(50)) AS select count(*) as authenticated from usr where usr_name = @usr_name and password = @password");
 
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
+			RunSql("CREATE TABLE dbo.executor (executor_id uniqueidentifier, is_dedicated bit NOT NULL, is_connected bit NOT NULL, ping_time datetime NULL, host varchar (100) NULL, port int NULL, usr_name varchar (50) NULL, cpu_max int NULL, cpu_usage int NULL, cpu_avail int NULL, cpu_totalusage float NULL )");
+
 		}
 
 		public void InitializeStorageData()
@@ -108,9 +111,12 @@ namespace Alchemi.Core.Manager.Storage
 
 		public void TearDownStorage()
 		{
-			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_Authenticate]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.User_Authenticate') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
 			RunSql("DROP TABLE dbo.usr");
 			RunSql("DROP TABLE dbo.grp");
+
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
+
 		}
 
 		#endregion
