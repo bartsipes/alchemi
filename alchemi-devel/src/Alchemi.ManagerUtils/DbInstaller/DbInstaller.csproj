@@ -114,22 +114,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "Alchemi_data.sql"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Alchemi_database.sql"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Alchemi_structure.sql"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "CleanAll.sql"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "CommonAssemblyInfo.cs"
                     Link = "..\..\CommonAssemblyInfo.cs"
                     SubType = "Code"
