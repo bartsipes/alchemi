@@ -44,7 +44,7 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Gets or sets the hostname of the remote end point
 		/// </summary>
-        public string Host
+        public new string Host
         {
             get { return _Host; } 
             set { _Host = value; }
