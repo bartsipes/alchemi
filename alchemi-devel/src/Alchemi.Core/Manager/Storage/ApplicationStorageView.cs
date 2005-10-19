@@ -1,5 +1,5 @@
 //
-// Alchemi.Core.Manager.Storage.UserStorageView.cs
+// Alchemi.Core.Manager.Storage.ApplicationStorageView.cs
 //
 // Author:
 //   Tibor Biro (tb@tbiro.com)
@@ -25,20 +25,57 @@ using System;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Storage view of a user object. 
-	/// Used to pass user related data to and from the storage layer 
+	/// Summary description for ApplicationStorageView.
 	/// </summary>
-	public class UserStorageView
+	public class ApplicationStorageView
 	{
 		#region "Private variables"
 		
+		private String m_applicationId;
+		private Int32 m_state;
+		private DateTime m_timeCreated;
+		private bool m_primary;
 		private String m_username;
-		private String m_password;
-		private Int32 m_groupId; 
 
 		#endregion
 
 		#region "Properties"
+		public String ApplicationId
+		{
+			get
+			{
+				return m_applicationId;
+			}
+			set
+			{
+				m_applicationId = value;
+			}
+		}
+
+		public Int32 State
+		{
+			get
+			{
+				return m_state;
+			}
+		}
+
+		public DateTime TimeCreated
+		{
+			get
+			{
+				return m_timeCreated;
+			}
+		}
+
+		public bool Primary
+		{
+			get
+			{
+				return m_primary;
+			}
+		}
+
 		public String Username
 		{
 			get
@@ -46,38 +83,38 @@ namespace Alchemi.Core.Manager.Storage
 				return m_username;
 			}
 		}
-		
-		public String Password
-		{
-			get
-			{
-				return m_password;
-			}
-			set
-			{
-				m_password = value;
-			}
-		}
-
-		public Int32 GroupId
-		{
-			get
-			{
-				return m_groupId;
-			}
-			set
-			{
-				m_groupId = value;
-			}
-		}
 
 		#endregion
 
-		public UserStorageView(String username, String password, Int32 groupId)
+		public ApplicationStorageView(
+				Int32 state,
+				DateTime timeCreated,
+				bool primary,
+				String username
+			) : this (
+				null,
+				state,
+				timeCreated,
+				primary,
+				username
+			)
 		{
+		
+		}
+
+		public ApplicationStorageView(
+				String applicationId,
+				Int32 state,
+				DateTime timeCreated,
+				bool primary,
+				String username
+		)
+		{
+			m_applicationId = applicationId;
+			m_state = state;
+			m_timeCreated = timeCreated;
+			m_primary = primary;
 			m_username = username;
-			m_password = password;
-			m_groupId = groupId; 
 		}
 	}
 }

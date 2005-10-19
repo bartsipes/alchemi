@@ -36,6 +36,8 @@ namespace Alchemi.Core.Manager.Storage
 		private ArrayList m_users;
 		private ArrayList m_groups;
 		private ArrayList m_executors;
+		private ArrayList m_applications;
+		private ArrayList m_threads;
 
 		public InMemoryManagerStorage()
 		{
@@ -203,6 +205,122 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		public String AddApplication(ApplicationStorageView application)
+		{
+			if (application == null)
+			{
+				return null;
+			}
+
+			if (m_applications == null)
+			{
+				m_applications = new ArrayList();
+			}
+
+			String applicationId = Guid.NewGuid().ToString();
+
+			application.ApplicationId = applicationId;
+
+			m_applications.Add(application);
+
+			return applicationId;
+		}
+
+		public void UpdateApplication(ApplicationStorageView updatedApplication)
+		{
+			if (m_applications == null || updatedApplication == null)
+			{
+				return;
+			}
+
+			ArrayList newApplicationList = new ArrayList();
+
+			foreach(ApplicationStorageView application in m_applications)
+			{
+				if (application.ApplicationId == updatedApplication.ApplicationId)
+				{
+					newApplicationList.Add(updatedApplication);
+				}
+				else
+				{
+					newApplicationList.Add(application);
+				}
+			}
+
+			m_applications = newApplicationList;
+		}
+
+		public ApplicationStorageView[] GetApplications()
+		{
+			if (m_applications == null)
+			{
+				return new ApplicationStorageView[0];
+			}
+			else
+			{
+				return (ApplicationStorageView[])m_applications.ToArray(typeof(ApplicationStorageView));
+			}
+		}
+
+		public Int32 AddThread(ThreadStorageView thread)
+		{
+			if (thread == null)
+			{
+				return -1;
+			}
+
+			if (m_threads == null)
+			{
+				m_threads = new ArrayList();
+			}
+
+			lock(m_threads)
+			{
+				// generate the next threadID from the length, this will make sure the thread ID is unique
+				// generating from the length also requires thread synchronization code here
+				thread.InternalThreadId = m_threads.Count;
+
+				m_threads.Add(thread);
+			}
+
+			return thread.InternalThreadId;
+		}
+
+		public void UpdateThread(ThreadStorageView updatedThread)
+		{
+			if (m_threads == null || updatedThread == null)
+			{
+				return;
+			}
+
+			ArrayList newThreadList = new ArrayList();
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.InternalThreadId == updatedThread.InternalThreadId)
+				{
+					newThreadList.Add(updatedThread);
+				}
+				else
+				{
+					newThreadList.Add(thread);
+				}
+			}
+
+			m_threads = newThreadList;
+		}
+
+		public ThreadStorageView[] GetThreads()
+		{
+			if (m_threads == null)
+			{
+				return new ThreadStorageView[0];
+			}
+			else
+			{
+				return (ThreadStorageView[])m_threads.ToArray(typeof(ThreadStorageView));
+			}
+		}
 
 		#endregion
 	}

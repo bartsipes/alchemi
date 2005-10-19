@@ -99,11 +99,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\Storage\GenericManagerDatabaseStorageTester.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Manager\Storage\InMemoryManagerStorageTester.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -30,9 +30,10 @@ using Advanced.Data.Provider;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Summary description for GenericManagerDatabaseStorage.
+	/// Implement generic relational database storage here
+	/// This class should not be directly instantiated because it only contains a partial implementation
 	/// </summary>
-	public class GenericManagerDatabaseStorage : IManagerStorage
+	public abstract class GenericManagerDatabaseStorage : IManagerStorage
 	{
 		private String m_connectionString;
 
@@ -122,8 +123,12 @@ namespace Alchemi.Core.Manager.Storage
 
 			connection.Close();
 		}
-
 		protected object RunSqlReturnScalar(String sqlQuery)
+		{
+			return RunSqlReturnScalar(sqlQuery, null);
+		}
+
+		protected object RunSqlReturnScalar(String sqlQuery, params SqlParameter[] parameters)
 		{
 			using(AdpConnection connection = new AdpConnection(m_connectionString))
 			{
@@ -132,6 +137,14 @@ namespace Alchemi.Core.Manager.Storage
 				command.Connection = connection;
 				command.CommandText = sqlQuery;
 				command.CommandType = CommandType.Text;
+
+				if (parameters != null)
+				{
+					foreach(SqlParameter parameter in parameters)
+					{
+						command.CreateParameter(parameter.ParameterName, parameter.Value);
+					}
+				}
 		
 				return command.ExecuteScalar();
 			}
@@ -386,6 +399,162 @@ namespace Alchemi.Core.Manager.Storage
 			}
 
 			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
+		}
+
+		public String AddApplication(ApplicationStorageView application)
+		{
+			if (application == null)
+			{
+				return null;
+			}
+
+			String applicationId = Guid.NewGuid().ToString();
+
+			SqlParameter dateTimeParameter = new SqlParameter("@time_created", application.TimeCreated);
+
+			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, @time_created, '{2}', '{3}')",
+				applicationId,
+				application.State,
+				Convert.ToInt16(application.Primary),
+				application.Username.Replace("'", "''")
+				), 
+				dateTimeParameter);
+
+			return applicationId;
+		}
+
+		public void UpdateApplication(ApplicationStorageView updatedApplication)
+		{
+			if (updatedApplication == null || updatedApplication.ApplicationId == null || updatedApplication.ApplicationId.Length == 0)
+			{
+				return;
+			}
+
+			SqlParameter dateTimeParameter = new SqlParameter("@time_created", updatedApplication.TimeCreated);
+
+			RunSql(String.Format("update application set state = {1}, time_created = @time_created, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
+				updatedApplication.ApplicationId,
+				updatedApplication.State,
+				Convert.ToInt16(updatedApplication.Primary),
+				updatedApplication.Username.Replace("'", "''")
+				), 
+				dateTimeParameter);
+		}
+
+		public ApplicationStorageView[] GetApplications()
+		{
+			ArrayList applications = new ArrayList();
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application")))
+			{
+				while(dataReader.Read())
+				{
+					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+
+					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+
+					ApplicationStorageView application = new ApplicationStorageView(
+						applicationId,
+						state,
+						timeCreated,
+						primary,
+						username
+						);
+
+					applications.Add(application);
+				}
+			}
+
+			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
+		}
+
+		public Int32 AddThread(ThreadStorageView thread)
+		{
+			if (thread == null)
+			{
+				return -1;
+			}
+
+			SqlParameter timeStartedParameter = new SqlParameter("@time_started", thread.TimeStarted);
+			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", thread.TimeFinished);
+
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', '{1}', {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
+				thread.ApplicationId,
+				thread.ExecutorId,
+				thread.ThreadId,
+				thread.State,
+				thread.Priority,
+				Convert.ToInt16(thread.Failed)
+				), 
+				timeStartedParameter, timeFinishedParameter);
+
+			return Convert.ToInt32(threadIdObject);
+		}
+
+		public void UpdateThread(ThreadStorageView updatedThread)
+		{
+			if (updatedThread == null)
+			{
+				return;
+			}
+
+			SqlParameter timeStartedParameter = new SqlParameter("@time_started", updatedThread.TimeStarted);
+			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", updatedThread.TimeFinished);
+
+			object threadIdObject = RunSqlReturnScalar(String.Format("update thread set application_id = '{1}', executor_id = '{2}', thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+				updatedThread.InternalThreadId,
+				updatedThread.ApplicationId,
+				updatedThread.ExecutorId,
+				updatedThread.ThreadId,
+				updatedThread.State,
+				updatedThread.Priority,
+				Convert.ToInt16(updatedThread.Failed)
+				), 
+				timeStartedParameter, timeFinishedParameter);
+		}
+
+		public ThreadStorageView[] GetThreads()
+		{
+			ArrayList threads = new ArrayList();
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread")))
+			{
+				while(dataReader.Read())
+				{
+					Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
+
+					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
+
+					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
+					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					DateTime timeStarted = dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
+					DateTime timeFinished = dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
+					bool failed = dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
+
+					ThreadStorageView thread = new ThreadStorageView(
+						internalThreadId,
+						applicationId,
+						executorId,
+						threadId,
+						state,
+						timeStarted,
+						timeFinished,
+						priority,
+						failed
+						);
+
+					threads.Add(thread);
+				}
+			}
+
+			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));
 		}
 
 		#endregion

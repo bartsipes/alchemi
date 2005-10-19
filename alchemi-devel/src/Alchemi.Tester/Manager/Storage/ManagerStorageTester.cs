@@ -43,7 +43,7 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.AddGroups(groups);
 		}
 
-		private String AddExecutor(			
+		private String AddExecutor(
 			bool dedicated,
 			bool connected,
 			DateTime pingTime,
@@ -71,6 +71,49 @@ namespace Alchemi.Tester.Manager.Storage
 
 			return ManagerStorage.AddExecutor(executor);
 		}
+
+		private String AddApplication(
+			Int32 state,
+			DateTime timeCreated,
+			bool primary,
+			String username
+			)
+		{
+			ApplicationStorageView application = new ApplicationStorageView(
+				state,
+				timeCreated,
+				primary,
+				username
+				);
+
+			return ManagerStorage.AddApplication(application);
+		}
+
+		private void AddThread(
+			String applicationId,
+			String executorId,
+			Int32 threadId,
+			Int32 state,
+			DateTime timeStarted,
+			DateTime timeFinished,
+			Int32 priority,
+			bool failed
+			)
+		{
+			ThreadStorageView thread = new ThreadStorageView(
+				applicationId,
+				executorId,
+				threadId,
+				state,
+				timeStarted,
+				timeFinished,
+				priority,
+				failed
+				);
+
+			ManagerStorage.AddThread(thread);
+		}
+
 
 		#region "AddUsers Tests"
 
@@ -381,6 +424,170 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "AddApplication Tests"
+
+		/// <summary>
+		/// Add a new application.
+		/// Make sure we get back an ID. 
+		/// No errors are expected.
+		/// </summary>
+		[Test]
+		public void AddApplicationTest1()
+		{
+			String applicationId = AddApplication(1, DateTime.Now, false, "test");
+
+			Assert.IsNotNull(applicationId);
+			Assert.AreNotEqual("", applicationId);
+		}
+
+		/// <summary>
+		/// Add a null application.
+		/// No errors are expected, nothing should be added. Return value should be null.
+		/// </summary>
+		[Test]
+		public void AddApplicationTest2()
+		{
+			Assert.IsNull(ManagerStorage.AddApplication(null));
+		}
+		
+		#endregion
+
+		#region "UpdateApplication Tests"
+
+		/// <summary>
+		/// Add a new application.
+		/// Change all values, run update
+		/// Get applications, confirm that the update worked.
+		/// </summary>
+		[Test]
+		public void UpdateApplicationTest1()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeCreated1 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now = now.AddDays(1);
+			DateTime timeCreated2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(12, timeCreated1, false, "test");
+
+			ApplicationStorageView updatedApplication = new ApplicationStorageView(10, timeCreated2, true, "test2");
+
+			updatedApplication.ApplicationId = applicationId;
+
+			ManagerStorage.UpdateApplication(updatedApplication);
+			
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(1, applications.Length);
+			Assert.AreEqual(10, applications[0].State);
+			Assert.AreEqual(timeCreated2, applications[0].TimeCreated);
+			Assert.AreEqual(true, applications[0].Primary);
+			Assert.AreEqual("test2", applications[0].Username);
+		}
+
+		/// <summary>
+		/// Run update without any values in there.
+		/// The application list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateApplicationTest2()
+		{
+			DateTime timeCreated = DateTime.Now.AddDays(1);
+
+			ApplicationStorageView updatedApplication = new ApplicationStorageView(123, timeCreated, false, "username2");
+
+			updatedApplication.ApplicationId = "";
+
+			ManagerStorage.UpdateApplication(updatedApplication);
+			
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(0, applications.Length);
+		}
+
+		/// <summary>
+		/// Add a new application
+		/// Run update with a null application.
+		/// The application list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateApplicationTest3()
+		{
+			DateTime timeCreated = DateTime.Now;
+
+			String applicationId = AddApplication(123, timeCreated, true, "username1");
+
+			ManagerStorage.UpdateApplication(null);
+			
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(1, applications.Length);
+		}
+
+		#endregion
+
+		#region "GetApplications Tests"
+
+		/// <summary>
+		/// Add a new application.
+		/// Get the application list.
+		/// The list should only contain the newly added application.
+		/// </summary>
+		[Test]
+		public void GetApplicationsTest1()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(1, applications.Length);
+			Assert.AreEqual(123, applications[0].State);
+			Assert.AreEqual(timeCreated, applications[0].TimeCreated);
+			Assert.AreEqual(true, applications[0].Primary);
+			Assert.AreEqual("username2", applications[0].Username);
+		}
+
+		/// <summary>
+		/// Add 3 applications.
+		/// Get the applications list.
+		/// The list should contain 3 items.
+		/// </summary>
+		[Test]
+		public void GetApplicationsTest2()
+		{
+			DateTime timeCreated = DateTime.Now;
+
+			String applicationId1 = AddApplication(123, timeCreated, true, "username1");
+			String applicationId2 = AddApplication(123, timeCreated, true, "username2");
+			String applicationId3 = AddApplication(123, timeCreated, true, "username3");
+			
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(3, applications.Length);
+		}
+
+		/// <summary>
+		/// Add no applications.
+		/// Get the application list.
+		/// The list should be empty but not null. No error is expected
+		/// </summary>
+		[Test]
+		public void GetApplicationsTest3()
+		{
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(0, applications.Length);
+		}
+
+
+		#endregion
+
 		#region "AddExecutor Tests"
 
 		/// <summary>
@@ -554,6 +761,204 @@ namespace Alchemi.Tester.Manager.Storage
 			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(0, executors.Length);
+		}
+
+
+		#endregion
+
+		#region "AddThread Tests"
+
+		/// <summary>
+		/// Add a new thread.
+		/// No errors are expected.
+		/// </summary>
+		[Test]
+		public void AddThreadTest1()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId, 1, 2, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
+		}
+
+		/// <summary>
+		/// Add a null thread.
+		/// No errors are expected, nothing should be added.
+		/// </summary>
+		[Test]
+		public void AddThreadTest2()
+		{
+			ManagerStorage.AddThread(null);
+		}
+		
+		#endregion
+
+		#region "UpdateThread Tests"
+
+		/// <summary>
+		/// Add a new thread.
+		/// Change all values, run update
+		/// Get threads, confirm that the update worked.
+		/// </summary>
+		[Test]
+		public void UpdateThreadTest1()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = Guid.NewGuid().ToString();
+			String executorId2 = Guid.NewGuid().ToString();
+
+			Int32 threadId = 122;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted1 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now = now.AddDays(1);
+			DateTime timeFinished1 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			now = now.AddDays(1);
+			DateTime timeStarted2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now = now.AddDays(1);
+			DateTime timeFinished2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId1, threadId, 2, timeStarted1, timeFinished1, 4, true);
+
+			// retrieve the newly added thread so we have the new internal thread id
+			ThreadStorageView[] newThreads = ManagerStorage.GetThreads();
+
+			ThreadStorageView updatedThread = new ThreadStorageView(newThreads[0].InternalThreadId, applicationId, executorId2, threadId, 6, timeStarted2, timeFinished2, 7, false);
+
+			ManagerStorage.UpdateThread(updatedThread);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId2, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(6, threads[0].State);
+			Assert.AreEqual(timeStarted2, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished2, threads[0].TimeFinished);
+			Assert.AreEqual(7, threads[0].Priority);
+			Assert.AreEqual(false, threads[0].Failed);
+		}
+
+		/// <summary>
+		/// Run update without any values in there.
+		/// The thread list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateThreadTest2()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 122;
+
+			DateTime timeCreated = DateTime.Now.AddDays(1);
+
+			ThreadStorageView updatedThread = new ThreadStorageView(applicationId, executorId, threadId, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+
+			updatedThread.ThreadId = -1;
+
+			ManagerStorage.UpdateThread(updatedThread);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(0, threads.Length);
+		}
+
+		/// <summary>
+		/// Add a new thread
+		/// Run update with a null thread.
+		/// The thread list should stay empty, no errors are expected
+		/// </summary>
+		[Test]
+		public void UpdateThreadTest3()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 122;
+			DateTime timeStarted = DateTime.Now;
+			DateTime timeFinished = DateTime.Now.AddDays(1);
+
+			AddThread(applicationId, executorId, threadId, 2, timeStarted, timeFinished, 1, false);
+
+			ManagerStorage.UpdateThread(null);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(1, threads.Length);
+		}
+
+		#endregion
+
+		#region "GetThreads Tests"
+
+		/// <summary>
+		/// Add a new thread.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetThreadsTest1()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, 2, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(2, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
+		/// <summary>
+		/// Add 3 threads.
+		/// Get the threads list.
+		/// The list should contain 3 items.
+		/// </summary>
+		[Test]
+		public void GetThreadsTest2()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId, 1, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 2, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 3, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(3, threads.Length);
+		}
+
+		/// <summary>
+		/// Add no threads.
+		/// Get the thread list.
+		/// The list should be empty but not null. No error is expected
+		/// </summary>
+		[Test]
+		public void GetThreadsTest3()
+		{
+			ThreadStorageView[] threads = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(0, threads.Length);
 		}
 
 

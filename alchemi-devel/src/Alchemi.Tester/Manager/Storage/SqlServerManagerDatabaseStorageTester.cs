@@ -9,7 +9,9 @@ using NUnit.Framework;
 namespace Alchemi.Tester.Manager.Storage
 {
 	/// <summary>
-	/// Summary description for SqlServerManagerDatabaseStorageTester.
+	/// SQL Server specific tests
+	/// Replace the managerStorage object with a SQL Server storage and 
+	/// inherit all tests from the ManagerStorageTester
 	/// </summary>
 	[TestFixture]
 	public class SqlServerManagerDatabaseStorageTester : ManagerStorageTester

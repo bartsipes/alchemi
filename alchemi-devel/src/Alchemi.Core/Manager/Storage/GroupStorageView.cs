@@ -1,5 +1,5 @@
 //
-// Alchemi.Core.Manager.Storage.Group.cs
+// Alchemi.Core.Manager.Storage.GroupStorageView.cs
 //
 // Author:
 //   Tibor Biro (tb@tbiro.com)

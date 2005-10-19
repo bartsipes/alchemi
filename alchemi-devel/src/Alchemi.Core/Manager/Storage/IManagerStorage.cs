@@ -86,6 +86,17 @@ namespace Alchemi.Core.Manager.Storage
 
 		ExecutorStorageView[] GetExecutors();
 
+		String AddApplication(ApplicationStorageView application);
+
+		void UpdateApplication(ApplicationStorageView updatedApplication);
+
+		ApplicationStorageView[] GetApplications();
+
+		Int32 AddThread(ThreadStorageView thread);
+
+		void UpdateThread(ThreadStorageView updatedThread);
+
+		ThreadStorageView[] GetThreads();
 
 		/// <summary>
 		/// Get system summary information from the storage.

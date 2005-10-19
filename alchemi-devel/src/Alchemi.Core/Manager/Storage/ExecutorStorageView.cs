@@ -1,5 +1,5 @@
 //
-// Alchemi.Core.Manager.Storage.Executor.cs
+// Alchemi.Core.Manager.Storage.ExecutorStorageView.cs
 //
 // Author:
 //   Tibor Biro (tb@tbiro.com)

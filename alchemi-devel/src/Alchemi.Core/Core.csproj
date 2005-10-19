@@ -335,6 +335,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Manager\Storage\ApplicationStorageView.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Manager\Storage\ExecutorStorageView.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -381,6 +386,11 @@
                 />
                 <File
                     RelPath = "Manager\Storage\SystemSummary.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Manager\Storage\ThreadStorageView.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

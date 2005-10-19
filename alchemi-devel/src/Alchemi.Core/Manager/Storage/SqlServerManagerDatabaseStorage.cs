@@ -102,6 +102,12 @@ namespace Alchemi.Core.Manager.Storage
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
 			RunSql("CREATE TABLE dbo.executor (executor_id uniqueidentifier, is_dedicated bit NOT NULL, is_connected bit NOT NULL, ping_time datetime NULL, host varchar (100) NULL, port int NULL, usr_name varchar (50) NULL, cpu_max int NULL, cpu_usage int NULL, cpu_avail int NULL, cpu_totalusage float NULL )");
 
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[application]");
+			RunSql("CREATE TABLE [dbo].[application] ([application_id] [uniqueidentifier] NOT NULL , [state] [int] NOT NULL , [time_created] [datetime] NULL , [is_primary] [bit] NOT NULL , [usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL )");
+
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[thread]");
+			RunSql("CREATE TABLE [dbo].[thread] ([internal_thread_id] [int] IDENTITY (1, 1) NOT NULL , [application_id] [uniqueidentifier] NOT NULL , [executor_id] [uniqueidentifier] NULL ,[thread_id] [int] NOT NULL ,[state] [int] NOT NULL ,[time_started] [datetime] NULL ,[time_finished] [datetime] NULL ,[priority] [int] NOT NULL ,[failed] [bit] NOT NULL )");
+
 		}
 
 		public void InitializeStorageData()
@@ -116,7 +122,8 @@ namespace Alchemi.Core.Manager.Storage
 			RunSql("DROP TABLE dbo.grp");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
-
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[application]");
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[thread]");
 		}
 
 		#endregion
