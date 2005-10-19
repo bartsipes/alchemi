@@ -50,7 +50,7 @@ namespace Alchemi.Core.Manager.Storage
 			throw new Exception("Not implemented");
 		}
 
-		public void AddUsers(User[] users)
+		public void AddUsers(UserStorageView[] users)
 		{
 			if (users == null)
 			{
@@ -65,7 +65,7 @@ namespace Alchemi.Core.Manager.Storage
 			m_users.AddRange(users);
 		}
 
-		public void UpdateUsers(User[] updates)
+		public void UpdateUsers(UserStorageView[] updates)
 		{
 			if (m_users == null || updates == null)
 			{
@@ -74,9 +74,9 @@ namespace Alchemi.Core.Manager.Storage
 
 			for(int indexInList=0; indexInList<m_users.Count; indexInList++)
 			{
-				User userInList = (User)m_users[indexInList];
+				UserStorageView userInList = (UserStorageView)m_users[indexInList];
 
-				foreach(User userInUpdates in updates)
+				foreach(UserStorageView userInUpdates in updates)
 				{
 					if (userInList.Username == userInUpdates.Username)
 					{
@@ -96,7 +96,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			for(int index=0; index<m_users.Count; index++)
 			{
-				User user = (User)m_users[index];
+				UserStorageView user = (UserStorageView)m_users[index];
 
 				if (user.Username == sc.Username && user.Password == sc.Password)
 				{
@@ -107,19 +107,19 @@ namespace Alchemi.Core.Manager.Storage
 			return false;
 		}
 
-		public User[] GetUserList()
+		public UserStorageView[] GetUserList()
 		{
 			if (m_users == null)
 			{
-				return new User[0];
+				return new UserStorageView[0];
 			}
 			else
 			{
-				return (User[])m_users.ToArray(typeof(User));
+				return (UserStorageView[])m_users.ToArray(typeof(UserStorageView));
 			}
 		}
 
-		public void AddGroups(Group[] groups)
+		public void AddGroups(GroupStorageView[] groups)
 		{
 			if (groups == null)
 			{
@@ -134,19 +134,19 @@ namespace Alchemi.Core.Manager.Storage
 			m_groups.AddRange(groups);
 		}
 		
-		public Group[] GetGroups()
+		public GroupStorageView[] GetGroups()
 		{
 			if (m_groups == null)
 			{
-				return new Group[0];
+				return new GroupStorageView[0];
 			}
 			else
 			{
-				return (Group[])m_groups.ToArray(typeof(Group));
+				return (GroupStorageView[])m_groups.ToArray(typeof(GroupStorageView));
 			}
 		}
 
-		public String AddExecutor(Executor executor)
+		public String AddExecutor(ExecutorStorageView executor)
 		{
 			if (executor == null)
 			{
@@ -167,7 +167,7 @@ namespace Alchemi.Core.Manager.Storage
 			return executorId;
 		}
 
-		public void UpdateExecutor(Executor updatedExecutor)
+		public void UpdateExecutor(ExecutorStorageView updatedExecutor)
 		{
 			if (m_executors == null || updatedExecutor == null)
 			{
@@ -176,7 +176,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			ArrayList newExecutorList = new ArrayList();
 
-			foreach(Executor executor in m_executors)
+			foreach(ExecutorStorageView executor in m_executors)
 			{
 				if (executor.ExecutorId == updatedExecutor.ExecutorId)
 				{
@@ -191,15 +191,15 @@ namespace Alchemi.Core.Manager.Storage
 			m_executors = newExecutorList;
 		}
 
-		public Executor[] GetExecutors()
+		public ExecutorStorageView[] GetExecutors()
 		{
 			if (m_executors == null)
 			{
-				return new Executor[0];
+				return new ExecutorStorageView[0];
 			}
 			else
 			{
-				return (Executor[])m_executors.ToArray(typeof(Executor));
+				return (ExecutorStorageView[])m_executors.ToArray(typeof(ExecutorStorageView));
 			}
 		}
 

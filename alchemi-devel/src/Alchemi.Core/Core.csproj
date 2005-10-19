@@ -335,7 +335,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\Storage\Executor.cs"
+                    RelPath = "Manager\Storage\ExecutorStorageView.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -345,7 +345,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\Storage\Group.cs"
+                    RelPath = "Manager\Storage\GroupStorageView.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -385,7 +385,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\Storage\User.cs"
+                    RelPath = "Manager\Storage\UserStorageView.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

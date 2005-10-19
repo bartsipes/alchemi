@@ -79,32 +79,29 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="storedProcedure"></param>
 		/// <param name="paramArray"></param>
 		/// <returns></returns>
-//		protected object RunSpReturnScalar(String storedProcedure, params SqlParameter[] paramArray)
-//		{
-//			AdpConnection connection = new AdpConnection(m_connectionString);
-//			AdpCommand command = new AdpCommand();
-//
-//			command.Connection = connection;
-//			command.CommandText = storedProcedure;
-//			command.CommandType = CommandType.StoredProcedure;
-//
-//			foreach (SqlParameter objParam in paramArray)
-//			{
-//				AdpParameter param = command.CreateParameter(objParam.ParameterName, objParam.Value);
-//				//AdpParameter param = new AdpParameter();
-//				
-//				param.DbType = DbType.String;
-//				param.Value = objParam.Value;
-//				param.ParameterName = objParam.ParameterName;
-//				param.Direction = ParameterDirection.Input;
-//				
-//				command.Parameters.Add(param);
-//			}
-//		
-//			return command.ExecuteScalar();
-//		}
+		protected object RunSpReturnScalar(String storedProcedure, params SqlParameter[] parameters)
+		{
+			AdpConnection connection = new AdpConnection(m_connectionString);
+			AdpCommand command = new AdpCommand();
+
+			command.Connection = connection;
+			command.CommandText = storedProcedure;
+			command.CommandType = CommandType.StoredProcedure;
+
+			foreach (SqlParameter parameter in parameters)
+			{
+				command.CreateParameter(parameter.ParameterName, parameter.Value);				
+			}
+		
+			return command.ExecuteScalar();
+		}
 
 		protected void RunSql(String sqlQuery)
+		{
+			RunSql(sqlQuery, null);
+		}
+
+		protected void RunSql(String sqlQuery, params SqlParameter[] parameters)
 		{
 			AdpConnection connection = new AdpConnection(m_connectionString);
 			AdpCommand command = new AdpCommand();
@@ -112,6 +109,14 @@ namespace Alchemi.Core.Manager.Storage
 			command.Connection = connection;
 			command.CommandText = sqlQuery;
 			command.CommandType = CommandType.Text;
+
+			if (parameters != null)
+			{
+				foreach(SqlParameter parameter in parameters)
+				{
+					command.CreateParameter(parameter.ParameterName, parameter.Value);
+				}
+			}
 		
 			command.ExecuteNonQuery();
 
@@ -145,14 +150,14 @@ namespace Alchemi.Core.Manager.Storage
 		/// Add users to a database
 		/// </summary>
 		/// <param name="users"></param>
-		public void AddUsers(User[] users)
+		public void AddUsers(UserStorageView[] users)
 		{
 			if (users == null)
 			{
 				return;
 			}
 
-			foreach (User user in users)
+			foreach (UserStorageView user in users)
 			{
 				String sqlQuery;
 				
@@ -165,14 +170,14 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public void UpdateUsers(User[] updates)
+		public void UpdateUsers(UserStorageView[] updates)
 		{
 			if (updates == null)
 			{
 				return;
 			}
 
-			foreach (User user in updates)
+			foreach (UserStorageView user in updates)
 			{
 				String sqlQuery;
 				
@@ -185,7 +190,7 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public User[] GetUserList()
+		public UserStorageView[] GetUserList()
 		{
 			ArrayList userList = new ArrayList();
 
@@ -197,13 +202,13 @@ namespace Alchemi.Core.Manager.Storage
 					String password = dataReader.GetString(dataReader.GetOrdinal("password"));
 					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
 
-					User user = new User(username, password, groupId);
+					UserStorageView user = new UserStorageView(username, password, groupId);
 
 					userList.Add(user);
 				}
 			}
 
-			return (User[])userList.ToArray(typeof(User));
+			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
 		}
 
 		public bool AuthenticateUser(SecurityCredentials sc)
@@ -220,14 +225,14 @@ namespace Alchemi.Core.Manager.Storage
 			return Convert.ToBoolean(userCount);
 		}
 
-		public void AddGroups(Group[] groups)
+		public void AddGroups(GroupStorageView[] groups)
 		{
 			if (groups == null)
 			{
 				return;
 			}
 
-			foreach (Group group in groups)
+			foreach (GroupStorageView group in groups)
 			{
 				String sqlQuery;
 				
@@ -239,7 +244,7 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 		
-		public Group[] GetGroups()
+		public GroupStorageView[] GetGroups()
 		{
 			ArrayList groupList = new ArrayList();
 
@@ -250,16 +255,16 @@ namespace Alchemi.Core.Manager.Storage
 					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
 					String groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
 
-					Group group = new Group(groupId, groupName);
+					GroupStorageView group = new GroupStorageView(groupId, groupName);
 
 					groupList.Add(group);
 				}
 			}
 
-			return (Group[])groupList.ToArray(typeof(Group));
+			return (GroupStorageView[])groupList.ToArray(typeof(GroupStorageView));
 		}
 
-		public String AddExecutor(Executor executor)
+		public String AddExecutor(ExecutorStorageView executor)
 		{
 			if (executor == null)
 			{
@@ -275,36 +280,112 @@ namespace Alchemi.Core.Manager.Storage
 				executor.Username.Replace("'", "''")
 				));
 
-			// TODO: use timestamp escaping here
-//			RunSql(String.Format("update executor set ping_time={1} where executor_id='{0}'",
-//				executorId,
-//				executor.PingTime
-//				));
+			UpdateExecutorPingTime(executorId, executor.PingTime);
 
-			RunSql(String.Format("update executor set host='{1}', port={2} where executor_id='{0}'",
-				executorId,
-				executor.HostName.Replace("'", "''"),
-				executor.Port
-				));
-			RunSql(String.Format("update executor set cpu_max={1}, cpu_usage={2}, cpu_avail={3}, cpu_totalusage={4} where executor_id='{0}'",
-				executorId,
-				executor.MaxCpu,
-				executor.CpuUsage,
-				executor.AvailableCpu,
-				executor.TotalCpuUsage
-				));
+			UpdateExecutorHostAddress(executorId, executor.HostName, executor.Port);
+
+			UpdateExecutorCpuUsage(executorId, executor.MaxCpu, executor.CpuUsage, executor.AvailableCpu, executor.TotalCpuUsage);
 
 			return executorId;
 		}
 
-		public void UpdateExecutor(Executor executor)
+		private void UpdateExecutorPingTime(String executorId, DateTime pingTime)
 		{
-			throw new Exception("Not implemented");
+			SqlParameter dateTimeParameter = new SqlParameter("@ping_time", pingTime);
+			
+			RunSql(String.Format("update executor set ping_time=@ping_time where executor_id='{0}'",
+				executorId
+				), 
+				dateTimeParameter);		
 		}
 
-		public Executor[] GetExecutors()
+		private void UpdateExecutorHostAddress(String executorId, String hostName, Int32 port)
 		{
-			throw new Exception("Not implemented");
+			RunSql(String.Format("update executor set host='{1}', port={2} where executor_id='{0}'",
+				executorId,
+				hostName.Replace("'", "''"),
+				port
+				));
+		}
+
+		private void UpdateExecutorCpuUsage(String executorId, Int32 maxCpu, Int32 cpuUsage, Int32 availableCpu, float totalCpuUsage)
+		{
+			RunSql(String.Format("update executor set cpu_max={1}, cpu_usage={2}, cpu_avail={3}, cpu_totalusage={4} where executor_id='{0}'",
+				executorId,
+				maxCpu,
+				cpuUsage,
+				availableCpu,
+				totalCpuUsage
+				));
+		}
+
+		private void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
+		{
+			RunSql(String.Format("update executor set is_dedicated='{1}', is_connected='{2}', usr_name='{3}' where executor_id='{0}'",
+				executorId,
+				Convert.ToInt16(dedicated),
+				Convert.ToInt16(connected),
+				userName.Replace("'", "''")
+				));
+		}
+
+		public void UpdateExecutor(ExecutorStorageView executor)
+		{
+			if (executor == null || executor.ExecutorId == null || executor.ExecutorId.Length == 0)
+			{
+				return;
+			}
+
+			UpdateExecutorDetails(executor.ExecutorId, executor.Dedicated, executor.Connected, executor.Username);
+
+			UpdateExecutorPingTime(executor.ExecutorId, executor.PingTime);
+
+			UpdateExecutorHostAddress(executor.ExecutorId, executor.HostName, executor.Port);
+
+			UpdateExecutorCpuUsage(executor.ExecutorId, executor.MaxCpu, executor.CpuUsage, executor.AvailableCpu, executor.TotalCpuUsage);
+		}
+
+		public ExecutorStorageView[] GetExecutors()
+		{
+			ArrayList executors = new ArrayList();
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage from executor")))
+			{
+				while(dataReader.Read())
+				{
+					// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
+
+					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
+					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
+					DateTime pingTime = dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
+					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
+					Int32 port = dataReader.GetInt32(dataReader.GetOrdinal("port"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					Int32 maxCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
+					Int32 cpuUsage = dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
+					Int32 availableCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
+					float totalCpuUsage = (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
+
+					ExecutorStorageView executor = new ExecutorStorageView(
+						executorId,
+						dedicated,
+						connected,
+						pingTime,
+						hostname,
+						port,
+						username,
+						maxCpu,
+						cpuUsage,
+						availableCpu,
+						totalCpuUsage
+						);
+
+					executors.Add(executor);
+				}
+			}
+
+			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
 		}
 
 		#endregion

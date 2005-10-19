@@ -27,18 +27,18 @@ namespace Alchemi.Tester.Manager.Storage
 
 		private void AddUser(String username, String password, Int32 groupId)
 		{
-			User[] users = new User[1];
+			UserStorageView[] users = new UserStorageView[1];
 
-			users[0] = new User(username, password, groupId);
+			users[0] = new UserStorageView(username, password, groupId);
 
 			ManagerStorage.AddUsers(users);
 		}
 
 		private void AddGroup(Int32 groupId, String groupName)
 		{
-			Group[] groups = new Group[1];
+			GroupStorageView[] groups = new GroupStorageView[1];
 
-			groups[0] = new Group(groupId, groupName);
+			groups[0] = new GroupStorageView(groupId, groupName);
 
 			ManagerStorage.AddGroups(groups);
 		}
@@ -56,7 +56,7 @@ namespace Alchemi.Tester.Manager.Storage
 			float totalCpuUsage
 		)
 		{
-			Executor executor = new Executor(
+			ExecutorStorageView executor = new ExecutorStorageView(
 						dedicated,
 						connected,
 						pingTime,
@@ -108,13 +108,13 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			AddUser("username1", "password1", 0);
 
-			User[] userUpdates = new User[1];
+			UserStorageView[] userUpdates = new UserStorageView[1];
 
-			userUpdates[0] = new User("username1", "password2", 1);
+			userUpdates[0] = new UserStorageView("username1", "password2", 1);
 
 			ManagerStorage.UpdateUsers(userUpdates);
 
-			User[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUserList();
 			
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
@@ -130,13 +130,13 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateUsersTest2()
 		{
-			User[] userUpdates = new User[1];
+			UserStorageView[] userUpdates = new UserStorageView[1];
 
-			userUpdates[0] = new User("username1", "password2", 1);
+			userUpdates[0] = new UserStorageView("username1", "password2", 1);
 
 			ManagerStorage.UpdateUsers(userUpdates);
 
-			User[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUserList();
 			
 			Assert.AreEqual(0, users.Length);
 		}
@@ -153,7 +153,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.UpdateUsers(null);
 
-			User[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUserList();
 			
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
@@ -257,7 +257,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			AddUser("username1", "password1");
 			
-			User[] users;
+			UserStorageView[] users;
 
 			users = ManagerStorage.GetUserList();
 
@@ -279,7 +279,7 @@ namespace Alchemi.Tester.Manager.Storage
 			AddUser("username2", "password2");
 			AddUser("username3", "password3");
 			
-			User[] users;
+			UserStorageView[] users;
 
 			users = ManagerStorage.GetUserList();
 
@@ -294,7 +294,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetUserListTest3()
 		{
-			User[] users;
+			UserStorageView[] users;
 
 			users = ManagerStorage.GetUserList();
 
@@ -340,7 +340,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			AddGroup(0, "group0");
 			
-			Group[] groups = ManagerStorage.GetGroups();
+			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
 			Assert.AreEqual(1, groups.Length);
 			Assert.AreEqual(0, groups[0].GroupId);
@@ -360,7 +360,7 @@ namespace Alchemi.Tester.Manager.Storage
 			AddGroup(1, "group1");
 			AddGroup(2, "group2");
 			
-			Group[] groups = ManagerStorage.GetGroups();
+			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
 			Assert.AreEqual(3, groups.Length);
 		}
@@ -373,7 +373,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupsTest3()
 		{
-			Group[] groups = ManagerStorage.GetGroups();
+			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
 			Assert.AreEqual(0, groups.Length);
 		}
@@ -419,18 +419,22 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateExecutorTest1()
 		{
-			DateTime pingTime1 = DateTime.Now;
-			DateTime pingTime2 = DateTime.Now.AddDays(1);
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime pingTime1 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now = now.AddDays(1);
+			DateTime pingTime2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
 			String executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
 
-			Executor updatedExecutor = new Executor(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
+			ExecutorStorageView updatedExecutor = new ExecutorStorageView(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
 
 			updatedExecutor.ExecutorId = executorId;
 
 			ManagerStorage.UpdateExecutor(updatedExecutor);
 			
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(1, executors.Length);
 			Assert.AreEqual(true, executors[0].Dedicated);
@@ -455,13 +459,13 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime2 = DateTime.Now.AddDays(1);
 
-			Executor updatedExecutor = new Executor(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
+			ExecutorStorageView updatedExecutor = new ExecutorStorageView(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
 
 			updatedExecutor.ExecutorId = "";
 
 			ManagerStorage.UpdateExecutor(updatedExecutor);
 			
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(0, executors.Length);
 		}
@@ -480,7 +484,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.UpdateExecutor(null);
 			
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(1, executors.Length);
 		}
@@ -497,11 +501,14 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorsTest1()
 		{
-			DateTime pingTime = DateTime.Now;
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
 			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
 			
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(1, executors.Length);
 			Assert.AreEqual(false, executors[0].Dedicated);
@@ -531,7 +538,7 @@ namespace Alchemi.Tester.Manager.Storage
 			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
 			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(3, executors.Length);
 		}
@@ -544,7 +551,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorsTest3()
 		{
-			Executor[] executors = ManagerStorage.GetExecutors();
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
 			Assert.AreEqual(0, executors.Length);
 		}

@@ -66,25 +66,25 @@ namespace Alchemi.Core.Manager.Storage
 		/// Add a list of users to the storage.
 		/// </summary>
 		/// <param name="users"></param>
-		void AddUsers(User[] users);
+		void AddUsers(UserStorageView[] users);
 
-		void UpdateUsers(User[] updates);
+		void UpdateUsers(UserStorageView[] updates);
 
 		/// <summary>
 		/// Get an array with all the users found in the current storage
 		/// </summary>
 		/// <returns></returns>
-		User[] GetUserList();
+		UserStorageView[] GetUserList();
 
-		void AddGroups(Group[] groups);
+		void AddGroups(GroupStorageView[] groups);
 		
-		Group[] GetGroups();
+		GroupStorageView[] GetGroups();
 
-		String AddExecutor(Executor executor);
+		String AddExecutor(ExecutorStorageView executor);
 
-		void UpdateExecutor(Executor executor);
+		void UpdateExecutor(ExecutorStorageView executor);
 
-		Executor[] GetExecutors();
+		ExecutorStorageView[] GetExecutors();
 
 
 		/// <summary>
