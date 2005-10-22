@@ -29,6 +29,8 @@ namespace Alchemi.Core.Manager.Storage
 	/// </summary>
 	public class ApplicationStorageView
 	{
+		private const Int32 c_valueNotSet = Int32.MaxValue;
+
 		#region "Private variables"
 		
 		private String m_applicationId;
@@ -36,6 +38,10 @@ namespace Alchemi.Core.Manager.Storage
 		private DateTime m_timeCreated;
 		private bool m_primary;
 		private String m_username;
+
+		// these values are set by calculating the number of threads in various states
+		private Int32 m_totalThreads = c_valueNotSet;
+		private Int32 m_unfinishedThreads = c_valueNotSet;
 
 		#endregion
 
@@ -84,6 +90,40 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		public Int32 TotalThreads
+		{
+			get
+			{
+				if (m_totalThreads == c_valueNotSet)
+				{
+					throw new Exception("The total thread value is not set for this application object.");
+				}
+
+				return m_totalThreads;
+			}
+			set
+			{
+				m_totalThreads = value;
+			}
+		}
+
+		public Int32 UnfinishedThreads
+		{
+			get
+			{
+				if (m_unfinishedThreads == c_valueNotSet)
+				{
+					throw new Exception("The unfinished thread value is not set for this application object.");
+				}
+
+				return m_unfinishedThreads;
+			}
+			set
+			{
+				m_unfinishedThreads = value;
+			}
+		}
+
 		#endregion
 
 		public ApplicationStorageView(
@@ -115,6 +155,20 @@ namespace Alchemi.Core.Manager.Storage
 			m_timeCreated = timeCreated;
 			m_primary = primary;
 			m_username = username;
+		}
+
+		// initialize an application with only a username supplied
+		public ApplicationStorageView(
+				String username
+			) : this (
+				null,
+				0,
+				DateTime.Now,
+				true,
+				username
+			)
+		{
+		
 		}
 	}
 }

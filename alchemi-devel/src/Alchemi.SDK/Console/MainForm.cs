@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using System.Data;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Manager.Storage;
 using System.Xml;
 using System.IO;
 using System.Drawing.Drawing2D;
@@ -2866,10 +2867,18 @@ namespace Alchemi.Console
 				{
 					if (cobAppList.Items.Count > 0)
 						cobAppList.Items.Clear();
-					DataSet ds = new DataSet();
-					ds = console.Manager.Admon_GetLiveApplicationList(console.Credentials);
-					for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-						cobAppList.Items.Add(ds.Tables[0].Rows[i][0]);
+//					DataSet ds = new DataSet();
+//					ds = console.Manager.Admon_GetLiveApplicationList(console.Credentials);
+//					for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+//						cobAppList.Items.Add(ds.Tables[0].Rows[i][0]);
+					
+					ApplicationStorageView[] applications = console.Manager.Admon_GetLiveApplicationList(console.Credentials);
+					
+					foreach(ApplicationStorageView application in applications)
+					{
+						cobAppList.Items.Add(application.ApplicationId);
+					}
+
 					cobAppList.SelectedIndex = 0;
 				}
 				else	if (cobAppList.Items.Count > 0)

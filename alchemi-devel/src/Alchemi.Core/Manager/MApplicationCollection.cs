@@ -37,6 +37,7 @@ using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -63,7 +64,11 @@ namespace Alchemi.Core.Manager
 		/// <returns>Id of the newly created application</returns>
         public string CreateNew(string username)
         {
-            string appId = InternalShared.Instance.Database.ExecSql_Scalar("Application_Insert '{0}'", username).ToString();
+			ApplicationStorageView application = new ApplicationStorageView(username);
+			
+			string appId = ManagerStorageFactory.ManagerStorage().AddApplication(application);
+
+//            string appId = InternalShared.Instance.Database.ExecSql_Scalar("Application_Insert '{0}'", username).ToString();
             this[appId].CreateDataDirectory();
             return appId;
         }
@@ -80,35 +85,45 @@ namespace Alchemi.Core.Manager
 			//create directory can be repeated, and wont throw an error even if the dir already exists.
 			this[id].CreateDataDirectory();
 
-			object appId = InternalShared.Instance.Database.ExecSql_Scalar("SELECT application_id FROM application WHERE application_id='{0}'", id);
-			if (appId==null)
+			ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(id);
+
+			if (application == null)
 			{
 				appSetup = false;
 			}
+
+//			object appId = InternalShared.Instance.Database.ExecSql_Scalar("SELECT application_id FROM application WHERE application_id='{0}'", id);
+//			if (appId==null)
+//			{
+//				appSetup = false;
+//			}
 			return appSetup;
 		}
 
 		/// <summary>
 		/// Gets the list of applications.
 		/// </summary>
-        public DataSet LiveList
+        public ApplicationStorageView[] LiveList
         {
             get 
             {
-                DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_Applications"));
-                return applications;
-            }
+//                DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_Applications"));
+//                return applications;
+				return ManagerStorageFactory.ManagerStorage().GetApplications(true);
+			}
         }
 
 		/// <summary>
 		/// Gets the list of applications for the given user.
 		/// </summary>
 		/// <param name="user_name"></param>
-		/// <returns></returns>
-		public DataSet GetApplicationList(string user_name)
+		/// <returns>ApplicationStorageView array with the requested information.</returns>
+		public ApplicationStorageView[] GetApplicationList(string user_name)
 		{
-			DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_UserApplications '{0}'",user_name));
-			return applications;			
+//			DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_UserApplications '{0}'",user_name));
+//			return applications;			
+
+			return ManagerStorageFactory.ManagerStorage().GetApplications(user_name, true);
 		}
 
 		/// <summary>

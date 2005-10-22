@@ -252,15 +252,87 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ApplicationStorageView[] GetApplications()
 		{
-			if (m_applications == null)
+			return GetApplications(false);
+		}
+
+		public ApplicationStorageView[] GetApplications(bool populateThreadCount)
+		{
+			if (m_applications == null || m_applications.Count == 0)
 			{
 				return new ApplicationStorageView[0];
 			}
-			else
+
+			ArrayList applicationList = new ArrayList();
+
+			foreach(ApplicationStorageView application in m_applications)
 			{
-				return (ApplicationStorageView[])m_applications.ToArray(typeof(ApplicationStorageView));
+				if (populateThreadCount)
+				{
+					Int32 totalThreads;
+					Int32 unfinishedThreads;
+
+					GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
+
+					application.TotalThreads = totalThreads;
+					application.UnfinishedThreads = unfinishedThreads;
+				}
+
+				applicationList.Add(application);
 			}
+
+			return (ApplicationStorageView[])applicationList.ToArray(typeof(ApplicationStorageView));
 		}
+
+		public ApplicationStorageView[] GetApplications(String userName, bool populateThreadCount)
+		{
+			ArrayList applicationList = new ArrayList();
+
+			foreach(ApplicationStorageView application in m_applications)
+			{
+				if (String.Compare(application.Username, userName, false) == 0)
+				{
+					if (populateThreadCount)
+					{
+						Int32 totalThreads;
+						Int32 unfinishedThreads;
+
+						GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
+
+						application.TotalThreads = totalThreads;
+						application.UnfinishedThreads = unfinishedThreads;
+					}
+
+					applicationList.Add(application);
+				}
+			}
+
+			return (ApplicationStorageView[])applicationList.ToArray(typeof(ApplicationStorageView));
+		}
+
+		public ApplicationStorageView GetApplication(String applicationId)
+		{
+			if (m_applications == null)
+			{
+				return null;
+			}
+
+			IEnumerator enumerator = m_applications.GetEnumerator();
+
+			while(enumerator.MoveNext())
+			{
+				ApplicationStorageView application = (ApplicationStorageView)enumerator.Current;
+
+				if (application.ApplicationId == applicationId)
+				{
+					return application;
+				}
+			}
+
+			// data not found
+			return null;
+
+		}
+
 
 		public Int32 AddThread(ThreadStorageView thread)
 		{
@@ -319,6 +391,29 @@ namespace Alchemi.Core.Manager.Storage
 			else
 			{
 				return (ThreadStorageView[])m_threads.ToArray(typeof(ThreadStorageView));
+			}
+		}
+
+		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
+		{
+			totalThreads = unfinishedThreads = 0;
+
+			if (m_threads == null || m_threads.Count == 0)
+			{
+				return;
+			}
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ApplicationId == applicationId)
+				{
+					totalThreads ++;
+
+					if (thread.State == 0 || thread.State == 1 || thread.State == 2)
+					{
+						unfinishedThreads ++;
+					}
+				}
 			}
 		}
 

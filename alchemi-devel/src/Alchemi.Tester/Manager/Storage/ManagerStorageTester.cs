@@ -471,6 +471,27 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			Assert.IsNull(ManagerStorage.AddApplication(null));
 		}
+
+		/// <summary>
+		/// create an application object only from the username.
+		/// Check the inserted data to see if the right defaults were applied:
+		/// state = 0
+		/// primary = true
+		/// timeCreated is the current time
+		/// new application id is generated
+		/// </summary>
+		[Test]
+		public void AddApplicationTestWithUsernameOnly()
+		{
+			ApplicationStorageView application = new ApplicationStorageView("username3");
+
+			String applicationId = ManagerStorage.AddApplication(application);
+
+			Assert.AreEqual(0, application.State);
+			Assert.AreEqual(true, application.Primary);			
+			Assert.IsTrue(DateTime.Now.AddHours(-1) < application.TimeCreated && application.TimeCreated < DateTime.Now.AddHours(1), "Time created is not in this hour!");
+			Assert.IsTrue(applicationId != null && applicationId.Length > 0, "Invalid ApplicationID!");
+		}
 		
 		#endregion
 
@@ -605,6 +626,121 @@ namespace Alchemi.Tester.Manager.Storage
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
 			Assert.AreEqual(0, applications.Length);
+		}
+
+		/// <summary>
+		/// Create an application for username1, add 3 threads
+		/// Create an application for username2, add 1 thread
+		/// Get the username1 applications, it should have 5 threads, of which 3 are unfinished (status 0, 1 or 2).
+		/// </summary>
+		[Test]
+		public void GetApplicationsTestUserApplications()
+		{
+			String applicationId1 = AddApplication(0, DateTime.Now, true, "username1");
+			String executorId = null;
+
+			// Add a few threads to ths application
+			AddThread(applicationId1, executorId, 1, 0, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 2, 1, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 3, 2, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 4, 3, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 5, 4, DateTime.Now, DateTime.Now, 0, false);
+
+			String applicationId2 = AddApplication(0, DateTime.Now, true, "username2");
+
+			AddThread(applicationId2, executorId, 1, 0, DateTime.Now, DateTime.Now, 0, false);
+
+			ApplicationStorageView[] applications = ManagerStorage.GetApplications("username1", true);
+
+			Assert.AreEqual(1, applications.Length);
+			Assert.AreEqual(5, applications[0].TotalThreads);
+			Assert.AreEqual(3, applications[0].UnfinishedThreads);
+		}
+
+		#endregion
+
+		#region "GetApplication Tests"
+
+		/// <summary>
+		/// Add a new application.
+		/// Get the application by application ID.
+		/// We should find the new application
+		/// </summary>
+		[Test]
+		public void GetApplicationTest1()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			
+			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId);
+
+			Assert.IsNotNull(application);
+			Assert.AreEqual(123, application.State);
+			Assert.AreEqual(timeCreated, application.TimeCreated);
+			Assert.AreEqual(true, application.Primary);
+			Assert.AreEqual("username2", application.Username);
+		}
+
+		/// <summary>
+		/// Add 3 applications.
+		/// Get the second application.
+		/// </summary>
+		[Test]
+		public void GetApplicationTest2()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId1 = AddApplication(122, timeCreated, false, "username1");
+			String applicationId2 = AddApplication(123, timeCreated, true, "username2");
+			String applicationId3 = AddApplication(124, timeCreated, false, "username3");
+			
+			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId2);
+
+			Assert.IsNotNull(application);
+			Assert.AreEqual(123, application.State);
+			Assert.AreEqual(timeCreated, application.TimeCreated);
+			Assert.AreEqual(true, application.Primary);
+			Assert.AreEqual("username2", application.Username);
+		}
+
+		/// <summary>
+		/// Add no applications.
+		/// Get an application.
+		/// The object should be null
+		/// </summary>
+		[Test]
+		public void GetApplicationTest3()
+		{
+			ApplicationStorageView application = ManagerStorage.GetApplication(Guid.NewGuid().ToString());
+
+			Assert.IsNull(application);
+		}
+
+		/// <summary>
+		/// Add application
+		/// Get another application (non-existent)
+		/// The object should be null
+		/// </summary>
+		[Test]
+		public void GetApplicationTest4()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			
+			ApplicationStorageView application = ManagerStorage.GetApplication(Guid.NewGuid().ToString());
+
+			Assert.IsNull(application);
 		}
 
 
@@ -813,6 +949,20 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.AddThread(null);
 		}
 		
+		/// <summary>
+		/// Add a thread with a null Executor ID.
+		/// Note: 
+		///		Reproducing a bug on the SQL Server implementation.
+		/// </summary>
+		[Test]
+		public void AddThreadTestNullExecutorId()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = null;
+
+			AddThread(applicationId, executorId, 1, 2, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
+		}
+
 		#endregion
 
 		#region "UpdateThread Tests"
@@ -986,5 +1136,48 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "GetApplicationThreadInformation Tests"
+
+		/// <summary>
+		/// Add no application or thread
+		/// Attempt to get the threads, it should return 0
+		/// </summary>
+		[Test]
+		public void GetApplicationThreadCountTestNoThreadInformation()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 totalThreads;
+			Int32 unfinishedThreads;
+
+			ManagerStorage.GetApplicationThreadCount(applicationId, out totalThreads, out unfinishedThreads);
+
+			Assert.AreEqual(0, totalThreads);
+			Assert.AreEqual(0, unfinishedThreads);
+		}
+
+		/// <summary>
+		/// Add a few threads for an application
+		/// Attempt to get the threads, the numbers should be good
+		/// </summary>
+		[Test]
+		public void GetApplicationThreadCountTestSimpleScenario()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 totalThreads;
+			Int32 unfinishedThreads;
+
+			// add 4 threads, 3 are unfinished
+			AddThread(applicationId, null, 1, 0, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 2, 1, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 3, 2, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 4, 3, DateTime.Now, DateTime.Now, 0, false);
+
+			ManagerStorage.GetApplicationThreadCount(applicationId, out totalThreads, out unfinishedThreads);
+
+			Assert.AreEqual(4, totalThreads);
+			Assert.AreEqual(3, unfinishedThreads);
+		}
+
+		#endregion
 	}
 }

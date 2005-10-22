@@ -29,6 +29,7 @@ using System;
 using System.Data;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Manager;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 
 namespace Alchemi.Core
@@ -256,15 +257,15 @@ namespace Alchemi.Core
 		/// Gets the list of all the applications.
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>Dataset with application information</returns>
-        DataSet Admon_GetLiveApplicationList(SecurityCredentials sc);
+		/// <returns>ApplicationStorageView array with application information</returns>
+        ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the application list for the given user.
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>Dataset with application information</returns>
-		DataSet Admon_GetUserApplicationList(SecurityCredentials sc);
+		/// <returns>ApplicationStorageView array with application information</returns>
+		ApplicationStorageView[] Admon_GetUserApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of thread for the given application

@@ -31,6 +31,7 @@ using System.IO;
 using System.Threading;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Manager.Storage;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 namespace Alchemi.Core.Manager
@@ -685,10 +686,10 @@ namespace Alchemi.Core.Manager
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of applications, which is associated with the permission: ManageAllApps).</param>
-		/// <returns>A DataSet containing all the applications running currently, with the attributes:
+		/// <returns>An ApplicationStorageView array containing all the applications running currently, with the attributes:
 		/// application_id, usr_name, state, time_created, total_threads, unfinished_threads
 		/// </returns>
-        public DataSet Admon_GetLiveApplicationList(SecurityCredentials sc)
+        public ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc)
         {
 			DataSet ds = null;
             AuthenticateUser(sc);
@@ -696,8 +697,8 @@ namespace Alchemi.Core.Manager
 			try
 			{
 				EnsurePermission(sc, Permission.ManageAllApps);
-				ds = _Applications.LiveList;
 				logger.Debug("Getting list of live applications.");
+				return _Applications.LiveList;
 			}
 			catch (AuthorizationException)
 			{
@@ -705,19 +706,17 @@ namespace Alchemi.Core.Manager
 				//let us try ManageOwnApp
 				logger.Debug("User doesnot have permission for ManageAllApps, checking ManageOwnApp");
 				EnsurePermission(sc,Permission.ManageOwnApp);
-				ds = _Applications.GetApplicationList(sc.Username);
 				logger.Debug("Getting list of live applications for user: "+sc.Username);
+				return _Applications.GetApplicationList(sc.Username);
 			}
-
-            return ds;
         }
 
 		/// <summary>
 		/// Gets the application list for the current user.
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>Dataset with application info</returns>
-    	public DataSet Admon_GetUserApplicationList(SecurityCredentials sc)
+		/// <returns>ApplicationStorageView array with application info</returns>
+    	public ApplicationStorageView[] Admon_GetUserApplicationList(SecurityCredentials sc)
     	{
 			EnsurePermission(sc,Permission.ManageOwnApp);
 			logger.Debug("Getting list of live applications for user: "+sc.Username);

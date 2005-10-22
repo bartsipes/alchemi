@@ -443,6 +443,11 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ApplicationStorageView[] GetApplications()
 		{
+			return GetApplications(false);
+		}
+
+		public ApplicationStorageView[] GetApplications(bool populateThreadCount)
+		{
 			ArrayList applications = new ArrayList();
 
 			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application")))
@@ -465,11 +470,93 @@ namespace Alchemi.Core.Manager.Storage
 						username
 						);
 
+					if (populateThreadCount)
+					{
+						Int32 totalThreads;
+						Int32 unfinishedThreads;
+
+						GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
+
+						application.TotalThreads = totalThreads;
+						application.UnfinishedThreads = unfinishedThreads;
+					}
+
 					applications.Add(application);
 				}
 			}
 
 			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
+		}
+
+		public ApplicationStorageView[] GetApplications(String userName, bool populateThreadCount)
+		{
+			ArrayList applications = new ArrayList();
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where usr_name = '{0}'",
+					  userName.Replace("'", "''"))))
+			{
+				while(dataReader.Read())
+				{
+					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+
+					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+
+					ApplicationStorageView application = new ApplicationStorageView(
+						applicationId,
+						state,
+						timeCreated,
+						primary,
+						username
+						);
+
+					if (populateThreadCount)
+					{
+						Int32 totalThreads;
+						Int32 unfinishedThreads;
+
+						GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
+
+						application.TotalThreads = totalThreads;
+						application.UnfinishedThreads = unfinishedThreads;
+					}
+
+					applications.Add(application);
+				}
+			}
+
+			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
+		}
+
+		public ApplicationStorageView GetApplication(String applicationId)
+		{
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where application_id='{0}'", applicationId)))
+			{
+				if(dataReader.Read())
+				{
+					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+
+					ApplicationStorageView application = new ApplicationStorageView(
+						applicationId,
+						state,
+						timeCreated,
+						primary,
+						username
+						);
+
+					return application;
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
 		public Int32 AddThread(ThreadStorageView thread)
@@ -481,8 +568,18 @@ namespace Alchemi.Core.Manager.Storage
 
 			SqlParameter timeStartedParameter = new SqlParameter("@time_started", thread.TimeStarted);
 			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", thread.TimeFinished);
+			SqlParameter executorIdParameter;
+			
+			if (thread.ExecutorId != null)
+			{
+				executorIdParameter = new SqlParameter("@executor_id", thread.ExecutorId);
+			}
+			else
+			{
+				executorIdParameter = new SqlParameter("@executor_id", DBNull.Value);
+			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', '{1}', {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', @executor_id, {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
 				thread.ApplicationId,
 				thread.ExecutorId,
 				thread.ThreadId,
@@ -490,7 +587,7 @@ namespace Alchemi.Core.Manager.Storage
 				thread.Priority,
 				Convert.ToInt16(thread.Failed)
 				), 
-				timeStartedParameter, timeFinishedParameter);
+				timeStartedParameter, timeFinishedParameter, executorIdParameter);
 
 			return Convert.ToInt32(threadIdObject);
 		}
@@ -555,6 +652,29 @@ namespace Alchemi.Core.Manager.Storage
 			}
 
 			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));
+		}
+
+		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
+		{
+			totalThreads = unfinishedThreads = 0;
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select state from thread where application_id = '{0}'",
+					  applicationId)))
+			{
+				while(dataReader.Read())
+				{
+					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+
+					totalThreads ++;
+
+					if (state == 0 || state == 1 || state == 2)
+					{
+						unfinishedThreads ++;
+					}
+
+				}
+			}
+
 		}
 
 		#endregion
