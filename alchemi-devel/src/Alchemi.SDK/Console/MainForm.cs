@@ -2858,7 +2858,15 @@ namespace Alchemi.Console
 					break;
 			}
 		}
-
+		
+		/// <summary>
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
+		/// </summary>
+		/// <param name="appRefresh"></param>
 		private void showJobsPerformanceByApp(bool appRefresh)
 		{
 			try

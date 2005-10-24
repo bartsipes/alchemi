@@ -59,6 +59,11 @@ namespace Alchemi.Core.Manager
         
 		/// <summary>
 		/// Creates a new application
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database call to use the Manager Storage instead
+		///		
 		/// </summary>
 		/// <param name="username">the user associated with the application</param>
 		/// <returns>Id of the newly created application</returns>
@@ -75,6 +80,11 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Verify if the database is properly set up.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database calls to use the Manager Storage objects
+		///		
 		/// </summary>
 		/// <param name="id">application id</param>
 		/// <returns>true if the application is set up in the database</returns>
@@ -102,6 +112,12 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the list of applications.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
         public ApplicationStorageView[] LiveList
         {
@@ -115,6 +131,12 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the list of applications for the given user.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
 		/// <param name="user_name"></param>
 		/// <returns>ApplicationStorageView array with the requested information.</returns>

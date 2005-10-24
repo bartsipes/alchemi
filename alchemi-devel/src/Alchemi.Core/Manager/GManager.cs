@@ -683,6 +683,12 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the list of live applications (i.e those that are currently running).
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of applications, which is associated with the permission: ManageAllApps).</param>
@@ -713,6 +719,12 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the application list for the current user.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>ApplicationStorageView array with application info</returns>

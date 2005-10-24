@@ -255,6 +255,12 @@ namespace Alchemi.Core
 
 		/// <summary>
 		/// Gets the list of all the applications.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		/// 
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>ApplicationStorageView array with application information</returns>
@@ -262,6 +268,11 @@ namespace Alchemi.Core
 
 		/// <summary>
 		/// Gets the application list for the given user.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>ApplicationStorageView array with application information</returns>
