@@ -25,6 +25,8 @@ details.
 
 using System;
 
+using Alchemi.Core.Owner;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -38,7 +40,7 @@ namespace Alchemi.Core.Manager.Storage
 		private String m_applicationId;
 		private String m_executorId;
 		private Int32 m_threadId;
-		private Int32 m_state;
+		private ThreadState m_state;
 		private DateTime m_timeStarted;
 		private DateTime m_timeFinished;
 		private Int32 m_priority;
@@ -95,7 +97,7 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public Int32 State
+		public ThreadState State
 		{
 			get
 			{
@@ -141,7 +143,7 @@ namespace Alchemi.Core.Manager.Storage
 				String applicationId,
 				String executorId,
 				Int32 threadId,
-				Int32 state,
+				ThreadState state,
 				DateTime timeStarted,
 				DateTime timeFinished,
 				Int32 priority,
@@ -165,7 +167,7 @@ namespace Alchemi.Core.Manager.Storage
 				String applicationId,
 				String executorId,
 				Int32 threadId,
-				Int32 state,
+				ThreadState state,
 				DateTime timeStarted,
 				DateTime timeFinished,
 				Int32 priority,

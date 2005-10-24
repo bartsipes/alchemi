@@ -697,7 +697,7 @@ namespace Alchemi.Core.Manager
 		/// </returns>
         public ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc)
         {
-			DataSet ds = null;
+			//DataSet ds = null;
             AuthenticateUser(sc);
             
 			try

@@ -24,6 +24,7 @@ using System;
 
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Owner;
 
 using NUnit.Framework;
 
@@ -115,7 +116,7 @@ namespace Alchemi.Tester.Manager.Storage
 			String applicationId,
 			String executorId,
 			Int32 threadId,
-			Int32 state,
+			ThreadState state,
 			DateTime timeStarted,
 			DateTime timeFinished,
 			Int32 priority,
@@ -640,11 +641,11 @@ namespace Alchemi.Tester.Manager.Storage
 			String executorId = null;
 
 			// Add a few threads to ths application
-			AddThread(applicationId1, executorId, 1, 0, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId1, executorId, 2, 1, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId1, executorId, 3, 2, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId1, executorId, 4, 3, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId1, executorId, 5, 4, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 2, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, executorId, 5, ThreadState.Dead, DateTime.Now, DateTime.Now, 0, false);
 
 			String applicationId2 = AddApplication(0, DateTime.Now, true, "username2");
 
@@ -936,7 +937,7 @@ namespace Alchemi.Tester.Manager.Storage
 			String applicationId = Guid.NewGuid().ToString();
 			String executorId = Guid.NewGuid().ToString();
 
-			AddThread(applicationId, executorId, 1, 2, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
+			AddThread(applicationId, executorId, 1, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
 		}
 
 		/// <summary>
@@ -960,7 +961,7 @@ namespace Alchemi.Tester.Manager.Storage
 			String applicationId = Guid.NewGuid().ToString();
 			String executorId = null;
 
-			AddThread(applicationId, executorId, 1, 2, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
+			AddThread(applicationId, executorId, 1, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
 		}
 
 		#endregion
@@ -993,12 +994,12 @@ namespace Alchemi.Tester.Manager.Storage
 			now = now.AddDays(1);
 			DateTime timeFinished2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			AddThread(applicationId, executorId1, threadId, 2, timeStarted1, timeFinished1, 4, true);
+			AddThread(applicationId, executorId1, threadId, ThreadState.Started, timeStarted1, timeFinished1, 4, true);
 
 			// retrieve the newly added thread so we have the new internal thread id
 			ThreadStorageView[] newThreads = ManagerStorage.GetThreads();
 
-			ThreadStorageView updatedThread = new ThreadStorageView(newThreads[0].InternalThreadId, applicationId, executorId2, threadId, 6, timeStarted2, timeFinished2, 7, false);
+			ThreadStorageView updatedThread = new ThreadStorageView(newThreads[0].InternalThreadId, applicationId, executorId2, threadId, ThreadState.Dead, timeStarted2, timeFinished2, 7, false);
 
 			ManagerStorage.UpdateThread(updatedThread);
 			
@@ -1008,7 +1009,7 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(applicationId, threads[0].ApplicationId);
 			Assert.AreEqual(executorId2, threads[0].ExecutorId);
 			Assert.AreEqual(threadId, threads[0].ThreadId);
-			Assert.AreEqual(6, threads[0].State);
+			Assert.AreEqual(ThreadState.Dead, threads[0].State);
 			Assert.AreEqual(timeStarted2, threads[0].TimeStarted);
 			Assert.AreEqual(timeFinished2, threads[0].TimeFinished);
 			Assert.AreEqual(7, threads[0].Priority);
@@ -1028,7 +1029,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			DateTime timeCreated = DateTime.Now.AddDays(1);
 
-			ThreadStorageView updatedThread = new ThreadStorageView(applicationId, executorId, threadId, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			ThreadStorageView updatedThread = new ThreadStorageView(applicationId, executorId, threadId, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
 
 			updatedThread.ThreadId = -1;
 
@@ -1053,7 +1054,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime timeStarted = DateTime.Now;
 			DateTime timeFinished = DateTime.Now.AddDays(1);
 
-			AddThread(applicationId, executorId, threadId, 2, timeStarted, timeFinished, 1, false);
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, false);
 
 			ManagerStorage.UpdateThread(null);
 			
@@ -1085,7 +1086,7 @@ namespace Alchemi.Tester.Manager.Storage
 			now.AddDays(1);
 			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			AddThread(applicationId, executorId, threadId, 2, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
 			
 			ThreadStorageView[] threads = ManagerStorage.GetThreads();
 
@@ -1093,7 +1094,7 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(applicationId, threads[0].ApplicationId);
 			Assert.AreEqual(executorId, threads[0].ExecutorId);
 			Assert.AreEqual(threadId, threads[0].ThreadId);
-			Assert.AreEqual(2, threads[0].State);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
 			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
 			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
 			Assert.AreEqual(1, threads[0].Priority);
@@ -1111,9 +1112,9 @@ namespace Alchemi.Tester.Manager.Storage
 			String applicationId = Guid.NewGuid().ToString();
 			String executorId = Guid.NewGuid().ToString();
 
-			AddThread(applicationId, executorId, 1, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
-			AddThread(applicationId, executorId, 2, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
-			AddThread(applicationId, executorId, 3, 6, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 1, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 2, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 3, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
 			
 			ThreadStorageView[] threads = ManagerStorage.GetThreads();
 
@@ -1167,10 +1168,10 @@ namespace Alchemi.Tester.Manager.Storage
 			Int32 unfinishedThreads;
 
 			// add 4 threads, 3 are unfinished
-			AddThread(applicationId, null, 1, 0, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId, null, 2, 1, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId, null, 3, 2, DateTime.Now, DateTime.Now, 0, false);
-			AddThread(applicationId, null, 4, 3, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 2, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
 
 			ManagerStorage.GetApplicationThreadCount(applicationId, out totalThreads, out unfinishedThreads);
 

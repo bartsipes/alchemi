@@ -30,6 +30,8 @@ using System.Data.SqlClient;
 
 using Advanced.Data.Provider;
 
+using Alchemi.Core.Owner;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -586,7 +588,7 @@ namespace Alchemi.Core.Manager.Storage
 				thread.ApplicationId,
 				thread.ExecutorId,
 				thread.ThreadId,
-				thread.State,
+				(int)thread.State,
 				thread.Priority,
 				Convert.ToInt16(thread.Failed)
 				), 
@@ -610,7 +612,7 @@ namespace Alchemi.Core.Manager.Storage
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
 				updatedThread.ThreadId,
-				updatedThread.State,
+				(int)updatedThread.State,
 				updatedThread.Priority,
 				Convert.ToInt16(updatedThread.Failed)
 				), 
@@ -632,7 +634,7 @@ namespace Alchemi.Core.Manager.Storage
 					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
 
 					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
-					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeStarted = dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
 					DateTime timeFinished = dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
 					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));

@@ -26,6 +26,8 @@ details.
 using System;
 using System.Collections;
 
+using Alchemi.Core.Owner;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -412,7 +414,7 @@ namespace Alchemi.Core.Manager.Storage
 				{
 					totalThreads ++;
 
-					if (thread.State == 0 || thread.State == 1 || thread.State == 2)
+					if (thread.State == ThreadState.Ready || thread.State == ThreadState.Scheduled || thread.State == ThreadState.Started)
 					{
 						unfinishedThreads ++;
 					}
