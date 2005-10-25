@@ -100,7 +100,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			RunSql("CREATE TABLE dbo.grp (grp_id int NOT NULL, grp_name varchar(50) NOT NULL)");
 
-			RunSql("CREATE PROCEDURE dbo.User_Authenticate(@usr_name varchar(50), @password varchar(50)) AS select count(*) as authenticated from usr where usr_name = @usr_name and password = @password");
+			//RunSql("CREATE PROCEDURE dbo.User_Authenticate(@usr_name varchar(50), @password varchar(50)) AS select count(*) as authenticated from usr where usr_name = @usr_name and password = @password");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
 			RunSql("CREATE TABLE dbo.executor (executor_id uniqueidentifier, is_dedicated bit NOT NULL, is_connected bit NOT NULL, ping_time datetime NULL, host varchar (100) NULL, port int NULL, usr_name varchar (50) NULL, cpu_max int NULL, cpu_usage int NULL, cpu_avail int NULL, cpu_totalusage float NULL )");
@@ -111,22 +111,34 @@ namespace Alchemi.Core.Manager.Storage
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[thread]");
 			RunSql("CREATE TABLE [dbo].[thread] ([internal_thread_id] [int] IDENTITY (1, 1) NOT NULL , [application_id] [uniqueidentifier] NOT NULL , [executor_id] [uniqueidentifier] NULL ,[thread_id] [int] NOT NULL ,[state] [int] NOT NULL ,[time_started] [datetime] NULL ,[time_finished] [datetime] NULL ,[priority] [int] NOT NULL ,[failed] [bit] NOT NULL )");
 
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[grp_prm]");
+			RunSql("CREATE TABLE [dbo].[grp_prm] ([grp_id] [int] NOT NULL ,[prm_id] [int] NOT NULL )");
+
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[prm]");
+			RunSql("CREATE TABLE [dbo].[prm] ([prm_id] [int] NOT NULL , [prm_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL )");
+
+
 		}
 
 		public void InitializeStorageData()
 		{
-			// TODO:  Add SqlServerManagerDatabaseStorage.InitializeStorageData implementation
+			RunSql("insert into prm(prm_id, prm_name) values(1, 'ExecuteThread')");
+			RunSql("insert into prm(prm_id, prm_name) values(2, 'ManageOwnApp')");
+			RunSql("insert into prm(prm_id, prm_name) values(3, 'ManageAllApps')");
+			RunSql("insert into prm(prm_id, prm_name) values(4, 'ManageUsers')");
 		}
 
 		public void TearDownStorage()
 		{
-			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.User_Authenticate') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
+			//RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.User_Authenticate') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
 			RunSql("DROP TABLE dbo.usr");
 			RunSql("DROP TABLE dbo.grp");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[application]");
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[thread]");
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[grp_prm]");
+			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[prm]");
 		}
 
 		#endregion

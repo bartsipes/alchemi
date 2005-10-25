@@ -40,6 +40,7 @@ namespace Alchemi.Core.Manager.Storage
 	{
 		private ArrayList m_users;
 		private ArrayList m_groups;
+		private Hashtable m_groupPermissions;
 		private ArrayList m_executors;
 		private ArrayList m_applications;
 		private ArrayList m_threads;
@@ -50,6 +51,7 @@ namespace Alchemi.Core.Manager.Storage
 			// TODO: Add constructor logic here
 			//
 		}
+
 		#region IManagerStorage Members
 
 		public SystemSummary GetSystemSummary()
@@ -151,6 +153,85 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return (GroupStorageView[])m_groups.ToArray(typeof(GroupStorageView));
 			}
+		}
+
+		public void AddGroupPermission(Int32 groupId, Permission permission)
+		{
+			if (m_groupPermissions == null)
+			{
+				m_groupPermissions = new Hashtable();
+			}
+
+			ArrayList permissions = null;
+
+			if (m_groupPermissions[groupId] != null)
+			{
+				permissions = (ArrayList)m_groupPermissions[groupId];
+			}
+			else
+			{
+				permissions = new ArrayList();
+
+				m_groupPermissions.Add(groupId, permissions);
+			}
+
+			Int32 index = permissions.IndexOf(permission);
+
+			// only add it if it is not already in the array
+			if (index < 0)
+			{
+				permissions.Add(permission);
+			}
+
+			m_groupPermissions[groupId] = permissions;
+		}
+
+		public Permission[] GetGroupPermissions(Int32 groupId)
+		{
+			if (m_groupPermissions == null || m_groupPermissions[groupId] == null)
+			{
+				return new Permission[0];
+			}
+
+			ArrayList permissions = (ArrayList)m_groupPermissions[groupId];
+
+			return (Permission[])permissions.ToArray(typeof(Permission));
+		}
+
+		public bool CheckPermission(SecurityCredentials sc, Permission perm)
+		{
+			if (m_users == null || m_groups == null || m_groupPermissions == null)
+			{
+				return false;
+			}
+
+			// get the user's groupId
+			Int32 groupId = -1;
+			foreach(UserStorageView user in m_users)
+			{
+				if(String.Compare(user.Username, sc.Username, true) == 0 && user.Password == sc.Password)
+				{
+					groupId = user.GroupId;
+					break;
+				}
+			}
+
+			if (groupId == -1)
+			{
+				return false;
+			}
+
+			foreach(Permission permission in GetGroupPermissions(groupId))
+			{
+				// in the SQL implementation the higher leverl permissions are considered to 
+				// include the lower leverl permissions
+				if ((int)permission >= (int)perm)
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public String AddExecutor(ExecutorStorageView executor)

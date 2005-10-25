@@ -254,7 +254,7 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				String sqlQuery;
 				
-				sqlQuery = String.Format("insert grp values({0}, '{1}')", 
+				sqlQuery = String.Format("insert grp(grp_id, grp_name) values({0}, '{1}')", 
 					group.GroupId,
 					group.GroupName.Replace("'", "''"));
 				
@@ -280,6 +280,50 @@ namespace Alchemi.Core.Manager.Storage
 			}
 
 			return (GroupStorageView[])groupList.ToArray(typeof(GroupStorageView));
+		}
+
+		public void AddGroupPermission(Int32 groupId, Permission permission)
+		{
+			String sqlQuery;
+			
+			// in case there is a duplicate remove the permission first
+			sqlQuery = String.Format("delete grp_prm where grp_id={0} and prm_id={1}", 
+				groupId,
+				(Int32)permission);
+
+			RunSql(sqlQuery);
+
+			sqlQuery = String.Format("insert grp_prm(grp_id, prm_id) values({0}, {1})", 
+				groupId,
+				(Int32)permission);
+				
+			RunSql(sqlQuery);
+		}
+
+		public Permission[] GetGroupPermissions(Int32 groupId)
+		{
+			ArrayList permissions = new ArrayList();
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select prm_id from grp_prm where grp_id={0}", groupId)))
+			{
+				while(dataReader.Read())
+				{
+					Permission permission = (Permission)dataReader.GetInt32(dataReader.GetOrdinal("prm_id"));
+
+					permissions.Add(permission);
+				}
+			}
+
+			return (Permission[])permissions.ToArray(typeof(Permission));
+		}
+
+		public bool CheckPermission(SecurityCredentials sc, Permission perm)
+		{
+			String query = String.Format("select count(*) as permitted from usr inner join grp on grp.grp_id = usr.grp_id inner join grp_prm on grp_prm.grp_id = grp.grp_id inner join prm on prm.prm_id = grp_prm.prm_id where usr.usr_name = '{0}' and prm.prm_id >= {1}", 
+				sc.Username.Replace("'", "''"),
+				(int)perm);
+
+			return Convert.ToBoolean(RunSqlReturnScalar(query));
 		}
 
 		public String AddExecutor(ExecutorStorageView executor)

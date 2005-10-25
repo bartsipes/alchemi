@@ -48,6 +48,8 @@ namespace Alchemi.Core.Manager.Storage
 
 		object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
+		*/
+
 		/// <summary>
 		/// Check if a permisison is set.
 		/// </summary>
@@ -55,8 +57,6 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="perm">Permission to check for</param>
 		/// <returns>true if the permission is set, false otherwise</returns>
 		bool CheckPermission(SecurityCredentials sc, Permission perm);
-
-		*/
 
 		/// <summary>
 		/// Authenticate a user's security credentials
@@ -79,9 +79,15 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns></returns>
 		UserStorageView[] GetUserList();
 
+		
 		void AddGroups(GroupStorageView[] groups);
 		
 		GroupStorageView[] GetGroups();
+
+		void AddGroupPermission(Int32 groupId, Permission permission);
+
+		Permission[] GetGroupPermissions(Int32 groupId);
+
 
 		String AddExecutor(ExecutorStorageView executor);
 

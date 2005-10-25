@@ -1,28 +1,32 @@
-//
-// Alchemi.Tester.Manager.Storage.ManagerStorageTester.cs
-//
-// Author:
-//   Tibor Biro (tb@tbiro.com)
-//
-// Copyright (C) 2005 Tibor Biro (tb@tbiro.com)
-//
-// This program is free software; you can redistribute it and/or modify 
-// it under the terms of the GNU General Public License as published by 
-// the Free Software Foundation; either version 2 of the License, or 
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of 
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License 
-// along with this program; if not, write to the Free Software 
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+#region Alchemi copyright and license notice
+
+/*
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+* Title         :  ManagerStorageTester.cs
+* Project       :  Alchemi.Tester.Manager.Storage
+* Created on    :  22 September 2005
+* Copyright     :  Copyright © 2005 The University of Melbourne
+*                    This technology has been developed with the support of
+*                    the Australian Research Council and the University of Melbourne
+*                    research grants as part of the Gridbus Project
+*                    within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author        :  Tibor Biro (tb@tbiro.com)
+* License       :  GPL
+*                    This program is free software; you can redistribute it and/or
+*                    modify it under the terms of the GNU General Public
+*                    License as published by the Free Software Foundation;
+*                    See the GNU General Public License
+*                    (http://www.gnu.org/copyleft/gpl.html) for more 
+details.
+*
+*/
+#endregion
 
 using System;
 
 using Alchemi.Core;
+using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 
@@ -444,6 +448,148 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(0, groups.Length);
 		}
 
+
+		#endregion
+
+		#region "AddGroupPermission Tests"
+		/// <summary>
+		/// Add a permission to a group
+		/// Should throw no exceptions
+		/// </summary>
+		[Test]
+		public void AddGroupPermissionTestSimpleScenario()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+		}
+		#endregion
+
+		#region "GetGroupPermissions Tests"
+
+		/// <summary>
+		/// Add a permission to a group
+		/// Get the permissions, it should be there
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionsTestSimpleScenario()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+
+			Permission[] result = ManagerStorage.GetGroupPermissions(groupId);
+
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual(Permission.ExecuteThread, result[0]);
+		}
+
+		/// <summary>
+		/// Add no permissions
+		/// Get the permissions, there should be none
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionsTestNoPermissions()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			Permission[] result = ManagerStorage.GetGroupPermissions(groupId);
+
+			Assert.AreEqual(0, result.Length);
+		}
+
+		/// <summary>
+		/// Add the same permission several times
+		/// Get the permissions, there should be only one
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionsTestDuplicates()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+
+			Permission[] result = ManagerStorage.GetGroupPermissions(groupId);
+
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual(Permission.ExecuteThread, result[0]);
+		}
+
+		#endregion
+
+		#region "CheckPermission Tests"
+
+		/// <summary>
+		/// Add a group
+		/// Add a user to the group
+		/// Add a permission to a group
+		/// Check permission, it should be there
+		/// </summary>
+		[Test]
+		public void CheckPermissionTestSimpleScenario()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			AddUser("username1", "password1", groupId);
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ManageUsers);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			bool result = ManagerStorage.CheckPermission(sc, Permission.ManageUsers);
+
+			Assert.IsTrue(result);
+		}
+
+		/// <summary>
+		/// Add no group or user
+		/// Check permission, it should fail
+		/// </summary>
+		[Test]
+		public void CheckPermissionTestNoGroupsOrUsers()
+		{
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			bool result = ManagerStorage.CheckPermission(sc, Permission.ManageUsers);
+
+			Assert.IsFalse(result);
+		}
+
+		/// <summary>
+		/// Add a group
+		/// Add a user to the group
+		/// Add a high level permission: ManageUsers
+		/// Check a lower level permission: ExecuteThread, it should be there
+		/// </summary>
+		[Test]
+		public void CheckPermissionTestHigherLevelPermission()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			AddUser("username1", "password1", groupId);
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ManageUsers);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			bool result = ManagerStorage.CheckPermission(sc, Permission.ExecuteThread);
+
+			Assert.IsTrue(result);
+		}
 
 		#endregion
 

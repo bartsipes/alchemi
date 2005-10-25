@@ -82,13 +82,19 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Authenticates a user with the given security credentials
+		/// 
+		/// Updates: 
+		/// 
+		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="sc">security credentials of the user</param>
         public void AuthenticateUser(SecurityCredentials sc)
         {
-            string result = InternalShared.Instance.Database.ExecSql_Scalar("User_Authenticate '{0}', '{1}'", sc.Username, sc.Password).ToString();
+			bool result = ManagerStorageFactory.ManagerStorage().AuthenticateUser(sc);
+            //string result = InternalShared.Instance.Database.ExecSql_Scalar("User_Authenticate '{0}', '{1}'", sc.Username, sc.Password).ToString();
 			//logger.Debug("Authenticating user: "+sc.Username);
-            if (result == "0")
+            if (!result)
             {
                 //logger.Debug("Authentication failed for user:"+sc.Username);
 				throw new AuthenticationException(string.Format("Authentication failed for user {0}.", sc.Username), null);
@@ -933,10 +939,38 @@ namespace Alchemi.Core.Manager
 
         //-----------------------------------------------------------------------------------------------          
 
-        private bool IsApplicationCreator(SecurityCredentials sc, string appId)
+		/// <summary>
+		/// Check if the given user is the application creator.
+		/// 
+		/// Updates: 
+		/// 
+		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///												- Changed the function protection level to protected to facilitate unit testing
+		///	
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="appId"></param>
+		/// <returns></returns>
+        protected bool IsApplicationCreator(SecurityCredentials sc, string appId)
         {
-            string creator = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyApplicationCreator '{0}', '{1}'", sc.Username, appId).ToString();
-            return creator == "0" ? false : true;
+			ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(appId);
+
+			if (application == null)
+			{
+				return false;
+			}
+
+			if (String.Compare(application.Username, sc.Username, true) == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+//            string creator = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyApplicationCreator '{0}', '{1}'", sc.Username, appId).ToString();
+//            return creator == "0" ? false : true;
         }
         
         //-----------------------------------------------------------------------------------------------          
@@ -956,14 +990,26 @@ namespace Alchemi.Core.Manager
 
         //-----------------------------------------------------------------------------------------------          
 
-        private void EnsurePermission(SecurityCredentials sc, Permission perm)
+		/// <summary>
+		/// Check if the permission was set
+		/// 
+		/// Updates: 
+		/// 
+		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///												- Changed the function protection level to protected to facilitate unit testing
+		/// 
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="perm"></param>
+        protected void EnsurePermission(SecurityCredentials sc, Permission perm)
         {
-            string result = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)).ToString();
+			bool result = ManagerStorageFactory.ManagerStorage().CheckPermission(sc, perm);
+            //string result = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)).ToString();
             //logger.Debug("Checking permission "+perm+" for user:"+sc.Username);
-			if (result == "0")
+			if (!result)
             {
 				logger.Debug("User"+sc.Username+" doesnt have permission "+perm.ToString());
-				logger.Debug(string.Format("----------- User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)));				
+				logger.Debug(string.Format("----------- User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)));
                 throw new AuthorizationException(
                     string.Format("User '{0}' is not associated with permission '{1}'", sc.Username, perm.ToString()),
                     null
