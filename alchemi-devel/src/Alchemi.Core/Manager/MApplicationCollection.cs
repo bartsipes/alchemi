@@ -73,7 +73,6 @@ namespace Alchemi.Core.Manager
 			
 			string appId = ManagerStorageFactory.ManagerStorage().AddApplication(application);
 
-//            string appId = InternalShared.Instance.Database.ExecSql_Scalar("Application_Insert '{0}'", username).ToString();
             this[appId].CreateDataDirectory();
             return appId;
         }
@@ -102,11 +101,6 @@ namespace Alchemi.Core.Manager
 				appSetup = false;
 			}
 
-//			object appId = InternalShared.Instance.Database.ExecSql_Scalar("SELECT application_id FROM application WHERE application_id='{0}'", id);
-//			if (appId==null)
-//			{
-//				appSetup = false;
-//			}
 			return appSetup;
 		}
 
@@ -123,8 +117,6 @@ namespace Alchemi.Core.Manager
         {
             get 
             {
-//                DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_Applications"));
-//                return applications;
 				return ManagerStorageFactory.ManagerStorage().GetApplications(true);
 			}
         }
@@ -142,9 +134,6 @@ namespace Alchemi.Core.Manager
 		/// <returns>ApplicationStorageView array with the requested information.</returns>
 		public ApplicationStorageView[] GetApplicationList(string user_name)
 		{
-//			DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_UserApplications '{0}'",user_name));
-//			return applications;			
-
 			return ManagerStorageFactory.ManagerStorage().GetApplications(user_name, true);
 		}
 

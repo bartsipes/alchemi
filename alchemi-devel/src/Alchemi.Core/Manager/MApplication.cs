@@ -30,6 +30,7 @@ using System.Data;
 using System.IO;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -114,24 +115,17 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the count threads with the given thread-state.
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="ts"></param>
 		/// <returns>Thread count</returns>
 		public int ThreadCount(ThreadState ts)
 		{
-			object totCount;
-
-			string sql = string.Format("SELECT count(thread_id) FROM Thread WHERE application_id='{0}' AND [state]={1};",_Id,(int)ts);
-			totCount = InternalShared.Instance.Database.ExecSql_Scalar(sql);
-
-			if (totCount==null)
-			{
-				return 0;
-			}
-			else
-			{
-				return (int)totCount;
-			}
+			return ManagerStorageFactory.ManagerStorage().GetThreadCount(_Id, ts);
 		}
 
 		/// <summary>
@@ -149,14 +143,17 @@ namespace Alchemi.Core.Manager
         {
             get
             {
-                int state = (int) InternalShared.Instance.Database.ExecSql_Scalar(
-                    string.Format("select state from application where application_id = '{0}'", _Id)
-                    );
-                return (ApplicationState) state;
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+				return application.State;
             }
             set
             {
-                InternalShared.Instance.Database.ExecSql("Application_UpdateState '{0}', {1}", _Id, (int) value);
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+				application.State = value;
+
+				ManagerStorageFactory.ManagerStorage().UpdateApplication(application);
             }
         }
 
@@ -178,7 +175,7 @@ namespace Alchemi.Core.Manager
 		/// <returns>Dataset with thread info.</returns>
 		public DataSet GetThreadList(ThreadState status)
 		{
-			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));			
+			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));
 		}
 
 		/// <summary>
@@ -189,12 +186,9 @@ namespace Alchemi.Core.Manager
         {
             get 
             {
-                string primary = 
-                    InternalShared.Instance.Database.ExecSql_Scalar(
-                    string.Format("select count(*) from application where application_id = '{0}' and is_primary = 1", _Id)
-                    ).ToString();
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
 
-                return (primary == "0") ? false : true;
+				return application.Primary;
             }
         }
 
@@ -203,11 +197,13 @@ namespace Alchemi.Core.Manager
 		/// </summary>
         public void Stop()
         {
-            DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Application_Stop '{0}'", _Id);
-            foreach (DataRow thread in dt.Rows)
-            {
-                GManager.AbortThread(new ThreadIdentifier(_Id, int.Parse(thread["thread_id"].ToString())), thread["executor_id"].ToString());
-            }
+			ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(_Id);
+
+			foreach (ThreadStorageView thread in threads)
+			{
+			    GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);
+			}
+
 			logger.Debug("Stopped the current application."+_Id);
         }
     }

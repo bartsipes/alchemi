@@ -32,6 +32,7 @@ namespace Alchemi.Core.Manager.Storage
 	/// <summary>
 	/// Summary description for ThreadStorageView.
 	/// </summary>
+	[Serializable]
 	public class ThreadStorageView
 	{
 		#region "Private variables"

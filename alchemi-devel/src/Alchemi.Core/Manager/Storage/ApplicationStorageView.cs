@@ -25,11 +25,14 @@ details.
 
 using System;
 
+using Alchemi.Core.Owner;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Summary description for ApplicationStorageView.
 	/// </summary>
+	[Serializable]
 	public class ApplicationStorageView
 	{
 		private const Int32 c_valueNotSet = Int32.MaxValue;
@@ -37,7 +40,7 @@ namespace Alchemi.Core.Manager.Storage
 		#region "Private variables"
 		
 		private String m_applicationId;
-		private Int32 m_state;
+		private ApplicationState m_state;
 		private DateTime m_timeCreated;
 		private bool m_primary;
 		private String m_username;
@@ -61,11 +64,15 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public Int32 State
+		public ApplicationState State
 		{
 			get
 			{
 				return m_state;
+			}
+			set
+			{
+				m_state = value;
 			}
 		}
 
@@ -130,7 +137,7 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		public ApplicationStorageView(
-				Int32 state,
+				ApplicationState state,
 				DateTime timeCreated,
 				bool primary,
 				String username
@@ -147,7 +154,7 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ApplicationStorageView(
 				String applicationId,
-				Int32 state,
+				ApplicationState state,
 				DateTime timeCreated,
 				bool primary,
 				String username
@@ -165,7 +172,7 @@ namespace Alchemi.Core.Manager.Storage
 				String username
 			) : this (
 				null,
-				0,
+				ApplicationState.Stopped,
 				DateTime.Now,
 				true,
 				username

@@ -31,6 +31,7 @@ namespace Alchemi.Core.Manager.Storage
 	/// Storage view of a group object. 
 	/// Used to pass group related data to and from the storage layer 
 	/// </summary>
+	[Serializable]
 	public class GroupStorageView
 	{
 

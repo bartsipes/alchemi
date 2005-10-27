@@ -100,7 +100,7 @@ namespace Alchemi.Tester.Manager.Storage
 		}
 
 		private String AddApplication(
-			Int32 state,
+			ApplicationState state,
 			DateTime timeCreated,
 			bool primary,
 			String username
@@ -184,7 +184,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.UpdateUsers(userUpdates);
 
-			UserStorageView[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUsers();
 			
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
@@ -206,7 +206,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.UpdateUsers(userUpdates);
 
-			UserStorageView[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUsers();
 			
 			Assert.AreEqual(0, users.Length);
 		}
@@ -223,7 +223,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.UpdateUsers(null);
 
-			UserStorageView[] users = ManagerStorage.GetUserList();
+			UserStorageView[] users = ManagerStorage.GetUsers();
 			
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
@@ -329,7 +329,7 @@ namespace Alchemi.Tester.Manager.Storage
 			
 			UserStorageView[] users;
 
-			users = ManagerStorage.GetUserList();
+			users = ManagerStorage.GetUsers();
 
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
@@ -351,7 +351,7 @@ namespace Alchemi.Tester.Manager.Storage
 			
 			UserStorageView[] users;
 
-			users = ManagerStorage.GetUserList();
+			users = ManagerStorage.GetUsers();
 
 			Assert.AreEqual(3, users.Length);
 		}
@@ -366,7 +366,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			UserStorageView[] users;
 
-			users = ManagerStorage.GetUserList();
+			users = ManagerStorage.GetUsers();
 
 			Assert.AreEqual(0, users.Length);
 		}
@@ -603,7 +603,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddApplicationTest1()
 		{
-			String applicationId = AddApplication(1, DateTime.Now, false, "test");
+			String applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
 
 			Assert.IsNotNull(applicationId);
 			Assert.AreNotEqual("", applicationId);
@@ -634,7 +634,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			String applicationId = ManagerStorage.AddApplication(application);
 
-			Assert.AreEqual(0, application.State);
+			Assert.AreEqual(ApplicationState.Stopped, application.State);
 			Assert.AreEqual(true, application.Primary);			
 			Assert.IsTrue(DateTime.Now.AddHours(-1) < application.TimeCreated && application.TimeCreated < DateTime.Now.AddHours(1), "Time created is not in this hour!");
 			Assert.IsTrue(applicationId != null && applicationId.Length > 0, "Invalid ApplicationID!");
@@ -659,9 +659,9 @@ namespace Alchemi.Tester.Manager.Storage
 			now = now.AddDays(1);
 			DateTime timeCreated2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(12, timeCreated1, false, "test");
+			String applicationId = AddApplication(ApplicationState.Ready, timeCreated1, false, "test");
 
-			ApplicationStorageView updatedApplication = new ApplicationStorageView(10, timeCreated2, true, "test2");
+			ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, timeCreated2, true, "test2");
 
 			updatedApplication.ApplicationId = applicationId;
 
@@ -670,7 +670,7 @@ namespace Alchemi.Tester.Manager.Storage
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
 			Assert.AreEqual(1, applications.Length);
-			Assert.AreEqual(10, applications[0].State);
+			Assert.AreEqual(ApplicationState.Stopped, applications[0].State);
 			Assert.AreEqual(timeCreated2, applications[0].TimeCreated);
 			Assert.AreEqual(true, applications[0].Primary);
 			Assert.AreEqual("test2", applications[0].Username);
@@ -685,7 +685,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime timeCreated = DateTime.Now.AddDays(1);
 
-			ApplicationStorageView updatedApplication = new ApplicationStorageView(123, timeCreated, false, "username2");
+			ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated, false, "username2");
 
 			updatedApplication.ApplicationId = "";
 
@@ -706,7 +706,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime timeCreated = DateTime.Now;
 
-			String applicationId = AddApplication(123, timeCreated, true, "username1");
+			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
 
 			ManagerStorage.UpdateApplication(null);
 			
@@ -732,12 +732,12 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
 			
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
 			Assert.AreEqual(1, applications.Length);
-			Assert.AreEqual(123, applications[0].State);
+			Assert.AreEqual(ApplicationState.Stopped, applications[0].State);
 			Assert.AreEqual(timeCreated, applications[0].TimeCreated);
 			Assert.AreEqual(true, applications[0].Primary);
 			Assert.AreEqual("username2", applications[0].Username);
@@ -753,9 +753,9 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime timeCreated = DateTime.Now;
 
-			String applicationId1 = AddApplication(123, timeCreated, true, "username1");
-			String applicationId2 = AddApplication(123, timeCreated, true, "username2");
-			String applicationId3 = AddApplication(123, timeCreated, true, "username3");
+			String applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
+			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			String applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, true, "username3");
 			
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
@@ -821,12 +821,12 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId);
 
 			Assert.IsNotNull(application);
-			Assert.AreEqual(123, application.State);
+			Assert.AreEqual(ApplicationState.Ready, application.State);
 			Assert.AreEqual(timeCreated, application.TimeCreated);
 			Assert.AreEqual(true, application.Primary);
 			Assert.AreEqual("username2", application.Username);
@@ -844,14 +844,14 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId1 = AddApplication(122, timeCreated, false, "username1");
-			String applicationId2 = AddApplication(123, timeCreated, true, "username2");
-			String applicationId3 = AddApplication(124, timeCreated, false, "username3");
+			String applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, false, "username1");
+			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			String applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, false, "username3");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId2);
 
 			Assert.IsNotNull(application);
-			Assert.AreEqual(123, application.State);
+			Assert.AreEqual(ApplicationState.Ready, application.State);
 			Assert.AreEqual(timeCreated, application.TimeCreated);
 			Assert.AreEqual(true, application.Primary);
 			Assert.AreEqual("username2", application.Username);
@@ -883,7 +883,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(123, timeCreated, true, "username2");
+			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(Guid.NewGuid().ToString());
 
@@ -1280,10 +1280,46 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(0, threads.Length);
 		}
 
+		/// <summary>
+		/// Add a new thread.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetThreadsTestApplicationThreads()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String otherApplicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads(applicationId);
+			ThreadStorageView[] otherThreads = ManagerStorage.GetThreads(otherApplicationId);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(0, otherThreads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
 
 		#endregion
 
-		#region "GetApplicationThreadInformation Tests"
+		#region "GetApplicationThreadcount Tests"
 
 		/// <summary>
 		/// Add no application or thread
@@ -1323,6 +1359,54 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.AreEqual(4, totalThreads);
 			Assert.AreEqual(3, unfinishedThreads);
+		}
+
+		#endregion
+
+		#region "GetThreadCount Tests"
+
+		/// <summary>
+		/// Add no application or thread
+		/// Attempt to get the threads, it should return 0
+		/// </summary>
+		[Test]
+		public void GetThreadCountTestNoThreadInformation()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 totalThreads;
+			Int32 unfinishedThreads;
+
+			Int32 result = ManagerStorage.GetThreadCount(applicationId, ThreadState.Dead);
+
+			Assert.AreEqual(0, result);
+		}
+
+		/// <summary>
+		/// Add a few threads for an application
+		/// Attempt to get the threads, the numbers should be good
+		/// </summary>
+		[Test]
+		public void GetThreadCountTestSimpleScenario()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+
+			// add 4 threads, 3 are unfinished
+			AddThread(applicationId, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 2, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
+
+			Int32 ready = ManagerStorage.GetThreadCount(applicationId, ThreadState.Ready);
+			Int32 scheduled = ManagerStorage.GetThreadCount(applicationId, ThreadState.Scheduled);
+			Int32 started = ManagerStorage.GetThreadCount(applicationId, ThreadState.Started);
+			Int32 finished = ManagerStorage.GetThreadCount(applicationId, ThreadState.Finished);
+			Int32 dead = ManagerStorage.GetThreadCount(applicationId, ThreadState.Dead);
+
+			Assert.AreEqual(1, ready);
+			Assert.AreEqual(1, scheduled);
+			Assert.AreEqual(1, started);
+			Assert.AreEqual(1, finished);
+			Assert.AreEqual(0, dead);
 		}
 
 		#endregion

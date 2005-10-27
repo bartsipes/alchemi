@@ -116,7 +116,7 @@ namespace Alchemi.Core.Manager.Storage
 			return false;
 		}
 
-		public UserStorageView[] GetUserList()
+		public UserStorageView[] GetUsers()
 		{
 			if (m_users == null)
 			{
@@ -480,6 +480,26 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		public ThreadStorageView[] GetThreads(String applicationId)
+		{
+			if (m_threads == null)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threadList = new ArrayList();
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ApplicationId == applicationId)
+				{
+					threadList.Add(thread);
+				}
+			}
+
+			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
+		}
+
 		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
 		{
 			totalThreads = unfinishedThreads = 0;
@@ -501,6 +521,26 @@ namespace Alchemi.Core.Manager.Storage
 					}
 				}
 			}
+		}
+
+		public Int32 GetThreadCount(String applicationId, ThreadState threadState)
+		{
+			Int32 threadCount = 0;
+
+			if (m_threads == null || m_threads.Count == 0)
+			{
+				return threadCount;
+			}
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ApplicationId == applicationId && thread.State == threadState)
+				{
+					threadCount ++;
+				}
+			}
+
+			return threadCount;
 		}
 
 		#endregion

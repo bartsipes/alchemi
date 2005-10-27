@@ -1662,7 +1662,20 @@ namespace Alchemi.Console
 				{
 					try
 					{
-						console.Manager.Admon_AddUsers(console.Credentials, adds);
+						UserStorageView[] usersToAdd = new UserStorageView[adds.Rows.Count];
+
+						Int32 userIndex = 0;
+						foreach(DataRow row in adds.Rows)
+						{
+							usersToAdd[userIndex] = new UserStorageView(
+								row["usr_name"].ToString(),
+								row["password"].ToString(),
+								Convert.ToInt32(row["grp_id"]));
+
+							userIndex++;
+						}
+
+						console.Manager.Admon_AddUsers(console.Credentials, usersToAdd);
 						refresh = true;
 					}
 					catch (Exception ex)
@@ -1675,7 +1688,20 @@ namespace Alchemi.Console
 				{
 					try
 					{
-						console.Manager.Admon_UpdateUsers(console.Credentials, updates);
+						UserStorageView[] usersToUpdate = new UserStorageView[updates.Rows.Count];
+
+						Int32 userIndex = 0;
+						foreach(DataRow row in updates.Rows)
+						{
+							usersToUpdate[userIndex] = new UserStorageView(
+								row["usr_name"].ToString(),
+								row["password"].ToString(),
+								Convert.ToInt32(row["grp_id"]));
+
+							userIndex++;
+						}
+						
+						console.Manager.Admon_UpdateUsers(console.Credentials, usersToUpdate);
 						refresh = true;
 					}
 					catch (Exception ex)
@@ -1707,11 +1733,41 @@ namespace Alchemi.Console
 
         }
 
+		/// <summary>
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the User data from a DataSet 
+		///		to UserStorageView
+		/// 
+		/// </summary>
         private void RefreshUsers()
         {
 			try
 			{
-				dgUsers.DataSource = console.Manager.Admon_GetUserList(console.Credentials);
+				UserStorageView[] users = console.Manager.Admon_GetUserList(console.Credentials);
+
+				/// TB: transforming the user array in a DataTable.
+				/// It might be a better idea to create a data type that could be directly used as a source
+				DataTable dt = new DataTable();
+
+				dt.Columns.Add("usr_name");
+				dt.Columns.Add("password");
+				dt.Columns.Add("grp_id");
+
+				foreach(UserStorageView user in users)
+				{
+					object[] values = new object[3];
+
+					values[0] = user.Username;
+					values[1] = user.Password;
+					values[2] = user.GroupId;
+
+					dt.Rows.Add(values);
+				}
+
+				dt.AcceptChanges();
+
+				dgUsers.DataSource = dt;
 				SizeColumnsToContent(dgUsers, -1);
 			}			
 			catch (Exception e)
@@ -2095,7 +2151,42 @@ namespace Alchemi.Console
 		{
 			try
 			{
-				dgExecutors.DataSource = console.Manager.Admon_GetExecutors(console.Credentials);
+				ExecutorStorageView[] executors = console.Manager.Admon_GetExecutors(console.Credentials);
+
+				/// TB: transforming the user array in a DataTable.
+				/// It might be a better idea to create a data type that could be directly used as a source
+				DataTable dt = new DataTable();
+
+				dt.Columns.Add("executor_id");
+				dt.Columns.Add("host");
+				dt.Columns.Add("port");
+				dt.Columns.Add("usr_name");
+				dt.Columns.Add("is_connected");
+				dt.Columns.Add("is_dedicated");
+				dt.Columns.Add("cpu_max");
+				dt.Columns.Add("cpu_totalusage");
+
+				foreach(ExecutorStorageView executor in executors)
+				{
+					object[] values = new object[8];
+
+					values[0] = executor.ExecutorId;
+					values[1] = executor.HostName;
+					values[2] = executor.Port;
+					values[3] = executor.Username;
+					values[4] = executor.AvailableCpu;
+					values[5] = executor.Dedicated;
+					values[6] = executor.MaxCpu;
+					values[7] = executor.TotalCpuUsage * executor.MaxCpu / (3600 * 1000);
+
+					dt.Rows.Add(values);
+				}
+
+				dt.AcceptChanges();
+
+				dgUsers.DataSource = dt;
+
+				dgExecutors.DataSource = dt;
 				SizeColumnsToContent(dgExecutors, -1);
 			}
 			catch (Exception ex)

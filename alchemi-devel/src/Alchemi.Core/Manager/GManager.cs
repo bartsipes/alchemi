@@ -92,11 +92,9 @@ namespace Alchemi.Core.Manager
         public void AuthenticateUser(SecurityCredentials sc)
         {
 			bool result = ManagerStorageFactory.ManagerStorage().AuthenticateUser(sc);
-            //string result = InternalShared.Instance.Database.ExecSql_Scalar("User_Authenticate '{0}', '{1}'", sc.Username, sc.Password).ToString();
-			//logger.Debug("Authenticating user: "+sc.Username);
-            if (!result)
+
+			if (!result)
             {
-                //logger.Debug("Authentication failed for user:"+sc.Username);
 				throw new AuthenticationException(string.Format("Authentication failed for user {0}.", sc.Username), null);
             }
         }
@@ -801,95 +799,115 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the list of users from the database
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///												
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of users, which is associated with the permission: ManageUsers)</param>
 		/// <returns>A DataTable containing the list of users with the attributes:
 		/// usr_name, password, grp_id
 		/// </returns>
-        public DataTable Admon_GetUserList(SecurityCredentials sc)
+        public UserStorageView[] Admon_GetUserList(SecurityCredentials sc)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
 			logger.Debug("Getting the list of users.");
-            return InternalShared.Instance.Database.ExecSql_DataTable("Admon_GetUserList");
+			
+			return ManagerStorageFactory.ManagerStorage().GetUsers();
         }
         
         //-----------------------------------------------------------------------------------------------          
         
 		/// <summary>
 		/// Gets the list of groups in the database
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of groups, which is associated with the permission: ManageUsers).
 		/// </param>
 		/// <returns>a DataTable containing the list of groups with the following attributes:
 		/// gri_id, grp_name</returns>
-        public DataTable Admon_GetGroups(SecurityCredentials sc)
+        public GroupStorageView[] Admon_GetGroups(SecurityCredentials sc)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
 			logger.Debug("Getting list of groups from the db");
-            return InternalShared.Instance.Database.ExecSql_DataTable("select * from grp");
+
+			return ManagerStorageFactory.ManagerStorage().GetGroups();
         }
 
         //-----------------------------------------------------------------------------------------------          
 
 		/// <summary>
 		/// Updates the list of users with the data table given.
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///												
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e update users, which is associated with the permission: ManageUsers).</param>
 		/// <param name="updates">DataTable containing users details to update</param>
-        public void Admon_UpdateUsers(SecurityCredentials sc, DataTable updates)
+        public void Admon_UpdateUsers(SecurityCredentials sc, UserStorageView[] updates)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
 
-            foreach (DataRow user in updates.Rows)
-            {
-				logger.Debug("Updating user:"+user["usr_name"].ToString());
-                InternalShared.Instance.Database.ExecSql("update usr set password = '{0}', grp_id = '{1}' where usr_name = '{2}'", user["password"].ToString(), (int) user["grp_id"], user["usr_name"].ToString());
-            }
+			ManagerStorageFactory.ManagerStorage().UpdateUsers(updates);
         }
 
         //-----------------------------------------------------------------------------------------------          
 
 		/// <summary>
 		/// Adds the list of users to the Alchemi database
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e add list of users, which is associated with the permission: ManageUsers).</param>
 		/// <param name="adds">a DataTable object containing the list of users to be added</param>
-        public void Admon_AddUsers(SecurityCredentials sc, DataTable adds)
+        public void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] adds)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
 
-            foreach (DataRow user in adds.Rows)
-            {
-				logger.Debug("Adding user to db: "+user["usr_name"].ToString());
-                InternalShared.Instance.Database.ExecSql("insert usr values('{0}', '{1}', {2})", user["usr_name"].ToString(), user["password"].ToString(), (int) user["grp_id"]);
-            }
+			ManagerStorageFactory.ManagerStorage().AddUsers(adds);
         }
 
         //-----------------------------------------------------------------------------------------------          
 
 		/// <summary>
 		/// Gets the list of executors from the database
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permission to perform this operation 
 		/// (i.e get list of executors, which is associated with the ManageOwnApp permission)</param>
 		/// <returns>a DataTable containing the list of executors and the properties:
 		/// executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, cpu_totalusage
 		/// </returns>
-        public DataTable Admon_GetExecutors(SecurityCredentials sc)
+        public ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
 
 			logger.Debug("Getting list of executors from database");
-            return InternalShared.Instance.Database.ExecSql_DataTable("Admon_GetExecutors");
+
+			return ManagerStorageFactory.ManagerStorage().GetExecutors();
         }
 
         //----------------------------------------------------------------------------------------------- 
@@ -968,9 +986,6 @@ namespace Alchemi.Core.Manager
 			{
 				return false;
 			}
-
-//            string creator = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyApplicationCreator '{0}', '{1}'", sc.Username, appId).ToString();
-//            return creator == "0" ? false : true;
         }
         
         //-----------------------------------------------------------------------------------------------          
@@ -1004,8 +1019,7 @@ namespace Alchemi.Core.Manager
         protected void EnsurePermission(SecurityCredentials sc, Permission perm)
         {
 			bool result = ManagerStorageFactory.ManagerStorage().CheckPermission(sc, perm);
-            //string result = InternalShared.Instance.Database.ExecSql_Scalar("User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)).ToString();
-            //logger.Debug("Checking permission "+perm+" for user:"+sc.Username);
+
 			if (!result)
             {
 				logger.Debug("User"+sc.Username+" doesnt have permission "+perm.ToString());

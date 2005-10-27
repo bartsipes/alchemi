@@ -18,6 +18,34 @@ namespace Alchemi.Tester.Manager
 	{
 		private InMemoryManagerStorage m_managerStorage;
 
+		private void SetupApplicationsGroupsAndUsers(Permission permission)
+		{
+			// add permissions
+			Int32 groupId = 12;
+
+			GroupStorageView[] groups = new GroupStorageView[1];
+
+			groups[0] = new GroupStorageView(groupId, "test1");
+
+			UserStorageView[] users = new UserStorageView[1];
+
+			users[0] = new UserStorageView("username1", "password1", groupId);
+
+			m_managerStorage.AddGroups(groups);
+
+			m_managerStorage.AddUsers(users);
+
+			m_managerStorage.AddGroupPermission(groupId, permission);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			// add applications, only one assigned to this user
+
+			m_managerStorage.AddApplication(new ApplicationStorageView("username1"));
+			m_managerStorage.AddApplication(new ApplicationStorageView("username2"));
+			m_managerStorage.AddApplication(new ApplicationStorageView("username3"));		
+		}
+
 		[SetUp]
 		public void SetUp()
 		{
@@ -197,18 +225,48 @@ namespace Alchemi.Tester.Manager
 			Assert.IsFalse(true, "The authorization should fail");			
 		}
 
-//		[Test]
-//		public void Admon_GetLiveApplicationListTestSimpleScenario()
-//		{
-//			Assert.Fail("Test not implemented.");
-//		}
-//		
-//		[Test]
-//		public void Admon_GetUserApplicationListTestSimpleScenario()
-//		{
-//			Assert.Fail("Test not implemented.");
-//		}
+		/// <summary>
+		/// Add permissions and group membership so that EnsurePermission(sc,Permission.ManageOwnApp) does not throw an exception
+		/// </summary>
+		[Test]
+		public void Admon_GetLiveApplicationListTestSimpleScenario()
+		{
+			SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			ApplicationStorageView[] result = Admon_GetUserApplicationList(sc);
+
+			Assert.AreEqual(1, result.Length);
+		}
 		
+		[Test]
+		public void Admon_GetUserApplicationListTestSimpleScenario()
+		{
+			SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			ApplicationStorageView[] result = Admon_GetLiveApplicationList(sc);
+
+			Assert.AreEqual(3, result.Length);
+		}
+		
+		/// <summary>
+		/// Setup applications but user has only rights to see own apps
+		/// Should return oly one application
+		/// </summary>
+		[Test]
+		public void Admon_GetUserApplicationListTestNotEnoughPermissions()
+		{
+			SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
+
+			SecurityCredentials sc = new SecurityCredentials("username1", "password1");
+
+			ApplicationStorageView[] result = Admon_GetLiveApplicationList(sc);
+
+			Assert.AreEqual(1, result.Length);
+		}
 
 
 	}

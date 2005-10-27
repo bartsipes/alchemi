@@ -208,7 +208,7 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-		public UserStorageView[] GetUserList()
+		public UserStorageView[] GetUsers()
 		{
 			ArrayList userList = new ArrayList();
 
@@ -463,7 +463,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, @time_created, '{2}', '{3}')",
 				applicationId,
-				application.State,
+				(int)application.State,
 				Convert.ToInt16(application.Primary),
 				application.Username.Replace("'", "''")
 				), 
@@ -483,7 +483,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			RunSql(String.Format("update application set state = {1}, time_created = @time_created, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
 				updatedApplication.ApplicationId,
-				updatedApplication.State,
+				(int)updatedApplication.State,
 				Convert.ToInt16(updatedApplication.Primary),
 				updatedApplication.Username.Replace("'", "''")
 				), 
@@ -506,7 +506,7 @@ namespace Alchemi.Core.Manager.Storage
 					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
 					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
-					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
@@ -549,7 +549,7 @@ namespace Alchemi.Core.Manager.Storage
 					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
 					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
-					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
@@ -586,7 +586,7 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				if(dataReader.Read())
 				{
-					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
@@ -665,9 +665,24 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ThreadStorageView[] GetThreads()
 		{
-			ArrayList threads = new ArrayList();
+			return GetThreads(null);
+		}
 
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread")))
+		public ThreadStorageView[] GetThreads(String findApplicationId)
+		{
+			ArrayList threads = new ArrayList();
+			String query;
+
+			query = String.Format("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
+
+			if (findApplicationId != null)
+			{
+				query = String.Format("{0} where application_id='{1}'",
+					query,
+					findApplicationId);
+			}
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query))
 			{
 				while(dataReader.Read())
 				{
@@ -724,6 +739,15 @@ namespace Alchemi.Core.Manager.Storage
 				}
 			}
 
+		}
+
+		public Int32 GetThreadCount(String applicationId, ThreadState threadState)
+		{
+			object threadCount = RunSqlReturnScalar(String.Format("select count(*) from thread where application_id='{0}' and state = {1}",
+				applicationId,
+				(int)threadState));
+
+			return Convert.ToInt32(threadCount);
 		}
 
 		#endregion

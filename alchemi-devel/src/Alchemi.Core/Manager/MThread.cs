@@ -135,8 +135,6 @@ namespace Alchemi.Core.Manager
                 InternalShared.Instance.Database.ExecSql(string.Format(
                     "update thread set priority = {0} where application_id = '{1}' and thread_id = {2}", value, _AppId, _Id
                     ));
-
-                string foo = string.Format("select priority from thread where application_id = '{0}' and thread_id = {1}", _AppId, _Id).ToString(); // InternalShared.Instance.Database.ExecSql_Scalar
             }
         }
 

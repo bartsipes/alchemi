@@ -25,6 +25,8 @@ details.
 
 using System;
 
+using Alchemi.Core.Owner;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -77,7 +79,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// Get an array with all the users found in the current storage
 		/// </summary>
 		/// <returns></returns>
-		UserStorageView[] GetUserList();
+		UserStorageView[] GetUsers();
 
 		
 		void AddGroups(GroupStorageView[] groups);
@@ -122,7 +124,12 @@ namespace Alchemi.Core.Manager.Storage
 
 		ThreadStorageView[] GetThreads();
 
+		ThreadStorageView[] GetThreads(String applicationId);
+
 		void GetApplicationThreadCount(String applicationId, out Int32 totalthreads, out Int32 unfinishedThreads);
+
+		Int32 GetThreadCount(String applicationId, ThreadState threadState);
+
 
 		/// <summary>
 		/// Get system summary information from the storage.

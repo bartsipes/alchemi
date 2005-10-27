@@ -31,6 +31,7 @@ namespace Alchemi.Core.Manager.Storage
 	/// Storage view of a user object. 
 	/// Used to pass user related data to and from the storage layer 
 	/// </summary>
+	[Serializable]
 	public class UserStorageView
 	{
 		#region "Private variables"

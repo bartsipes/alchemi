@@ -300,28 +300,28 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTabke with user information</returns>
-        DataTable Admon_GetUserList(SecurityCredentials sc);
+        UserStorageView[] Admon_GetUserList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of groups
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTable with group information</returns>
-        DataTable Admon_GetGroups(SecurityCredentials sc);
+        GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
 
 		/// <summary>
 		/// Updates the Manager database with the given table of users.
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="updates"></param>
-        void Admon_UpdateUsers(SecurityCredentials sc, DataTable updates);
+        void Admon_UpdateUsers(SecurityCredentials sc, UserStorageView[] updates);
 
 		/// <summary>
 		/// Adds all the users in the given table to the Manager database
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="users"></param>
-        void Admon_AddUsers(SecurityCredentials sc, DataTable users);
+        void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] users);
 
 		/// <summary>
 		/// Gets the system summary information
@@ -335,7 +335,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns></returns>
-        DataTable Admon_GetExecutors(SecurityCredentials sc);
+        ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
 		/// Executes an SQL query on the Manager database.
