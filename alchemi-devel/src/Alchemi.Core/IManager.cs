@@ -1,35 +1,32 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	IManager.cs
+* Project		:	Alchemi Core
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
 
 using System;
 using System.Data;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Manager;
-using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 
 namespace Alchemi.Core
@@ -255,28 +252,17 @@ namespace Alchemi.Core
 
 		/// <summary>
 		/// Gets the list of all the applications.
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
-		/// 
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>ApplicationStorageView array with application information</returns>
-        ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc);
+		/// <returns>Dataset with application information</returns>
+        DataSet Admon_GetLiveApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the application list for the given user.
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>ApplicationStorageView array with application information</returns>
-		ApplicationStorageView[] Admon_GetUserApplicationList(SecurityCredentials sc);
+		/// <returns>Dataset with application information</returns>
+		DataSet Admon_GetUserApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of thread for the given application
@@ -300,28 +286,28 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTabke with user information</returns>
-        UserStorageView[] Admon_GetUserList(SecurityCredentials sc);
+        DataTable Admon_GetUserList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of groups
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTable with group information</returns>
-        GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
+        DataTable Admon_GetGroups(SecurityCredentials sc);
 
 		/// <summary>
 		/// Updates the Manager database with the given table of users.
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="updates"></param>
-        void Admon_UpdateUsers(SecurityCredentials sc, UserStorageView[] updates);
+        void Admon_UpdateUsers(SecurityCredentials sc, DataTable updates);
 
 		/// <summary>
 		/// Adds all the users in the given table to the Manager database
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="users"></param>
-        void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] users);
+        void Admon_AddUsers(SecurityCredentials sc, DataTable users);
 
 		/// <summary>
 		/// Gets the system summary information
@@ -335,7 +321,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns></returns>
-        ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
+        DataTable Admon_GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
 		/// Executes an SQL query on the Manager database.

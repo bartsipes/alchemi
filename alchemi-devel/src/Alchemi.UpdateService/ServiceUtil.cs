@@ -1,10 +1,35 @@
+#region Alchemi copyright and license notice
+
+/*
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+* 
+* Title			:	ServiceUtil.cs
+* Project		:	Alchemi Updater Service
+* Created on	:	August 2005
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Krishna Nadiminti (kna@cs.mu.oz.au) and Rajkumar Buyya (raj@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
+#endregion
+
 using System;
 using System.IO;
 using Microsoft.Win32.Security;
 
 
-//even though this class belongs to the Core namespace, we dont put it in the ManagerService project,
-//and link it in the ExecutorService since we dont want a dependency on the Win32.Security dll in the core dll.
+//even though this class belongs to the Core namespace, we dont put it in the Manager/Executor-Service project,
+//and link it in the Manager/Executor-Service since we dont want a dependency on the Win32.Security dll in the core dll.
 //this is so far used only in the Service projects.
 //with .Net 2.0 this will be in the base-class-lib.
 namespace Alchemi.Core.Utility

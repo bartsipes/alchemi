@@ -1,28 +1,26 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	ManagerMainForm.cs
+* Project		:	Alchemi Manager Application
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
 
 using System;
@@ -33,7 +31,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
-using Alchemi.Updater;
+//using Alchemi.Updater;
 using log4net;
 
 
@@ -89,13 +87,12 @@ namespace Alchemi.ManagerExec
 		private TabControl tabControl1;
 		private TabPage tabPage1;
 		private ProgressBar pbar;
-		private MenuItem mnuUpdates;
 
-		//updater stuff
-		private AppUpdater updater = null;
-		private const string updateExecURL = "http://www.alchemi.net/updates/manager/exec/ManagerExecManifest.xml";
-		private const string updateServiceURL = "http://www.alchemi.net/updates/manager/service/ManagerServiceManifest.xml";
-		private bool updating = false;
+//		//updater stuff
+//		private AppUpdater updater = null;
+//		private const string updateExecURL = "http://www.alchemi.net/updates/manager/exec/ManagerExecManifest.xml";
+//		private const string updateServiceURL = "http://www.alchemi.net/updates/manager/service/ManagerServiceManifest.xml";
+//		private bool updating = false;
 		public int returnCode = 0;
 
 		//field specifying whether the manager-form is a service controller.
@@ -111,30 +108,30 @@ namespace Alchemi.ManagerExec
 			InitializeComponent();
  			this.isService = isService;
      
-			string updateURL;
+			//string updateURL;
 			if (isService)
 			{
 				this.Text = "Alchemi Manager Service Controller";
-				updateURL = updateServiceURL;
+				//updateURL = updateServiceURL;
 			}
 			else
 			{
 				this.Text = "Alchemi Manager";
-				updateURL = updateExecURL;
+				//updateURL = updateExecURL;
 				Logger.LogHandler += new LogEventHandler(LogHandler);
 				ManagerContainer.ManagerStartEvent += new ManagerStartStatusEventHandler(this.Manager_StartStatusEvent);
 			}
 
-			// 
-			// updater
-			// 
-			updater = new AppUpdater(updateURL,ChangeDetectionModes.ServerManifestCheck,false,false,false);
-			
-			//need this only for a custom update detection system
-			//updater.OnCheckForUpdate += new AppUpdater.CheckForUpdateEventHandler(this.updater_OnCheckForUpdate);
-			updater.OnUpdateDetected += new AppUpdater.UpdateDetectedEventHandler(this.updater_OnUpdateDetected);
-			updater.OnUpdateComplete += new AppUpdater.UpdateCompleteEventHandler(this.updater_OnUpdateComplete);
-			updater.OnDownloadProgress += new AppUpdater.DownloadProgressEventHandler(updater_OnDownloadProgress);
+//			// 
+//			// updater
+//			// 
+//			updater = new AppUpdater(updateURL,ChangeDetectionModes.ServerManifestCheck,false,false,false);
+//			
+//			//need this only for a custom update detection system
+//			//updater.OnCheckForUpdate += new AppUpdater.CheckForUpdateEventHandler(this.updater_OnCheckForUpdate);
+//			updater.OnUpdateDetected += new AppUpdater.UpdateDetectedEventHandler(this.updater_OnUpdateDetected);
+//			updater.OnUpdateComplete += new AppUpdater.UpdateCompleteEventHandler(this.updater_OnUpdateComplete);
+//			updater.OnDownloadProgress += new AppUpdater.DownloadProgressEventHandler(updater_OnDownloadProgress);
 
 		}
 
@@ -185,7 +182,6 @@ namespace Alchemi.ManagerExec
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.mmExit = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.mnuUpdates = new System.Windows.Forms.MenuItem();
 			this.mmAbout = new System.Windows.Forms.MenuItem();
 			this.label5 = new System.Windows.Forms.Label();
 			this.txDbPassword = new System.Windows.Forms.TextBox();
@@ -414,19 +410,12 @@ namespace Alchemi.ManagerExec
 			// 
 			this.menuItem2.Index = 1;
 			this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.mnuUpdates,
 																					  this.mmAbout});
 			this.menuItem2.Text = "Help";
 			// 
-			// mnuUpdates
-			// 
-			this.mnuUpdates.Index = 0;
-			this.mnuUpdates.Text = "Check for Updates...";
-			this.mnuUpdates.Click += new System.EventHandler(this.mnuUpdates_Click);
-			// 
 			// mmAbout
 			// 
-			this.mmAbout.Index = 1;
+			this.mmAbout.Index = 0;
 			this.mmAbout.Text = "About";
 			this.mmAbout.Click += new System.EventHandler(this.mmAbout_Click);
 			// 
@@ -643,12 +632,12 @@ namespace Alchemi.ManagerExec
 
 		private void StartManagerService()
 		{
-			//if the update process is going on, avoid starting the manager.
-			if (updating)
-			{
-				MessageBox.Show(this,"The manager is checking for updates. It can be started only after the updates are completed.","Update Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
-				return;
-			}
+//			//if the update process is going on, avoid starting the manager.
+//			if (updating)
+//			{
+//				MessageBox.Show(this,"The manager is checking for updates. It can be started only after the updates are completed.","Update Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+//				return;
+//			}
 
 			if (Started)
 			{
@@ -694,12 +683,12 @@ namespace Alchemi.ManagerExec
 
 		private void StartManager()
 		{
-			//if the update process is going on, avoid starting the manager.
-			if (updating)
-			{
-				MessageBox.Show(this,"The manager is checking for updates. It can be started only after the updates are completed.","Update Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
-				return;
-			}
+//			//if the update process is going on, avoid starting the manager.
+//			if (updating)
+//			{
+//				MessageBox.Show(this,"The manager is checking for updates. It can be started only after the updates are completed.","Update Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+//				return;
+//			}
 
 			if (Started)
 			{
@@ -709,6 +698,7 @@ namespace Alchemi.ManagerExec
 
 			//to avoid people from clicking this again
 			btStart.Enabled = false;
+			btStop.Enabled = false;
 			statusBar.Text = "Starting Manager...";
 
 			Log("Attempting to start Manager...");
@@ -876,6 +866,8 @@ namespace Alchemi.ManagerExec
 				
 				statusBar.Text = "Stopping Manager...";
 				Log("Stopping Manager...");
+				btStop.Enabled = false;
+				btStart.Enabled = false;
 				try
 				{
 					_container.Stop();
@@ -892,13 +884,13 @@ namespace Alchemi.ManagerExec
 
 			}
 
-			try
-			{
-				if (updater!=null)
-				{
-					updater.Dispose();	
-				}
-			}catch {}
+//			try
+//			{
+//				if (updater!=null)
+//				{
+//					updater.Dispose();	
+//				}
+//			}catch {}
 			
 			RefreshUIControls();
 
@@ -1129,152 +1121,153 @@ namespace Alchemi.ManagerExec
 			}    	
 		}
 		
-		private void mnuUpdates_Click(object sender, EventArgs e)
-		{
-			updateManager();
-		}
 
-		#region "Updater Stuff"
-
-		//**************************************************************
-		// This event is called everytime the appupdater attempts to check for 
-		// an update.  You can hook this event and perform your own update check.
-		// Return a boolean value indicating whether an update was found.  
-		// Notes:  
-		//   * This event fires on the poller thread, so you can make network requests 
-		//     to check for updates & it will be done asyncronously.
-		//   * Because this event has a non void return value, it can only
-		//     be handled by one event handler.  It can not be multi-cast.
-		//**************************************************************
-//		public bool updater_OnCheckForUpdate(object sender, EventArgs e)
+		#region "Updater Stuff (Commented out - not using it now)"
+//		private void mnuUpdates_Click(object sender, EventArgs e)
 //		{
-//			//TODO : can implement an updates webservice... later on
-//			return true;
+//			updateManager();
 //		}
 
-		//**************************************************************
-		// This event if fired whenever a new update is detected.
-		// The default behavior is to start the update download immediatly.
-		// However, in this case we have disabled that feature by setting
-		// the DownloadOnDetection property to false. In this case we'll ask 
-		// the user if they want to download the update & then use the ApplyUpdate()
-		// method if they wish too.  Note that this event will fire on the main
-		// UI thread to allow interaction with the app UI.  
-		//**************************************************************
-		public void updater_OnUpdateDetected(object sender, UpdateDetectedEventArgs e)
-		{
-			try
-			{
-				if (e.UpdateDetected)
-				{
-					Log("Manager updater: Found new updates...");
-				
-					DialogResult res = MessageBox.Show(this,"New updates were found. Click Yes to proceed with downloading the updates, No to cancel the download","Alchemi Manager",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
-					if (res == DialogResult.Yes)
-					{
-						//async method, starts the download 
-						updater.DownloadUpdate();
-					}
-					else
-					{ //user selected NO downloads...
-						updating = false;
-					}
-				}
-				else
-				{
-					Log("Manager updater: No new updates...update complete.");
-					MessageBox.Show(this,"No new updates found.","Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Information);
-					updating = false;
-				}
-			}
-			catch (Exception ex)
-			{
-				handleUpdaterError("Error in DoUpdateDetectedAction: update found = "+ e.UpdateDetected ,ex);
-			}
-		}
-
-		//**************************************************************
-		// This event if fired whenever a new update is complete.
-		// You could do whatever shut down logic your app needs to run
-		// here (ex. saving files).  The Exit() method will close
-		// the current app.
-		//**************************************************************		
-		public void updater_OnUpdateComplete(object sender, UpdateCompleteEventArgs e)
-		{
-			//If the udpate succeeded...
-			if ( e.UpdateSucceeded)
-			{
-				string message = "The updates were successfully completed. Do you want to start using the new udpate now?";		
-				if (MessageBox.Show(this,message,"Update Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-				{
-					//The return code must be set to tell appstart to restart the app
-					//The app must shut itself down. Note:  Don't use methods like Environment.Exit that
-					//will shut down the entire process, when using appstart in appdomain mode.
-					this.returnCode = AppUpdater.RestartAppReturnValue;
-					Exit();
-				}
-			} 
-			else //If the update failed....
-			{
-				handleUpdaterError(e.ErrorMessage,e.FailureException);
-			}
-		}
-
-		private void updateManager()
-		{
-			if (updating)
-			{
-				MessageBox.Show(this,"Another update process is already in progress","Alchemi Manager", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
-				return;
-			}
-
-			try
-			{
-				if (Started){ //if manager is started then stop it
-					DialogResult res = MessageBox.Show(this,"The manager needs to be stopped before checking for updates. Click Yes to proceed, No to cancel checking for updates","Alchemi Manager",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
-					if (res == DialogResult.No)
-					{
-						return;
-					}
-					if (isService)
-					{
-						StopManagerService();
-					}
-					else
-					{
-						StopManager();
-					}
-				}
-				updating = true;
-
-				Log("Manager updater: Checking for updates...");
-
-				updater.CheckForUpdates();
-			}
-			catch (Exception ex)
-			{
-				handleUpdaterError("Error updating manager...",ex);
-			}
-		}
-		
-		private void updater_OnDownloadProgress(object sender, DownloadProgressEventArgs e)
-		{
-			try
-			{
-				pbar.Visible = true;
-				pbar.Value = (int)e.CurrentState;
-				statusBar.Text = "Downloading " + e.CurrentState + " %";
-			}catch {}
-		}
-
-		private void handleUpdaterError(string msg, Exception ex)
-		{
-			updating = false;
-			Log(msg + Environment.NewLine + ex.Message);
-			logger.Error("Error Updating Manager",ex) ;	
-			MessageBox.Show(this,"Error updating manager: " + ex.Message,"Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Error);
-			RefreshUIControls();
-		}
+//
+//		//**************************************************************
+//		// This event is called everytime the appupdater attempts to check for 
+//		// an update.  You can hook this event and perform your own update check.
+//		// Return a boolean value indicating whether an update was found.  
+//		// Notes:  
+//		//   * This event fires on the poller thread, so you can make network requests 
+//		//     to check for updates & it will be done asyncronously.
+//		//   * Because this event has a non void return value, it can only
+//		//     be handled by one event handler.  It can not be multi-cast.
+//		//**************************************************************
+////		public bool updater_OnCheckForUpdate(object sender, EventArgs e)
+////		{
+////			//TODO : can implement an updates webservice... later on
+////			return true;
+////		}
+//
+//		//**************************************************************
+//		// This event if fired whenever a new update is detected.
+//		// The default behavior is to start the update download immediatly.
+//		// However, in this case we have disabled that feature by setting
+//		// the DownloadOnDetection property to false. In this case we'll ask 
+//		// the user if they want to download the update & then use the ApplyUpdate()
+//		// method if they wish too.  Note that this event will fire on the main
+//		// UI thread to allow interaction with the app UI.  
+//		//**************************************************************
+//		public void updater_OnUpdateDetected(object sender, UpdateDetectedEventArgs e)
+//		{
+//			try
+//			{
+//				if (e.UpdateDetected)
+//				{
+//					Log("Manager updater: Found new updates...");
+//				
+//					DialogResult res = MessageBox.Show(this,"New updates were found. Click Yes to proceed with downloading the updates, No to cancel the download","Alchemi Manager",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+//					if (res == DialogResult.Yes)
+//					{
+//						//async method, starts the download 
+//						updater.DownloadUpdate();
+//					}
+//					else
+//					{ //user selected NO downloads...
+//						updating = false;
+//					}
+//				}
+//				else
+//				{
+//					Log("Manager updater: No new updates...update complete.");
+//					MessageBox.Show(this,"No new updates found.","Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Information);
+//					updating = false;
+//				}
+//			}
+//			catch (Exception ex)
+//			{
+//				handleUpdaterError("Error in DoUpdateDetectedAction: update found = "+ e.UpdateDetected ,ex);
+//			}
+//		}
+//
+//		//**************************************************************
+//		// This event if fired whenever a new update is complete.
+//		// You could do whatever shut down logic your app needs to run
+//		// here (ex. saving files).  The Exit() method will close
+//		// the current app.
+//		//**************************************************************		
+//		public void updater_OnUpdateComplete(object sender, UpdateCompleteEventArgs e)
+//		{
+//			//If the udpate succeeded...
+//			if ( e.UpdateSucceeded)
+//			{
+//				string message = "The updates were successfully completed. Do you want to start using the new udpate now?";		
+//				if (MessageBox.Show(this,message,"Update Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+//				{
+//					//The return code must be set to tell appstart to restart the app
+//					//The app must shut itself down. Note:  Don't use methods like Environment.Exit that
+//					//will shut down the entire process, when using appstart in appdomain mode.
+//					this.returnCode = AppUpdater.RestartAppReturnValue;
+//					Exit();
+//				}
+//			} 
+//			else //If the update failed....
+//			{
+//				handleUpdaterError(e.ErrorMessage,e.FailureException);
+//			}
+//		}
+//
+//		private void updateManager()
+//		{
+//			if (updating)
+//			{
+//				MessageBox.Show(this,"Another update process is already in progress","Alchemi Manager", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+//				return;
+//			}
+//
+//			try
+//			{
+//				if (Started){ //if manager is started then stop it
+//					DialogResult res = MessageBox.Show(this,"The manager needs to be stopped before checking for updates. Click Yes to proceed, No to cancel checking for updates","Alchemi Manager",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+//					if (res == DialogResult.No)
+//					{
+//						return;
+//					}
+//					if (isService)
+//					{
+//						StopManagerService();
+//					}
+//					else
+//					{
+//						StopManager();
+//					}
+//				}
+//				updating = true;
+//
+//				Log("Manager updater: Checking for updates...");
+//
+//				updater.CheckForUpdates();
+//			}
+//			catch (Exception ex)
+//			{
+//				handleUpdaterError("Error updating manager...",ex);
+//			}
+//		}
+//		
+//		private void updater_OnDownloadProgress(object sender, DownloadProgressEventArgs e)
+//		{
+//			try
+//			{
+//				pbar.Visible = true;
+//				pbar.Value = (int)e.CurrentState;
+//				statusBar.Text = "Downloading " + e.CurrentState + " %";
+//			}catch {}
+//		}
+//
+//		private void handleUpdaterError(string msg, Exception ex)
+//		{
+//			updating = false;
+//			Log(msg + Environment.NewLine + ex.Message);
+//			logger.Error("Error Updating Manager",ex) ;	
+//			MessageBox.Show(this,"Error updating manager: " + ex.Message,"Alchemi Manager",MessageBoxButtons.OK,MessageBoxIcon.Error);
+//			RefreshUIControls();
+//		}
 
 		#endregion
 

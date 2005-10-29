@@ -1,36 +1,34 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	MApplication.cs
+* Project		:	Alchemi Core
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
+
 
 using System.Collections;
 using System.Data;
 using System.IO;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
-using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -115,17 +113,24 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the count threads with the given thread-state.
-		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///	
 		/// </summary>
 		/// <param name="ts"></param>
 		/// <returns>Thread count</returns>
 		public int ThreadCount(ThreadState ts)
 		{
-			return ManagerStorageFactory.ManagerStorage().GetThreadCount(_Id, ts);
+			object totCount;
+
+			string sql = string.Format("SELECT count(thread_id) FROM Thread WHERE application_id='{0}' AND [state]={1};",_Id,(int)ts);
+			totCount = InternalShared.Instance.Database.ExecSql_Scalar(sql);
+
+			if (totCount==null)
+			{
+				return 0;
+			}
+			else
+			{
+				return (int)totCount;
+			}
 		}
 
 		/// <summary>
@@ -143,17 +148,14 @@ namespace Alchemi.Core.Manager
         {
             get
             {
-				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
-
-				return application.State;
+                int state = (int) InternalShared.Instance.Database.ExecSql_Scalar(
+                    string.Format("select state from application where application_id = '{0}'", _Id)
+                    );
+                return (ApplicationState) state;
             }
             set
             {
-				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
-
-				application.State = value;
-
-				ManagerStorageFactory.ManagerStorage().UpdateApplication(application);
+                InternalShared.Instance.Database.ExecSql("Application_UpdateState '{0}', {1}", _Id, (int) value);
             }
         }
 
@@ -175,7 +177,7 @@ namespace Alchemi.Core.Manager
 		/// <returns>Dataset with thread info.</returns>
 		public DataSet GetThreadList(ThreadState status)
 		{
-			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));
+			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));			
 		}
 
 		/// <summary>
@@ -186,9 +188,12 @@ namespace Alchemi.Core.Manager
         {
             get 
             {
-				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+                string primary = 
+                    InternalShared.Instance.Database.ExecSql_Scalar(
+                    string.Format("select count(*) from application where application_id = '{0}' and is_primary = 1", _Id)
+                    ).ToString();
 
-				return application.Primary;
+                return (primary == "0") ? false : true;
             }
         }
 
@@ -197,13 +202,11 @@ namespace Alchemi.Core.Manager
 		/// </summary>
         public void Stop()
         {
-			ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(_Id);
-
-			foreach (ThreadStorageView thread in threads)
-			{
-			    GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);
-			}
-
+            DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Application_Stop '{0}'", _Id);
+            foreach (DataRow thread in dt.Rows)
+            {
+                GManager.AbortThread(new ThreadIdentifier(_Id, int.Parse(thread["thread_id"].ToString())), thread["executor_id"].ToString());
+            }
 			logger.Debug("Stopped the current application."+_Id);
         }
     }

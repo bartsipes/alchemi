@@ -1,28 +1,26 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	CrossPlatformHelper.cs
+* Project		:	Alchemi Core
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
 
 using System;
@@ -69,12 +67,8 @@ namespace Alchemi.Core
             // TODO: validate against schema
             string taskId = manager.Owner_CreateApplication(sc);
 
-			//Html decode the xml
-			taskXml = HttpUtility.HtmlDecode(taskXml);
-
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(taskXml);
-            logger.Debug("Loaded taskXML:" + taskXml);
 			
             FileDependencyCollection manifest = new FileDependencyCollection();
             foreach (XmlNode manifestFile in doc.SelectNodes("task/manifest/embedded_file"))
@@ -112,9 +106,6 @@ namespace Alchemi.Core
 		/// <param name="jobXml"></param>
         public static void AddJob(IManager manager, SecurityCredentials sc, string taskId, int jobId, int priority, string jobXml)
         {
-			//Html decode the xml
-			jobXml = HttpUtility.HtmlDecode(jobXml);
-
             manager.Owner_SetThread(
                 sc,
                 new ThreadIdentifier(taskId, jobId, priority),
@@ -252,7 +243,6 @@ namespace Alchemi.Core
       
             return xsw.GetXmlString();
         }
-
 
     }
 }

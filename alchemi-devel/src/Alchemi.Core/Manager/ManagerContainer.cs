@@ -1,30 +1,28 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	ManagerContainer.cs
+* Project		:	Alchemi Core
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
+
 
 using System;
 using System.Data;
@@ -71,6 +69,7 @@ namespace Alchemi.Core.Manager
 
 		private Thread _DedicatedSchedulerThread;
         private Thread _WatchDogThread;
+		private Thread _InitExecutorsThread;
 
         private MExecutorCollection _Executors = new MExecutorCollection();
         private MApplicationCollection _Applications = new MApplicationCollection();
@@ -140,7 +139,7 @@ namespace Alchemi.Core.Manager
 
 				// build sql server configuration string
 				string sqlConnStr = string.Format(
-					"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+					"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=10; Max Pool Size=5; Min Pool Size=5",
 					Config.DbServer,
 					Config.DbUsername,
 					Config.DbPassword,
@@ -251,7 +250,8 @@ namespace Alchemi.Core.Manager
 					ManagerStartEvent("Updating configuration",80);
 
 				//start a seperate thread to init-known executors, since this may take a while.
-				new Thread(new ThreadStart(InitExecutors)).Start();
+				_InitExecutorsThread = new Thread(new ThreadStart(InitExecutors));
+				_InitExecutorsThread.Start();
 
 				Config.Slz();
 
@@ -296,12 +296,19 @@ namespace Alchemi.Core.Manager
 
 		private void InitExecutors()
 		{
-			logger.Info("Initialising known executors...");
-			lock (_Executors) 
+			try
 			{
-				_Executors.Init();
+				logger.Info("Initialising known executors...");
+				lock (_Executors) 
+				{
+					_Executors.Init();
+				}
+				logger.Info("Initialising known executors...done");
 			}
-			logger.Info("Initialising known executors...done");
+			catch(Exception ex)
+			{
+				logger.Debug("Exception in InitExecutors: ",ex);
+			}
 		}
 
         //----------------------------------------------------------------------------------------------- 
@@ -316,6 +323,12 @@ namespace Alchemi.Core.Manager
 			if (!Started)
 				return;
 
+			if (_InitExecutorsThread != null)
+			{
+				logger.Info("Stopping init-executors thread...");
+				_InitExecutorsThread.Abort();
+				_InitExecutorsThread.Join();
+			}
             if (_DedicatedSchedulerThread != null)
             {
 				logger.Info("Stopping the scheduler thread...");

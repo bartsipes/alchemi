@@ -1,36 +1,42 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c) 2002-2004 Akshay Luther & 2003-2004 Rajkumar Buyya 
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	CrossPlatformManager.cs
+* Project		:	Alchemi CrossPlatform Manager Webservice
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au) and Krishna Nadiminti (kna@cs.mu.oz.au) 
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
 
 using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Reflection;
+using System.Web;
 using System.Web.Services;
+
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 
-namespace Alchemi.Manager
+using log4net;
+
+namespace Alchemi.CrossPlatformManager
 {
     [WebService(Namespace="http://www.alchemi.net")]
     public class CrossPlatformManager : WebService, ICrossPlatformManager
@@ -63,6 +69,9 @@ namespace Alchemi.Manager
         #endregion
 
         private IManager Manager;
+
+		// Create a logger for use in this class
+		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
     
         //-----------------------------------------------------------------------------------------------          
     
@@ -74,6 +83,8 @@ namespace Alchemi.Manager
                 );
 
             InitializeComponent();
+
+			Logger.LogHandler += new LogEventHandler(LogHandler);
         }
 
         //-----------------------------------------------------------------------------------------------          
@@ -89,7 +100,22 @@ namespace Alchemi.Manager
         [WebMethod]
         public string SubmitTask(string username, string password, string taskXml)
         {
-            return CrossPlatformHelper.CreateTask(Manager, new SecurityCredentials(username, password), taskXml);
+			//decode base64
+			//taskXml = Convert.FromBase64String(taskXml).ToString();
+			//Html decode the xml
+			taskXml = HttpUtility.HtmlDecode(taskXml);
+
+			logger.Debug("Task XML recvd = " + taskXml);
+			string temp = null;
+			try
+			{
+				temp = CrossPlatformHelper.CreateTask(Manager, new SecurityCredentials(username, password), taskXml);
+			}
+			catch (Exception e)
+			{
+				logger.Error("Error Submitting task...",e);
+			}
+			return temp;
         }
         
         //-----------------------------------------------------------------------------------------------       
@@ -97,6 +123,11 @@ namespace Alchemi.Manager
         [WebMethod]
         public void AddJob(string username, string password, string taskId, int jobId, int priority, string jobXml)
         {
+			//decode base64
+			//jobXml = Convert.FromBase64String(jobXml).ToString();
+			//Html decode the xml
+			jobXml = HttpUtility.HtmlDecode(jobXml);
+
             CrossPlatformHelper.AddJob(Manager, new SecurityCredentials(username, password), taskId, jobId, priority, jobXml);
         }
 
@@ -155,6 +186,27 @@ namespace Alchemi.Manager
 		public string GetFailedJobException(string username, string password, string taskId, int jobId)
 		{
 			return CrossPlatformHelper.GetFailedThreadException(Manager,new SecurityCredentials(username,password),new ThreadIdentifier(taskId,jobId));
+		}
+
+		//-------------- used for logging and debugging
+		private void LogHandler(object sender, LogEventArgs e)
+		{
+			switch (e.Level)
+			{
+				case LogLevel.Debug:
+					string message = e.Source  + ":" + e.Member + " - " + e.Message;
+					logger.Debug(message,e.Exception);
+					break;
+				case LogLevel.Info:
+					logger.Info(e.Message);
+					break;
+				case LogLevel.Error:
+					logger.Error(e.Message,e.Exception);
+					break;
+				case LogLevel.Warn:
+					logger.Warn(e.Message);
+					break;
+			}
 		}
 
     }

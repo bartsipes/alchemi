@@ -115,11 +115,6 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Management.dll"
                 />
                 <Reference
-                    Name = "log4net"
-                    AssemblyName = "log4net"
-                    HintPath = "..\..\bin\log4net.dll"
-                />
-                <Reference
                     Name = "Core"
                     Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -128,6 +123,11 @@
                     Name = "Win32Security"
                     AssemblyName = "Win32Security"
                     HintPath = "..\..\lib\Win32Security.dll"
+                />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\..\lib\log4net.dll"
                 />
             </References>
         </Build>
@@ -138,12 +138,7 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "AppStart.config"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "CommonAssemblyInfo.cs"
-                    Link = "..\CommonAssemblyInfo.cs"
+                    RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

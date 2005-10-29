@@ -18,7 +18,7 @@
                 OutputType = "WinExe"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Console"
+                RootNamespace = "Alchemi.Console"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -115,11 +115,6 @@
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Design.dll"
                 />
                 <Reference
-                    Name = "scpl"
-                    AssemblyName = "scpl"
-                    HintPath = "..\..\..\lib\scpl.dll"
-                />
-                <Reference
                     Name = "Core"
                     Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -129,29 +124,81 @@
                     AssemblyName = "NPlot"
                     HintPath = "..\..\..\lib\NPlot.dll"
                 />
+                <Reference
+                    Name = "log4net"
+                    AssemblyName = "log4net"
+                    HintPath = "..\..\..\lib\log4net.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
-                    RelPath = "CommonAssemblyInfo.cs"
-                    Link = "..\..\CommonAssemblyInfo.cs"
+                    RelPath = "App.config"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "App.ico"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ConsoleNode.cs"
+                    RelPath = "Console.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MainForm.cs"
+                    RelPath = "ConsoleForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MainForm.resx"
-                    DependentUpon = "MainForm.cs"
+                    RelPath = "ConsoleForm.resx"
+                    DependentUpon = "ConsoleForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ConsoleNode.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConsoleParentForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConsoleParentForm.resx"
+                    DependentUpon = "ConsoleParentForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "CustomTreeNodes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorForm.resx"
+                    DependentUpon = "ExecutorForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "SysPerfForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SysPerfForm.resx"
+                    DependentUpon = "SysPerfForm.cs"
                     BuildAction = "EmbeddedResource"
                 />
             </Include>

@@ -103,10 +103,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AppStart.config"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "AppStartConfig.cs"
                     Link = "..\Alchemi.AppUpdater\AppStartConfig.cs"
                     SubType = "Code"

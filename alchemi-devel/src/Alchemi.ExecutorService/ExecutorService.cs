@@ -1,39 +1,27 @@
-/* 
+#region Alchemi copyright and license notice
 
-File: ExecutorService.cs for Alchemi Executor Service
-   Written by 
-   Rodrigo Assirati Dias (rdias@ime.usp.br) and
-   Paula Akemi Nishimoto (pakemi@gmail.com)
-   under supervision of Dr. Roberto Hirata Jr. (hirata@ime.usp.br)
-   
-	Updated: July 2005: Krishna Nadiminti
-*/
-
-#region Alchemi copyright notice
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+* 
+* Title			:	ExecutorService.cs
+* Project		:	Alchemi Executor Service
+* Created on	:	July 2005
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Rodrigo Assirati Dias (rdias@ime.usp.br), Paula Akemi Nishimoto (pakemi@gmail.com),
+*					Dr. Roberto Hirata Jr. (hirata@ime.usp.br) and Krishna Nadiminti(kna@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
 
 using System;
@@ -51,6 +39,13 @@ using log4net.Config;
 
 namespace Alchemi.ExecutorService
 {
+	public enum ExecutorServiceCustomCommands
+	{
+		Reload_Config = 1,
+		Reconnect = 2,
+		Disconnect = 3
+	}
+
 	public class ExecutorService : ServiceBase
 	{
 		/// <summary> 
@@ -62,6 +57,7 @@ namespace Alchemi.ExecutorService
 
 		// Create a logger for use in this class
 		private static ILog logger;
+
 
 		public ExecutorService()
 		{
@@ -168,7 +164,7 @@ namespace Alchemi.ExecutorService
 				ThreadStart ts = new ThreadStart(Start);
 				Thread t = new Thread(ts);
 				t.Start();
-				t.Join(25000);
+				//t.Join(25000); //let the thread continue: for eg: in case the connection is not available, it will keep trying forever.
 			}
 			catch (Exception e)
 			{
@@ -206,7 +202,7 @@ namespace Alchemi.ExecutorService
 				if (execContainer!=null)
 					execContainer.Stop();
 				else
-					logger.Debug("execContainer was null.");
+					logger.Debug("Trying to stop: execContainer was null.");
 
 				logger.Info("Executor Service Stopped");
 			}
@@ -249,6 +245,58 @@ namespace Alchemi.ExecutorService
 		}
 
 		/// <summary>
+		/// This could be used for commands such as "reload config", "(re)connect", "disconnect", any other future use etc.
+		/// </summary>
+		/// <param name="command"></param>
+		protected override void OnCustomCommand(int command)
+		{
+			base.OnCustomCommand (command);
+			try
+			{
+				switch (command)
+				{
+					case (int)ExecutorServiceCustomCommands.Reload_Config:
+						if (execContainer!=null)
+						{
+							logger.Debug("Trying to exec custom command : ReadConfig");
+							execContainer.ReadConfig(false);
+						}
+						else
+						{
+							logger.Debug("Container is null. Not trying to exec custom command : ReadConfig");
+						}
+						break;
+					case (int)ExecutorServiceCustomCommands.Disconnect:
+						if (execContainer!=null)
+						{
+							logger.Debug("Trying to exec custom command : Disconnect");
+							execContainer.Disconnect();
+						}
+						else
+						{
+							logger.Debug("Container is null. Not trying to exec custom command : Disconnect");
+						}
+						break;
+					case (int)ExecutorServiceCustomCommands.Reconnect:
+						if (execContainer!=null)
+						{
+							logger.Debug("Trying to exec custom command : Reconnect");
+							execContainer.Reconnect();
+						}
+						else
+						{
+							logger.Debug("Container is null. Not trying to exec custom command : Reconnect");
+						}
+						break;
+				}
+			}
+			catch (Exception e)
+			{
+				logger.Debug("Error trying to execute custom command : " + command ,e);
+			}
+		}
+
+		/// <summary>
 		/// Stop this service.
 		/// </summary>
 		protected override void OnStop()
@@ -259,7 +307,7 @@ namespace Alchemi.ExecutorService
 				ThreadStart ts = new ThreadStart(Stop);
 				Thread t = new Thread(ts);
 				t.Start();
-				t.Join(25000);
+				t.Join(25000); //in this case we really want things to be stopped within the 25 seconds.
 			}
 			catch (Exception e)
 			{

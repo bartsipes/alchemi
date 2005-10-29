@@ -1,29 +1,28 @@
-#region Alchemi copyright notice
+#region Alchemi copyright and license notice
+
 /*
-  Alchemi [.NET Grid Computing Framework]
-  http://www.alchemi.net
-  
-  Copyright (c)  Akshay Luther (2002-2004) & Rajkumar Buyya (2003-to-date), 
-  GRIDS Lab, The University of Melbourne, Australia.
-  
-  Maintained and Updated by: Krishna Nadiminti (2005-to-date)
----------------------------------------------------------------------------
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Title			:	MApplicationCollection.cs
+* Project		:	Alchemi Core
+* Created on	:	2003
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au) and Rajkumar Buyya (raj@cs.mu.oz.au)
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
 #endregion
+
 
 using System;
 using System.IO;
@@ -37,7 +36,6 @@ using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
-using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -59,31 +57,18 @@ namespace Alchemi.Core.Manager
         
 		/// <summary>
 		/// Creates a new application
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database call to use the Manager Storage instead
-		///		
 		/// </summary>
 		/// <param name="username">the user associated with the application</param>
 		/// <returns>Id of the newly created application</returns>
         public string CreateNew(string username)
         {
-			ApplicationStorageView application = new ApplicationStorageView(username);
-			
-			string appId = ManagerStorageFactory.ManagerStorage().AddApplication(application);
-
+            string appId = InternalShared.Instance.Database.ExecSql_Scalar("Application_Insert '{0}'", username).ToString();
             this[appId].CreateDataDirectory();
             return appId;
         }
 
 		/// <summary>
 		/// Verify if the database is properly set up.
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database calls to use the Manager Storage objects
-		///		
 		/// </summary>
 		/// <param name="id">application id</param>
 		/// <returns>true if the application is set up in the database</returns>
@@ -94,47 +79,35 @@ namespace Alchemi.Core.Manager
 			//create directory can be repeated, and wont throw an error even if the dir already exists.
 			this[id].CreateDataDirectory();
 
-			ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(id);
-
-			if (application == null)
+			object appId = InternalShared.Instance.Database.ExecSql_Scalar("SELECT application_id FROM application WHERE application_id='{0}'", id);
+			if (appId==null)
 			{
 				appSetup = false;
 			}
-
 			return appSetup;
 		}
 
 		/// <summary>
 		/// Gets the list of applications.
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
-		///		
 		/// </summary>
-        public ApplicationStorageView[] LiveList
+        public DataSet LiveList
         {
             get 
             {
-				return ManagerStorageFactory.ManagerStorage().GetApplications(true);
-			}
+                DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_Applications"));
+                return applications;
+            }
         }
 
 		/// <summary>
 		/// Gets the list of applications for the given user.
-		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
-		///		
 		/// </summary>
 		/// <param name="user_name"></param>
-		/// <returns>ApplicationStorageView array with the requested information.</returns>
-		public ApplicationStorageView[] GetApplicationList(string user_name)
+		/// <returns></returns>
+		public DataSet GetApplicationList(string user_name)
 		{
-			return ManagerStorageFactory.ManagerStorage().GetApplications(user_name, true);
+			DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_UserApplications '{0}'",user_name));
+			return applications;			
 		}
 
 		/// <summary>

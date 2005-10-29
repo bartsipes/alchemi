@@ -1,1 +1,1 @@
-<%@ Application Codebehind="Global.asax.cs" Inherits="CrossPlatformManager.Global" %>
+<%@ Application Codebehind="Global.asax.cs" Inherits="Alchemi.CrossPlatformManager.Global" %>
