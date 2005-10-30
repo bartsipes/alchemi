@@ -29,6 +29,7 @@ using System.Data;
 using System.IO;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -113,24 +114,17 @@ namespace Alchemi.Core.Manager
 
 		/// <summary>
 		/// Gets the count threads with the given thread-state.
+		/// 
+		/// Updates: 
+		/// 
+		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
+		///	
 		/// </summary>
 		/// <param name="ts"></param>
 		/// <returns>Thread count</returns>
 		public int ThreadCount(ThreadState ts)
 		{
-			object totCount;
-
-			string sql = string.Format("SELECT count(thread_id) FROM Thread WHERE application_id='{0}' AND [state]={1};",_Id,(int)ts);
-			totCount = InternalShared.Instance.Database.ExecSql_Scalar(sql);
-
-			if (totCount==null)
-			{
-				return 0;
-			}
-			else
-			{
-				return (int)totCount;
-			}
+			return ManagerStorageFactory.ManagerStorage().GetThreadCount(_Id, ts);
 		}
 
 		/// <summary>
