@@ -27,6 +27,7 @@ using System;
 using System.Data;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Manager;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 
 namespace Alchemi.Core
@@ -252,17 +253,28 @@ namespace Alchemi.Core
 
 		/// <summary>
 		/// Gets the list of all the applications.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		/// 
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>Dataset with application information</returns>
-        DataSet Admon_GetLiveApplicationList(SecurityCredentials sc);
+		/// <returns>ApplicationStorageView array with application information</returns>
+		ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the application list for the given user.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <returns>Dataset with application information</returns>
-		DataSet Admon_GetUserApplicationList(SecurityCredentials sc);
+		/// <returns>ApplicationStorageView array with application information</returns>
+		ApplicationStorageView[] Admon_GetUserApplicationList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of thread for the given application
@@ -286,28 +298,28 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTabke with user information</returns>
-        DataTable Admon_GetUserList(SecurityCredentials sc);
+		UserStorageView[] Admon_GetUserList(SecurityCredentials sc);
 
 		/// <summary>
 		/// Gets the list of groups
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>DataTable with group information</returns>
-        DataTable Admon_GetGroups(SecurityCredentials sc);
+		GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
 
 		/// <summary>
 		/// Updates the Manager database with the given table of users.
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="updates"></param>
-        void Admon_UpdateUsers(SecurityCredentials sc, DataTable updates);
+		void Admon_UpdateUsers(SecurityCredentials sc, UserStorageView[] updates);
 
 		/// <summary>
 		/// Adds all the users in the given table to the Manager database
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="users"></param>
-        void Admon_AddUsers(SecurityCredentials sc, DataTable users);
+		void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] users);
 
 		/// <summary>
 		/// Gets the system summary information
@@ -321,7 +333,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns></returns>
-        DataTable Admon_GetExecutors(SecurityCredentials sc);
+		ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
 		/// Executes an SQL query on the Manager database.

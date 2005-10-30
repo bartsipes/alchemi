@@ -71,6 +71,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossPlatformManager", "htt
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Tester", "Alchemi.Tester\Alchemi.Tester.csproj", "{C11636CD-14B6-4526-80DA-AFF5DFA84298}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -174,6 +178,12 @@ Global
 		{B3EDA024-7864-4335-9817-67A78064C360}.Release.Build.0 = Release|.NET
 		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease.ActiveCfg = ServiceRelease|.NET
 		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease.Build.0 = ServiceRelease|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug.ActiveCfg = Debug|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug.Build.0 = Debug|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release.ActiveCfg = Release|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release.Build.0 = Release|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.ServiceRelease.ActiveCfg = Release|.NET
+		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.ServiceRelease.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc

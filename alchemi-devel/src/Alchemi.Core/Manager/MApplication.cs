@@ -138,20 +138,23 @@ namespace Alchemi.Core.Manager
 		/// <summary>
 		/// Gets or sets the application state
 		/// </summary>
-        public ApplicationState State
-        {
-            get
-            {
-                int state = (int) InternalShared.Instance.Database.ExecSql_Scalar(
-                    string.Format("select state from application where application_id = '{0}'", _Id)
-                    );
-                return (ApplicationState) state;
-            }
-            set
-            {
-                InternalShared.Instance.Database.ExecSql("Application_UpdateState '{0}', {1}", _Id, (int) value);
-            }
-        }
+		public ApplicationState State
+		{
+			get
+			{
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+				return application.State;
+			}
+			set
+			{
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+				application.State = value;
+
+				ManagerStorageFactory.ManagerStorage().UpdateApplication(application);
+			}
+		}
 
 		/// <summary>
 		/// Gets the list of threads from the database, for this application.
@@ -178,30 +181,29 @@ namespace Alchemi.Core.Manager
 		/// Gets a value indicating whether the manager is at the top of the hierarchy.
 		/// If true, this node is a primary manager.
 		/// </summary>
-        public bool IsPrimary
-        {
-            get 
-            {
-                string primary = 
-                    InternalShared.Instance.Database.ExecSql_Scalar(
-                    string.Format("select count(*) from application where application_id = '{0}' and is_primary = 1", _Id)
-                    ).ToString();
+		public bool IsPrimary
+		{
+			get 
+			{
+				ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
 
-                return (primary == "0") ? false : true;
-            }
-        }
+				return application.Primary;
+			}
+		}
 
 		/// <summary>
 		/// Stops an application.
 		/// </summary>
-        public void Stop()
-        {
-            DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Application_Stop '{0}'", _Id);
-            foreach (DataRow thread in dt.Rows)
-            {
-                GManager.AbortThread(new ThreadIdentifier(_Id, int.Parse(thread["thread_id"].ToString())), thread["executor_id"].ToString());
-            }
+		public void Stop()
+		{
+			ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(_Id);
+
+			foreach (ThreadStorageView thread in threads)
+			{
+				GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);
+			}
+
 			logger.Debug("Stopped the current application."+_Id);
-        }
-    }
+		}
+	}
 }

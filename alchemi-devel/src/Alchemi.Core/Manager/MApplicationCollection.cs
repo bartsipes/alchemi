@@ -36,6 +36,7 @@ using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Core.Manager
 {
@@ -57,18 +58,31 @@ namespace Alchemi.Core.Manager
         
 		/// <summary>
 		/// Creates a new application
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database call to use the Manager Storage instead
+		///		
 		/// </summary>
 		/// <param name="username">the user associated with the application</param>
 		/// <returns>Id of the newly created application</returns>
-        public string CreateNew(string username)
-        {
-            string appId = InternalShared.Instance.Database.ExecSql_Scalar("Application_Insert '{0}'", username).ToString();
-            this[appId].CreateDataDirectory();
-            return appId;
-        }
+		public string CreateNew(string username)
+		{
+			ApplicationStorageView application = new ApplicationStorageView(username);
+			
+			string appId = ManagerStorageFactory.ManagerStorage().AddApplication(application);
+
+			this[appId].CreateDataDirectory();
+			return appId;
+		}
 
 		/// <summary>
 		/// Verify if the database is properly set up.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the database calls to use the Manager Storage objects
+		///		
 		/// </summary>
 		/// <param name="id">application id</param>
 		/// <returns>true if the application is set up in the database</returns>
@@ -79,35 +93,48 @@ namespace Alchemi.Core.Manager
 			//create directory can be repeated, and wont throw an error even if the dir already exists.
 			this[id].CreateDataDirectory();
 
-			object appId = InternalShared.Instance.Database.ExecSql_Scalar("SELECT application_id FROM application WHERE application_id='{0}'", id);
-			if (appId==null)
+			ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(id);
+
+			if (application == null)
 			{
 				appSetup = false;
 			}
+
 			return appSetup;
 		}
 
+
 		/// <summary>
 		/// Gets the list of applications.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
-        public DataSet LiveList
-        {
-            get 
-            {
-                DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_Applications"));
-                return applications;
-            }
-        }
+		public ApplicationStorageView[] LiveList
+		{
+			get 
+			{
+				return ManagerStorageFactory.ManagerStorage().GetApplications(true);
+			}
+		}
 
 		/// <summary>
 		/// Gets the list of applications for the given user.
+		/// 
+		/// Updates: 
+		/// 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///		to ApplicationStorageView
+		///		
 		/// </summary>
 		/// <param name="user_name"></param>
-		/// <returns></returns>
-		public DataSet GetApplicationList(string user_name)
+		/// <returns>ApplicationStorageView array with the requested information.</returns>
+		public ApplicationStorageView[] GetApplicationList(string user_name)
 		{
-			DataSet applications = InternalShared.Instance.Database.ExecSql_DataSet(string.Format("Admon_UserApplications '{0}'",user_name));
-			return applications;			
+			return ManagerStorageFactory.ManagerStorage().GetApplications(user_name, true);
 		}
 
 		/// <summary>

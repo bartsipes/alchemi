@@ -427,7 +427,7 @@ namespace Alchemi.Core.Manager.Storage
 					Int32 maxCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
 					Int32 cpuUsage = dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
 					Int32 availableCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
-					float totalCpuUsage = (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
+					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
 
 					ExecutorStorageView executor = new ExecutorStorageView(
 						executorId,

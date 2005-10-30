@@ -103,13 +103,55 @@ namespace Alchemi.Core.Manager.Storage
 			//RunSql("CREATE PROCEDURE dbo.User_Authenticate(@usr_name varchar(50), @password varchar(50)) AS select count(*) as authenticated from usr where usr_name = @usr_name and password = @password");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.executor') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table dbo.executor");
-			RunSql("CREATE TABLE dbo.executor (executor_id uniqueidentifier, is_dedicated bit NOT NULL, is_connected bit NOT NULL, ping_time datetime NULL, host varchar (100) NULL, port int NULL, usr_name varchar (50) NULL, cpu_max int NULL, cpu_usage int NULL, cpu_avail int NULL, cpu_totalusage float NULL )");
+			//RunSql("CREATE TABLE dbo.executor (executor_id uniqueidentifier, is_dedicated bit NOT NULL, is_connected bit NOT NULL, ping_time datetime NULL, host varchar (100) NULL, port int NULL, usr_name varchar (50) NULL, cpu_max int NULL, cpu_usage int NULL, cpu_avail int NULL, cpu_totalusage float NULL )");
+
+			RunSql(@"CREATE TABLE [dbo].[executor] (
+				[executor_id] [uniqueidentifier] NOT NULL ,
+				[is_dedicated] [bit] NOT NULL ,
+				[is_connected] [bit] NOT NULL ,
+				[ping_time] [datetime] NULL ,
+				[host] [varchar] (100) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+				[port] [int] NULL ,
+				[usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+				[cpu_max] [int] NULL ,
+				[cpu_usage] [int] NULL ,
+				[cpu_avail] [int] NULL ,
+				[cpu_totalusage] [float] NULL ,
+				[mem_max] [float] NULL ,
+				[disk_max] [float] NULL ,
+				[num_cpus] [int] NULL ,
+				[cpuLimit] [float] NULL ,
+				[memLimit] [float] NULL ,
+				[diskLimit] [float] NULL ,
+				[costPerCPUSec] [float] NULL ,
+				[costPerThread] [float] NULL ,
+				[costPerDiskMB] [float] NULL ,
+				[arch] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+				[os] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL)");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[application]");
-			RunSql("CREATE TABLE [dbo].[application] ([application_id] [uniqueidentifier] NOT NULL , [state] [int] NOT NULL , [time_created] [datetime] NULL , [is_primary] [bit] NOT NULL , [usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL )");
+			//RunSql("CREATE TABLE [dbo].[application] ([application_id] [uniqueidentifier] NOT NULL , [state] [int] NOT NULL , [time_created] [datetime] NULL , [is_primary] [bit] NOT NULL , [usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL )");
+			RunSql(@"CREATE TABLE [dbo].[application] (
+					[application_id] [uniqueidentifier] NOT NULL ,
+					[state] [int] NOT NULL ,
+					[time_created] [datetime] NULL ,
+					[is_primary] [bit] NOT NULL ,
+					[usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
+					[application_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+					[time_completed] [datetime] NULL )");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[thread]");
-			RunSql("CREATE TABLE [dbo].[thread] ([internal_thread_id] [int] IDENTITY (1, 1) NOT NULL , [application_id] [uniqueidentifier] NOT NULL , [executor_id] [uniqueidentifier] NULL ,[thread_id] [int] NOT NULL ,[state] [int] NOT NULL ,[time_started] [datetime] NULL ,[time_finished] [datetime] NULL ,[priority] [int] NOT NULL ,[failed] [bit] NOT NULL )");
+			//RunSql("CREATE TABLE [dbo].[thread] ([internal_thread_id] [int] IDENTITY (1, 1) NOT NULL , [application_id] [uniqueidentifier] NOT NULL , [executor_id] [uniqueidentifier] NULL ,[thread_id] [int] NOT NULL ,[state] [int] NOT NULL ,[time_started] [datetime] NULL ,[time_finished] [datetime] NULL ,[priority] [int] NOT NULL ,[failed] [bit] NOT NULL )");
+			RunSql(@"CREATE TABLE [dbo].[thread] (
+					[internal_thread_id] [int] IDENTITY (1, 1) NOT NULL ,
+					[application_id] [uniqueidentifier] NOT NULL ,
+					[executor_id] [uniqueidentifier] NULL ,
+					[thread_id] [int] NOT NULL ,
+					[state] [int] NOT NULL ,
+					[time_started] [datetime] NULL ,
+					[time_finished] [datetime] NULL ,
+					[priority] [int] NULL ,
+					[failed] [bit] NULL )");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[grp_prm]");
 			RunSql("CREATE TABLE [dbo].[grp_prm] ([grp_id] [int] NOT NULL ,[prm_id] [int] NOT NULL )");

@@ -29,6 +29,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 using System.Xml;
 using System.IO;
@@ -670,28 +671,28 @@ namespace Alchemi.Console
 
 					//get users and groups.
 					//select grp_id, grp_name from grp 
-					DataTable groups = console.Manager.Admon_GetGroups(console.Credentials);
+					GroupStorageView[] groups = console.Manager.Admon_GetGroups(console.Credentials);
 					//select usr_name, password, grp.grp_id from usr inner join grp on grp.grp_id = usr.grp_id
-					DataTable users = console.Manager.Admon_GetUserList(console.Credentials);
+					UserStorageView[] users = console.Manager.Admon_GetUserList(console.Credentials);
 
-					foreach (DataRow group in groups.Rows)
+					foreach (GroupStorageView group in groups)
 					{
-						if (!group.IsNull("grp_name"))
+						if (group.GroupName != null)
 						{
-							GroupTreeNode grpNode = new GroupTreeNode(group["grp_name"].ToString(), 2, 2);
-							string grpId = group["grp_id"].ToString(); //keep the grp_id in the tag for later
+							GroupTreeNode grpNode = new GroupTreeNode(group.GroupName, 2, 2);
+							string grpId = group.GroupId.ToString(); //keep the grp_id in the tag for later
 							grpNode.grp_id = grpId;
-							grpNode.grp_name = group["grp_name"].ToString();
+							grpNode.grp_name = group.GroupName;
 							rootNode.Nodes.Add(grpNode);
 
 							//filter the users table.
-							DataRow[] grpUsers = users.Select("grp_id="+grpId , "usr_name");
-							foreach (DataRow user in grpUsers)
+							//DataRow[] grpUsers = users.Select("grp_id="+grpId , "usr_name");
+							foreach (UserStorageView user in users)
 							{
-								if (!user.IsNull("usr_name"))
+								if (user.Username != null && user.GroupId == group.GroupId)
 								{
-									UserTreeNode usrNode = new UserTreeNode(user["usr_name"].ToString(), 3, 3);
-									usrNode.usr_name = user["usr_name"].ToString();
+									UserTreeNode usrNode = new UserTreeNode(user.Username, 3, 3);
+									usrNode.usr_name = user.Username;
 									usrNode.grp_id = grpId;
 									//add this user to the parent grp node.
 									grpNode.Nodes.Add(usrNode);
@@ -730,20 +731,20 @@ namespace Alchemi.Console
 					rootNode.Nodes.Clear();
 
 					//select executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, convert(varchar, cpu_totalusage * cpu_max / (3600 * 1000)) as cpu_totalusage from executor order by is_connected desc
-					DataTable executors = console.Manager.Admon_GetExecutors(console.Credentials);
-					foreach (DataRow executor in executors.Rows)
+					ExecutorStorageView[] executors = console.Manager.Admon_GetExecutors(console.Credentials);
+					foreach (ExecutorStorageView executor in executors)
 					{
-						if (!executor.IsNull("host"))
+						if (executor.HostName != null)
 						{
-							ExecutorTreeNode exNode = new ExecutorTreeNode(executor["host"].ToString());
-							exNode.cpu_max = executor["cpu_max"].ToString();
-							exNode.cpu_totalusage = executor["cpu_totalusage"].ToString();
-							exNode.executor_id = executor["executor_id"].ToString();
-							exNode.host = executor["host"].ToString();
-							exNode.is_connected = (bool)executor["is_connected"];
-							exNode.is_dedicated = (bool)executor["is_dedicated"];
-							exNode.port = executor["port"].ToString();
-							exNode.usr_name = executor["usr_name"].ToString();
+							ExecutorTreeNode exNode = new ExecutorTreeNode(executor.HostName);
+							exNode.cpu_max = executor.MaxCpu.ToString();
+							exNode.cpu_totalusage = executor.TotalCpuUsage.ToString();
+							exNode.executor_id = executor.ExecutorId;
+							exNode.host = executor.HostName;
+							exNode.is_connected = executor.Connected;
+							exNode.is_dedicated = executor.Dedicated;
+							exNode.port = executor.Port.ToString();
+							exNode.usr_name = executor.Username;
 
 							if (exNode.is_connected)
 							{
@@ -819,7 +820,7 @@ namespace Alchemi.Console
 							ThreadTreeNode thrNode = new ThreadTreeNode(thread["thread_id"].ToString(), 7, 7);
 							thrNode.appId = appId; //keep the id in the tag for later
 							thrNode.executor_id = thread["executor_id"].ToString();
-							thrNode.failed = (bool)thread["failed"];
+							thrNode.failed = thread.IsNull("failed") ? false : (bool)thread["failed"];
 							thrNode.priority = (int)thread["priority"];
 							thrNode.state = (ThreadState)thread["state"];
 							thrNode.thread_id = thread["thread_id"].ToString();
