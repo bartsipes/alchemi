@@ -482,6 +482,11 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ThreadStorageView[] GetThreads(String applicationId)
 		{
+			return GetThreads(applicationId, ThreadState.Unknown);
+		}
+
+		public ThreadStorageView[] GetThreads(String applicationId, ThreadState state)
+		{
 			if (m_threads == null)
 			{
 				return new ThreadStorageView[0];
@@ -491,7 +496,8 @@ namespace Alchemi.Core.Manager.Storage
 
 			foreach(ThreadStorageView thread in m_threads)
 			{
-				if (thread.ApplicationId == applicationId)
+				bool threadStateCorrectOrUnknown = thread.State == state || state == ThreadState.Unknown;
+				if (thread.ApplicationId == applicationId && threadStateCorrectOrUnknown)
 				{
 					threadList.Add(thread);
 				}

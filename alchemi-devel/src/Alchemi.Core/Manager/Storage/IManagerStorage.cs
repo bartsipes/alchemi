@@ -126,6 +126,8 @@ namespace Alchemi.Core.Manager.Storage
 
 		ThreadStorageView[] GetThreads(String applicationId);
 
+		ThreadStorageView[] GetThreads(String applicationId, ThreadState state);
+
 		void GetApplicationThreadCount(String applicationId, out Int32 totalthreads, out Int32 unfinishedThreads);
 
 		Int32 GetThreadCount(String applicationId, ThreadState threadState);

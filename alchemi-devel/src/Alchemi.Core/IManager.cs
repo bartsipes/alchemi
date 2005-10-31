@@ -282,7 +282,7 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="appId"></param>
 		/// <returns>Dataset with thread information</returns>
-        DataSet Admon_GetThreadList(SecurityCredentials sc, string appId);
+        ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId);
 
 		/// <summary>
 		/// Gets the list of threads with a given status.
@@ -291,7 +291,7 @@ namespace Alchemi.Core
 		/// <param name="appId"></param>
 		/// <param name="status"></param>
 		/// <returns>Dataset with thread information</returns>
-		DataSet Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
+		ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
 		/// <summary>
 		/// Gets the list of users.

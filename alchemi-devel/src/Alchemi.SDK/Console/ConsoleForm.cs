@@ -813,19 +813,19 @@ namespace Alchemi.Console
 						rootNode.Nodes.Add(appNode);
 
 						//select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = {appId}
-						DataTable threads = console.Manager.Admon_GetThreadList(console.Credentials, appId).Tables[0];
+						ThreadStorageView[] threads = console.Manager.Admon_GetThreadList(console.Credentials, appId);
 						int iterations = 0;
-						foreach (DataRow thread in threads.Rows)
+						foreach (ThreadStorageView thread in threads)
 						{
-							ThreadTreeNode thrNode = new ThreadTreeNode(thread["thread_id"].ToString(), 7, 7);
+							ThreadTreeNode thrNode = new ThreadTreeNode(thread.ThreadId.ToString(), 7, 7);
 							thrNode.appId = appId; //keep the id in the tag for later
-							thrNode.executor_id = thread["executor_id"].ToString();
-							thrNode.failed = thread.IsNull("failed") ? false : (bool)thread["failed"];
-							thrNode.priority = (int)thread["priority"];
-							thrNode.state = (ThreadState)thread["state"];
-							thrNode.thread_id = thread["thread_id"].ToString();
-							thrNode.time_finished = thread["time_finished"].ToString();
-							thrNode.time_started = thread["time_started"].ToString();
+							thrNode.executor_id = thread.ExecutorId;
+							thrNode.failed = thread.Failed; 
+							thrNode.priority = thread.Priority;
+							thrNode.state = thread.State;
+							thrNode.thread_id = thread.ThreadId.ToString();
+							thrNode.time_finished = thread.TimeFinished.ToString();
+							thrNode.time_started = thread.TimeStarted.ToString();
 
 							//add this thread to the parent app node.
 							appNode.Nodes.Add(thrNode);
@@ -841,7 +841,7 @@ namespace Alchemi.Console
 						}
 						
 						//set the # of threads here
-						appNode.num_threads = threads.Rows.Count;
+						appNode.num_threads = threads.Length;
 
 						tv.Refresh();
 						Application.DoEvents();

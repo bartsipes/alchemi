@@ -774,7 +774,7 @@ namespace Alchemi.Core.Manager
 		/// <returns>A DataSet containing the list of threads with attributes:
 		/// thread_id, state, time_started, time_finished
 		/// </returns>
-        public DataSet Admon_GetThreadList(SecurityCredentials sc, string appId)
+        public ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId)
         {
             AuthenticateUser(sc);
             ApplicationAuthorizationCheck(sc, appId);
@@ -791,7 +791,7 @@ namespace Alchemi.Core.Manager
 		/// <returns>A DataSet containing the list of threads with attributes:
 		/// thread_id, state, time_started, time_finished
 		/// </returns>
-    	public DataSet Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status)
+    	public ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status)
     	{
     		AuthenticateUser(sc);
 			ApplicationAuthorizationCheck(sc, appId);

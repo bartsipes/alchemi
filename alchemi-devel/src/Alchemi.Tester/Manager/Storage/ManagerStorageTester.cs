@@ -1317,6 +1317,44 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(true, threads[0].Failed);
 		}
 
+		/// <summary>
+		/// Add a few threads.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetThreadsTestApplicationThreadsWithStatus()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId, threadId, ThreadState.Dead, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] allThreads = ManagerStorage.GetThreads(applicationId);
+			ThreadStorageView[] threads = ManagerStorage.GetThreads(applicationId, ThreadState.Started);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(3, allThreads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
 		#endregion
 
 		#region "GetApplicationThreadcount Tests"

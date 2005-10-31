@@ -38,6 +38,7 @@ namespace Alchemi.Core.Owner
 	[Serializable]
     public enum ThreadState
     {
+		Unknown = -1, // unknown or unitialized - added by Tibor Biro (tb@tbiro.com)
         Ready = 0, // ready to execute
         Scheduled = 1, // executor has id
         Started = 2, // executor has thread and is executing

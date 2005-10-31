@@ -91,6 +91,8 @@ namespace Alchemi.Core.Manager
         
 		/// <summary>
 		/// Gets the finished threads as a byte array
+		/// 
+		/// As a side effect, sets the status of the Finished threads to Dead
 		/// </summary>
         public byte[][] FinishedThreads
         {
@@ -98,14 +100,15 @@ namespace Alchemi.Core.Manager
             {
             	ArrayList finishedThreads = new ArrayList();
 
-            	DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable(
-                    string.Format("Threads_UpdateStateAndSelect '{0}', {1}, {2}", _Id, (int) ThreadState.Finished, (int) ThreadState.Dead)
-                    );
+				ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(_Id, ThreadState.Finished);
 
-                foreach (DataRow dr in dt.Rows)
+                foreach (ThreadStorageView thread in threads)
                 {
+					thread.State = ThreadState.Dead;
+					ManagerStorageFactory.ManagerStorage().UpdateThread(thread);
+
                     finishedThreads.Add(
-                        this[int.Parse(dr["thread_id"].ToString())].Value
+                        this[thread.ThreadId].Value
                         );
                 }
                 return (byte[][]) finishedThreads.ToArray(typeof(byte[]));
@@ -159,11 +162,11 @@ namespace Alchemi.Core.Manager
 		/// <summary>
 		/// Gets the list of threads from the database, for this application.
 		/// </summary>
-        public DataSet ThreadList
+        public ThreadStorageView[] ThreadList
         {
             get
             {
-                return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' order by thread_id", _Id));
+				return ManagerStorageFactory.ManagerStorage().GetThreads(_Id);
             }
         }
 
@@ -172,9 +175,9 @@ namespace Alchemi.Core.Manager
 		/// </summary>
 		/// <param name="status"></param>
 		/// <returns>Dataset with thread info.</returns>
-		public DataSet GetThreadList(ThreadState status)
+		public ThreadStorageView[] GetThreadList(ThreadState status)
 		{
-			return InternalShared.Instance.Database.ExecSql_DataSet(string.Format("select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = '{0}' and state = {1} order by thread_id", _Id, (int)status));			
+			return ManagerStorageFactory.ManagerStorage().GetThreads(_Id, status);
 		}
 
 		/// <summary>

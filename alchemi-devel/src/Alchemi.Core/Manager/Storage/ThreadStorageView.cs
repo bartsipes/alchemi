@@ -104,6 +104,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_state;
 			}
+			set
+			{
+				m_state = value;
+			}
 		}
 
 		public DateTime TimeStarted

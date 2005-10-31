@@ -670,16 +670,29 @@ namespace Alchemi.Core.Manager.Storage
 
 		public ThreadStorageView[] GetThreads(String findApplicationId)
 		{
+			return GetThreads(findApplicationId, ThreadState.Unknown);
+		}
+
+		public ThreadStorageView[] GetThreads(String findApplicationId, ThreadState findState)
+		{
 			ArrayList threads = new ArrayList();
 			String query;
 
 			query = String.Format("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
 
+			// build the query based on the passed in variables
 			if (findApplicationId != null)
 			{
 				query = String.Format("{0} where application_id='{1}'",
 					query,
 					findApplicationId);
+
+				if (findState != ThreadState.Unknown)
+				{
+					query = String.Format("{0} and state={1}",
+						query,
+						(int)findState);
+				}
 			}
 
 			using(AdpDataReader dataReader = RunSqlReturnDataReader(query))
@@ -694,10 +707,13 @@ namespace Alchemi.Core.Manager.Storage
 
 					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
 					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
-					DateTime timeStarted = dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
-					DateTime timeFinished = dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+
+					// for lack of a better default set the dates to DateTime.MinValue.
+					DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
+					DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+
 					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
-					bool failed = dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
+					bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
 
 					ThreadStorageView thread = new ThreadStorageView(
 						internalThreadId,
@@ -717,6 +733,7 @@ namespace Alchemi.Core.Manager.Storage
 
 			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));
 		}
+
 
 		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
 		{
