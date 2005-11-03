@@ -129,6 +129,11 @@
                     AssemblyName = "Win32Security"
                     HintPath = "..\..\..\..\..\installs\Win32SecurityV05\v0.5_GotDotNet\Win32Security\bin\Release\Win32Security.dll"
                 />
+                <Reference
+                    Name = "Manager"
+                    Project = "{3122055C-044A-4C0C-80BB-82232FB333C5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

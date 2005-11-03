@@ -129,6 +129,11 @@
                     AssemblyName = "log4net"
                     HintPath = "..\..\lib\log4net.dll"
                 />
+                <Reference
+                    Name = "Executor"
+                    Project = "{A71A830F-F3FA-47BD-956E-67CFB22F75E8}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

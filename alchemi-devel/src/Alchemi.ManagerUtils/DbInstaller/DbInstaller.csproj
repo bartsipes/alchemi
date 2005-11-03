@@ -120,7 +120,7 @@
                 />
                 <File
                     RelPath = "Configuration.cs"
-                    Link = "..\..\Alchemi.Core\Manager\Configuration.cs"
+                    Link = "..\..\Alchemi.Manager\Configuration.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1,7 +1,7 @@
 <VisualStudioProject>
     <CSHARP LastOpenVersion = "7.10.3077" >
         <Build>
-            <Settings ReferencePath = "D:\installs\Win32SecurityV05\v0.5_GotDotNet\Win32Security\bin\Release\;D:\work\Alchemi\project\lib\;E:\akshay\dev\Alchemi\project\lib\" >
+            <Settings ReferencePath = "D:\installs\Win32SecurityV05\v0.5_GotDotNet\Win32Security\bin\Release\;D:\work\Alchemi\project\lib\;E:\akshay\dev\Alchemi\project\lib\;F:\Alchemi_SF_CVS\alchemi-devel\lib\" >
                 <Config
                     Name = "Debug"
                     EnableASPDebugging = "false"

@@ -514,7 +514,7 @@ namespace Alchemi.Console
 					//need to throw an error or something here...
 					MessageBox.Show("Could not refresh system. Error: "+se.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					//sbar.Text = "Could not refresh system. Error: " + e.Message; 
 				}

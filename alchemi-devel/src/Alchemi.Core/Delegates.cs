@@ -23,24 +23,8 @@
 */ 
 #endregion
 
-using System;
-using Alchemi.Core.Owner;
-
 namespace Alchemi.Core
 {
-	/// <summary>
-	/// Delegate for the Application Finished event
-	/// </summary>
-    public delegate void GApplicationFinish();
-	/// <summary>
-	/// Delegare for the ThreadFinish event
-	/// </summary>
-    public delegate void GThreadFinish(GThread thread);
-	/// <summary>
-	/// Delegate for the ThreadFailed event
-	/// </summary>
-    public delegate void GThreadFailed(GThread thread, Exception e);
-
 	/// <summary>
 	/// Delegate for the log event
 	/// </summary>

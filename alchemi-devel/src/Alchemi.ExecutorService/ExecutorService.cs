@@ -55,6 +55,8 @@ namespace Alchemi.ExecutorService
 
 		private ExecutorContainer execContainer = null;
 
+		private Thread starterThread = null;
+
 		// Create a logger for use in this class
 		private static ILog logger;
 
@@ -162,9 +164,9 @@ namespace Alchemi.ExecutorService
 			{
 				logger.Info("Starting Alchemi Executor Service v."+Utils.AssemblyVersion);
 				ThreadStart ts = new ThreadStart(Start);
-				Thread t = new Thread(ts);
-				t.Start();
-				//t.Join(25000); //let the thread continue: for eg: in case the connection is not available, it will keep trying forever.
+				starterThread = new Thread(ts);
+				starterThread.Start();
+				//let the thread continue: for eg: in case the connection is not available, it will keep trying forever.
 			}
 			catch (Exception e)
 			{
@@ -181,16 +183,26 @@ namespace Alchemi.ExecutorService
 				execContainer.Start();
 				logger.Info("Executor Service Started");
 			}
-			catch (Exception e)
+			catch (ThreadAbortException) 
 			{
-				logger.Warn("Exception starting Executor service...Reconnecting...",e);
+				//abort this thread.
+				logger.Info("Aborting starterThread");
+			}
+			catch (Exception ex1)
+			{
+				logger.Warn("Exception starting Executor service...Reconnecting...",ex1);
 				try
 				{
 					execContainer.Reconnect();
 				}
-				catch (Exception ex1)
+				catch (ThreadAbortException) 
 				{
-					logger.Error("Error trying to reconnect: ",ex1);
+					//abort this thread.
+					logger.Info("Aborting starterThread");
+				}
+				catch (Exception ex2)
+				{
+					logger.Error("Error trying to reconnect: ",ex2);
 				}
 			}
 		}
@@ -199,6 +211,9 @@ namespace Alchemi.ExecutorService
 		{
 			try
 			{
+				if (starterThread!=null && starterThread.IsAlive)
+					starterThread.Abort();
+
 				if (execContainer!=null)
 					execContainer.Stop();
 				else
@@ -206,24 +221,24 @@ namespace Alchemi.ExecutorService
 
 				logger.Info("Executor Service Stopped");
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				logger.Error("Error stopping ExecutorService. ",e);
+				logger.Error("Error stopping ExecutorService. ", ex);
 			}
 		}
 
 		private static void DefaultErrorHandler(object sender, UnhandledExceptionEventArgs args)
 		{
-			Exception e = (Exception) args.ExceptionObject;
-			HandleAllUnknownErrors(sender.ToString(),e);
+			Exception ex = (Exception) args.ExceptionObject;
+			HandleAllUnknownErrors(sender.ToString(), ex);
 		} 
 
 		//just to follow the same model as the windows forms app
-		private static void HandleAllUnknownErrors(string sender, Exception e)
+		private static void HandleAllUnknownErrors(string sender, Exception ex)
 		{
 			if (logger!=null)
 			{
-				logger.Error("Unhandled Exception in Alchemi Executor Service: sender = "+sender,e);
+				logger.Error("Unhandled Exception in Alchemi Executor Service: sender = "+sender, ex);
 			}
 			else
 			{
@@ -231,7 +246,7 @@ namespace Alchemi.ExecutorService
 				{
 					TextWriter tw = File.CreateText("alchemiExecutorError.txt");
 					tw.WriteLine("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender);
-					tw.WriteLine(e.ToString());
+					tw.WriteLine(ex.ToString());
 					tw.Flush();
 					tw.Close();
 					tw = null;
@@ -309,9 +324,9 @@ namespace Alchemi.ExecutorService
 				t.Start();
 				t.Join(25000); //in this case we really want things to be stopped within the 25 seconds.
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				logger.Error("Error Stopping Service " ,e);
+				logger.Error("Error Stopping Service " , ex);
 			}
 		}
 
@@ -326,9 +341,9 @@ namespace Alchemi.ExecutorService
 					execContainer.Reconnect();					
 				}
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				logger.Error("Error in Executor_GotDisconnected, while reconnecting. ",e);
+				logger.Error("Error in Executor_GotDisconnected, while reconnecting. ", ex);
 			}
 		}
 

@@ -90,29 +90,14 @@
                     HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.dll"
                 />
                 <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
-                />
-                <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
                     HintPath = "E:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
                 />
                 <Reference
-                    Name = "System.Runtime.Remoting"
-                    AssemblyName = "System.Runtime.Remoting"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Runtime.Remoting.dll"
-                />
-                <Reference
                     Name = "System.Windows.Forms"
                     AssemblyName = "System.Windows.Forms"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.Windows.Forms.dll"
-                />
-                <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
                 <Reference
                     Name = "System.ServiceProcess"
@@ -125,14 +110,19 @@
                     HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
                 />
                 <Reference
-                    Name = "System.Web"
-                    AssemblyName = "System.Web"
-                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Web.dll"
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
                 <Reference
-                    Name = "Advanced.Data.Provider"
-                    AssemblyName = "Advanced.Data.Provider"
-                    HintPath = "..\..\lib\Advanced.Data.Provider.dll"
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
             </References>
         </Build>
@@ -140,11 +130,6 @@
             <Include>
                 <File
                     RelPath = "CommonAssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "CrossPlatformHelper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -159,6 +144,36 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GConnection.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GConnection.resx"
+                    DependentUpon = "GConnection.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "GConnectionDialog.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GConnectionDialog.resx"
+                    DependentUpon = "GConnectionDialog.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "GConnectionDialogForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GConnectionDialogForm.resx"
+                    DependentUpon = "GConnectionDialogForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "GNode.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
@@ -167,26 +182,6 @@
                     RelPath = "GNode.resx"
                     DependentUpon = "GNode.cs"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "ICrossPlatformManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IExecutor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IOwner.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Logger.cs"
@@ -214,32 +209,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Executor\AppDomainExecutor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Executor\Configuration.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Executor\ExecutorContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Executor\ExecutorInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Executor\GExecutor.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Executor\GridAppDomain.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -249,77 +219,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\Configuration.cs"
+                    RelPath = "Executor\IExecutor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\DedicatedSchedule.cs"
+                    RelPath = "Manager\ICrossPlatformManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Manager\DefaultScheduler.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Exceptions.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\GManager.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\InternalShared.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\IScheduler.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\ManagerContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\MApplication.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\MApplicationCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\MExecutor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\MExecutorCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\MThread.cs"
+                    RelPath = "Manager\IManager.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Manager\Permission.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\SqlServer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -330,11 +245,6 @@
                 />
                 <File
                     RelPath = "Manager\Storage\ExecutorStorageView.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Storage\GenericManagerDatabaseStorage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -350,26 +260,6 @@
                 />
                 <File
                     RelPath = "Manager\Storage\IManagerStorageSetup.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Storage\InMemoryManagerStorage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Storage\ManagerStorageFactory.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Storage\MySqlManagerDatabaseStorage.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Manager\Storage\SqlServerManagerDatabaseStorage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -390,6 +280,16 @@
                 />
                 <File
                     RelPath = "Owner\ApplicationState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Owner\CrossPlatformHelper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Owner\Delegates.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -419,42 +319,17 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Owner\GConnection.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Owner\GConnection.resx"
-                    DependentUpon = "GConnection.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Owner\GConnectionDialog.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Owner\GConnectionDialog.resx"
-                    DependentUpon = "GConnectionDialog.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Owner\GConnectionDialogForm.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Owner\GConnectionDialogForm.resx"
-                    DependentUpon = "GConnectionDialogForm.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Owner\GJob.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Owner\GThread.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Owner\IOwner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -475,6 +350,11 @@
                 />
                 <File
                     RelPath = "Owner\ThreadState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Utility\HashUtil.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

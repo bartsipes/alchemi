@@ -50,6 +50,9 @@ namespace Alchemi.Console
 		private System.Windows.Forms.MenuItem mnuExit;
 		private System.Windows.Forms.MenuItem mnuGridConnect;
 		private System.Windows.Forms.MenuItem mnuFileSep1;
+		private System.Windows.Forms.MenuItem mnuClose;
+		private System.Windows.Forms.MenuItem mnuFileSep2;
+
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -72,7 +75,6 @@ namespace Alchemi.Console
 			mainchild.MdiParent = this;
 			mainchild.WindowState = FormWindowState.Maximized;
 			mainchild.ControlBox = false;
-			mainchild.Show();
 		}
 
 		/// <summary>
@@ -108,6 +110,8 @@ namespace Alchemi.Console
 			this.mnuTileV = new System.Windows.Forms.MenuItem();
 			this.mnuHelp = new System.Windows.Forms.MenuItem();
 			this.mnuAbout = new System.Windows.Forms.MenuItem();
+			this.mnuClose = new System.Windows.Forms.MenuItem();
+			this.mnuFileSep2 = new System.Windows.Forms.MenuItem();
 			// 
 			// mainMenu1
 			// 
@@ -122,6 +126,8 @@ namespace Alchemi.Console
 			this.mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					this.mnuGridConnect,
 																					this.mnuFileSep1,
+																					this.mnuClose,
+																					this.mnuFileSep2,
 																					this.mnuExit});
 			this.mnuFile.Text = "File";
 			// 
@@ -138,7 +144,7 @@ namespace Alchemi.Console
 			// 
 			// mnuExit
 			// 
-			this.mnuExit.Index = 2;
+			this.mnuExit.Index = 4;
 			this.mnuExit.Text = "Exit";
 			this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
 			// 
@@ -184,6 +190,17 @@ namespace Alchemi.Console
 			this.mnuAbout.Text = "About";
 			this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
 			// 
+			// mnuClose
+			// 
+			this.mnuClose.Index = 2;
+			this.mnuClose.Text = "Close";
+			this.mnuClose.Click += new System.EventHandler(this.mnuClose_Click);
+			// 
+			// mnuFileSep2
+			// 
+			this.mnuFileSep2.Index = 3;
+			this.mnuFileSep2.Text = "-";
+			// 
 			// ConsoleParentForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -193,9 +210,15 @@ namespace Alchemi.Console
 			this.Name = "ConsoleParentForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ConsoleParentForm";
-
+			this.MdiChildActivate += new EventHandler(ConsoleParentForm_MdiChildActivate);
+			this.Activated += new EventHandler(ConsoleParentForm_Activated);
 		}
 		#endregion
+
+		public void DisableCloseMenu (bool disable)
+		{
+			mnuClose.Enabled = disable;
+		}
 
 		private void mnuExit_Click(object sender, System.EventArgs e)
 		{
@@ -240,6 +263,30 @@ namespace Alchemi.Console
 				consoleForms.Remove(sender);
 
 				//todo maintain and update the menu item...recent window list etc..
+			}
+		}
+
+		private void mnuClose_Click(object sender, System.EventArgs e)
+		{
+			if (this.ActiveMdiChild != null)
+			{
+				this.ActiveMdiChild.Close();
+			}
+		}
+
+		private void ConsoleParentForm_MdiChildActivate(object sender, EventArgs e)
+		{
+			//mainchild.Show();
+			//if this is the only MdiChild, then disable the Close menu, in the parent.
+			mnuClose.Enabled = ((this.ActiveMdiChild != null) && (this.ActiveMdiChild != mainchild));
+		}
+
+		private void ConsoleParentForm_Activated(object sender, EventArgs e)
+		{
+			//if no active child, then show main child.
+			if (this.ActiveMdiChild == null)
+			{
+				mainchild.Show();
 			}
 		}
 	}

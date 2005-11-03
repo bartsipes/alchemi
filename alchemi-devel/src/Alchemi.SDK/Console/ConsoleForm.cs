@@ -64,13 +64,10 @@ namespace Alchemi.Console
 
 		//menus
 		private System.Windows.Forms.MainMenu mainMenu1;
-		private System.Windows.Forms.MenuItem mnuGrid;
-		private System.Windows.Forms.MenuItem mnuConnect;
 		private System.Windows.Forms.MenuItem mnuView;
 		private System.Windows.Forms.MenuItem mnuAction;
 		//context-menu
 		private System.Windows.Forms.ContextMenu rightClickMenu;
-		private System.Windows.Forms.MenuItem mnuGrid_Sep1;
 		private System.Windows.Forms.MenuItem mnuContextView;
 		private System.Windows.Forms.StatusBar sbar;
 		private System.Windows.Forms.MenuItem mnuLargeIcons;
@@ -102,7 +99,7 @@ namespace Alchemi.Console
 		private System.Windows.Forms.ImageList imgLstTbar;
 		private System.Windows.Forms.ColumnHeader ch1;
 		private System.Windows.Forms.ColumnHeader ch2;
-		private System.Windows.Forms.MenuItem mnuClose;
+		private System.Windows.Forms.ToolBarButton tbtnConnect;
 		private System.Windows.Forms.MenuItem mnuContextAction;
 
 		public ConsoleForm()
@@ -139,10 +136,6 @@ namespace Alchemi.Console
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ConsoleForm));
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
-			this.mnuGrid = new System.Windows.Forms.MenuItem();
-			this.mnuConnect = new System.Windows.Forms.MenuItem();
-			this.mnuGrid_Sep1 = new System.Windows.Forms.MenuItem();
-			this.mnuClose = new System.Windows.Forms.MenuItem();
 			this.mnuAction = new System.Windows.Forms.MenuItem();
 			this.mnuNew = new System.Windows.Forms.MenuItem();
 			this.mnuEdit = new System.Windows.Forms.MenuItem();
@@ -180,44 +173,18 @@ namespace Alchemi.Console
 			this.lv = new System.Windows.Forms.ListView();
 			this.ch1 = new System.Windows.Forms.ColumnHeader();
 			this.ch2 = new System.Windows.Forms.ColumnHeader();
+			this.tbtnConnect = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
 			// 
 			this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					  this.mnuGrid,
 																					  this.mnuAction,
 																					  this.mnuView});
 			// 
-			// mnuGrid
-			// 
-			this.mnuGrid.Index = 0;
-			this.mnuGrid.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-																					this.mnuConnect,
-																					this.mnuGrid_Sep1,
-																					this.mnuClose});
-			this.mnuGrid.Text = "Grid";
-			// 
-			// mnuConnect
-			// 
-			this.mnuConnect.Index = 0;
-			this.mnuConnect.Text = "Connect...";
-			this.mnuConnect.Click += new System.EventHandler(this.mnuConnect_Click);
-			// 
-			// mnuGrid_Sep1
-			// 
-			this.mnuGrid_Sep1.Index = 1;
-			this.mnuGrid_Sep1.Text = "-";
-			// 
-			// mnuClose
-			// 
-			this.mnuClose.Index = 2;
-			this.mnuClose.Text = "Close";
-			this.mnuClose.Click += new System.EventHandler(this.mnuClose_Click);
-			// 
 			// mnuAction
 			// 
-			this.mnuAction.Index = 1;
+			this.mnuAction.Index = 0;
 			this.mnuAction.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.mnuNew,
 																					  this.mnuEdit,
@@ -251,7 +218,7 @@ namespace Alchemi.Console
 			// 
 			// mnuView
 			// 
-			this.mnuView.Index = 2;
+			this.mnuView.Index = 1;
 			this.mnuView.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					this.mnuLargeIcons,
 																					this.mnuSmallIcons,
@@ -382,6 +349,7 @@ namespace Alchemi.Console
 			// 
 			this.tbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
 			this.tbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
+																					this.tbtnConnect,
 																					this.tbtnRefresh,
 																					this.tbtnSep1,
 																					this.tbtnNew,
@@ -400,6 +368,7 @@ namespace Alchemi.Console
 			// tbtnRefresh
 			// 
 			this.tbtnRefresh.ImageIndex = 1;
+			this.tbtnRefresh.ToolTipText = "Refresh";
 			// 
 			// tbtnSep1
 			// 
@@ -408,10 +377,12 @@ namespace Alchemi.Console
 			// tbtnNew
 			// 
 			this.tbtnNew.ImageIndex = 0;
+			this.tbtnNew.ToolTipText = "New...";
 			// 
 			// tbtDelete
 			// 
 			this.tbtDelete.ImageIndex = 2;
+			this.tbtDelete.ToolTipText = "Delete...";
 			// 
 			// tbtnSep2
 			// 
@@ -420,6 +391,7 @@ namespace Alchemi.Console
 			// tbtnProperties
 			// 
 			this.tbtnProperties.ImageIndex = 3;
+			this.tbtnProperties.ToolTipText = "Properties";
 			// 
 			// imgLstTbar
 			// 
@@ -476,6 +448,11 @@ namespace Alchemi.Console
 			this.ch2.Text = "";
 			this.ch2.Width = 150;
 			// 
+			// tbtnConnect
+			// 
+			this.tbtnConnect.ImageIndex = 4;
+			this.tbtnConnect.ToolTipText = "Connect...";
+			// 
 			// ConsoleForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -490,6 +467,7 @@ namespace Alchemi.Console
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Alchemi Console";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			this.Activated += new EventHandler(ConsoleForm_Activated);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.ConsoleForm_Closing);
 			this.ResumeLayout(false);
 
@@ -503,12 +481,10 @@ namespace Alchemi.Console
 			if (connected)
 			{
 				sbar.Text = string.Format("Connected to grid at {0}:{1}.", console.Connection.Host, console.Connection.Port);
-				mnuConnect.Text = "Disconnect...";
 			}
 			else
 			{
 				sbar.Text = "Not connected.";
-				mnuConnect.Text = "Connect...";
 			}
 
 			SetColumnHeaders();
@@ -527,7 +503,18 @@ namespace Alchemi.Console
 
 		private void SetToolbarState()
 		{
-			//todo
+			//todo other button states
+
+			if (connected)
+			{
+				tbtnConnect.ImageIndex = 5;
+				tbtnConnect.ToolTipText = "Disconnect";
+			}
+			else
+			{
+				tbtnConnect.ImageIndex = 4;
+				tbtnConnect.ToolTipText = "Connect...";
+			}
 		}
 
 		private void SetColumnHeaders()
@@ -569,11 +556,32 @@ namespace Alchemi.Console
 			}
 		}
 
+		private void Connect()
+		{
+			try
+			{
+				logger.Debug("Showing connection dialog...");
+				GConnectionDialog gcd = new GConnectionDialog();
+				if (gcd.ShowDialog() == DialogResult.OK)
+				{
+					console = new ConsoleNode(gcd.Connection);
+					connected = true;
+					InitTreeView();
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Error("Error trying to connect...", ex);
+				MessageBox.Show("Error trying to connect..." + ex.Message);
+			}
+		}
 
 		private void Disconnect()
 		{
 			console = null;
 			connected = false;
+			ShowDisconnectedMessage();
+			RefreshUI();
 		}
 
 		private void ShowDisconnectedMessage()
@@ -630,34 +638,6 @@ namespace Alchemi.Console
 
 		#endregion
 
-		
-		private void mnuConnect_Click(object sender, System.EventArgs e)
-		{
-			if (!connected)
-			{
-				logger.Debug("Showing connection dialog...");
-				GConnectionDialog gcd = new GConnectionDialog();
-				if (gcd.ShowDialog() == DialogResult.OK)
-				{
-					console = new ConsoleNode(gcd.Connection);
-					connected = true;
-					InitTreeView();
-					RefreshUI();
-				}
-			}
-			else
-			{
-				Disconnect();
-				RefreshUI();
-			}
-		}
-
-		private void mnuClose_Click(object sender, System.EventArgs e)
-		{
-			Disconnect();
-			this.Close();
-		}
-
 		#region "Users and Groups" 
 		
 		private void ShowUsers()
@@ -706,6 +686,7 @@ namespace Alchemi.Console
 				}			
 				catch (Exception ex)
 				{
+					logger.Error("Could not get list of users. Error: "+ex.Message, ex);
 					MessageBox.Show("Could not get list of users. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
 					sbar.Text = "Couldnot get list of users. Error: " + ex.Message;
 				}
@@ -764,6 +745,7 @@ namespace Alchemi.Console
 				}			
 				catch (Exception ex)
 				{
+					logger.Error("Could not get list of executors. Error: "+ex.Message, ex);
 					MessageBox.Show("Could not get list of executors. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
 					sbar.Text = "Couldnot get list of executors. Error: " + ex.Message;
 				}
@@ -850,6 +832,7 @@ namespace Alchemi.Console
 				}			
 				catch (Exception ex)
 				{
+					logger.Error("Could not get list of applications. Error: "+ex.Message, ex);
 					MessageBox.Show("Couldnot get list of applications. Error: "+ex.StackTrace,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
 					sbar.Text = "Couldnot get list of applications. Error: " + ex.Message;
 				}
@@ -863,79 +846,48 @@ namespace Alchemi.Console
 
 		#endregion
 
+		#region "Show Properties"
+
+		//Show properties always shows the properties for the selected ListView Item. it it exists.
+		private void ShowProperties()
+		{
+			if (connected)
+			{
+				TreeNode node = null;
+				
+				if (lv.SelectedItems!=null && lv.SelectedItems.Count > 0)
+					node = (TreeNode) lv.SelectedItems[0].Tag;
+
+				if (node != null)
+				{
+					if (node is UserTreeNode)
+					{
+						//show user dialog. .. //todo
+					}
+					else if (node is GroupTreeNode)
+					{
+						//show the group dialog .. //todo
+					}
+					else if (node is ExecutorTreeNode)
+					{
+						//show the executor dialog 
+						ExecutorForm ef = new ExecutorForm();
+						ef.SetData((ExecutorTreeNode)node);
+						ef.ShowDialog(this);
+					}
+					else if (node is ApplicationTreeNode)
+					{
+						//show the application dialog ..//todo
+					}
+				}
+			}
+		}
+
+		#endregion
+
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			logger.Debug("After Select");
-
-			if (!connected)
-				return;
-
-			lv.Items.Clear();
-
-			if (e.Node==null)
-				return;
-
-			//show the items in the list view.
-			if (e.Node.GetNodeCount(false)!=0)
-			{
-				
-				//selected node has children
-				foreach (TreeNode node in e.Node.Nodes)
-				{
-					//add the node to the listview.
-					ListViewItem li = new ListViewItem(node.Text);
-					li.ImageIndex = node.ImageIndex;
-
-					//store a reference to the tree-view node in the listview item's tag
-					li.Tag = node;
-
-					//special cases
-					if (e.Node is SpecialParentNode)
-					{
-						SpecialParentNode spn = (SpecialParentNode)e.Node;
-						if (spn.NodeType == SpecialParentNodeType.Users)
-						{
-							if (!(node is DummyTreeNode))
-								li.SubItems.Add(node.GetNodeCount(false).ToString());
-						}
-					}
-
-					lv.Items.Add(li);
-					lv.Refresh();
-					Application.DoEvents(); //to make sure the GUI is responsive
-				}
-			}
-			else
-			{
-				//add the node to the listview.
-				ListViewItem li = new ListViewItem(e.Node.Text);
-				li.ImageIndex = e.Node.ImageIndex;
-
-				//special cases
-				if (e.Node is UserTreeNode)
-				{
-					UserTreeNode utn = (UserTreeNode)e.Node;
-					li.SubItems.Add(utn.Parent.Text);
-				} 
-				else if (e.Node is ExecutorTreeNode)
-				{
-					ExecutorTreeNode etn = (ExecutorTreeNode)e.Node;
-					li.SubItems.Add(etn.host+":"+etn.port);
-				}
-				else if (e.Node is ThreadTreeNode)
-				{
-					ThreadTreeNode ttn = (ThreadTreeNode)e.Node;
-					li.SubItems.Add(ttn.Parent.Text);
-				}
-
-				//store a reference to the tree-view node in the listview item's tag
-				li.Tag = e.Node;
-				lv.Items.Add(li);
-				lv.Refresh();
-			}
-
-			
-			RefreshUI();
+			RefreshListItems(e.Node);
 		}
 
 		private void mnuView_Click(object sender, System.EventArgs e)
@@ -982,10 +934,28 @@ namespace Alchemi.Console
 
 		private void tbar_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
 		{
-			//todo
+			//todo all other buttons
 			if (e.Button == tbtnRefresh)
 			{
+				//if any of the SpecialParentNodes are selected, we better refresh their contents here again.
+				RefreshTreeNode(tv.SelectedNode);
 				RefreshUI();
+			}
+			else if (e.Button == tbtnConnect)
+			{
+				if (connected)
+				{
+					Disconnect();
+				}
+				else //not connected
+				{
+					Connect();
+				}
+				RefreshUI();
+			}
+			else if (e.Button == tbtnProperties)
+			{
+				ShowProperties();
 			}
 		}
 
@@ -1069,25 +1039,111 @@ namespace Alchemi.Console
 
 		private void tv_AfterExpand(object sender, TreeViewEventArgs e)
 		{
-			logger.Debug("After Expand");
+			RefreshTreeNode(e.Node);
+		}
+
+		
+		//RefreshTreeNode is the function to be called if both the treeview, listview items should be reloaded.
+		//this calls the RefreshListItems.
+		private void RefreshTreeNode(TreeNode node)
+		{
 			//if the node is a special parent node do stuff here to fill its child nodes.
-			if (e.Node is SpecialParentNode)
+			if (node is SpecialParentNode)
 			{
-				SpecialParentNode node = (SpecialParentNode) e.Node;
-				if (node.NodeType == SpecialParentNodeType.Users)
+				SpecialParentNode spn = (SpecialParentNode) node;
+				if (spn.NodeType == SpecialParentNodeType.Users)
 				{
 					ShowUsers();
 				}
-				else if (node.NodeType == SpecialParentNodeType.Executors)
+				else if (spn.NodeType == SpecialParentNodeType.Executors)
 				{
 					ShowExecutors();
 				}
-				else if (node.NodeType == SpecialParentNodeType.Applications)
+				else if (spn.NodeType == SpecialParentNodeType.Applications)
 				{
 					ShowApplications();
 				}
 			}
+			RefreshListItems(node);
 		}
+
+		
+		private void RefreshListItems(TreeNode tnode)
+		{
+			if (!connected)
+				return;
+
+			lv.Items.Clear();
+
+			if (tnode==null)
+				return;
+
+			//show the items in the list view.
+			if (tnode.GetNodeCount(false)!=0)
+			{
+				
+				//selected node has children
+				foreach (TreeNode node in tnode.Nodes)
+				{
+					//add the node to the listview.
+					ListViewItem li = new ListViewItem(node.Text);
+					li.ImageIndex = node.ImageIndex;
+
+					//store a reference to the tree-view node in the listview item's tag
+					li.Tag = node;
+
+					//special cases
+					if (tnode is SpecialParentNode)
+					{
+						SpecialParentNode spn = (SpecialParentNode)tnode;
+						if (spn.NodeType == SpecialParentNodeType.Users)
+						{
+							if (!(node is DummyTreeNode))
+								li.SubItems.Add(node.GetNodeCount(false).ToString());
+						}
+					}
+
+					lv.Items.Add(li);
+					lv.Refresh();
+					Application.DoEvents(); //to make sure the GUI is responsive
+				}
+			}
+			else
+			{
+				//add the node to the listview.
+				ListViewItem li = new ListViewItem(tnode.Text);
+				li.ImageIndex = tnode.ImageIndex;
+
+				//special cases
+				if (tnode is UserTreeNode)
+				{
+					UserTreeNode utn = (UserTreeNode)tnode;
+					li.SubItems.Add(utn.Parent.Text);
+				} 
+				else if (tnode is ExecutorTreeNode)
+				{
+					ExecutorTreeNode etn = (ExecutorTreeNode)tnode;
+					li.SubItems.Add(etn.host+":"+etn.port);
+				}
+				else if (tnode is ThreadTreeNode)
+				{
+					ThreadTreeNode ttn = (ThreadTreeNode)tnode;
+					li.SubItems.Add(ttn.Parent.Text);
+				}
+
+				//store a reference to the tree-view node in the listview item's tag
+				li.Tag = tnode;
+				lv.Items.Add(li);
+				lv.Refresh();
+			}
+
+			//just select the first list item if it exists.
+			if (lv.Items.Count > 0)
+			{
+				lv.Items[0].Selected = true;
+			}
+		}
+
 
 		private void lv_DoubleClick(object sender, EventArgs e)
 		{
@@ -1095,7 +1151,7 @@ namespace Alchemi.Console
 			//this event is raised only when an item is clicked
 			try
 			{
-				if (lv.SelectedItems != null && lv.SelectedItems[0]!=null)
+				if (lv.SelectedItems != null && lv.SelectedItems.Count>0 && lv.SelectedItems[0]!=null)
 				{
 					ListViewItem li = lv.SelectedItems[0];
 
@@ -1103,11 +1159,19 @@ namespace Alchemi.Console
 					TreeNode node = (TreeNode)li.Tag;
 					if (node!=null)
 					{
-						//expand/collapse it. and then select it.
-						node.Expand();
-						node.EnsureVisible();
-						tv.SelectedNode = node;
-						RefreshUI();
+						if (node.GetNodeCount(false) > 0)
+						{
+							//expand/collapse it. and then select it.
+							node.Expand();
+							node.EnsureVisible();
+							tv.SelectedNode = node;
+							RefreshUI();
+						}
+						else
+						{
+							//for the selected list item.
+							ShowProperties();
+						}
 					}
 				}
 			}
@@ -1121,6 +1185,15 @@ namespace Alchemi.Console
 		{
 			//just make sure the grid is disconnected.
 			Disconnect();
+		}
+
+		private void ConsoleForm_Activated(object sender, EventArgs e)
+		{
+			//everytime it is activated, if it is not connected, show the connection dialog.
+			if (!connected)
+			{
+				Connect();
+			}
 		}
 	}
 }

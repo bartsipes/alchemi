@@ -182,16 +182,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ExecutorForm.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ExecutorForm.resx"
-                    DependentUpon = "ExecutorForm.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "SysPerfForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -199,6 +189,16 @@
                 <File
                     RelPath = "SysPerfForm.resx"
                     DependentUpon = "SysPerfForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "PropertiesDialogs\ExecutorForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertiesDialogs\ExecutorForm.resx"
+                    DependentUpon = "ExecutorForm.cs"
                     BuildAction = "EmbeddedResource"
                 />
             </Include>

@@ -124,6 +124,11 @@
                     AssemblyName = "System.ServiceProcess"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.ServiceProcess.dll"
                 />
+                <Reference
+                    Name = "Manager"
+                    Project = "{3122055C-044A-4C0C-80BB-82232FB333C5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
