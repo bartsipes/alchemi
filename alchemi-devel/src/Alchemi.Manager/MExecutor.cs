@@ -31,6 +31,8 @@ using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using Alchemi.Manager.Storage;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Manager
 {
@@ -66,12 +68,15 @@ namespace Alchemi.Manager
 			logger.Debug("Trying to connect NON-Dedicated to executor: "+_Id);
             VerifyExists(ep);
 
-			//here we dont ping back, since we know non-dedicated nodes can't be pinged back.
+			//here we don't ping back, since we know non-dedicated nodes can't be pinged back.
             
-            // update state in db
-            InternalShared.Instance.Database.ExecSql(
-                string.Format("update executor set is_connected = 1, is_dedicated = 0 where executor_id = '{0}'", _Id)
-                );
+			ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
+			
+			executorStorage.Connected = true;
+			executorStorage.Dedicated = false;
+
+			// update state in db
+			ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
 
 			logger.Debug("Connected non-dedicated. Updated db. executor_id="+_Id);
         }
@@ -101,10 +106,20 @@ namespace Alchemi.Manager
             }
             finally
             {
+				ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
+
+				executorStorage.Connected = success;
+				executorStorage.Dedicated = true;
+				executorStorage.HostName = ep.Host;
+				executorStorage.Port = ep.Port;
+
                 // update state in db (always happens even if cannnot connect back to executor
-                InternalShared.Instance.Database.ExecSql(
-                    string.Format("update executor set is_connected = {1}, is_dedicated = 1, host = '{2}', port = {3} where executor_id = '{0}'", _Id, Utils.BoolToSqlBit(success), ep.Host, ep.Port)
-                    );
+				ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
+				
+//				InternalShared.Instance.Database.ExecSql(
+//                    string.Format("update executor set is_connected = {1}, is_dedicated = 1, host = '{2}', port = {3} where executor_id = '{0}'", 
+//					_Id, Utils.BoolToSqlBit(success), ep.Host, ep.Port)
+//                    );
 				logger.Debug("Updated db after ping back to executor. dedicated executor_id="+_Id + ", dedicated = true, connected = "+success);
             }
 

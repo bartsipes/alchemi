@@ -26,9 +26,12 @@ details.
 using System;
 using System.Collections;
 
+using Alchemi.Core;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Manager;
+using Alchemi.Core.Manager.Storage;
 
-namespace Alchemi.Core.Manager.Storage
+namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Store all manager information in memory.
@@ -290,6 +293,25 @@ namespace Alchemi.Core.Manager.Storage
 				return (ExecutorStorageView[])m_executors.ToArray(typeof(ExecutorStorageView));
 			}
 		}
+
+		public ExecutorStorageView GetExecutor(String executorId)
+		{
+			if (m_executors == null)
+			{
+				return null;
+			}
+
+			foreach(ExecutorStorageView executor in m_executors)
+			{
+				if (executor.ExecutorId == executorId)
+				{
+					return executor;
+				}
+			}
+
+			return null;
+		}
+
 
 		public String AddApplication(ApplicationStorageView application)
 		{

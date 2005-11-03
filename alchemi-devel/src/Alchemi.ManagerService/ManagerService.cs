@@ -34,6 +34,7 @@ using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Utility;
+using Alchemi.Manager;
 using log4net;
 using log4net.Config;
 

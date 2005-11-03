@@ -97,6 +97,8 @@ namespace Alchemi.Core.Manager.Storage
 
 		ExecutorStorageView[] GetExecutors();
 
+		ExecutorStorageView GetExecutor(String executorId);
+
 
 		String AddApplication(ApplicationStorageView application);
 

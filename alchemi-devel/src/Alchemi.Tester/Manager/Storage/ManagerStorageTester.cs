@@ -1071,6 +1071,56 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "GetExecutor Tests"
+
+		/// <summary>
+		/// Add 3 executors.
+		/// Get one executor.
+		/// </summary>
+		[Test]
+		public void GetExecutorTestSimpleScenario()
+		{
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			
+			ExecutorStorageView executor = ManagerStorage.GetExecutor(executorId);
+
+			Assert.IsNotNull(executor);
+			Assert.AreEqual(false, executor.Dedicated);
+			Assert.AreEqual(true, executor.Connected);
+			Assert.AreEqual(pingTime, executor.PingTime);
+			Assert.AreEqual("test", executor.HostName);
+			Assert.AreEqual(9999, executor.Port);
+			Assert.AreEqual("username1", executor.Username);
+			Assert.AreEqual(111, executor.MaxCpu);
+			Assert.AreEqual(123, executor.CpuUsage);
+			Assert.AreEqual(34, executor.AvailableCpu);
+			Assert.AreEqual(3.4, executor.TotalCpuUsage);
+			Assert.AreEqual(executorId, executor.ExecutorId);
+		}
+
+		/// <summary>
+		/// Add no executors.
+		/// Get the executor list.
+		/// The list should be empty but not null. No error is expected
+		/// </summary>
+		[Test]
+		public void GetExecutorTestNoExecutor()
+		{
+			ExecutorStorageView executor = ManagerStorage.GetExecutor(Guid.NewGuid().ToString());
+
+			Assert.IsNull(executor);
+		}
+
+
+		#endregion
+
 		#region "AddThread Tests"
 
 		/// <summary>
@@ -1411,8 +1461,6 @@ namespace Alchemi.Tester.Manager.Storage
 		public void GetThreadCountTestNoThreadInformation()
 		{
 			String applicationId = Guid.NewGuid().ToString();
-			Int32 totalThreads;
-			Int32 unfinishedThreads;
 
 			Int32 result = ManagerStorage.GetThreadCount(applicationId, ThreadState.Dead);
 

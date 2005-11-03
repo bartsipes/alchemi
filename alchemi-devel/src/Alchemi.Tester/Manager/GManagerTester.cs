@@ -30,6 +30,8 @@ using NUnit.Framework;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager;
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.Tester.Manager
 {

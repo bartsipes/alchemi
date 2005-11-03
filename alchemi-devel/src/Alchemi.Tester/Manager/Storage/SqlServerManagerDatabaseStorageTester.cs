@@ -28,6 +28,7 @@ using System.Configuration;
 
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
 using NUnit.Framework;
 

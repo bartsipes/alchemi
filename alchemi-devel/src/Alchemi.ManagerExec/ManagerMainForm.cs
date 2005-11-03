@@ -31,6 +31,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
+using Alchemi.Manager;
 //using Alchemi.Updater;
 using log4net;
 

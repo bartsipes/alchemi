@@ -30,9 +30,12 @@ using System.Data.SqlClient;
 
 using Advanced.Data.Provider;
 
+using Alchemi.Core;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Manager;
+using Alchemi.Core.Manager.Storage;
 
-namespace Alchemi.Core.Manager.Storage
+namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Implement generic relational database storage here
@@ -448,6 +451,45 @@ namespace Alchemi.Core.Manager.Storage
 			}
 
 			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
+		}
+
+		public ExecutorStorageView GetExecutor(String executorId)
+		{
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage from executor where executor_id='{0}'",
+					  executorId)))
+			{
+				if(dataReader.Read())
+				{
+					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
+					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
+					DateTime pingTime = dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
+					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
+					Int32 port = dataReader.GetInt32(dataReader.GetOrdinal("port"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					Int32 maxCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
+					Int32 cpuUsage = dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
+					Int32 availableCpu = dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
+					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
+
+					ExecutorStorageView executor = new ExecutorStorageView(
+						executorId,
+						dedicated,
+						connected,
+						pingTime,
+						hostname,
+						port,
+						username,
+						maxCpu,
+						cpuUsage,
+						availableCpu,
+						totalCpuUsage
+						);
+
+					return executor;
+				}
+			}
+
+			return null;
 		}
 
 		public String AddApplication(ApplicationStorageView application)

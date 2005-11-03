@@ -25,7 +25,7 @@ details.
 
 using System;
 
-namespace Alchemi.Core.Manager.Storage
+namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Override some generic database calls with mySQL specific calls.

@@ -29,7 +29,9 @@ using System.Data.SqlClient;
 
 using Advanced.Data.Provider;
 
-namespace Alchemi.Core.Manager.Storage
+using Alchemi.Core.Manager.Storage;
+
+namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Override some generic database calls with SQL Server specific calls.

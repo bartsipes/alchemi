@@ -26,8 +26,9 @@ details.
 using System;
 
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
 
-namespace Alchemi.Core.Manager.Storage
+namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Takes care of choosing the right storage.

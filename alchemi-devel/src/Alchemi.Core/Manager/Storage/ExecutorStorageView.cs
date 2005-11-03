@@ -69,6 +69,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_dedicated;
 			}
+			set
+			{
+				m_dedicated = value;
+			}
 		}
 
 		public bool Connected
@@ -76,6 +80,10 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_connected;
+			}
+			set
+			{
+				m_connected = value;
 			}
 		}
 
@@ -93,6 +101,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_hostname;
 			}
+			set
+			{
+				m_hostname = value;
+			}
 		}
 
 		public Int32 Port
@@ -100,6 +112,10 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_port;
+			}
+			set
+			{
+				m_port = value;
 			}
 		}
 
