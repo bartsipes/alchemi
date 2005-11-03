@@ -60,7 +60,7 @@ namespace Alchemi.Core.Owner
 		/// Sets the id of the grid thread
 		/// </summary>
 		/// <param name="id"></param>
-        internal void SetId (int id)
+        public void SetId (int id)
         {
             _Id = id;
         }
@@ -77,7 +77,7 @@ namespace Alchemi.Core.Owner
 		/// Sets the working directory of the grid thread
 		/// </summary>
 		/// <param name="workingDirectory">the directory name to set as the working directory</param>
-        internal void SetWorkingDirectory(string workingDirectory)
+        public void SetWorkingDirectory(string workingDirectory)
         {
             _WorkingDirectory = workingDirectory;
         }
@@ -86,7 +86,7 @@ namespace Alchemi.Core.Owner
 		/// Sets the thread state to failed
 		/// </summary>
 		/// <param name="failed">value indicating whether to set the thread to failed</param>
-        internal void SetFailed(bool failed)
+        public void SetFailed(bool failed)
         {
             _Failed = failed;
         }
@@ -103,7 +103,7 @@ namespace Alchemi.Core.Owner
 		/// Sets the application to which this grid thread belongs
 		/// </summary>
 		/// <param name="application"></param>
-        internal void SetApplication(GApplication application)
+        public void SetApplication(GApplication application)
         {
             _Application = application;
         }
