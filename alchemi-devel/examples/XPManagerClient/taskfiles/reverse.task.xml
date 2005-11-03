@@ -1,0 +1,30 @@
+<task>
+  <manifest>
+    <embedded_file name="Reverse.exe" location="Reverse.exe" />
+  </manifest>
+  
+  <job id="0">
+    <input>
+      <embedded_file name="input1.txt" location="input1.txt" />
+    </input> 
+    <work run_command="Reverse.exe input1.txt > result1.txt" />
+    <output>
+      <embedded_file name="result1.txt"/>
+    </output>  
+  </job>
+
+  <job id="1">
+    <input>
+      <embedded_file name="input2.txt" location="input2.txt" />
+    </input> 
+    <work run_command="Reverse input2.txt > result2.txt" />
+    <output>
+      <embedded_file name="result2.txt"/>
+    </output>  
+  </job>
+</task>  
+    
+    
+  
+
+    
