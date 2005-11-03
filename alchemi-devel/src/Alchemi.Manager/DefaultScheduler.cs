@@ -26,9 +26,10 @@
 
 using System;
 using System.Data;
+using Alchemi.Core;
 using Alchemi.Core.Owner;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// This is the default implementation of the IScheduler interface provided by Alchemi.

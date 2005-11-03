@@ -33,7 +33,9 @@ using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
-namespace Alchemi.Core.Manager
+using Alchemi.Core;
+
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Event handler for status changes during Manager startup.

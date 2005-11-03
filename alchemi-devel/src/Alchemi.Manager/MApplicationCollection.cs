@@ -37,8 +37,9 @@ using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
     /// <summary>
     /// Represents a collection of grid applications. A particular application is referred to by its ID via the indexer.

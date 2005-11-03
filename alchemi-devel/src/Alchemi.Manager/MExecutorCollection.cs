@@ -26,10 +26,11 @@
 
 using System;
 using System.Data;
+using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Utility;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents a collection of the MExecutor objects held by the manager

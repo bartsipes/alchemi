@@ -27,11 +27,12 @@
 using System;
 using System.Collections;
 using System.Threading;
+using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents a container for the executor reference held by the manager.

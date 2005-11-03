@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents an exception used to indicate that there is an error communicating with the Executor

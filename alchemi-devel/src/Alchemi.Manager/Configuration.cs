@@ -28,7 +28,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// This class stores the configuration information for the Alchemi Manager

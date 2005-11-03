@@ -28,7 +28,7 @@ using System;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents scheduler.

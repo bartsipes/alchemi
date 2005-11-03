@@ -28,7 +28,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
     // TODO: verify if returning a new connection for each request is
     // fine from a connection pooling point of view

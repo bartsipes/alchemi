@@ -38,7 +38,7 @@ using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents a thread on the manager node.

@@ -27,11 +27,13 @@
 using System.Collections;
 using System.Data;
 using System.IO;
+using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// Represents an Application on the manager.

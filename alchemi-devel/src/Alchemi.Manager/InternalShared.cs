@@ -28,7 +28,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
 	/// <summary>
 	/// This class has some static methods which are used internally in Alchemi by various other classes.

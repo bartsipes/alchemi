@@ -28,12 +28,15 @@ using System;
 using System.Data;
 using System.IO;
 using System.Threading;
+using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
-namespace Alchemi.Core.Manager
+namespace Alchemi.Manager
 {
     /// <summary>
     /// Represents an Alchemi Manager
