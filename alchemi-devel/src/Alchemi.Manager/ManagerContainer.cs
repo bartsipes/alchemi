@@ -60,7 +60,7 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// The configuration file used to set remoting parameters for the Manager.
 		/// </summary>
-		public string RemotingConfigFile = "Alchemi.Manager.exe.config";
+		public string RemotingConfigFile = "Manager.exe.config";
 
 		/// <summary>
 		/// Specifies if the Manager is started.

@@ -34,6 +34,8 @@ namespace Alchemi.Core.Manager.Storage
 	[Serializable]
 	public class ExecutorStorageView
 	{
+		private static DateTime c_noTimeSet = DateTime.MinValue;
+
 		#region "Private variables"
 		
 		private String m_executorId;
@@ -92,6 +94,14 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_pingTime;
+			}
+		}
+
+		public bool PingTimeSet
+		{
+			get
+			{
+				return m_pingTime != c_noTimeSet;
 			}
 		}
 
@@ -206,6 +216,32 @@ namespace Alchemi.Core.Manager.Storage
 			m_dedicated = dedicated;
 			m_connected = connected;
 			m_pingTime = pingTime;
+			m_hostname = hostname;
+			m_port = port;
+			m_username = username;
+			m_maxCpu = maxCpu;
+			m_cpuUsage = cpuUsage;
+			m_availableCpu = availableCpu;
+			m_totalCpuUsage = totalCpuUsage;
+		}
+
+		public ExecutorStorageView(
+			String executorId,
+			bool dedicated,
+			bool connected,
+			String hostname,
+			Int32 port,
+			String username,
+			Int32 maxCpu,
+			Int32 cpuUsage,
+			Int32 availableCpu,
+			float totalCpuUsage
+			)
+		{
+			m_executorId = executorId;
+			m_dedicated = dedicated;
+			m_connected = connected;
+			m_pingTime = c_noTimeSet;
 			m_hostname = hostname;
 			m_port = port;
 			m_username = username;
