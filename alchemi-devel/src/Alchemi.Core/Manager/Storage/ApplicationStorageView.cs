@@ -36,6 +36,7 @@ namespace Alchemi.Core.Manager.Storage
 	public class ApplicationStorageView
 	{
 		private const Int32 c_valueNotSet = Int32.MaxValue;
+		private static DateTime c_noDateTime = DateTime.MinValue;
 
 		#region "Private variables"
 		
@@ -81,6 +82,14 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_timeCreated;
+			}
+		}
+
+		public bool TimeCreatedSet
+		{
+			get
+			{
+				return m_timeCreated != c_noDateTime;
 			}
 		}
 

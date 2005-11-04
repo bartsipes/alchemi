@@ -95,6 +95,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_pingTime;
 			}
+			set
+			{
+				m_pingTime = value;
+			}
 		}
 
 		public bool PingTimeSet
@@ -151,6 +155,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_cpuUsage;
 			}
+			set
+			{
+				m_cpuUsage = value;
+			}
 		}
 
 		public Int32 AvailableCpu
@@ -159,6 +167,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_availableCpu;
 			}
+			set
+			{
+				m_availableCpu = value;
+			}
 		}
 
 		public float TotalCpuUsage
@@ -166,6 +178,10 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_totalCpuUsage;
+			}
+			set
+			{
+				m_totalCpuUsage = value;
 			}
 		}
 

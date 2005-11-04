@@ -116,10 +116,6 @@ namespace Alchemi.Manager
                 // update state in db (always happens even if cannnot connect back to executor
 				ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
 				
-//				InternalShared.Instance.Database.ExecSql(
-//                    string.Format("update executor set is_connected = {1}, is_dedicated = 1, host = '{2}', port = {3} where executor_id = '{0}'", 
-//					_Id, Utils.BoolToSqlBit(success), ep.Host, ep.Port)
-//                    );
 				logger.Debug("Updated db after ping back to executor. dedicated executor_id="+_Id + ", dedicated = true, connected = "+success);
             }
 
@@ -133,20 +129,27 @@ namespace Alchemi.Manager
 
         private void VerifyExists(RemoteEndPoint ep)
         {
-            bool exists;
+            bool exists = false;
+
             try
             {
 				logger.Debug("Checking if executor :"+_Id+" exists in db");
-                exists = bool.Parse(
-                    (string) InternalShared.Instance.Database.ExecSql_Scalar(string.Format("Executor_SelectExists '{0}','{1}'", _Id, ep.Host))
-                    );
-				logger.Debug("Executor :"+_Id+" exists in db="+exists);
+
+				ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
+
+				if (executorStorage != null && executorStorage.HostName == ep.Host)
+				{
+					exists = true;
+				}
+
+				logger.Debug("Executor :" + _Id + " exists in db=" + exists);
             }
             catch (Exception ex)
             {
 				logger.Error("Executor :"+_Id+ " invalid id? ",ex);
                 throw new InvalidExecutorException("The supplied Executor ID is invalid.", ex);
             }
+
             if (!exists)
             {
 				logger.Debug("The supplied Executor ID does not exist.");
@@ -161,7 +164,15 @@ namespace Alchemi.Manager
         public void HeartbeatUpdate(HeartbeatInfo info)
         {
             // update ping time and other heartbeatinfo
-            InternalShared.Instance.Database.ExecSql("Executor_Heartbeat '{0}', {1}, {2}, {3}", _Id, info.Interval, info.PercentUsedCpuPower, info.PercentAvailCpuPower);
+			ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
+
+			executorStorage.PingTime = DateTime.Now;
+			executorStorage.Connected = true;
+			executorStorage.CpuUsage = info.PercentUsedCpuPower;
+			executorStorage.AvailableCpu = info.PercentAvailCpuPower;
+			executorStorage.TotalCpuUsage += info.Interval * (float)info.PercentUsedCpuPower / 100;
+
+			ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
         }
 
 		/// <summary>
@@ -171,8 +182,11 @@ namespace Alchemi.Manager
         public void Disconnect()
         {
             // maybe should reset threads here as part of the disconnection rather than explicitly ...
-            InternalShared.Instance.Database.ExecSql(
-                string.Format("update executor set is_connected = 0 where executor_id = '{0}'", _Id));
+			ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
+
+			executorStorage.Connected = false;
+
+			ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
         }
 
 		/// <summary>
@@ -199,8 +213,11 @@ namespace Alchemi.Manager
 			int numConcurrentThreads = 0;
 			try
 			{
-				string strSQL = string.Format("select count(*) from thread where executor_id='{0}' and state not in (3,4)",_Id);
-				numConcurrentThreads = Int32.Parse(InternalShared.Instance.Database.ExecSql_Scalar(strSQL).ToString());
+				numConcurrentThreads = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(
+					_Id, 
+					Alchemi.Core.Owner.ThreadState.Ready, 
+					Alchemi.Core.Owner.ThreadState.Scheduled,
+					Alchemi.Core.Owner.ThreadState.Started);
 			}
 			catch (Exception ex)
 			{

@@ -1440,7 +1440,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
-		#region "GetApplicationThreadcount Tests"
+		#region "GetApplicationThreadCount Tests"
 
 		/// <summary>
 		/// Add no application or thread
@@ -1484,18 +1484,18 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
-		#region "GetThreadCount Tests"
+		#region "GetApplicationThreadCount Overloaded Tests"
 
 		/// <summary>
 		/// Add no application or thread
 		/// Attempt to get the threads, it should return 0
 		/// </summary>
 		[Test]
-		public void GetThreadCountTestNoThreadInformation()
+		public void GetApplicationThreadCountTestNoThreadInformationForOverload()
 		{
 			String applicationId = Guid.NewGuid().ToString();
 
-			Int32 result = ManagerStorage.GetThreadCount(applicationId, ThreadState.Dead);
+			Int32 result = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
 
 			Assert.AreEqual(0, result);
 		}
@@ -1505,7 +1505,7 @@ namespace Alchemi.Tester.Manager.Storage
 		/// Attempt to get the threads, the numbers should be good
 		/// </summary>
 		[Test]
-		public void GetThreadCountTestSimpleScenario()
+		public void GetApplicationThreadCountTestSimpleScenarioForOverload()
 		{
 			String applicationId = Guid.NewGuid().ToString();
 
@@ -1515,11 +1515,11 @@ namespace Alchemi.Tester.Manager.Storage
 			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
 			AddThread(applicationId, null, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
 
-			Int32 ready = ManagerStorage.GetThreadCount(applicationId, ThreadState.Ready);
-			Int32 scheduled = ManagerStorage.GetThreadCount(applicationId, ThreadState.Scheduled);
-			Int32 started = ManagerStorage.GetThreadCount(applicationId, ThreadState.Started);
-			Int32 finished = ManagerStorage.GetThreadCount(applicationId, ThreadState.Finished);
-			Int32 dead = ManagerStorage.GetThreadCount(applicationId, ThreadState.Dead);
+			Int32 ready = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Ready);
+			Int32 scheduled = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Scheduled);
+			Int32 started = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Started);
+			Int32 finished = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Finished);
+			Int32 dead = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
 
 			Assert.AreEqual(1, ready);
 			Assert.AreEqual(1, scheduled);
@@ -1529,5 +1529,97 @@ namespace Alchemi.Tester.Manager.Storage
 		}
 
 		#endregion
+
+		#region "GetExecutorThreadCount Tests"
+
+		/// <summary>
+		/// Add no thread
+		/// Attempt to get the threads, it should return 0
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadCountTestNoThreadInformation()
+		{
+			String executorId = Guid.NewGuid().ToString();
+
+			Int32 result = ManagerStorage.GetExecutorThreadCount(executorId, ThreadState.Dead);
+
+			Assert.AreEqual(0, result);
+		}
+
+		/// <summary>
+		/// Add no thread
+		/// Attempt to get the threadsbut with no state, we should get 0
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadCountTestEmptyRequestArray()
+		{
+			String executorId = Guid.NewGuid().ToString();
+
+			Int32 result = ManagerStorage.GetExecutorThreadCount(executorId);
+
+			Assert.AreEqual(0, result);
+		}
+
+		/// <summary>
+		/// Add no thread
+		/// Attempt to get the threadsbut with no state, we should get 0
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadCountTestNullExecutorId()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+
+			Int32 result = ManagerStorage.GetExecutorThreadCount(null, ThreadState.Started);
+
+			Assert.AreEqual(0, result);
+		}
+
+		/// <summary>
+		/// Add a few threads for an executor
+		/// Attempt to get the threads, the numbers should be good
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadCountTestSimpleScenario()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = Guid.NewGuid().ToString();
+			String executorId2 = Guid.NewGuid().ToString();
+
+			// add 4 threads, 3 are unfinished
+			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, executorId1, 2, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, executorId1, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, executorId1, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
+			
+			// and a few more for other executors
+			AddThread(applicationId, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, executorId2, 2, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId, executorId2, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
+
+			Int32 ready = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Ready);
+			Int32 scheduled = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Scheduled);
+			Int32 started = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Started);
+			Int32 finished = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Finished);
+			Int32 dead = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Dead);
+			Int32 notDeadOrFinished = ManagerStorage.GetExecutorThreadCount(
+				executorId1, 
+				ThreadState.Ready,
+				ThreadState.Scheduled,
+				ThreadState.Started);
+
+			Assert.AreEqual(1, ready);
+			Assert.AreEqual(1, scheduled);
+			Assert.AreEqual(1, started);
+			Assert.AreEqual(1, finished);
+			Assert.AreEqual(0, dead);
+			Assert.AreEqual(3, notDeadOrFinished);
+		}
+
+		#endregion
+
 	}
 }

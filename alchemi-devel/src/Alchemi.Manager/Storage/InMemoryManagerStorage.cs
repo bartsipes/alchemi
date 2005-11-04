@@ -551,7 +551,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public Int32 GetThreadCount(String applicationId, ThreadState threadState)
+		public Int32 GetApplicationThreadCount(String applicationId, ThreadState threadState)
 		{
 			Int32 threadCount = 0;
 
@@ -565,6 +565,33 @@ namespace Alchemi.Manager.Storage
 				if (thread.ApplicationId == applicationId && thread.State == threadState)
 				{
 					threadCount ++;
+				}
+			}
+
+			return threadCount;
+		}
+
+		public Int32 GetExecutorThreadCount(String executorId, params ThreadState[] threadState)
+		{
+			Int32 threadCount = 0;
+
+			if (m_threads == null || m_threads.Count == 0 || threadState == null && threadState.Length == 0)
+			{
+				return threadCount;
+			}
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ExecutorId != null && thread.ExecutorId == executorId)
+				{
+					foreach(ThreadState state in threadState)
+					{
+						if (thread.State == state)
+						{
+							threadCount ++;
+							break; // no point in continuing since there is only one state for a thread
+						}
+					}
 				}
 			}
 

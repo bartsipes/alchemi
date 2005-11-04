@@ -129,7 +129,7 @@ namespace Alchemi.Manager
 		/// <returns>Thread count</returns>
 		public int ThreadCount(ThreadState ts)
 		{
-			return ManagerStorageFactory.ManagerStorage().GetThreadCount(_Id, ts);
+			return ManagerStorageFactory.ManagerStorage().GetApplicationThreadCount(_Id, ts);
 		}
 
 		/// <summary>
