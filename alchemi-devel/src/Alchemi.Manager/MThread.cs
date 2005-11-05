@@ -34,9 +34,12 @@ using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Threading;
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
+
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.Manager
 {
@@ -77,13 +80,29 @@ namespace Alchemi.Manager
         {
             if (primary)
             {
-                InternalShared.Instance.Database.ExecSql(
-                    "Thread_Insert '{0}', {1}", _AppId, _Id);
+				ThreadStorageView threadStorage = new ThreadStorageView(_AppId, _Id, ThreadState.Ready);
+
+				ManagerStorageFactory.ManagerStorage().AddThread(threadStorage);
             }
             else
             {
-                InternalShared.Instance.Database.ExecSql(
-                    "Thread_InsertNonPrimary '{0}', {1}, {2}", _AppId, _Id);
+				ApplicationStorageView applicationStorage = ManagerStorageFactory.ManagerStorage().GetApplication(_AppId);
+
+				if (applicationStorage == null)
+				{
+					applicationStorage = new ApplicationStorageView(
+						_AppId, 
+						ApplicationState.AwaitingManifest, 
+						DateTime.Now, 
+						false,
+						""/*What's the username here?*/);
+
+					ManagerStorageFactory.ManagerStorage().AddApplication(applicationStorage);
+				}
+
+				ThreadStorageView threadStorage = new ThreadStorageView(_AppId, _Id, ThreadState.Ready);
+
+				ManagerStorageFactory.ManagerStorage().AddThread(threadStorage);
             }
         }
         
@@ -131,11 +150,11 @@ namespace Alchemi.Manager
         {
             set 
             {
-                InternalShared.Instance.Database.ExecSql(string.Format(
-                    "update thread set priority = {0} where application_id = '{1}' and thread_id = {2}", value, _AppId, _Id
-                    ));
+				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
 
-                string foo = string.Format("select priority from thread where application_id = '{0}' and thread_id = {1}", _AppId, _Id).ToString(); // InternalShared.Instance.Database.ExecSql_Scalar
+				threadStorage.Priority = value;
+
+				ManagerStorageFactory.ManagerStorage().UpdateThread(threadStorage);
             }
         }
 
@@ -164,34 +183,30 @@ namespace Alchemi.Manager
         {
             get 
             {
-                int state = (int) InternalShared.Instance.Database.ExecSql_Scalar(
-                    string.Format("Thread_SelectState '{0}', {1}", _AppId, _Id)
-                    );
+				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
+
                 // TODO: if state can be verfified on the executor, verify it
-                return (ThreadState) state;
+                return threadStorage.State;
             }
             set
             {
-                // optional special things to do
+				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
+				
+				// optional special things to do
                 switch (value)
                 {
                     case ThreadState.Started:
-                        InternalShared.Instance.Database.ExecSql(
-                            string.Format("update thread set time_started = getdate() where application_id = '{0}' and thread_id = {1}", _AppId, _Id)
-                            );
+						threadStorage.TimeStarted = DateTime.Now;
                         break;
 
                     case ThreadState.Finished:
-                        InternalShared.Instance.Database.ExecSql(
-                            string.Format("update thread set time_finished = getdate() where application_id = '{0}' and thread_id = {1}", _AppId, _Id)
-                            );
+						threadStorage.TimeFinished = DateTime.Now;
                         break;
                 }
 
-                // update state in db
-                InternalShared.Instance.Database.ExecSql(
-                    string.Format("Thread_UpdateState '{0}', {1}, {2}", _AppId, _Id, (int) value)
-                    );
+				threadStorage.State = value;
+
+				ManagerStorageFactory.ManagerStorage().UpdateThread(threadStorage);
             }
         }
 
@@ -200,36 +215,39 @@ namespace Alchemi.Manager
 		/// </summary>
         public void Reset()
         {
-			//the reset stored-procedure takes care that only threads that are not already aborted are reset.
-            InternalShared.Instance.Database.ExecSql(
-                string.Format("Thread_Reset '{0}', {1}", _AppId, _Id)
-                );
+			ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
+
+			//take care that only threads that are not already aborted are reset.
+			if (threadStorage.State != ThreadState.Dead)
+			{
+				threadStorage.State = ThreadState.Ready;
+				threadStorage.ExecutorId = null;
+				threadStorage.ResetTimeStarted();
+				threadStorage.ResetTimeFinished();
+
+				ManagerStorageFactory.ManagerStorage().UpdateThread(threadStorage);
+			}
         }
 
 		/// <summary>
 		/// Gets or sets the id of the executor
 		/// </summary>
         public string CurrentExecutorId
-        {
-            set 
-            {
-                InternalShared.Instance.Database.ExecSql(
-                    "update thread set executor_id = '{2}' where thread.application_id = '{0}' and thread.thread_id = {1}", _AppId, _Id, value);                
-            }
-            
+        {            
             get
             {
-                DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable(string.Format("select executor.executor_id, executor.is_dedicated from executor inner join thread on thread.executor_id = executor.executor_id where thread.application_id = '{0}' and thread.thread_id = {1}", _AppId, _Id));
-                if (dt.Rows.Count != 0)
-                {
-                    DataRow executor = dt.Rows[0];
-                    return executor["executor_id"].ToString();
-                }
-                else
-                {
-                    return null;
-                }
+				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
+
+				return threadStorage.ExecutorId;
             }
-        }
+			set 
+			{
+				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
+
+				threadStorage.ExecutorId = value;
+
+				ManagerStorageFactory.ManagerStorage().UpdateThread(threadStorage);
+			}
+		}
     }
 }

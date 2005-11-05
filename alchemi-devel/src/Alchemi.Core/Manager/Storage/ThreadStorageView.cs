@@ -35,6 +35,8 @@ namespace Alchemi.Core.Manager.Storage
 	[Serializable]
 	public class ThreadStorageView
 	{
+		private static DateTime c_noTimeSet = DateTime.MinValue;
+
 		#region "Private variables"
 		
 		private Int32 m_internalThreadId; // the database identity
@@ -116,6 +118,10 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_timeStarted;
 			}
+			set
+			{
+				m_timeStarted = value;
+			}
 		}
 
 		public DateTime TimeFinished
@@ -124,6 +130,26 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				return m_timeFinished;
 			}
+			set
+			{
+				m_timeFinished = value;
+			}
+		}
+
+		public bool TimeStartedSet
+		{
+			get
+			{
+				return m_timeStarted != c_noTimeSet;
+			}
+		}
+
+		public bool TimeFinishedSet
+		{
+			get
+			{
+				return m_timeFinished != c_noTimeSet;
+			}
 		}
 
 		public Int32 Priority
@@ -131,6 +157,10 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_priority;
+			}
+			set
+			{
+				m_priority = value;
 			}
 		}
 
@@ -143,6 +173,45 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		#endregion
+
+		public void ResetTimeStarted()
+		{
+			m_timeStarted = c_noTimeSet;
+		}
+
+		public void ResetTimeFinished()
+		{
+			m_timeFinished = c_noTimeSet;
+		}
+
+		public ThreadStorageView(
+			String applicationId,
+			Int32 threadId
+			) : this (
+			applicationId,
+			threadId,
+			ThreadState.Unknown
+			)
+		{
+		}
+
+		public ThreadStorageView(
+			String applicationId,
+			Int32 threadId,
+			ThreadState state
+			) : this (
+			-1,
+			applicationId,
+			null,
+			threadId,
+			state,
+			c_noTimeSet,
+			c_noTimeSet,
+			0,
+			false
+			)
+		{
+		}
 
 		public ThreadStorageView(
 				String applicationId,

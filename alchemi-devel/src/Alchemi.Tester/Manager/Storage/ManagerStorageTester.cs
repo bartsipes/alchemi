@@ -1193,6 +1193,22 @@ namespace Alchemi.Tester.Manager.Storage
 			AddThread(applicationId, executorId, 1, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
 		}
 
+		/// <summary>
+		/// Add a thread with a null time.
+		/// Note: 
+		///		Reproducing a bug on the SQL Server implementation.
+		/// </summary>
+		[Test]
+		public void AddThreadTestNullTimesAndExecutor()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 threadId = 23;
+
+			ThreadStorageView thread = new ThreadStorageView(applicationId, threadId);
+
+			ManagerStorage.AddThread(thread);
+		}
+
 		#endregion
 
 		#region "UpdateThread Tests"
@@ -1292,6 +1308,105 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(1, threads.Length);
 		}
 
+		[Test]
+		public void UpdateThreadTestNullExecutorIdAndTimes()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 threadId = 23;
+
+			ThreadStorageView newThread = new ThreadStorageView(applicationId, threadId);
+
+			ManagerStorage.AddThread(newThread);
+
+			ThreadStorageView foundThread = ManagerStorage.GetThread(applicationId, threadId);
+
+			foundThread.State = ThreadState.Started;
+
+			ManagerStorage.UpdateThread(foundThread);
+			
+			ThreadStorageView thread = ManagerStorage.GetThread(applicationId, threadId);
+
+			Assert.AreEqual(applicationId, thread.ApplicationId);
+			Assert.IsNull(thread.ExecutorId);
+			Assert.AreEqual(threadId, thread.ThreadId);
+			Assert.AreEqual(ThreadState.Started, thread.State);
+			Assert.IsFalse(thread.TimeStartedSet);
+			Assert.IsFalse(thread.TimeFinishedSet);
+			Assert.AreEqual(0, thread.Priority);
+			Assert.AreEqual(false, thread.Failed);
+			
+		}
+
+		#endregion
+
+		#region "GetThread Tests"
+
+		/// <summary>
+		/// Add a new thread.
+		/// Get the thread.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetThreadsTestSimpleScenario()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView thread = ManagerStorage.GetThread(applicationId, threadId);
+
+			Assert.AreEqual(applicationId, thread.ApplicationId);
+			Assert.AreEqual(executorId, thread.ExecutorId);
+			Assert.AreEqual(threadId, thread.ThreadId);
+			Assert.AreEqual(ThreadState.Started, thread.State);
+			Assert.AreEqual(timeStarted, thread.TimeStarted);
+			Assert.AreEqual(timeFinished, thread.TimeFinished);
+			Assert.AreEqual(1, thread.Priority);
+			Assert.AreEqual(true, thread.Failed);
+		}
+
+		[Test]
+		public void GetThreadsTestMinimumSetup()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			ThreadStorageView newThread = new ThreadStorageView(applicationId, threadId);
+
+			ManagerStorage.AddThread(newThread);
+			
+			ThreadStorageView thread = ManagerStorage.GetThread(applicationId, threadId);
+
+			Assert.AreEqual(applicationId, thread.ApplicationId);
+			Assert.IsNull(thread.ExecutorId);
+			Assert.AreEqual(threadId, thread.ThreadId);
+			Assert.AreEqual(ThreadState.Unknown, thread.State);
+			Assert.IsFalse(thread.TimeStartedSet);
+			Assert.IsFalse(thread.TimeFinishedSet);
+			Assert.AreEqual(0, thread.Priority);
+			Assert.AreEqual(false, thread.Failed);
+		}
+
+		[Test]
+		public void GetThreadsTestNoThread()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+			
+			ThreadStorageView thread = ManagerStorage.GetThread(applicationId, threadId);
+
+			Assert.IsNull(thread);
+		}
+		
 		#endregion
 
 		#region "GetThreads Tests"
@@ -1425,9 +1540,11 @@ namespace Alchemi.Tester.Manager.Storage
 			
 			ThreadStorageView[] allThreads = ManagerStorage.GetThreads(applicationId);
 			ThreadStorageView[] threads = ManagerStorage.GetThreads(applicationId, ThreadState.Started);
+			ThreadStorageView[] threadsReadyOrStarted = ManagerStorage.GetThreads(applicationId, ThreadState.Ready, ThreadState.Started);
 
 			Assert.AreEqual(1, threads.Length);
 			Assert.AreEqual(3, allThreads.Length);
+			Assert.AreEqual(2, threadsReadyOrStarted.Length);
 			Assert.AreEqual(applicationId, threads[0].ApplicationId);
 			Assert.AreEqual(executorId, threads[0].ExecutorId);
 			Assert.AreEqual(threadId, threads[0].ThreadId);
@@ -1438,7 +1555,201 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(true, threads[0].Failed);
 		}
 
+
+
 		#endregion
+
+		#region "GetExecutorThreads Tests"
+
+		/// <summary>
+		/// Add a new thread.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestSimpleScenario()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(executorId);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
+		/// <summary>
+		/// Add 3 threads.
+		/// Get the threads list.
+		/// The list should contain 3 items.
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestMultiple()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId, 1, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 2, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 3, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(executorId);
+
+			Assert.AreEqual(3, threads.Length);
+		}
+
+		/// <summary>
+		/// Add no threads.
+		/// Get the thread list.
+		/// The list should be empty but not null. No error is expected
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestNoThreads()
+		{
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(Guid.NewGuid().ToString());
+
+			Assert.AreEqual(0, threads.Length);
+		}
+
+		/// <summary>
+		/// Add a few threads.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestThreadsWithStatus()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId, threadId, ThreadState.Dead, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] allThreads = ManagerStorage.GetExecutorThreads(executorId);
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(executorId, ThreadState.Started);
+			ThreadStorageView[] threadsReadyOrStarted = ManagerStorage.GetExecutorThreads(executorId, ThreadState.Ready, ThreadState.Started);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(3, allThreads.Length);
+			Assert.AreEqual(2, threadsReadyOrStarted.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
+
+		/// <summary>
+		/// Add a few threads.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestDedicatedWithStatus()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			String executorId2 = AddExecutor(false, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			
+			AddThread(applicationId, executorId1, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId2, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId1, threadId, ThreadState.Dead, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] dedicatedThreads = ManagerStorage.GetExecutorThreads(true);
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(true, ThreadState.Started);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(2, dedicatedThreads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId1, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
+
+		/// <summary>
+		/// Add a few threads.
+		/// Get the thread list.
+		/// The list should only contain the newly added thread.
+		/// </summary>
+		[Test]
+		public void GetExecutorThreadsTestConnectedWithStatus()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			String executorId2 = AddExecutor(false, false, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			Int32 threadId = 125;
+
+			// TB: due to rounding errors the milliseconds might be lost in the database storage.
+			// TB: I think this is OK so we create a test DateTime without milliseconds
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			
+			AddThread(applicationId, executorId1, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId2, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId, executorId1, threadId, ThreadState.Dead, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] dedicatedThreads = ManagerStorage.GetExecutorThreads(true, true);
+			ThreadStorageView[] threads = ManagerStorage.GetExecutorThreads(true, true, ThreadState.Started);
+
+			Assert.AreEqual(1, threads.Length);
+			Assert.AreEqual(2, dedicatedThreads.Length);
+			Assert.AreEqual(applicationId, threads[0].ApplicationId);
+			Assert.AreEqual(executorId1, threads[0].ExecutorId);
+			Assert.AreEqual(threadId, threads[0].ThreadId);
+			Assert.AreEqual(ThreadState.Started, threads[0].State);
+			Assert.AreEqual(timeStarted, threads[0].TimeStarted);
+			Assert.AreEqual(timeFinished, threads[0].TimeFinished);
+			Assert.AreEqual(1, threads[0].Priority);
+			Assert.AreEqual(true, threads[0].Failed);
+		}
+
+		#endregion
+
 
 		#region "GetApplicationThreadCount Tests"
 

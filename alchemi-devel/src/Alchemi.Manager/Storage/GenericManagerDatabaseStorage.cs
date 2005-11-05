@@ -668,7 +668,17 @@ namespace Alchemi.Manager.Storage
 			}
 
 			SqlParameter timeStartedParameter = new SqlParameter("@time_started", thread.TimeStarted);
+			if (!thread.TimeStartedSet)
+			{
+				timeStartedParameter.Value = DBNull.Value;
+			}
+
 			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", thread.TimeFinished);
+			if (!thread.TimeFinishedSet)
+			{
+				timeFinishedParameter.Value = DBNull.Value;
+			}
+
 			SqlParameter executorIdParameter;
 			
 			if (thread.ExecutorId != null)
@@ -701,9 +711,29 @@ namespace Alchemi.Manager.Storage
 			}
 
 			SqlParameter timeStartedParameter = new SqlParameter("@time_started", updatedThread.TimeStarted);
-			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", updatedThread.TimeFinished);
+			if (!updatedThread.TimeStartedSet)
+			{
+				timeStartedParameter.Value = DBNull.Value;
+			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("update thread set application_id = '{1}', executor_id = '{2}', thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+			SqlParameter timeFinishedParameter = new SqlParameter("@time_finished", updatedThread.TimeFinished);
+			if (!updatedThread.TimeFinishedSet)
+			{
+				timeFinishedParameter.Value = DBNull.Value;
+			}
+
+			SqlParameter executorIdParameter;
+			
+			if (updatedThread.ExecutorId != null)
+			{
+				executorIdParameter = new SqlParameter("@executor_id", updatedThread.ExecutorId);
+			}
+			else
+			{
+				executorIdParameter = new SqlParameter("@executor_id", DBNull.Value);
+			}
+
+			object threadIdObject = RunSqlReturnScalar(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
@@ -712,7 +742,30 @@ namespace Alchemi.Manager.Storage
 				updatedThread.Priority,
 				Convert.ToInt16(updatedThread.Failed)
 				), 
-				timeStartedParameter, timeFinishedParameter);
+				timeStartedParameter, timeFinishedParameter, executorIdParameter);
+		}
+
+		public ThreadStorageView GetThread(String applicationId, Int32 threadId)
+		{
+			StringBuilder query = new StringBuilder();
+
+			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread where application_id='{0}' and thread_id={1}",
+				applicationId,
+				threadId);
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			{
+				ThreadStorageView[] threads = DecodeThreadFromDataReader(dataReader);
+
+				if (threads.Length > 0)
+				{
+					return threads[0];
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 
 		public ThreadStorageView[] GetThreads()
@@ -720,70 +773,192 @@ namespace Alchemi.Manager.Storage
 			return GetThreads(null);
 		}
 
-		public ThreadStorageView[] GetThreads(String findApplicationId)
-		{
-			return GetThreads(findApplicationId, ThreadState.Unknown);
-		}
-
-		public ThreadStorageView[] GetThreads(String findApplicationId, ThreadState findState)
+		public ThreadStorageView[] GetThreads(String findApplicationId, params ThreadState[] findStates)
 		{
 			ArrayList threads = new ArrayList();
-			String query;
+			StringBuilder query = new StringBuilder();
 
-			query = String.Format("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
+			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
 
 			// build the query based on the passed in variables
 			if (findApplicationId != null)
 			{
-				query = String.Format("{0} where application_id='{1}'",
-					query,
+				query.AppendFormat(" where application_id='{0}'",
 					findApplicationId);
 
-				if (findState != ThreadState.Unknown)
+				if (findStates != null && findStates.Length > 0)
 				{
-					query = String.Format("{0} and state={1}",
-						query,
-						(int)findState);
+					query.Append(" and state in ");
+					query.Append("(");
+
+					for(int index = 0; index < findStates.Length; index++)
+					{
+						ThreadState state = findStates[index];
+
+						if (index > 0)
+						{
+							query.Append(",");
+						}
+						query.Append((int)state);
+					}
+
+					query.Append(")");
 				}
 			}
 
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(query))
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
-				while(dataReader.Read())
+				return DecodeThreadFromDataReader(dataReader);
+			}
+		}
+
+		public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] findStates)
+		{
+			ArrayList threads = new ArrayList();
+			StringBuilder query = new StringBuilder();
+
+			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
+
+			// build the query based on the passed in variables
+			query.AppendFormat(" where executor_id='{0}'",
+				executorId);
+
+			if (findStates != null && findStates.Length > 0)
+			{
+				query.Append(" and state in ");
+				query.Append("(");
+
+				for(int index = 0; index < findStates.Length; index++)
 				{
-					Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
+					ThreadState state = findStates[index];
 
-					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
-					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
-
-					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
-					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
-
-					// for lack of a better default set the dates to DateTime.MinValue.
-					DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
-					DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
-
-					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
-					bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
-
-					ThreadStorageView thread = new ThreadStorageView(
-						internalThreadId,
-						applicationId,
-						executorId,
-						threadId,
-						state,
-						timeStarted,
-						timeFinished,
-						priority,
-						failed
-						);
-
-					threads.Add(thread);
+					if (index > 0)
+					{
+						query.Append(",");
+					}
+					query.Append((int)state);
 				}
+
+				query.Append(")");
 			}
 
-			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			{
+				return DecodeThreadFromDataReader(dataReader);
+			}
+		}
+
+		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, params ThreadState[] findStates)
+		{
+			ArrayList threads = new ArrayList();
+			StringBuilder query = new StringBuilder();
+
+			query.AppendFormat("select internal_thread_id, application_id, thread.executor_id, thread_id, state, time_started, time_finished, priority, failed from thread inner join executor on (thread.executor_id = executor.executor_id) where is_dedicated = {0}",
+				dedicatedExecutor ? "1" : "0");
+
+			if (findStates != null && findStates.Length > 0)
+			{
+				query.Append(" and state in ");
+				query.Append("(");
+
+				for(int index = 0; index < findStates.Length; index++)
+				{
+					ThreadState state = findStates[index];
+
+					if (index > 0)
+					{
+						query.Append(",");
+					}
+					query.Append((int)state);
+				}
+
+				query.Append(")");
+			}
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			{
+				return DecodeThreadFromDataReader(dataReader);
+			}
+
+		}
+
+		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, bool connectedExecutor, params ThreadState[] findStates)
+		{
+			ArrayList threads = new ArrayList();
+			StringBuilder query = new StringBuilder();
+
+			query.AppendFormat("select internal_thread_id, application_id, thread.executor_id, thread_id, state, time_started, time_finished, priority, failed from thread inner join executor on (thread.executor_id = executor.executor_id) where is_dedicated = {0} and is_connected = {1}",
+				dedicatedExecutor ? "1" : "0",
+				connectedExecutor ? "1" : "0");
+
+			if (findStates != null && findStates.Length > 0)
+			{
+				query.Append(" and state in ");
+				query.Append("(");
+
+				for(int index = 0; index < findStates.Length; index++)
+				{
+					ThreadState state = findStates[index];
+
+					if (index > 0)
+					{
+						query.Append(",");
+					}
+					query.Append((int)state);
+				}
+
+				query.Append(")");
+			}
+
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			{
+				return DecodeThreadFromDataReader(dataReader);
+			}
+		}
+
+		private ThreadStorageView[] DecodeThreadFromDataReader(AdpDataReader dataReader)
+		{
+			if (dataReader == null)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threads = new ArrayList();
+
+			while(dataReader.Read())
+			{
+				Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
+
+				// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+				String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+				String executorId = dataReader.IsDBNull(dataReader.GetOrdinal("executor_id")) ? null : dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString();
+
+				Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
+				ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
+
+				// for lack of a better default set the dates to DateTime.MinValue.
+				DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
+				DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+
+				Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
+				bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
+
+				ThreadStorageView thread = new ThreadStorageView(
+					internalThreadId,
+					applicationId,
+					executorId,
+					threadId,
+					state,
+					timeStarted,
+					timeFinished,
+					priority,
+					failed
+					);
+
+				threads.Add(thread);
+			}
+
+			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));  
 		}
 
 

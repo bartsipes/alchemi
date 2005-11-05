@@ -119,18 +119,21 @@ namespace Alchemi.Core.Manager.Storage
 
 
 
-
 		Int32 AddThread(ThreadStorageView thread);
 
 		void UpdateThread(ThreadStorageView updatedThread);
 
+		ThreadStorageView GetThread(String applicationId, Int32 threadId);
+		
 		ThreadStorageView[] GetThreads();
 
-		ThreadStorageView[] GetThreads(String applicationId);
+		ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] state);
 
-		ThreadStorageView[] GetThreads(String applicationId, ThreadState state);
+		ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] state);
 
-		//ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] state);
+		ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, params ThreadState[] state);
+
+		ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, bool connectedExecutor, params ThreadState[] state);
 
 		void GetApplicationThreadCount(String applicationId, out Int32 totalthreads, out Int32 unfinishedThreads);
 

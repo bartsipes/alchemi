@@ -34,6 +34,8 @@ using System.Threading;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.Manager
 {
@@ -469,10 +471,11 @@ namespace Alchemi.Manager
 						Thread.Sleep(7000);
 
 						// ping dedicated executors running threads and reset executor and thread if can't ping
-						DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("Executors_SelectDedicatedRunningThreads");
-						foreach (DataRow dr in dt.Rows)
+						ThreadStorageView[] dedicatedRunningThreadsStorage = ManagerStorageFactory.ManagerStorage().GetExecutorThreads(true, ThreadState.Scheduled, ThreadState.Started);
+
+						foreach (ThreadStorageView threadStorage in dedicatedRunningThreadsStorage)
 						{
-							MExecutor me = _Executors[dr["executor_id"].ToString()];
+							MExecutor me = _Executors[threadStorage.ExecutorId];
 							try
 							{
 								me.RemoteRef.PingExecutor();
@@ -480,7 +483,7 @@ namespace Alchemi.Manager
 							catch
 							{
 								me.Disconnect();
-								new MThread(dr["application_id"].ToString(), (int) dr["thread_id"]).Reset();
+								new MThread(threadStorage.ApplicationId, threadStorage.ThreadId).Reset();
 							}
 						}
 
@@ -489,11 +492,18 @@ namespace Alchemi.Manager
 						InternalShared.Instance.Database.ExecSql("Executors_DiscoverDisconnectedNDE 10");
 						// reset threads whose executors have been disconnected
                     
-						dt = InternalShared.Instance.Database.ExecSql_DataTable("Threads_SelectLostNDE");
-						foreach (DataRow thread in dt.Rows)
+						ThreadStorageView[] nonDedicatedLostThreadsStorage = ManagerStorageFactory.ManagerStorage().GetExecutorThreads(
+							false, 
+							false, 
+							ThreadState.Scheduled, 
+							ThreadState.Started, 
+							ThreadState.Finished,
+							ThreadState.Dead);
+
+						foreach (ThreadStorageView threadStorage in nonDedicatedLostThreadsStorage)
 						{
-							new MThread(thread["application_id"].ToString(), (int) thread["thread_id"]).Reset();
-							new MExecutor(thread["executor_id"].ToString()).Disconnect();
+							new MThread(threadStorage.ApplicationId, threadStorage.ThreadId).Reset();
+							new MExecutor(threadStorage.ExecutorId).Disconnect();
 						}
 				
 					}

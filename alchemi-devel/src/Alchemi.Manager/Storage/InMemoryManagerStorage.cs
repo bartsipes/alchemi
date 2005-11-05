@@ -490,6 +490,24 @@ namespace Alchemi.Manager.Storage
 			m_threads = newThreadList;
 		}
 
+		public ThreadStorageView GetThread(String applicationId, Int32 threadId)
+		{
+			if (m_threads == null)
+			{
+				return null;
+			}
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ApplicationId == applicationId && thread.ThreadId == threadId)
+				{
+					return thread;
+				}
+			}
+
+			return null;
+		}
+
 		public ThreadStorageView[] GetThreads()
 		{
 			if (m_threads == null)
@@ -502,12 +520,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public ThreadStorageView[] GetThreads(String applicationId)
-		{
-			return GetThreads(applicationId, ThreadState.Unknown);
-		}
-
-		public ThreadStorageView[] GetThreads(String applicationId, ThreadState state)
+		public ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] threadStates)
 		{
 			if (m_threads == null)
 			{
@@ -518,15 +531,117 @@ namespace Alchemi.Manager.Storage
 
 			foreach(ThreadStorageView thread in m_threads)
 			{
-				bool threadStateCorrectOrUnknown = thread.State == state || state == ThreadState.Unknown;
-				if (thread.ApplicationId == applicationId && threadStateCorrectOrUnknown)
+				if (thread.ApplicationId == applicationId)
 				{
-					threadList.Add(thread);
+					bool threadStateCorrect = false;
+
+					if (threadStates == null || threadStates.Length == 0)
+					{
+						threadStateCorrect = true;
+					}
+					else
+					{
+						foreach(ThreadState state in threadStates)
+						{
+							if (state == thread.State)
+							{
+								threadStateCorrect = true;
+								break;
+							}
+						}
+					}
+
+					if (threadStateCorrect)
+					{
+						threadList.Add(thread);
+					}
 				}
 			}
 
 			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
 		}
+
+		public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] threadStates)
+		{
+			if (m_threads == null)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threadList = new ArrayList();
+
+			foreach(ThreadStorageView thread in m_threads)
+			{
+				if (thread.ExecutorId == executorId)
+				{
+					bool threadStateCorrect = false;
+
+					if (threadStates == null || threadStates.Length == 0)
+					{
+						threadStateCorrect = true;
+					}
+					else
+					{
+						foreach(ThreadState state in threadStates)
+						{
+							if (state == thread.State)
+							{
+								threadStateCorrect = true;
+								break;
+							}
+						}
+					}
+
+					if (threadStateCorrect)
+					{
+						threadList.Add(thread);
+					}
+				}
+			}
+
+			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
+		}
+
+		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, params ThreadState[] state)
+		{
+			if (m_threads == null || m_executors == null)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threadList = new ArrayList();
+
+			foreach(ExecutorStorageView executor in m_executors)
+			{
+				if (executor.Dedicated == dedicatedExecutor)
+				{
+					threadList.AddRange(GetExecutorThreads(executor.ExecutorId, state));
+				}
+			}
+
+			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
+		}
+
+		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, bool connectedExecutor, params ThreadState[] state)
+		{
+			if (m_threads == null || m_executors == null)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threadList = new ArrayList();
+
+			foreach(ExecutorStorageView executor in m_executors)
+			{
+				if (executor.Dedicated == dedicatedExecutor && executor.Connected == connectedExecutor)
+				{
+					threadList.AddRange(GetExecutorThreads(executor.ExecutorId, state));
+				}
+			}
+
+			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
+		}
+
 
 		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
 		{
