@@ -128,8 +128,8 @@ namespace Alchemi.Manager.Storage
 				[costPerCPUSec] [float] NULL ,
 				[costPerThread] [float] NULL ,
 				[costPerDiskMB] [float] NULL ,
-				[arch] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
-				[os] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL)");
+				[arch] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+				[os] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL)");
 
 			RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [dbo].[application]");
 			//RunSql("CREATE TABLE [dbo].[application] ([application_id] [uniqueidentifier] NOT NULL , [state] [int] NOT NULL , [time_created] [datetime] NULL , [is_primary] [bit] NOT NULL , [usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL )");

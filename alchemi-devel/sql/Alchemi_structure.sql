@@ -214,8 +214,8 @@ CREATE TABLE [dbo].[executor] (
 	[costPerCPUSec] [float] NULL ,
 	[costPerThread] [float] NULL ,
 	[costPerDiskMB] [float] NULL ,
-	[arch] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
-	[os] [varchar] (15) COLLATE SQL_Latin1_General_CP1_CI_AS NULL 
+	[arch] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL ,
+	[os] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL 
 ) ON [PRIMARY]
 GO
 

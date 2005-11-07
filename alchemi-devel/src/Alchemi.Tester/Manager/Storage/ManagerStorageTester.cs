@@ -1207,8 +1207,8 @@ namespace Alchemi.Tester.Manager.Storage
 				2,
 				3,
 				4,
-				"Windows",
-				"686"
+				"Microsoft Windows NT 5.0.2195.0",
+				"x86 Family 6 Model 13 Stepping 6"
 				);
 
 			String executorId = ManagerStorage.AddExecutor(executorStorage);
@@ -1230,8 +1230,8 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(2, executor.MaxMemory);
 			Assert.AreEqual(3, executor.MaxDisk);
 			Assert.AreEqual(4, executor.NumberOfCpu);
-			Assert.AreEqual("Windows", executor.Os);
-			Assert.AreEqual("686", executor.Architecture);
+			Assert.AreEqual("Microsoft Windows NT 5.0.2195.0", executor.Os);
+			Assert.AreEqual("x86 Family 6 Model 13 Stepping 6", executor.Architecture);
 		}
 
 
