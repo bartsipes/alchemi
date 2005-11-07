@@ -918,6 +918,32 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			Assert.IsNull(ManagerStorage.AddExecutor(null));
 		}
+
+		/// <summary>
+		/// Add a null executor.
+		/// No errors are expected, nothing should be added. Return value should be null.
+		/// </summary>
+		[Test]
+		public void AddExecutorTestLatestConstructor()
+		{
+			ExecutorStorageView executorStorage = new ExecutorStorageView(
+				false,
+				false,
+				"hostname",
+				"username",
+				1,
+				2,
+				3,
+				4,
+				"Windows",
+				"686"
+				);
+
+			string executorId = ManagerStorage.AddExecutor(executorStorage);
+
+			Assert.IsNotNull(executorId);
+			Assert.AreNotEqual("", executorId);
+		}
 		
 		#endregion
 
@@ -1068,6 +1094,24 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(0, executors.Length);
 		}
 
+		/// Add 3 executors.
+		/// Get the dedicated executors list.
+		/// The list should contain 2 items.
+		/// </summary>
+		[Test]
+		public void GetExecutorsTestDedicatedExecutors()
+		{
+			DateTime pingTime = DateTime.Now;
+
+			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			String executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(true);
+
+			Assert.AreEqual(2, executors.Length);
+		}
+
 
 		#endregion
 
@@ -1149,6 +1193,45 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(34, executor.AvailableCpu);
 			Assert.AreEqual(3.4, executor.TotalCpuUsage);
 			Assert.AreEqual(executorId, executor.ExecutorId);
+		}
+
+		[Test]
+		public void GetExecutorTestAnotherConstructor()
+		{
+			ExecutorStorageView executorStorage = new ExecutorStorageView(
+				false,
+				true,
+				"hostname",
+				"username",
+				1,
+				2,
+				3,
+				4,
+				"Windows",
+				"686"
+				);
+
+			String executorId = ManagerStorage.AddExecutor(executorStorage);
+
+			ExecutorStorageView executor = ManagerStorage.GetExecutor(executorId);
+
+			Assert.IsNotNull(executor);
+			Assert.AreEqual(executorId, executor.ExecutorId);
+			Assert.AreEqual(false, executor.Dedicated);
+			Assert.AreEqual(true, executor.Connected);
+			Assert.IsFalse(executor.PingTimeSet);
+			Assert.AreEqual("hostname", executor.HostName);
+			Assert.AreEqual(0, executor.Port);
+			Assert.AreEqual("username", executor.Username);
+			Assert.AreEqual(1, executor.MaxCpu);
+			Assert.AreEqual(0, executor.CpuUsage);
+			Assert.AreEqual(0, executor.AvailableCpu);
+			Assert.AreEqual(0, executor.TotalCpuUsage);
+			Assert.AreEqual(2, executor.MaxMemory);
+			Assert.AreEqual(3, executor.MaxDisk);
+			Assert.AreEqual(4, executor.NumberOfCpu);
+			Assert.AreEqual("Windows", executor.Os);
+			Assert.AreEqual("686", executor.Architecture);
 		}
 
 
@@ -1463,6 +1546,26 @@ namespace Alchemi.Tester.Manager.Storage
 			ThreadStorageView[] threads = ManagerStorage.GetThreads();
 
 			Assert.AreEqual(3, threads.Length);
+		}
+
+		/// <summary>
+		/// Add 3 threads.
+		/// Get the threads list by status.
+		/// The list should contain 2 items.
+		/// </summary>
+		[Test]
+		public void GetThreadsTestAllthreadsWithStatus()
+		{
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 2, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			AddThread(applicationId, executorId, 3, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
+			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads(ThreadState.Ready, ThreadState.Dead);
+
+			Assert.AreEqual(2, threads.Length);
 		}
 
 		/// <summary>

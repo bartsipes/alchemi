@@ -294,6 +294,26 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+		public ExecutorStorageView[] GetExecutors(bool dedicated)
+		{
+			if (m_executors == null || m_executors.Count == 0)
+			{
+				return new ExecutorStorageView[0];
+			}
+
+			ArrayList executorList = new ArrayList();
+
+			foreach(ExecutorStorageView executor in m_executors)
+			{
+				if (executor.Dedicated == dedicated)
+				{
+					executorList.Add(executor);
+				}
+			}
+
+			return (ExecutorStorageView[])executorList.ToArray(typeof(ExecutorStorageView));
+		}
+
 		public ExecutorStorageView GetExecutor(String executorId)
 		{
 			if (m_executors == null)
@@ -508,16 +528,9 @@ namespace Alchemi.Manager.Storage
 			return null;
 		}
 
-		public ThreadStorageView[] GetThreads()
+		public ThreadStorageView[] GetThreads(params ThreadState[] state)
 		{
-			if (m_threads == null)
-			{
-				return new ThreadStorageView[0];
-			}
-			else
-			{
-				return (ThreadStorageView[])m_threads.ToArray(typeof(ThreadStorageView));
-			}
+			return GetThreads(null, state);
 		}
 
 		public ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] threadStates)
@@ -531,7 +544,7 @@ namespace Alchemi.Manager.Storage
 
 			foreach(ThreadStorageView thread in m_threads)
 			{
-				if (thread.ApplicationId == applicationId)
+				if (thread.ApplicationId == applicationId || applicationId == null)
 				{
 					bool threadStateCorrect = false;
 

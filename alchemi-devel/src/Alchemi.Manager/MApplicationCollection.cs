@@ -33,11 +33,13 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Runtime.Remoting;
 using System.Threading;
+
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager.Storage;
+using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 namespace Alchemi.Manager
 {
@@ -141,11 +143,11 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the list of threads which are ready to be scheduled.
 		/// </summary>
-        public DataTable ReadyThreads
+        public ThreadStorageView[] ReadyThreads
         {
             get 
             {
-                return InternalShared.Instance.Database.ExecSql_DataTable("Thread_SelectReady");
+				return ManagerStorageFactory.ManagerStorage().GetThreads(ThreadState.Ready);
             }
         }
 

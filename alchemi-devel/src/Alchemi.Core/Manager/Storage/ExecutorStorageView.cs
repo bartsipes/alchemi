@@ -50,9 +50,75 @@ namespace Alchemi.Core.Manager.Storage
 		private Int32 m_availableCpu;
 		private float m_totalCpuUsage;
 
+		private float m_MaxMemory;
+		private float m_MaxDisk;
+		private Int32 m_NumberOfCpu;
+		private String m_Os;
+		private String m_Architecture;
+
 		#endregion
 
 		#region "Properties"
+		public String Architecture
+		{
+			get
+			{
+				return m_Architecture;
+			}
+			set
+			{
+				m_Architecture = value;
+			}
+		}
+
+		public String Os
+		{
+			get
+			{
+				return m_Os;
+			}
+			set
+			{
+				m_Os = value;
+			}
+		}
+
+		public Int32 NumberOfCpu
+		{
+			get
+			{
+				return m_NumberOfCpu;
+			}
+			set
+			{
+				m_NumberOfCpu = value;
+			}
+		}
+
+		public float MaxDisk
+		{
+			get
+			{
+				return m_MaxDisk;
+			}
+			set
+			{
+				m_MaxDisk = value;
+			}
+		}
+
+		public float MaxMemory
+		{
+			get
+			{
+				return m_MaxMemory;
+			}
+			set
+			{
+				m_MaxMemory = value;
+			}
+		}
+
 		public String ExecutorId
 		{
 			get
@@ -218,6 +284,33 @@ namespace Alchemi.Core.Manager.Storage
 			String executorId,
 			bool dedicated,
 			bool connected,
+			String hostname,
+			Int32 port,
+			String username,
+			Int32 maxCpu,
+			Int32 cpuUsage,
+			Int32 availableCpu,
+			float totalCpuUsage
+			) : this(
+			executorId,
+			dedicated,
+			connected,
+			ExecutorStorageView.c_noTimeSet,
+			hostname,
+			port,
+			username,
+			maxCpu,
+			cpuUsage,
+			availableCpu,
+			totalCpuUsage
+			)
+		{
+		}
+
+		public ExecutorStorageView(
+			String executorId,
+			bool dedicated,
+			bool connected,
 			DateTime pingTime,
 			String hostname,
 			Int32 port,
@@ -226,6 +319,76 @@ namespace Alchemi.Core.Manager.Storage
 			Int32 cpuUsage,
 			Int32 availableCpu,
 			float totalCpuUsage
+			) : this(
+			executorId,
+			dedicated,
+			connected,
+			pingTime,
+			hostname,
+			port,
+			username,
+			maxCpu,
+			cpuUsage,
+			availableCpu,
+			totalCpuUsage,
+			0,
+			0,
+			0,
+			"",
+			""
+			)
+		{
+		}
+
+		public ExecutorStorageView(
+			bool dedicated,
+			bool connected,
+			String hostname,
+			String username,
+			Int32 maxCpu,
+			float maxMemory,
+			float maxDisk,
+			Int32 numberOfCpu,
+			String os,
+			String architecture
+			) : this(
+			null,
+			dedicated,
+			connected,
+			ExecutorStorageView.c_noTimeSet,
+			hostname,
+			0,
+			username,
+			maxCpu,
+			0,
+			0,
+			0,
+			maxMemory,
+			maxDisk,
+			numberOfCpu,
+			os,
+			architecture
+			)
+		{
+		}
+
+		public ExecutorStorageView(
+			String executorId,
+			bool dedicated,
+			bool connected,
+			DateTime pingTime,
+			String hostname,
+			Int32 port,
+			String username,
+			Int32 maxCpu,
+			Int32 cpuUsage,
+			Int32 availableCpu,
+			float totalCpuUsage,
+			float maxMemory,
+			float maxDisk,
+			Int32 numberOfCpu,
+			String os,
+			String architecture
 			)
 		{
 			m_executorId = executorId;
@@ -239,34 +402,12 @@ namespace Alchemi.Core.Manager.Storage
 			m_cpuUsage = cpuUsage;
 			m_availableCpu = availableCpu;
 			m_totalCpuUsage = totalCpuUsage;
+			MaxMemory =  maxMemory;
+			MaxDisk = maxDisk;
+			NumberOfCpu = numberOfCpu;
+			Os = os;
+			Architecture = architecture;
 		}
-
-		public ExecutorStorageView(
-			String executorId,
-			bool dedicated,
-			bool connected,
-			String hostname,
-			Int32 port,
-			String username,
-			Int32 maxCpu,
-			Int32 cpuUsage,
-			Int32 availableCpu,
-			float totalCpuUsage
-			)
-		{
-			m_executorId = executorId;
-			m_dedicated = dedicated;
-			m_connected = connected;
-			m_pingTime = c_noTimeSet;
-			m_hostname = hostname;
-			m_port = port;
-			m_username = username;
-			m_maxCpu = maxCpu;
-			m_cpuUsage = cpuUsage;
-			m_availableCpu = availableCpu;
-			m_totalCpuUsage = totalCpuUsage;
-		}
-
 	
 	}
 }

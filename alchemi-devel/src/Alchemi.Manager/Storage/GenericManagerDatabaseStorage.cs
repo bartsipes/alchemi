@@ -352,6 +352,8 @@ namespace Alchemi.Manager.Storage
 
 			UpdateExecutorCpuUsage(executorId, executor.MaxCpu, executor.CpuUsage, executor.AvailableCpu, executor.TotalCpuUsage);
 
+			UpdateExecutorAdditionalInformation(executorId, executor.MaxMemory, executor.MaxDisk, executor.NumberOfCpu, executor.Os, executor.Architecture);
+
 			return executorId;
 		}
 
@@ -403,6 +405,18 @@ namespace Alchemi.Manager.Storage
 				userName.Replace("'", "''")
 				));
 		}
+		
+		private void UpdateExecutorAdditionalInformation(String executorId, float maxMemory, float maxDisk, Int32 numberOfCpu, String os, String architecture)
+		{
+			RunSql(String.Format("update executor set mem_max = {1}, disk_max = {2}, num_cpus = {3}, os = '{4}', arch = '{5}' where executor_id='{0}'",
+				executorId,
+				maxMemory, 
+				maxDisk, 
+				numberOfCpu, 
+				os.Replace("'", "''"), 
+				architecture.Replace("'", "''")
+				));
+		}
 
 		public void UpdateExecutor(ExecutorStorageView executor)
 		{
@@ -422,84 +436,88 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView[] GetExecutors()
 		{
-			ArrayList executors = new ArrayList();
-
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage from executor")))
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor")))
 			{
-				while(dataReader.Read())
-				{
-					// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
-
-					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
-					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
-					DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
-					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
-					Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-					Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
-					Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
-					Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
-					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
-
-					ExecutorStorageView executor = new ExecutorStorageView(
-						executorId,
-						dedicated,
-						connected,
-						pingTime,
-						hostname,
-						port,
-						username,
-						maxCpu,
-						cpuUsage,
-						availableCpu,
-						totalCpuUsage
-						);
-
-					executors.Add(executor);
-				}
+				return DecodeExecutorFromDataReader(dataReader);
 			}
+		}
 
-			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
+		public ExecutorStorageView[] GetExecutors(bool dedicated)
+		{
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where is_dedicated = {0}",
+					  dedicated ? 1 : 0)))
+			{
+				return DecodeExecutorFromDataReader(dataReader);
+			}
 		}
 
 		public ExecutorStorageView GetExecutor(String executorId)
 		{
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage from executor where executor_id='{0}'",
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where executor_id='{0}'",
 					  executorId)))
 			{
-				if(dataReader.Read())
+				ExecutorStorageView[] executors = DecodeExecutorFromDataReader(dataReader);
+
+				if (executors == null || executors.Length == 0)
 				{
-					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
-					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
-					DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
-					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
-					Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-					Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
-					Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
-					Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
-					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
-
-					ExecutorStorageView executor = new ExecutorStorageView(
-						executorId,
-						dedicated,
-						connected,
-						pingTime,
-						hostname,
-						port,
-						username,
-						maxCpu,
-						cpuUsage,
-						availableCpu,
-						totalCpuUsage
-						);
-
-					return executor;
+					return null;
+				}
+				else
+				{
+					return executors[0];
 				}
 			}
+		}
 
-			return null;
+		private ExecutorStorageView[] DecodeExecutorFromDataReader(AdpDataReader dataReader)
+		{
+			ArrayList executors = new ArrayList();
+
+			while(dataReader.Read())
+			{
+				// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+				String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
+
+				bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
+				bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
+				DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
+				String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
+				Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
+				String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+				Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
+				Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
+				Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
+				float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
+
+				float maxMemory = dataReader.IsDBNull(dataReader.GetOrdinal("mem_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("mem_max"));;
+				float maxDisk = dataReader.IsDBNull(dataReader.GetOrdinal("disk_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("disk_max"));
+				Int32 numberOfCpu = dataReader.IsDBNull(dataReader.GetOrdinal("num_cpus")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("num_cpus"));
+				String os = dataReader.IsDBNull(dataReader.GetOrdinal("os")) ? "" : dataReader.GetString(dataReader.GetOrdinal("os"));
+				String architecture = dataReader.IsDBNull(dataReader.GetOrdinal("arch")) ? "" : dataReader.GetString(dataReader.GetOrdinal("arch"));
+
+				ExecutorStorageView executor = new ExecutorStorageView(
+					executorId,
+					dedicated,
+					connected,
+					pingTime,
+					hostname,
+					port,
+					username,
+					maxCpu,
+					cpuUsage,
+					availableCpu,
+					totalCpuUsage,
+					maxMemory,
+					maxDisk,
+					numberOfCpu,
+					os,
+					architecture
+					);
+
+				executors.Add(executor);
+			}
+
+			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
 		}
 
 		public String AddApplication(ApplicationStorageView application)
@@ -768,9 +786,9 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public ThreadStorageView[] GetThreads()
+		public ThreadStorageView[] GetThreads(params ThreadState[] findStates)
 		{
-			return GetThreads(null);
+			return GetThreads(null, findStates);
 		}
 
 		public ThreadStorageView[] GetThreads(String findApplicationId, params ThreadState[] findStates)
@@ -780,31 +798,43 @@ namespace Alchemi.Manager.Storage
 
 			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
 
+			if (findApplicationId != null || (findStates != null && findStates.Length > 0))
+			{
+				query.Append(" where ");
+			}
+
 			// build the query based on the passed in variables
 			if (findApplicationId != null)
 			{
-				query.AppendFormat(" where application_id='{0}'",
+				query.AppendFormat("application_id='{0}'",
 					findApplicationId);
 
-				if (findStates != null && findStates.Length > 0)
-				{
-					query.Append(" and state in ");
-					query.Append("(");
-
-					for(int index = 0; index < findStates.Length; index++)
-					{
-						ThreadState state = findStates[index];
-
-						if (index > 0)
-						{
-							query.Append(",");
-						}
-						query.Append((int)state);
-					}
-
-					query.Append(")");
-				}
 			}
+
+			if (findStates != null && findStates.Length > 0)
+			{
+				if (findApplicationId != null)
+				{
+					query.Append(" and ");
+				}
+
+				query.Append(" state in ");
+				query.Append("(");
+
+				for(int index = 0; index < findStates.Length; index++)
+				{
+					ThreadState state = findStates[index];
+
+					if (index > 0)
+					{
+						query.Append(",");
+					}
+					query.Append((int)state);
+				}
+
+				query.Append(")");
+			}
+			
 
 			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{

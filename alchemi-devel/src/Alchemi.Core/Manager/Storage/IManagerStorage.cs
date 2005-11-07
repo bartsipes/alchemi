@@ -41,16 +41,6 @@ namespace Alchemi.Core.Manager.Storage
 	/// </summary>
 	public interface IManagerStorage
 	{
-		/*
-		object GetLiveApplicationList(SecurityCredentials sc);
-
-		object GetUserApplicationList(SecurityCredentials sc);
-
-		object GetThreadList(SecurityCredentials sc, string appId);
-
-		object GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
-
-		*/
 
 		/// <summary>
 		/// Check if a permisison is set.
@@ -97,6 +87,8 @@ namespace Alchemi.Core.Manager.Storage
 
 		ExecutorStorageView[] GetExecutors();
 
+		ExecutorStorageView[] GetExecutors(bool dedicated);
+
 		ExecutorStorageView GetExecutor(String executorId);
 
 
@@ -125,7 +117,7 @@ namespace Alchemi.Core.Manager.Storage
 
 		ThreadStorageView GetThread(String applicationId, Int32 threadId);
 		
-		ThreadStorageView[] GetThreads();
+		ThreadStorageView[] GetThreads(params ThreadState[] state);
 
 		ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] state);
 

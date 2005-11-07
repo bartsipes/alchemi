@@ -29,6 +29,8 @@ using System.Data;
 using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Utility;
+using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.Manager
 {
@@ -72,8 +74,23 @@ namespace Alchemi.Manager
 																											7 @os varchar(15),
 																											8 @arch varchar(15)
 			 **/
-            string executorId = InternalShared.Instance.Database.ExecSql_Scalar("Executor_Insert {0}, '{1}', '{2}', {3}, {4}, {5}, {6}, '{7}', '{8}'", 0, sc.Username, info.Hostname, info.MaxCpuPower, info.MaxMemory, info.MaxDiskSpace, info.Number_of_CPUs, info.OS, info.Architecture).ToString();
-            logger.Debug("Registered new executor id="+executorId);
+			ExecutorStorageView executorStorage = new ExecutorStorageView(
+					false,
+					false,
+					info.Hostname,
+					sc.Username,
+					info.MaxCpuPower,
+					info.MaxMemory,
+					info.MaxDiskSpace,
+					info.Number_of_CPUs,
+					info.OS,
+					info.Architecture
+				);
+
+			String executorId = ManagerStorageFactory.ManagerStorage().AddExecutor(executorStorage);
+
+			logger.Debug("Registered new executor id="+executorId);
+
 			return executorId;
         }
 
@@ -85,13 +102,16 @@ namespace Alchemi.Manager
         {
 			logger.Debug("Init-ing executor collection from db");
 
-			DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("select * from executor where is_dedicated = 1");
+			ExecutorStorageView[] executorsStorage = ManagerStorageFactory.ManagerStorage().GetExecutors(true);
 
-			logger.Debug("# of dedicated executors = " + dt.Rows.Count);
-            foreach (DataRow dr in dt.Rows)
+			//DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("select * from executor where is_dedicated = 1");
+
+			logger.Debug("# of dedicated executors = " + executorsStorage.Length);
+
+            foreach (ExecutorStorageView executorStorage in executorsStorage)
             {
-                string executorId = dr["executor_id"].ToString();
-                RemoteEndPoint ep = new RemoteEndPoint((string) dr["host"], (int) dr["port"], RemotingMechanism.TcpBinary);
+                string executorId = executorStorage.ExecutorId;
+                RemoteEndPoint ep = new RemoteEndPoint(executorStorage.HostName, executorStorage.Port, RemotingMechanism.TcpBinary);
                 MExecutor me = new MExecutor(executorId);
 				try
                 {
