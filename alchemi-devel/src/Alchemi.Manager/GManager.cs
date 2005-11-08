@@ -317,12 +317,12 @@ namespace Alchemi.Manager
 				AuthenticateUser(sc);
 				ApplicationAuthorizationCheck(sc, appid);
 
-				DataTable dt = _Executors.AvailableDedicatedExecutors;
-				foreach (DataRow dr in dt.Rows)
+				ExecutorStorageView[] executorsStorage = _Executors.AvailableDedicatedExecutors;
+				foreach (ExecutorStorageView executorStorage in executorsStorage)
 				{
 					try
 					{
-						string executorId = dr["executor_id"].ToString();
+						string executorId = executorStorage.ExecutorId;
 						MExecutor me = new MExecutor(executorId);
 						//do it for dedicated ones only.
 						if (me.RemoteRef!=null)

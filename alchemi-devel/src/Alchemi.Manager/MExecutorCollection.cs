@@ -25,12 +25,16 @@
 
 
 using System;
+using System.Collections;
 using System.Data;
+
 using Alchemi.Core;
 using Alchemi.Core.Executor;
+using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager.Storage;
+using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 namespace Alchemi.Manager
 {
@@ -102,9 +106,7 @@ namespace Alchemi.Manager
         {
 			logger.Debug("Init-ing executor collection from db");
 
-			ExecutorStorageView[] executorsStorage = ManagerStorageFactory.ManagerStorage().GetExecutors(true);
-
-			//DataTable dt = InternalShared.Instance.Database.ExecSql_DataTable("select * from executor where is_dedicated = 1");
+			ExecutorStorageView[] executorsStorage = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True);
 
 			logger.Debug("# of dedicated executors = " + executorsStorage.Length);
 
@@ -128,13 +130,32 @@ namespace Alchemi.Manager
         }
 
 		/// <summary>
-		/// Gets a DataTable containing all the available dedicated executors.
+		/// Gets a collection containing all the available dedicated executors.
+		/// This includes executors that satisfy all these conditions:
+		/// - Are dedicated
+		/// - Are connected
+		/// - Don't have any threads Started or Scheduled
 		/// </summary>
-        public DataTable AvailableDedicatedExecutors
+        public ExecutorStorageView[] AvailableDedicatedExecutors
         {
             get 
             {
-                return InternalShared.Instance.Database.ExecSql_DataTable("Executor_SelectAvailableDedicated");
+				ArrayList executors = new ArrayList();
+
+				IManagerStorage managerStorage = ManagerStorageFactory.ManagerStorage();
+
+				ExecutorStorageView[] dedicatedConnectedExecutors = managerStorage.GetExecutors(TriStateBoolean.True,  TriStateBoolean.True);
+
+            	foreach (ExecutorStorageView executor in dedicatedConnectedExecutors)
+            	{
+					bool executorHasNoThreadsScheduledOrStarted = (managerStorage.GetExecutorThreadCount(executor.ExecutorId, ThreadState.Scheduled, ThreadState.Started) == 0);
+					if (executorHasNoThreadsScheduledOrStarted)
+					{
+						executors.Add(executor);
+					}
+				}
+
+				return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
             }
         }
     }

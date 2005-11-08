@@ -35,12 +35,15 @@ using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Manager.Storage
 {
 	/// <summary>
 	/// Implement generic relational database storage here
 	/// This class should not be directly instantiated because it only contains a partial implementation
+	/// 
+	/// TODO: The Executors are updated very often so database updates will probably be very expensive. Change the update functions to only update data that actually changed since the last load.
 	/// </summary>
 	public abstract class GenericManagerDatabaseStorage : IManagerStorage
 	{
@@ -87,7 +90,7 @@ namespace Alchemi.Manager.Storage
 		/// Run a stored procedure and return a scalar.
 		/// </summary>
 		/// <param name="storedProcedure"></param>
-		/// <param name="paramArray"></param>
+		/// <param name="parameters"></param>
 		/// <returns></returns>
 		protected object RunSpReturnScalar(String storedProcedure, params SqlParameter[] parameters)
 		{
@@ -436,16 +439,52 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView[] GetExecutors()
 		{
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor")))
-			{
-				return DecodeExecutorFromDataReader(dataReader);
-			}
+			return GetExecutors(TriStateBoolean.Undefined);
 		}
 
-		public ExecutorStorageView[] GetExecutors(bool dedicated)
+		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated)
 		{
-			using(AdpDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where is_dedicated = {0}",
-					  dedicated ? 1 : 0)))
+			return GetExecutors(dedicated, TriStateBoolean.Undefined);
+		}
+
+		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated, TriStateBoolean connected)
+		{
+			StringBuilder query = new StringBuilder();
+			bool whereSet = false;
+
+			query.Append("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor");
+			
+			if(dedicated != TriStateBoolean.Undefined)
+			{
+				if (!whereSet)
+				{
+					query.Append(" where ");
+					whereSet = true;
+				}
+				else
+				{
+					query.Append(" and ");
+				}
+
+				query.AppendFormat(" is_dedicated = {0}", dedicated == TriStateBoolean.True ? 1 : 0);
+			}
+
+			if(connected != TriStateBoolean.Undefined)
+			{
+				if (!whereSet)
+				{
+					query.Append(" where ");
+					whereSet = true;
+				}
+				else
+				{
+					query.Append(" and ");
+				}
+
+				query.AppendFormat(" is_connected = {0}", connected == TriStateBoolean.True ? 1 : 0);
+			}
+		
+			using(AdpDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeExecutorFromDataReader(dataReader);
 			}
@@ -751,7 +790,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter = new SqlParameter("@executor_id", DBNull.Value);
 			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+			RunSql(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
@@ -793,7 +832,6 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetThreads(String findApplicationId, params ThreadState[] findStates)
 		{
-			ArrayList threads = new ArrayList();
 			StringBuilder query = new StringBuilder();
 
 			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
@@ -844,7 +882,6 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] findStates)
 		{
-			ArrayList threads = new ArrayList();
 			StringBuilder query = new StringBuilder();
 
 			query.AppendFormat("select internal_thread_id, application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed from thread");
@@ -880,7 +917,6 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, params ThreadState[] findStates)
 		{
-			ArrayList threads = new ArrayList();
 			StringBuilder query = new StringBuilder();
 
 			query.AppendFormat("select internal_thread_id, application_id, thread.executor_id, thread_id, state, time_started, time_finished, priority, failed from thread inner join executor on (thread.executor_id = executor.executor_id) where is_dedicated = {0}",
@@ -914,7 +950,6 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, bool connectedExecutor, params ThreadState[] findStates)
 		{
-			ArrayList threads = new ArrayList();
 			StringBuilder query = new StringBuilder();
 
 			query.AppendFormat("select internal_thread_id, application_id, thread.executor_id, thread_id, state, time_started, time_finished, priority, failed from thread inner join executor on (thread.executor_id = executor.executor_id) where is_dedicated = {0} and is_connected = {1}",

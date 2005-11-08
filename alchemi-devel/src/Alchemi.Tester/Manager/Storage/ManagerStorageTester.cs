@@ -29,6 +29,7 @@ using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Utility;
 
 using NUnit.Framework;
 
@@ -1107,9 +1108,52 @@ namespace Alchemi.Tester.Manager.Storage
 			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
 			String executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
-			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(true);
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(TriStateBoolean.True);
 
 			Assert.AreEqual(2, executors.Length);
+		}
+
+		/// Add 3 executors.
+		/// Get the executors list using the dedicated function but without care wether the executors are dedicated or not.
+		/// The list should contain 3 items (all executors).
+		/// </summary>
+		[Test]
+		public void GetExecutorsTestDedicatedExecutorsUndefined()
+		{
+			DateTime pingTime = DateTime.Now;
+
+			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			String executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			
+			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(TriStateBoolean.Undefined);
+
+			Assert.AreEqual(3, executors.Length);
+		}
+
+		/// Add 4 executors.
+		/// Get the dedicated and connected executors list.
+		/// The list should contain 1 item.
+		/// </summary>
+		[Test]
+		public void GetExecutorsTestDedicatedConnectedExecutors()
+		{
+			DateTime pingTime = DateTime.Now;
+
+			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			String executorId3 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			String executorId4 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			
+			ExecutorStorageView[] dedicatedAndConnectedExecutors = ManagerStorage.GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
+			ExecutorStorageView[] dedicatedExecutors = ManagerStorage.GetExecutors(TriStateBoolean.True, TriStateBoolean.Undefined);
+			ExecutorStorageView[] connectedExecutors = ManagerStorage.GetExecutors(TriStateBoolean.Undefined, TriStateBoolean.True);
+			ExecutorStorageView[] allExecutors = ManagerStorage.GetExecutors(TriStateBoolean.Undefined, TriStateBoolean.Undefined);
+
+			Assert.AreEqual(1, dedicatedAndConnectedExecutors.Length);
+			Assert.AreEqual(3, dedicatedExecutors.Length);
+			Assert.AreEqual(2, connectedExecutors.Length);
+			Assert.AreEqual(4, allExecutors.Length);
 		}
 
 

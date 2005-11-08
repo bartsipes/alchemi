@@ -364,6 +364,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Utility\TriStateBoolean.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Utility\Utils.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

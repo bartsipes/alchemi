@@ -25,7 +25,6 @@
 
 
 using System;
-using System.Data;
 using System.IO;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
@@ -36,6 +35,7 @@ using ThreadState = Alchemi.Core.Owner.ThreadState;
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager.Storage;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Manager
 {
@@ -487,11 +487,12 @@ namespace Alchemi.Manager
 							}
 						}
 
-						// disconnect nde if not recd alive notification in the last 10 seconds
+						// disconnect nde if not recd alive notification in the last 30 seconds
 						// TODO: make time interval configurable
-						InternalShared.Instance.Database.ExecSql("Executors_DiscoverDisconnectedNDE 10");
+						Int32 secondsToTimeout = 30;
+						DisconnectTimedOutExecutors(new TimeSpan(0, 0, secondsToTimeout));
+
 						// reset threads whose executors have been disconnected
-                    
 						ThreadStorageView[] nonDedicatedLostThreadsStorage = ManagerStorageFactory.ManagerStorage().GetExecutorThreads(
 							false, 
 							false, 
@@ -530,6 +531,26 @@ namespace Alchemi.Manager
 
 			logger.Info("WatchDog thread exited.");
         }
+
+		/// <summary>
+		/// Disconnect executors if the alive notification was not received in the alloted time.
+		/// </summary>
+		/// <param name="time"></param>
+		protected void DisconnectTimedOutExecutors(TimeSpan time)
+		{
+			DateTime currentTime = DateTime.Now; // storing the current time so we don't unfairly disconnect executors in case this process takes some time to complete
+			ExecutorStorageView[] connectedExecutorsStorage = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.Undefined, TriStateBoolean.True);
+
+			foreach (ExecutorStorageView executorStorage in connectedExecutorsStorage)
+			{
+				if (executorStorage.PingTime.Add(time) < currentTime)
+				{
+					executorStorage.Connected = false;
+					ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
+				}
+			}
+
+		}
     }
 }
 

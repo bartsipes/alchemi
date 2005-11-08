@@ -30,6 +30,7 @@ using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Manager.Storage
 {
@@ -294,7 +295,12 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public ExecutorStorageView[] GetExecutors(bool dedicated)
+		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated)
+		{
+			return GetExecutors(dedicated, TriStateBoolean.Undefined);
+		}
+
+		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated, TriStateBoolean connected)
 		{
 			if (m_executors == null || m_executors.Count == 0)
 			{
@@ -305,7 +311,13 @@ namespace Alchemi.Manager.Storage
 
 			foreach(ExecutorStorageView executor in m_executors)
 			{
-				if (executor.Dedicated == dedicated)
+				bool onlyLookingForDedicatedAndExecutorIsDedicated = (dedicated == TriStateBoolean.True && executor.Dedicated);
+				bool dedicatedTestPassed = (onlyLookingForDedicatedAndExecutorIsDedicated || dedicated == TriStateBoolean.Undefined);
+
+				bool onlyLookingForConnectedAndExecutorIsConnected = (connected == TriStateBoolean.True && executor.Connected);
+				bool connectedTestPassed = (onlyLookingForConnectedAndExecutorIsConnected || connected == TriStateBoolean.Undefined);
+				
+				if (dedicatedTestPassed && connectedTestPassed)
 				{
 					executorList.Add(executor);
 				}

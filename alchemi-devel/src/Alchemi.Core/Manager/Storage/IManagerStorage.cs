@@ -26,6 +26,7 @@ details.
 using System;
 
 using Alchemi.Core.Owner;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Manager.Storage
 {
@@ -87,10 +88,11 @@ namespace Alchemi.Core.Manager.Storage
 
 		ExecutorStorageView[] GetExecutors();
 
-		ExecutorStorageView[] GetExecutors(bool dedicated);
+		ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated);
+
+		ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated, TriStateBoolean connected);
 
 		ExecutorStorageView GetExecutor(String executorId);
-
 
 		String AddApplication(ApplicationStorageView application);
 
