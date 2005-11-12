@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = "..\..\graphics\Manager (multiformat).ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Manager"
+                AssemblyName = "Alchemi.Manager"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
