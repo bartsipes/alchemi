@@ -50,11 +50,11 @@ namespace Alchemi.Core.Manager.Storage
 		private Int32 m_availableCpu;
 		private float m_totalCpuUsage;
 
-		private float m_MaxMemory;
-		private float m_MaxDisk;
-		private Int32 m_NumberOfCpu;
-		private String m_Os;
-		private String m_Architecture;
+		private float m_maxMemory;
+		private float m_maxDisk;
+		private Int32 m_numberOfCpu;
+		private String m_os;
+		private String m_architecture;
 
 		#endregion
 
@@ -63,11 +63,11 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_Architecture;
+				return m_architecture;
 			}
 			set
 			{
-				m_Architecture = value;
+				m_architecture = value;
 			}
 		}
 
@@ -75,11 +75,11 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_Os;
+				return m_os;
 			}
 			set
 			{
-				m_Os = value;
+				m_os = value;
 			}
 		}
 
@@ -87,11 +87,11 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_NumberOfCpu;
+				return m_numberOfCpu;
 			}
 			set
 			{
-				m_NumberOfCpu = value;
+				m_numberOfCpu = value;
 			}
 		}
 
@@ -99,11 +99,11 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_MaxDisk;
+				return m_maxDisk;
 			}
 			set
 			{
-				m_MaxDisk = value;
+				m_maxDisk = value;
 			}
 		}
 
@@ -111,11 +111,11 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_MaxMemory;
+				return m_maxMemory;
 			}
 			set
 			{
-				m_MaxMemory = value;
+				m_maxMemory = value;
 			}
 		}
 

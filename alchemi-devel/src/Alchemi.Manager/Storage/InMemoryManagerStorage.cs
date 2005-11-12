@@ -25,6 +25,7 @@ details.
 
 using System;
 using System.Collections;
+using System.Xml;
 
 using Alchemi.Core;
 using Alchemi.Core.Owner;
@@ -739,5 +740,175 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
+
+		#region "XML storage persistence implementation"
+		/// Loading from an XML file is the perfect tool for complex storage setups which would be useful for more in-depth unit testing
+		/// Saving to an XML file could be used to dump the current storage state for troubleshooting, for example to receive faulty storages from the field.
+
+
+		/// <summary>
+		/// Save the current storage state into an XML file.
+		/// It is important that the file format is easily editable by humans so test cases can easily be maintained.
+		/// For this reason we do not use the build-in persistence modules.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void SaveToHumanReadableXmlFile(String filename)
+		{
+			const String storageDocumentTemplate = "<storage><users/><groups/><group_permissions/><executors/><applications/><threads/></storage>";
+			XmlDocument storageDocument = new XmlDocument();
+
+			storageDocument.LoadXml(storageDocumentTemplate);
+
+			XmlNode usersNode = storageDocument.SelectSingleNode("/storage/users");
+			XmlNode groupsNode = storageDocument.SelectSingleNode("/storage/groups");
+			XmlNode groupPermissionsNode = storageDocument.SelectSingleNode("/storage/group_permissions");
+			XmlNode executorsNode = storageDocument.SelectSingleNode("/storage/executors");
+			XmlNode applicationsNode = storageDocument.SelectSingleNode("/storage/applications");
+			XmlNode threadsNode = storageDocument.SelectSingleNode("/storage/threads");
+
+			if (m_users != null)
+			{
+				IEnumerator usersEnumerator = m_users.GetEnumerator();
+
+				while(usersEnumerator.MoveNext())
+				{
+					UserStorageView user = usersEnumerator.Current as UserStorageView;
+
+					XmlElement userElement = storageDocument.CreateElement("user");
+
+					userElement.SetAttribute("username", user.Username);
+					userElement.SetAttribute("password", user.Password);
+					userElement.SetAttribute("groupid", user.GroupId.ToString());
+
+					usersNode.AppendChild(userElement);
+				}
+			}
+
+			if (m_groups != null)
+			{
+				IEnumerator groupsEnumerator = m_groups.GetEnumerator();
+
+				while(groupsEnumerator.MoveNext())
+				{
+					GroupStorageView group = groupsEnumerator.Current as GroupStorageView;
+
+					XmlElement groupElement = storageDocument.CreateElement("group");
+
+					groupElement.SetAttribute("groupname", group.GroupName);
+					groupElement.SetAttribute("groupid", group.GroupId.ToString());
+
+					groupsNode.AppendChild(groupElement);
+				}
+			}
+
+			//		private Hashtable m_groupPermissions;
+//			if (m_groupPermissions != null)
+//			{
+//				IEnumerator groupPermissionsEnumerator = m_groupPermissions.GetEnumerator();
+//
+//				while(groupPermissionsEnumerator.MoveNext())
+//				{
+//					GroupPermissionStorageView group = groupPermissionsEnumerator.Current as GroupStorageView;
+//
+//					XmlElement groupElement = storageDocument.CreateElement("group");
+//
+//					groupElement.SetAttribute("groupname", group.GroupName);
+//					groupElement.SetAttribute("groupid", group.GroupId.ToString());
+//
+//					groupsNode.AppendChild(groupElement);
+//				}
+//			}
+
+
+			if (m_executors != null)
+			{
+				IEnumerator executorsEnumerator = m_executors.GetEnumerator();
+
+				while(executorsEnumerator.MoveNext())
+				{
+					ExecutorStorageView executor = executorsEnumerator.Current as ExecutorStorageView;
+
+					XmlElement executorElement = storageDocument.CreateElement("executor");
+
+					executorElement.SetAttribute("executorid", executor.ExecutorId);
+					executorElement.SetAttribute("dedicated", executor.Dedicated.ToString());
+					executorElement.SetAttribute("connected", executor.Connected.ToString());
+					executorElement.SetAttribute("pingtime", executor.PingTime.ToString());
+					executorElement.SetAttribute("hostname", executor.HostName);
+					executorElement.SetAttribute("port", executor.Port.ToString());
+					executorElement.SetAttribute("username", executor.Username);
+					executorElement.SetAttribute("maxcpu", executor.MaxCpu.ToString());
+					executorElement.SetAttribute("cpuusage", executor.CpuUsage.ToString());
+					executorElement.SetAttribute("availablecpu", executor.AvailableCpu.ToString());
+					executorElement.SetAttribute("totalcpuusage", executor.TotalCpuUsage.ToString());
+					executorElement.SetAttribute("maxmemory", executor.MaxMemory.ToString());
+					executorElement.SetAttribute("maxdisk", executor.MaxDisk.ToString());
+					executorElement.SetAttribute("numberofcpu", executor.NumberOfCpu.ToString());
+					executorElement.SetAttribute("os", executor.Os);
+					executorElement.SetAttribute("architecture", executor.Architecture);
+
+					executorsNode.AppendChild(executorElement);
+				}
+			}
+
+			if (m_applications != null)
+			{
+				IEnumerator applicationsEnumerator = m_applications.GetEnumerator();
+
+				while(applicationsEnumerator.MoveNext())
+				{
+					ApplicationStorageView application = applicationsEnumerator.Current as ApplicationStorageView;
+
+					XmlElement applicationElement = storageDocument.CreateElement("application");
+
+					applicationElement.SetAttribute("applicationid", application.ApplicationId);
+					applicationElement.SetAttribute("state", application.State.ToString());
+					applicationElement.SetAttribute("timecreated", application.TimeCreated.ToString());
+					applicationElement.SetAttribute("primary", application.Primary.ToString());
+					applicationElement.SetAttribute("username", application.Username.ToString());
+					applicationElement.SetAttribute("totalthreads", application.TotalThreads.ToString());
+					applicationElement.SetAttribute("unfinishedthreads", application.UnfinishedThreads.ToString());
+
+					applicationsNode.AppendChild(applicationElement);
+				}
+			}
+
+			if (m_threads != null)
+			{
+				IEnumerator threadsEnumerator = m_threads.GetEnumerator();
+
+				while(threadsEnumerator.MoveNext())
+				{
+					ThreadStorageView thread = threadsEnumerator.Current as ThreadStorageView;
+
+					XmlElement threadElement = storageDocument.CreateElement("thread");
+
+					threadElement.SetAttribute("internalthreadid", thread.InternalThreadId.ToString());
+					threadElement.SetAttribute("applicationid", thread.ApplicationId);
+					threadElement.SetAttribute("executorid", thread.ExecutorId);
+					threadElement.SetAttribute("threadid", thread.ThreadId.ToString());
+					threadElement.SetAttribute("state", thread.State.ToString());
+					threadElement.SetAttribute("timestarted", thread.TimeStarted.ToString());
+					threadElement.SetAttribute("timefinished", thread.TimeFinished.ToString());
+					threadElement.SetAttribute("priority", thread.Priority.ToString());
+					threadElement.SetAttribute("failed", thread.Failed.ToString());
+
+					threadsNode.AppendChild(threadElement);
+				}
+			}
+
+			storageDocument.Save(filename);
+		}
+
+		/// <summary>
+		/// Load the storage information from an XML file.
+		/// </summary>
+		/// <param name="filename"></param>
+		public void LoadFromHumanReadableXmlFile(String filename)
+		{
+			
+		}
+		#endregion
+
 	}
 }

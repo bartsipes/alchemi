@@ -25,9 +25,11 @@
 
 
 using System;
-using System.Data;
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Utility;
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.Manager
 {
@@ -46,6 +48,8 @@ namespace Alchemi.Manager
 
 		private MApplicationCollection _Applications;
         private MExecutorCollection _Executors;
+
+		private static object threadChooserLock = new object();
 
         /// <summary>
         /// Sets the collection of applications.
@@ -66,26 +70,82 @@ namespace Alchemi.Manager
 		/// <returns>ThreadIdentifier of the next available thread</returns>
         public ThreadIdentifier ScheduleNonDedicated(string executorId)
         {
-			//logger.Debug("Schedule non-dedicated...");
-			DataSet ds = InternalShared.Instance.Database.ExecSql_DataSet("Thread_Schedule '{0}'", executorId);
-            if (ds.Tables.Count == 0)
+			ThreadStorageView threadStorage = GetNextAvailableThread();
+            if (threadStorage == null)
             {
-				//logger.Debug("no records returned for schedule-non-dedicated");
                 return null;
             }
-            DataRow dr = ds.Tables[0].Rows[0];
 			
-			logger.Debug("Schedule non-dedicated. app_id="+dr["application_id"].ToString()+",threadID="+dr["thread_id"]);
+			logger.Debug(String.Format("Schedule non-dedicated. app_id={0},threadID={1}",
+				threadStorage.ApplicationId,
+				threadStorage.ThreadId)
+				);
 
-			string appid = dr["application_id"].ToString();
-			int threadId = (int)dr["thread_id"];
-			int priority = (int) dr["priority"];
+			string appid = threadStorage.ApplicationId;
+			int threadId = threadStorage.ThreadId;
+			int priority = threadStorage.Priority;
 			
-			dr = null;
-			ds.Dispose();
 
             return new ThreadIdentifier(appid, threadId, priority);
         }
+
+		/// <summary>
+		/// Return the next available ExecutorId. 
+		/// For an executor to be available the following considions have to be met:
+		/// - executor is dedicated
+		/// - executor is conected
+		/// - executor has no threads running or scheduled
+		/// </summary>
+		/// <returns></returns>
+		protected ExecutorStorageView GetNextAvailableExecutor()
+		{
+			ExecutorStorageView[] executors = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
+
+			foreach (ExecutorStorageView executor in executors)
+			{
+				if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, ThreadState.Scheduled, ThreadState.Started) == 0)
+				{
+					return executor;
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Return the thread with the highest priority from the pool of Ready threads.
+		/// 
+		/// Note: pathetic way of selecting the highest priority thread. 
+		///		This should be moved into the storage for a more efficient implementation.
+		/// </summary>
+		/// <returns></returns>
+		protected ThreadStorageView GetNextAvailableThread()
+		{
+			// achieve thread safety by locking on a static variable
+			// this lock is not enough, we should lock until the thread status changes
+			lock(threadChooserLock)
+			{
+				ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(ThreadState.Ready);
+
+				if (threads == null || threads.Length == 0)
+				{
+					return null;
+				}
+
+				ThreadStorageView highestPriorityThread = threads[0];
+
+				foreach (ThreadStorageView thread in threads)
+				{
+					if (thread.Priority > highestPriorityThread.Priority)
+					{
+						highestPriorityThread = thread;
+					}
+				}
+
+				return highestPriorityThread;
+			}
+		}
+
 
 		/// <summary>
 		/// Queries the database to return the next dedicated schedule.
@@ -93,48 +153,42 @@ namespace Alchemi.Manager
 		/// <returns>DedicatedSchedule</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
+			ExecutorStorageView executorStorage = GetNextAvailableExecutor();
+
+			if (executorStorage == null)
+			{
+				return null;
+			}
+
+			ThreadStorageView threadStorage = GetNextAvailableThread();
+			if (threadStorage == null)
+			{
+				return null;
+			}
+
 			DedicatedSchedule dsched = null;
-			DataSet ds = InternalShared.Instance.Database.ExecSql_DataSet("Thread_Schedule null");
-            if (ds.Tables.Count != 0)
-            {
-				DataRow dr = ds.Tables[0].Rows[0];
-				string executorId = null;
-				if (dr["executor_id"] != DBNull.Value)
-				{
-					executorId = dr["executor_id"].ToString();
-				}
-					
-				string appid = null;
-				if (dr["application_id"] != DBNull.Value)
-				{
-					appid = dr["application_id"].ToString();
-				}
-					
-				int threadId = -1;
-				if (dr["thread_id"]!=DBNull.Value)
-				{
-					threadId = (int)dr["thread_id"];
-				}
-					
-				int priority = -1;
-				if (dr["priority"]!=DBNull.Value)
-				{
-					priority = (int) dr["priority"];
-				}
-				else
-				{
-					priority = 5; //DEFAULT PRIORITY - TODO: have to put this in some Constants.cs file or something...
-				}
-				dr = null;
+
+			string executorId = executorStorage.ExecutorId;
 				
-				if (threadId!=-1 && appid!=null && executorId!=null)
-				{
-					ThreadIdentifier ti= new ThreadIdentifier(appid, threadId,priority);
-					logger.Debug("Schedule dedicated. app_id="+appid+",threadID="+threadId+", executor-id="+executorId);
-					dsched = new DedicatedSchedule(ti, executorId);
-				}
-            }
-			ds.Dispose();
+			string appid = threadStorage.ApplicationId;
+				
+			int threadId = threadStorage.ThreadId;
+				
+			int priority = threadStorage.Priority;
+
+//			if (priority == -1)
+//			{
+//				priority = 5; //DEFAULT PRIORITY - TODO: have to put this in some Constants.cs file or something...
+//			}
+			
+			ThreadIdentifier ti= new ThreadIdentifier(appid, threadId,priority);
+			logger.Debug(String.Format("Schedule dedicated. app_id={0},threadID={1}, executor-id={2}",																								   
+				appid, 
+				threadId, 
+				executorId)
+				);
+
+			dsched = new DedicatedSchedule(ti, executorId);
 
             return dsched;
         }
