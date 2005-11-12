@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = "..\..\graphics\Executor (multiformat).ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Executor"
+                AssemblyName = "Alchemi.Executor"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
