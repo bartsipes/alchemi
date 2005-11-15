@@ -236,7 +236,7 @@ namespace Alchemi.Core.Owner
 			//lock it to make doubly sure that the collection enumeration is sync-ed.
 			lock(_Threads)
 			{
-				logger.Debug("Enter Thread Lock...GApp " + _Id);
+				logger.Debug("Enter Thread Lock to SetThreads On Manager...GApp " + _Id);
 				foreach (GThread thread in _Threads)
 				{
 					if (thread.Id == -1)
@@ -245,7 +245,7 @@ namespace Alchemi.Core.Owner
 					}
 				}
 			}
-			logger.Debug("Exit Thread Lock...GApp " + _Id);
+			logger.Debug("Exit Thread Lock. Finished setting threads on Manager...GApp " + _Id);
 
 			StartGetFinishedThreads();
 
@@ -308,7 +308,7 @@ namespace Alchemi.Core.Owner
 		{
 			base.Init();
 
-			logger.Debug("GApp credentials appId, username: " + _Id + " , " + Credentials.Username );
+			logger.Debug(string.Format("GApp credentials appId: {0}, username: {1}", _Id, Credentials.Username));
 			if (!_Initted)
 			{
 				logger.Debug("Not initted. Initting GApp..."+_Id);

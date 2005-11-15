@@ -583,97 +583,120 @@ namespace Alchemi.Core.Executor
 
         //-----------------------------------------------------------------------------------------------    
 
-        private void ExecuteThreadInAppDomain()
-        {
-			logger.Info("Started ExecuteThreadInAppDomain...");
+		private void ExecuteThreadInAppDomain()
+		{
+			byte[] rawThread = null;
+			try
+			{
+				logger.Info("Started ExecuteThreadInAppDomain...");
 
-			logger.Info(string.Format("executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
+				logger.Info(string.Format("executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
 
-            string appDir = Path.Combine(_BaseDir,string.Format("dat\\application_{0}",_CurTi.ApplicationId));
-			logger.Debug("AppDir on executor=" + appDir);
-            if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
-            {
-                // create application domain for newly encountered grid application
-                Directory.CreateDirectory(appDir);
+				string appDir = Path.Combine(_BaseDir,string.Format("dat\\application_{0}",_CurTi.ApplicationId));
+				logger.Debug("AppDir on executor=" + appDir);
+				if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
+				{
+					// create application domain for newly encountered grid application
+					Directory.CreateDirectory(appDir);
     
-                FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);
-                if (manifest != null)
-                {
-                    foreach (FileDependency dep in manifest)
-                    {
-						logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
-                        dep.UnPack(Path.Combine(appDir,dep.FileName));
-                    }
-                }
-				else
-                {
-					logger.Warn("Executor_GetApplicationManifest from the Manager returned null");	
-                }
+					FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);
+					if (manifest != null)
+					{
+						foreach (FileDependency dep in manifest)
+						{
+							logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
+							dep.UnPack(Path.Combine(appDir,dep.FileName));
+						}
+					}
+					else
+					{
+						logger.Warn("Executor_GetApplicationManifest from the Manager returned null");	
+					}
 
-                AppDomainSetup info = new AppDomainSetup();
-                info.PrivateBinPath = appDir;
-                AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info);
+					AppDomainSetup info = new AppDomainSetup();
+					info.PrivateBinPath = appDir;
+					AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info);
 
-                // ***
-                // http://www.dotnetthis.com/Articles/DynamicSandboxing.htm
-            	PolicyLevel domainPolicy = PolicyLevel.CreateAppDomainLevel(); 
-                AllMembershipCondition allCodeMC = new AllMembershipCondition(); 
-                // TODO: 'FullTrust' in the following line needs to be replaced with something like 'AlchemiGridThread'
-                //        This permission set needs to be defined and set automatically as part of the installation.
-            	PermissionSet internetPermissionSet = domainPolicy.GetNamedPermissionSet("FullTrust"); 
-                PolicyStatement internetPolicyStatement = new PolicyStatement(internetPermissionSet); 
-                CodeGroup allCodeInternetCG = new UnionCodeGroup(allCodeMC, internetPolicyStatement); 
-                domainPolicy.RootCodeGroup = allCodeInternetCG; 
-                domain.SetAppDomainPolicy(domainPolicy);
-                // ***
+					// ***
+					// http://www.dotnetthis.com/Articles/DynamicSandboxing.htm
+					PolicyLevel domainPolicy = PolicyLevel.CreateAppDomainLevel(); 
+					AllMembershipCondition allCodeMC = new AllMembershipCondition(); 
+					// TODO: 'FullTrust' in the following line needs to be replaced with something like 'AlchemiGridThread'
+					//        This permission set needs to be defined and set automatically as part of the installation.
+					PermissionSet internetPermissionSet = domainPolicy.GetNamedPermissionSet("FullTrust"); 
+					PolicyStatement internetPolicyStatement = new PolicyStatement(internetPermissionSet); 
+					CodeGroup allCodeInternetCG = new UnionCodeGroup(allCodeMC, internetPolicyStatement); 
+					domainPolicy.RootCodeGroup = allCodeInternetCG; 
+					domain.SetAppDomainPolicy(domainPolicy);
+					// ***
 
-				/* Log 12/01, 2004
-				 * Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
-				 * Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
-				 * in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
-				 */
-				//Code edited by Rodrigo Assirati Dias
-				//Original code was:
-				//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
-				AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Core.dll"), "Alchemi.Core.Executor.AppDomainExecutor");
+					/* Log 12/01, 2004
+					 * Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
+					 * Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
+					 * in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
+					 */
+					//Code edited by Rodrigo Assirati Dias
+					//Original code was:
+					//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
 
-                _GridAppDomains.Add(
-                    _CurTi.ApplicationId,
-                    new GridAppDomain(domain, executor)
-                    );
+					//kna changed this to get the AppDomainExecutor type from the Alchemi.Executor.dll assembly.
+					AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Core.Executor.AppDomainExecutor");
 
-				logger.Info("Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
-            }
+					_GridAppDomains.Add(
+						_CurTi.ApplicationId,
+						new GridAppDomain(domain, executor)
+						);
 
-			//get thread from manager
-            byte[] rawThread = null;
-            try
-            {
+					logger.Info("Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
+				}
+
+				//get thread from manager
+				
 				GridAppDomain gad = (GridAppDomain) _GridAppDomains[_CurTi.ApplicationId];
 				rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
 				//execute it
-                byte[] finishedThread = gad.Executor.ExecuteThread(rawThread);
+				byte[] finishedThread = gad.Executor.ExecuteThread(rawThread);
 				//set its status to finished
-                Manager.Executor_SetFinishedThread(Credentials, _CurTi, finishedThread, null);
+				Manager.Executor_SetFinishedThread(Credentials, _CurTi, finishedThread, null);
 				logger.Info(string.Format("finished executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
 
-            }
-            catch (ThreadAbortException)
-            {
-				logger.Warn(string.Format("aborted grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
-                Thread.ResetAbort();
-            }
-            catch (Exception e)
-            {
-                Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
+			}
+			catch (ThreadAbortException)
+			{
+				if (_CurTi!=null)
+					logger.Warn(string.Format("aborted grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
+				else
+					logger.Warn(string.Format("aborted grid thread # {0}.{1}",null, null));
+
+				Thread.ResetAbort();
+			}
+			catch (Exception e)
+			{
 				logger.Warn(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()),e);
-            }
+				if (rawThread!=null)
+				{
+					try
+					{
+						Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
+					}
+					catch (Exception ex1)
+					{
+						if (_CurTi!=null)
+							logger.Warn("Error trying to set failed thread for App: "+_CurTi.ApplicationId+", thread="+_CurTi.ThreadId,ex1);	
+						else
+							logger.Warn("Error trying to set failed thread: ",ex1);	
+					}
+				}
+			}
+			finally
+			{
 
-            _CurTi = null;
-            _ReadyToExecute.Set();
+				_CurTi = null;
+				_ReadyToExecute.Set();
 
-			logger.Info("Exited ExecuteThreadInAppDomain...");
-        }
+				logger.Info("Exited ExecuteThreadInAppDomain...");
+			}
+		}
 
         //-----------------------------------------------------------------------------------------------    
 

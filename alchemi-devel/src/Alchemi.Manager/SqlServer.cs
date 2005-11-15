@@ -75,13 +75,19 @@ namespace Alchemi.Manager
         /// Executes a sql statement against the db
         /// </summary>
         /// <param name="sql">the SQL to execute</param>
-        public void ExecSql (string sql)
-        {
-            SqlConnection cn = NewConn();
-			cn.Open();
-            SqlCommand cmd = new SqlCommand(sql, cn);
-            cmd.ExecuteNonQuery();
-			cn.Dispose();
+		public void ExecSql (string sql)
+		{
+			SqlConnection cn = NewConn();
+			try
+			{
+				cn.Open();
+				SqlCommand cmd = new SqlCommand(sql, cn);
+				cmd.ExecuteNonQuery();
+			}
+			finally
+			{
+				cn.Dispose();
+			}
         }
 
 		/// <summary>
@@ -105,10 +111,16 @@ namespace Alchemi.Manager
         {
             SqlConnection cn = NewConn();
             object result;
-			cn.Open();
-            SqlCommand cmd = new SqlCommand(sql, cn);
-            result = cmd.ExecuteScalar();
-			cn.Dispose();
+			try
+			{
+				cn.Open();
+				SqlCommand cmd = new SqlCommand(sql, cn);
+				result = cmd.ExecuteScalar();
+			}
+			finally
+			{
+				cn.Dispose();
+			}
             return result;
         }
 
@@ -135,11 +147,17 @@ namespace Alchemi.Manager
             SqlConnection cn = NewConn();
             DataSet ds = new DataSet();
             SqlDataAdapter da = new SqlDataAdapter();
-			cn.Open();
-			SqlCommand cmd = new SqlCommand(sql, cn);
-            da.SelectCommand = cmd;
-            da.Fill(ds);
-			cn.Dispose();
+			try
+			{
+				cn.Open();
+				SqlCommand cmd = new SqlCommand(sql, cn);
+				da.SelectCommand = cmd;
+				da.Fill(ds);
+			}
+			finally
+			{
+				cn.Dispose();
+			}
 			return ds.Tables[0];
         }
 
@@ -166,11 +184,17 @@ namespace Alchemi.Manager
             SqlConnection cn = NewConn();
             DataSet ds = new DataSet();
             SqlDataAdapter da = new SqlDataAdapter();
-			cn.Open();
-            SqlCommand cmd = new SqlCommand(sql, cn);
-            da.SelectCommand = cmd;
-            da.Fill(ds);
-			cn.Dispose();
+			try
+			{
+				cn.Open();
+				SqlCommand cmd = new SqlCommand(sql, cn);
+				da.SelectCommand = cmd;
+				da.Fill(ds);
+			}
+			finally
+			{
+				cn.Dispose();
+			}
             return ds;
         }
 

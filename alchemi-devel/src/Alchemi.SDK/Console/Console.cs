@@ -23,7 +23,10 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
+using log4net;
 
 // Configure log4net using the .config file
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
@@ -35,9 +38,22 @@ namespace Alchemi.Console
 	public class Console
 	{
 
+		// Create a logger for use in this class
+		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 		[STAThread]
 		static void Main() 
 		{
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+			if (!System.IO.Directory.Exists("dat"))
+			{
+				System.IO.Directory.CreateDirectory("dat");
+				log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo(Assembly.GetExecutingAssembly().GetName()+".config"));
+			}
+			
+			logger.Debug(Application.ExecutablePath+".config");
+
 			//Application.EnableVisualStyles();
 			Application.Run(new ConsoleParentForm());
 		}
@@ -47,6 +63,18 @@ namespace Alchemi.Console
 			//
 			// TODO: Add constructor logic here
 			//
+		}
+
+		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Exception ex = (Exception) e.ExceptionObject;
+			HandleAllUnknownErrors(sender.ToString(),ex);
+		}
+
+		private static void HandleAllUnknownErrors(string sender, Exception ex)
+		{
+			logger.Error("Unknown Error from: " + sender,ex);
+			MessageBox.Show("Error occured: (continuing after error...)\n"+ex.ToString(), "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}
 }

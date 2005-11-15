@@ -407,10 +407,17 @@ namespace Alchemi.Examples.Mandelbrot
                 initted = true;
             }
             
-            if (ga.Running)
-            {
-                ga.Stop();
-            }
+			try
+			{
+				if (ga.Running)
+				{
+					ga.Stop();
+				}
+			}
+			catch (Exception ex1)
+			{
+				MessageBox.Show("Error trying to stop already running gApplication: " + ex1.ToString());
+			}
 
             startTime = DateTime.Now;
 

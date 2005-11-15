@@ -21,12 +21,11 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Alchemi.Core;
 using Alchemi.Core.Owner;
 
-namespace Alchemi.Core
+namespace Alchemi.Core.Owner
 {
-	namespace Owner
-	{
 		/// <summary>
 		/// Represents the form that is used to connect to the manager
 		/// </summary>
@@ -310,6 +309,9 @@ namespace Alchemi.Core
     [Serializable]
     class Config
     {
+		// Create a logger for use in this class
+		private static readonly Logger logger = new Logger();
+
         public string Host = "localhost";
         public int Port = 9000;
         public string Username = "user";
@@ -326,7 +328,7 @@ namespace Alchemi.Core
         {
             string file = Path.Combine(System.Windows.Forms.Application.StartupPath, filename);
             Config c;
-			//handle missing file exception and create a default config.
+			//handle missing file exception / serialization exception etc... and create a default config.
             try
             {
                 using (FileStream fs = new FileStream(file, FileMode.Open))
@@ -342,8 +344,9 @@ namespace Alchemi.Core
                     }
                 }
             }
-            catch (FileNotFoundException)
+            catch (Exception ex)
             {
+				logger.Debug("Error reading config from "+file+", getting default config.", ex);
                 c = new Config(file);
             }
             return c;
@@ -361,15 +364,24 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Write the config to file
 		/// </summary>
-        public void Write()
-        {
-            using (Stream s = new FileStream(_file, FileMode.Create))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, this);
-                s.Close();
-            }
-        }
-    }
+		public void Write()
+		{
+			string file = Path.Combine(System.Windows.Forms.Application.StartupPath, "GConnectionDialogForm.dat");
 
+			try
+			{
+				using (Stream s = new FileStream(_file, FileMode.Create))
+				{
+					BinaryFormatter bf = new BinaryFormatter();
+					bf.Serialize(s, this);
+					s.Close();
+				}
+			}
+			catch (Exception ex)
+			{
+				_file = file;
+				logger.Debug("Error trying to write file. Re-trying to Write with default config: "+_file, ex);
+				Write();
+			}
+        }
 }
