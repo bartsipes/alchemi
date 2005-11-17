@@ -25,7 +25,6 @@ details.
 
 using System;
 
-using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Manager.Storage
@@ -74,8 +73,8 @@ namespace Alchemi.Manager.Storage
 			// TODO: currently everything defaults to SQL Server
 
 			Configuration configuration = Configuration.GetConfiguration();
-			
-			String connectionString = String.Format("adpprovider=MsSql;server={0};database={1};User ID={2};Password={3}", 
+
+			String connectionString = String.Format("Provider=SQLOLEDB;User ID={2};Password={3};Initial Catalog={1};Data Source={0};Connect Timeout=30", 
 				configuration.DbServer, 
 				configuration.DbName, 
 				configuration.DbUsername,

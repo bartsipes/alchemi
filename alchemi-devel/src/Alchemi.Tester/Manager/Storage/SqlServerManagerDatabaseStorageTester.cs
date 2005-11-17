@@ -26,7 +26,6 @@ details.
 using System;
 using System.Configuration;
 
-using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager.Storage;
 
@@ -56,7 +55,7 @@ namespace Alchemi.Tester.Manager.Storage
 		public void TestStartUp()
 		{
 			String connectionString = ConfigurationSettings.AppSettings["SqlTesterConnectionString"];
-			connectionString = "adpprovider=MsSql;server=localhost;database=AlchemiTester;User ID=alchemi;Password=alchemi";
+			connectionString = "Provider=SQLOLEDB;User ID=alchemi;Password=alchemi;Initial Catalog=AlchemiTester;Data Source=localhost;Connect Timeout=30";
 
 			m_managerStorage = new SqlServerManagerDatabaseStorage(connectionString);
 

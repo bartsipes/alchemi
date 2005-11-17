@@ -71,6 +71,9 @@ namespace Alchemi.Manager.Storage
 			command.CommandText = storedProcedure;
 			command.CommandType = CommandType.StoredProcedure;
 		
+			connection.Open();
+
+			// the connection must remain open until the reader is closed
 			return command.ExecuteReader();
 		}
 
@@ -83,6 +86,9 @@ namespace Alchemi.Manager.Storage
 			command.CommandText = sqlQuery;
 			command.CommandType = CommandType.Text;
 		
+			connection.Open();
+
+			// the connection must remain open until the reader is closed
 			return command.ExecuteReader();
 		}
 
@@ -94,21 +100,23 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		protected object RunSpReturnScalar(String storedProcedure, params OleDbParameter[] parameters)
 		{
-			OleDbConnection connection = new OleDbConnection(m_connectionString);
-			OleDbCommand command = new OleDbCommand();
-
-			command.Connection = connection;
-			command.CommandText = storedProcedure;
-			command.CommandType = CommandType.StoredProcedure;
-
-			foreach (OleDbParameter parameter in parameters)
+			using(OleDbConnection connection = new OleDbConnection(m_connectionString))
 			{
-				OleDbParameter param = command.CreateParameter();
-				param.ParameterName = parameter.ParameterName;
-				param.Value = parameter.Value;				
-			}
+				OleDbCommand command = new OleDbCommand();
+
+				command.Connection = connection;
+				command.CommandText = storedProcedure;
+				command.CommandType = CommandType.StoredProcedure;
+
+				foreach (OleDbParameter parameter in parameters)
+				{
+					command.Parameters.Add(parameter);
+				}
 		
-			return command.ExecuteScalar();
+				connection.Open();
+
+				return command.ExecuteScalar();
+			}
 		}
 
 		protected void RunSql(String sqlQuery)
@@ -118,27 +126,28 @@ namespace Alchemi.Manager.Storage
 
 		protected void RunSql(String sqlQuery, params OleDbParameter[] parameters)
 		{
-			OleDbConnection connection = new OleDbConnection(m_connectionString);
-			OleDbCommand command = new OleDbCommand();
-
-			command.Connection = connection;
-			command.CommandText = sqlQuery;
-			command.CommandType = CommandType.Text;
-
-			if (parameters != null)
+			using(OleDbConnection connection = new OleDbConnection(m_connectionString))
 			{
-				foreach(OleDbParameter parameter in parameters)
-				{
-					OleDbParameter param= command.CreateParameter();
-					param.ParameterName = parameter.ParameterName;
-					param.Value = parameter.Value;
-				}
-			}
-		
-			command.ExecuteNonQuery();
+				OleDbCommand command = new OleDbCommand();
 
-			connection.Close();
+				command.Connection = connection;
+				command.CommandText = sqlQuery;
+				command.CommandType = CommandType.Text;
+
+				if (parameters != null)
+				{
+					foreach(OleDbParameter parameter in parameters)
+					{
+						command.Parameters.Add(parameter);
+					}
+				}
+		
+				connection.Open();
+
+				command.ExecuteNonQuery();
+			}
 		}
+
 		protected object RunSqlReturnScalar(String sqlQuery)
 		{
 			return RunSqlReturnScalar(sqlQuery, null);
@@ -158,12 +167,12 @@ namespace Alchemi.Manager.Storage
 				{
 					foreach(OleDbParameter parameter in parameters)
 					{
-						OleDbParameter param = command.CreateParameter();
-						param.ParameterName = parameter.ParameterName;
-						param.Value = parameter.Value;
+						command.Parameters.Add(parameter);
 					}
 				}
 		
+				connection.Open();
+
 				return command.ExecuteScalar();
 			}
 		}
@@ -372,7 +381,7 @@ namespace Alchemi.Manager.Storage
 			
 			if (pingTime != DateTime.MinValue)
 			{
-				RunSql(String.Format("update executor set ping_time=@ping_time where executor_id='{0}'",
+				RunSql(String.Format("update executor set ping_time=? where executor_id='{0}'",
 					executorId
 					), 
 					dateTimeParameter);
@@ -576,7 +585,7 @@ namespace Alchemi.Manager.Storage
 
 			OleDbParameter dateTimeParameter = new OleDbParameter("@time_created", application.TimeCreated);
 
-			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, @time_created, '{2}', '{3}')",
+			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, ?, '{2}', '{3}')",
 				applicationId,
 				(int)application.State,
 				Convert.ToInt16(application.Primary),
@@ -596,7 +605,7 @@ namespace Alchemi.Manager.Storage
 
 			OleDbParameter dateTimeParameter = new OleDbParameter("@time_created", updatedApplication.TimeCreated);
 
-			RunSql(String.Format("update application set state = {1}, time_created = @time_created, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
+			RunSql(String.Format("update application set state = {1}, time_created = ?, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
 				updatedApplication.ApplicationId,
 				(int)updatedApplication.State,
 				Convert.ToInt16(updatedApplication.Primary),
@@ -753,7 +762,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter = new OleDbParameter("@executor_id", DBNull.Value);
 			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', @executor_id, {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', ?, {2}, {3}, ?, ?, {4}, '{5}')",
 				thread.ApplicationId,
 				thread.ExecutorId,
 				thread.ThreadId,
@@ -761,7 +770,7 @@ namespace Alchemi.Manager.Storage
 				thread.Priority,
 				Convert.ToInt16(thread.Failed)
 				), 
-				timeStartedParameter, timeFinishedParameter, executorIdParameter);
+				executorIdParameter, timeStartedParameter, timeFinishedParameter);
 
 			return Convert.ToInt32(threadIdObject);
 		}
@@ -796,7 +805,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter = new OleDbParameter("@executor_id", DBNull.Value);
 			}
 
-			RunSql(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+			RunSql(String.Format("update thread set application_id = '{1}', executor_id = ?, thread_id = {3}, state = {4}, time_started = ?, time_finished = ?, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
@@ -805,7 +814,7 @@ namespace Alchemi.Manager.Storage
 				updatedThread.Priority,
 				Convert.ToInt16(updatedThread.Failed)
 				), 
-				timeStartedParameter, timeFinishedParameter, executorIdParameter);
+				executorIdParameter, timeStartedParameter, timeFinishedParameter);
 		}
 
 		public ThreadStorageView GetThread(String applicationId, Int32 threadId)
