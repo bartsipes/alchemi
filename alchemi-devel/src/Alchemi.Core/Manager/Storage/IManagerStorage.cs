@@ -24,7 +24,7 @@ details.
 #endregion
 
 using System;
-
+using System.Data;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
@@ -44,7 +44,7 @@ namespace Alchemi.Core.Manager.Storage
 	{
 
 		/// <summary>
-		/// Check if a permisison is set.
+		/// Check if a permission is set.
 		/// </summary>
 		/// <param name="sc">Security credentials to use in the check.</param>
 		/// <param name="perm">Permission to check for</param>
@@ -112,7 +112,6 @@ namespace Alchemi.Core.Manager.Storage
 		ApplicationStorageView GetApplication(String applicationId);
 
 
-
 		Int32 AddThread(ThreadStorageView thread);
 
 		void UpdateThread(ThreadStorageView updatedThread);
@@ -144,5 +143,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// </returns>
 		SystemSummary GetSystemSummary();
 
+		//for generic queries
+		DataSet RunSqlReturnDataSet(string query);
 	}
 }

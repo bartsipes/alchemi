@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Krishna Nadiminti (kna@cs.mu.oz.au) and Rajkumar Buyya (raj@cs.mu.oz.au)
+* Author         :  Krishna Nadiminti (kna@csse.unimelb.edu.au) and Rajkumar Buyya (raj@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -30,6 +30,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Alchemi.Core;
+using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 using System.Xml;
 using System.IO;
@@ -459,23 +460,23 @@ namespace Alchemi.Console
 			{
 				try
 				{
-					DataTable summary = console.Manager.Admon_GetSystemSummary(console.Credentials);
+					SystemSummary summary = console.Manager.Admon_GetSystemSummary(console.Credentials);
 
-					this.lbMaxPowerAvail.Text = summary.Rows[0]["max_power"].ToString();
-					this.lbTotalPowerUsage.Text = summary.Rows[0]["power_totalusage"].ToString();
+					this.lbMaxPowerAvail.Text =  summary.MaxPower.ToString();
+					this.lbTotalPowerUsage.Text = summary.PowerTotalUsage.ToString();
 				
-					this.lbCurPowerAvail.Text = summary.Rows[0]["power_avail"] + " %";
-					this.lbCurPowerUsage.Text = summary.Rows[0]["power_usage"] + " %";
+					this.lbCurPowerAvail.Text = summary.PowerAvailable.ToString()+ " %";
+					this.lbCurPowerUsage.Text = summary.PowerUsage.ToString() + " %";
 				
-					this.lbNumExec.Text = summary.Rows[0]["total_executors"].ToString();
-					this.lbRunningApps.Text = summary.Rows[0]["unfinished_apps"].ToString();
-					this.lbRunningJobs.Text = summary.Rows[0]["unfinished_threads"].ToString();
+					this.lbNumExec.Text = summary.TotalExecutors.ToString();
+					this.lbRunningApps.Text = summary.UnfinishedApps.ToString();
+					this.lbRunningJobs.Text = summary.UnfinishedThreads.ToString();
 					xVal++;
            
 					x1.Add(xVal);
 
-					y1.Add(Convert.ToDouble(summary.Rows[0]["power_usage"]));
-					y2.Add(Convert.ToDouble(summary.Rows[0]["power_avail"]));
+					y1.Add(Convert.ToDouble(summary.PowerUsage));
+					y2.Add(Convert.ToDouble(summary.PowerAvailable));
 
 					if (x1.Count > 31)
 					{

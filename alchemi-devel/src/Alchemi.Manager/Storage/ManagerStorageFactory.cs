@@ -25,6 +25,7 @@ details.
 
 using System;
 
+using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Manager.Storage
@@ -47,7 +48,7 @@ namespace Alchemi.Manager.Storage
 		{
 			if (m_managerStorage == null)
 			{
-				m_managerStorage = CreateManagerStorage();
+				CreateManagerStorage(null);
 			}
 
 			return m_managerStorage;
@@ -67,20 +68,35 @@ namespace Alchemi.Manager.Storage
 		/// Create the right manager storage object.
 		/// </summary>
 		/// <returns></returns>
-		private static IManagerStorage CreateManagerStorage()
+		public static IManagerStorage CreateManagerStorage(Configuration config)
 		{
 			// TODO: implement different storages based on the current configuration file
 			// TODO: currently everything defaults to SQL Server
 
-			Configuration configuration = Configuration.GetConfiguration();
+			Configuration configuration = config;
+			
+			if (configuration==null)
+			{
+				configuration = Configuration.GetConfiguration();
+			}
 
-			String connectionString = String.Format("Provider=SQLOLEDB;User ID={2};Password={3};Initial Catalog={1};Data Source={0};Connect Timeout=30", 
-				configuration.DbServer, 
-				configuration.DbName, 
+			// build sql server configuration string
+			string sqlConnStr = string.Format(
+				"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+				configuration.DbServer,
 				configuration.DbUsername,
-				configuration.DbPassword); 
+				configuration.DbPassword,
+				configuration.DbName
+				);
 
-			return new SqlServerManagerDatabaseStorage(connectionString);
+//			String connectionString = String.Format("adpprovider=MsSql;server={0};database={1};User ID={2};Password={3}", 
+//				configuration.DbServer, 
+//				configuration.DbName, 
+//				configuration.DbUsername,
+//				configuration.DbPassword); 
+
+			m_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
+			return m_managerStorage;
 		}
 
 	}

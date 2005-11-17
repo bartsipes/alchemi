@@ -25,6 +25,7 @@ details.
 
 using System;
 using System.Collections;
+using System.Data;
 using System.Xml;
 
 using Alchemi.Core;
@@ -62,6 +63,11 @@ namespace Alchemi.Manager.Storage
 		public SystemSummary GetSystemSummary()
 		{
 			throw new Exception("Not implemented");
+		}
+
+		public DataSet RunSqlReturnDataSet(string query)
+		{
+			throw new NotImplementedException();
 		}
 
 		public void AddUsers(UserStorageView[] users)
@@ -909,6 +915,5 @@ namespace Alchemi.Manager.Storage
 			
 		}
 		#endregion
-
 	}
 }

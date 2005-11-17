@@ -13,7 +13,7 @@
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
 * Author         :  Rodrigo Assirati Dias (rdias@ime.usp.br), Paula Akemi Nishimoto (pakemi@gmail.com),
-*					Roberto Hirata Jr. (hirata@ime.usp.br) and Krishna Nadiminti(kna@cs.mu.oz.au),
+*					Roberto Hirata Jr. (hirata@ime.usp.br) and Krishna Nadiminti(kna@csse.unimelb.edu.au),
 *					and Rajkumar Buyya (raj@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 

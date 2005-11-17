@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au), Rajkumar Buyya (raj@csse.unimelb.edu.au), and Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -229,7 +229,7 @@ namespace Alchemi.ManagerExec
 			this.txManagerHost.Location = new System.Drawing.Point(120, 128);
 			this.txManagerHost.Name = "txManagerHost";
 			this.txManagerHost.Size = new System.Drawing.Size(104, 20);
-			this.txManagerHost.TabIndex = 8;
+			this.txManagerHost.TabIndex = 9;
 			this.txManagerHost.Text = "";
 			// 
 			// txOwnPort
@@ -237,7 +237,7 @@ namespace Alchemi.ManagerExec
 			this.txOwnPort.Location = new System.Drawing.Point(120, 24);
 			this.txOwnPort.Name = "txOwnPort";
 			this.txOwnPort.Size = new System.Drawing.Size(104, 20);
-			this.txOwnPort.TabIndex = 30;
+			this.txOwnPort.TabIndex = 5;
 			this.txOwnPort.Text = "";
 			// 
 			// btStart
@@ -246,7 +246,7 @@ namespace Alchemi.ManagerExec
 			this.btStart.Location = new System.Drawing.Point(88, 50);
 			this.btStart.Name = "btStart";
 			this.btStart.Size = new System.Drawing.Size(128, 23);
-			this.btStart.TabIndex = 0;
+			this.btStart.TabIndex = 12;
 			this.btStart.Text = "Start";
 			this.btStart.Click += new System.EventHandler(this.btStart_Click);
 			// 
@@ -276,7 +276,7 @@ namespace Alchemi.ManagerExec
 			this.cbDedicated.Location = new System.Drawing.Point(120, 96);
 			this.cbDedicated.Name = "cbDedicated";
 			this.cbDedicated.Size = new System.Drawing.Size(88, 24);
-			this.cbDedicated.TabIndex = 7;
+			this.cbDedicated.TabIndex = 8;
 			this.cbDedicated.Text = "Dedicated";
 			// 
 			// label4
@@ -295,7 +295,7 @@ namespace Alchemi.ManagerExec
 			this.cbIntermediate.Location = new System.Drawing.Point(120, 48);
 			this.cbIntermediate.Name = "cbIntermediate";
 			this.cbIntermediate.Size = new System.Drawing.Size(88, 24);
-			this.cbIntermediate.TabIndex = 5;
+			this.cbIntermediate.TabIndex = 6;
 			this.cbIntermediate.TabStop = false;
 			this.cbIntermediate.Text = "Intermediate";
 			this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
@@ -306,7 +306,8 @@ namespace Alchemi.ManagerExec
 			this.txId.Location = new System.Drawing.Point(120, 72);
 			this.txId.Name = "txId";
 			this.txId.Size = new System.Drawing.Size(240, 20);
-			this.txId.TabIndex = 6;
+			this.txId.TabIndex = 7;
+			this.txId.TabStop = false;
 			this.txId.Text = "";
 			// 
 			// label3
@@ -323,7 +324,7 @@ namespace Alchemi.ManagerExec
 			this.txManagerPort.Location = new System.Drawing.Point(120, 160);
 			this.txManagerPort.Name = "txManagerPort";
 			this.txManagerPort.Size = new System.Drawing.Size(104, 20);
-			this.txManagerPort.TabIndex = 9;
+			this.txManagerPort.TabIndex = 10;
 			this.txManagerPort.Text = "";
 			// 
 			// btReset
@@ -332,7 +333,8 @@ namespace Alchemi.ManagerExec
 			this.btReset.Location = new System.Drawing.Point(88, 20);
 			this.btReset.Name = "btReset";
 			this.btReset.Size = new System.Drawing.Size(248, 23);
-			this.btReset.TabIndex = 2;
+			this.btReset.TabIndex = 11;
+			this.btReset.TabStop = false;
 			this.btReset.Text = "Reset";
 			this.btReset.Click += new System.EventHandler(this.btReset_Click);
 			// 
@@ -342,7 +344,7 @@ namespace Alchemi.ManagerExec
 			this.btStop.Location = new System.Drawing.Point(224, 50);
 			this.btStop.Name = "btStop";
 			this.btStop.Size = new System.Drawing.Size(112, 23);
-			this.btStop.TabIndex = 1;
+			this.btStop.TabIndex = 13;
 			this.btStop.Text = "Stop";
 			this.btStop.Click += new System.EventHandler(this.btStop_Click);
 			// 
@@ -365,7 +367,8 @@ namespace Alchemi.ManagerExec
 			this.txLog.ReadOnly = true;
 			this.txLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txLog.Size = new System.Drawing.Size(416, 96);
-			this.txLog.TabIndex = 0;
+			this.txLog.TabIndex = 14;
+			this.txLog.TabStop = false;
 			this.txLog.Text = "";
 			this.txLog.DoubleClick += new System.EventHandler(this.txLog_DoubleClick);
 			// 
@@ -435,7 +438,7 @@ namespace Alchemi.ManagerExec
 			this.txDbPassword.Name = "txDbPassword";
 			this.txDbPassword.PasswordChar = '*';
 			this.txDbPassword.Size = new System.Drawing.Size(104, 20);
-			this.txDbPassword.TabIndex = 14;
+			this.txDbPassword.TabIndex = 4;
 			this.txDbPassword.Text = "";
 			// 
 			// label6
@@ -452,7 +455,7 @@ namespace Alchemi.ManagerExec
 			this.txDbUsername.Location = new System.Drawing.Point(264, 24);
 			this.txDbUsername.Name = "txDbUsername";
 			this.txDbUsername.Size = new System.Drawing.Size(104, 20);
-			this.txDbUsername.TabIndex = 16;
+			this.txDbUsername.TabIndex = 3;
 			this.txDbUsername.Text = "";
 			// 
 			// label7
@@ -469,7 +472,7 @@ namespace Alchemi.ManagerExec
 			this.txDbServer.Location = new System.Drawing.Point(72, 24);
 			this.txDbServer.Name = "txDbServer";
 			this.txDbServer.Size = new System.Drawing.Size(104, 20);
-			this.txDbServer.TabIndex = 18;
+			this.txDbServer.TabIndex = 1;
 			this.txDbServer.Text = "";
 			// 
 			// label8
@@ -486,7 +489,7 @@ namespace Alchemi.ManagerExec
 			this.txDbName.Location = new System.Drawing.Point(72, 56);
 			this.txDbName.Name = "txDbName";
 			this.txDbName.Size = new System.Drawing.Size(104, 20);
-			this.txDbName.TabIndex = 20;
+			this.txDbName.TabIndex = 2;
 			this.txDbName.Text = "";
 			// 
 			// groupBox3
@@ -1121,7 +1124,6 @@ namespace Alchemi.ManagerExec
 				}
 			}    	
 		}
-		
 
 		#region "Updater Stuff (Commented out - not using it now)"
 //		private void mnuUpdates_Click(object sender, EventArgs e)

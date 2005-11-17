@@ -11,7 +11,7 @@
 *                    the Australian Research Council and the University of Melbourne
 *                    research grants as part of the Gridbus Project
 *                    within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author        :  Tibor Biro (tb@tbiro.com)
+* Author        :  Tibor Biro (tb@tbiro.com), Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License       :  GPL
 *                    This program is free software; you can redistribute it and/or
 *                    modify it under the terms of the GNU General Public
@@ -45,14 +45,14 @@ namespace Alchemi.Manager.Storage
 	/// </summary>
 	public abstract class GenericManagerDatabaseStorage : IManagerStorage
 	{
-		private String m_connectionString;
+		protected String m_connectionString;
 
 		public GenericManagerDatabaseStorage(String connectionString)
 		{
 			m_connectionString = connectionString;
 		}
 
-		#region "Generic database manipulation routines"
+		#region Generic database manipulation routines
 		
 		/// <summary>
 		/// Run a stored procedure and return a data reader.
@@ -74,7 +74,7 @@ namespace Alchemi.Manager.Storage
 			connection.Open();
 
 			// the connection must remain open until the reader is closed
-			return command.ExecuteReader();
+			return command.ExecuteReader(CommandBehavior.CloseConnection);
 		}
 
 		protected OleDbDataReader RunSqlReturnDataReader(String sqlQuery)
@@ -89,7 +89,7 @@ namespace Alchemi.Manager.Storage
 			connection.Open();
 
 			// the connection must remain open until the reader is closed
-			return command.ExecuteReader();
+			return command.ExecuteReader(CommandBehavior.CloseConnection);
 		}
 
 		/// <summary>
@@ -184,6 +184,25 @@ namespace Alchemi.Manager.Storage
 		public SystemSummary GetSystemSummary()
 		{
 			throw new Exception("Not implemented");
+		}
+
+		public DataSet RunSqlReturnDataSet(string query)
+		{
+			DataSet result = null;
+			using (OleDbConnection connection = new OleDbConnection(m_connectionString))
+			{
+				OleDbCommand command = new OleDbCommand();
+				command.Connection = connection;
+				command.CommandText = query;
+				command.CommandType = CommandType.Text;
+			
+				connection.Open();
+				OleDbDataAdapter da = new OleDbDataAdapter(command);
+				result = new DataSet();
+				da.Fill(result);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -1108,6 +1127,5 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
-
 	}
 }

@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au) and Rajkumar Buyya (raj@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au) and Rajkumar Buyya (raj@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -120,9 +120,9 @@ namespace Alchemi.Manager
 					logger.Debug("Creating a MExecutor and connecting-dedicated to it");
                     me.ConnectDedicated(ep);
                 }
-                catch (Exception ex)
+                catch (Exception)
 				{
-					logger.Debug("Exception while init-ing exec.collection. Continuing with other executors...",ex);
+					logger.Debug("Exception while init-ing exec.collection. Continuing with other executors...");
 				}
             }
 

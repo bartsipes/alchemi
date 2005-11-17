@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  David Cumps, Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  David Cumps, Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public

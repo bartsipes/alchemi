@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au), Rajkumar Buyya (raj@csse.unimelb.edu.au), and Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -149,16 +149,6 @@ namespace Alchemi.Manager
 //						);
 //				}
 
-				// build sql server configuration string
-				string sqlConnStr = string.Format(
-					"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
-					Config.DbServer,
-					Config.DbUsername,
-					Config.DbPassword,
-					Config.DbName
-					);
-
-				logger.Debug("Using SQLConnStr="+sqlConnStr);
 				logger.Debug("Registering tcp channel on port: "+ownEP.Port);
 
                 try
@@ -166,7 +156,10 @@ namespace Alchemi.Manager
                     _Chnl = new TcpChannel(ownEP.Port);
                 	ChannelServices.RegisterChannel(_Chnl);
                 }
-                catch {}
+                catch (Exception ex)
+                {
+                	logger.Error("Error registering channel...",ex);
+                }
 
 				if (ManagerStartEvent!=null)
 					ManagerStartEvent("Registered tcp channel on port: "+ownEP.Port,30);
@@ -233,12 +226,15 @@ namespace Alchemi.Manager
                 scheduler.Applications = _Applications;
 
 				logger.Debug("Configuring internal shared class...");
-                InternalShared common = InternalShared.GetInstance(
-                    new SqlServer(sqlConnStr),
-                    datDir,
-                    scheduler
-                    );
+//                InternalShared common = InternalShared.GetInstance(
+//                    new SqlServer(sqlConnStr),
+//                    datDir,
+//                    scheduler
+//                    );
 
+				ManagerStorageFactory.CreateManagerStorage(Config);
+
+				InternalShared common = InternalShared.GetInstance(datDir,scheduler);
 				logger.Debug("Initialising scheduler - done");
 				logger.Debug("Starting scheduler thread");
 

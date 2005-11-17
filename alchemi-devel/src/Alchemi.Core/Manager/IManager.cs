@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au), Rajkumar Buyya (raj@csse.unimelb.edu.au), and Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -326,7 +326,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns></returns>
-        DataTable Admon_GetSystemSummary(SecurityCredentials sc);
+        SystemSummary Admon_GetSystemSummary(SecurityCredentials sc);
 
 		/// <summary>
 		/// 
@@ -336,12 +336,12 @@ namespace Alchemi.Core
 		ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
 		/// <summary>
-		/// Executes an SQL query on the Manager database.
+		/// Executes a select query against the Manager database.
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="perm"></param>
 		/// <param name="query"></param>
-		/// <returns>Dataset conmtaining the query results</returns>
+		/// <returns>results of the query as a Dataset</returns>
 		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
     }
 }

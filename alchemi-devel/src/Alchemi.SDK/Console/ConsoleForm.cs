@@ -11,7 +11,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Krishna Nadiminti (kna@cs.mu.oz.au) and Rajkumar Buyya (raj@cs.mu.oz.au)
+* Author         :  Krishna Nadiminti (kna@csse.unimelb.edu.au) and Rajkumar Buyya (raj@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -22,20 +22,15 @@
 */ 
 #endregion
 
+//using NPlot;
 using System;
-using System.Data;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
+using System.Data;
+using System.Reflection;
 using System.Windows.Forms;
-using Alchemi.Core;
+using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
-using System.Xml;
-using System.IO;
-using System.Reflection;
-using System.Drawing.Drawing2D;
-//using NPlot;
 using log4net;
 
 namespace Alchemi.Console
@@ -43,7 +38,7 @@ namespace Alchemi.Console
 	/// <summary>
 	/// Summary description for ConsoleForm.
 	/// </summary>
-	public class ConsoleForm : System.Windows.Forms.Form
+	public class ConsoleForm : Form
 	{
 		private bool connected = false;
 		private ConsoleNode console = null;
@@ -57,50 +52,50 @@ namespace Alchemi.Console
 		// Create a logger for use in this class
 		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		private System.ComponentModel.IContainer components;
+		private IContainer components;
 
-		private System.Windows.Forms.ImageList imgListSmall;
-		private System.Windows.Forms.ImageList imgListBig;
+		private ImageList imgListSmall;
+		private ImageList imgListBig;
 
 		//menus
-		private System.Windows.Forms.MainMenu mainMenu1;
-		private System.Windows.Forms.MenuItem mnuView;
-		private System.Windows.Forms.MenuItem mnuAction;
+		private MainMenu mainMenu1;
+		private MenuItem mnuView;
+		private MenuItem mnuAction;
 		//context-menu
-		private System.Windows.Forms.ContextMenu rightClickMenu;
-		private System.Windows.Forms.MenuItem mnuContextView;
-		private System.Windows.Forms.StatusBar sbar;
-		private System.Windows.Forms.MenuItem mnuLargeIcons;
-		private System.Windows.Forms.MenuItem mnuSmallIcons;
-		private System.Windows.Forms.MenuItem mnuList;
-		private System.Windows.Forms.MenuItem mnuDetails;
-		private System.Windows.Forms.MenuItem mnuContextNew;
-		private System.Windows.Forms.MenuItem mnuContextEdit;
-		private System.Windows.Forms.MenuItem mnuContextLargeIcons;
-		private System.Windows.Forms.MenuItem mnuContextSmallIcons;
-		private System.Windows.Forms.MenuItem mnuContextList;
-		private System.Windows.Forms.MenuItem mnuContextDetails;
-		private System.Windows.Forms.MenuItem mnuContextProperties;
-		private System.Windows.Forms.MenuItem mnuNew;
-		private System.Windows.Forms.MenuItem mnuEdit;
-		private System.Windows.Forms.MenuItem mnuDelete;
-		private System.Windows.Forms.MenuItem mnuProperties;
-		private System.Windows.Forms.MenuItem mnuContextDelete;
-		private System.Windows.Forms.TreeView tv;
-		private System.Windows.Forms.Splitter split;
-		private System.Windows.Forms.ListView lv;
-		private System.Windows.Forms.ToolBarButton tbtnProperties;
-		private System.Windows.Forms.ToolBarButton tbtnRefresh;
-		private System.Windows.Forms.ToolBarButton tbtnNew;
-		private System.Windows.Forms.ToolBarButton tbtDelete;
-		private System.Windows.Forms.ToolBarButton tbtnSep1;
-		private System.Windows.Forms.ToolBar tbar;
-		private System.Windows.Forms.ToolBarButton tbtnSep2;
-		private System.Windows.Forms.ImageList imgLstTbar;
-		private System.Windows.Forms.ColumnHeader ch1;
-		private System.Windows.Forms.ColumnHeader ch2;
-		private System.Windows.Forms.ToolBarButton tbtnConnect;
-		private System.Windows.Forms.MenuItem mnuContextAction;
+		private ContextMenu rightClickMenu;
+		private MenuItem mnuContextView;
+		private StatusBar sbar;
+		private MenuItem mnuLargeIcons;
+		private MenuItem mnuSmallIcons;
+		private MenuItem mnuList;
+		private MenuItem mnuDetails;
+		private MenuItem mnuContextNew;
+		private MenuItem mnuContextEdit;
+		private MenuItem mnuContextLargeIcons;
+		private MenuItem mnuContextSmallIcons;
+		private MenuItem mnuContextList;
+		private MenuItem mnuContextDetails;
+		private MenuItem mnuContextProperties;
+		private MenuItem mnuNew;
+		private MenuItem mnuEdit;
+		private MenuItem mnuDelete;
+		private MenuItem mnuProperties;
+		private MenuItem mnuContextDelete;
+		private TreeView tv;
+		private Splitter split;
+		private ListView lv;
+		private ToolBarButton tbtnProperties;
+		private ToolBarButton tbtnRefresh;
+		private ToolBarButton tbtnNew;
+		private ToolBarButton tbtDelete;
+		private ToolBarButton tbtnSep1;
+		private ToolBar tbar;
+		private ToolBarButton tbtnSep2;
+		private ImageList imgLstTbar;
+		private ColumnHeader ch1;
+		private ColumnHeader ch2;
+		private ToolBarButton tbtnConnect;
+		private MenuItem mnuContextAction;
 
 		public ConsoleForm()
 		{
@@ -772,9 +767,8 @@ namespace Alchemi.Console
 
 					//get apps and jobs
 					//select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application
-					DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials,
-						Alchemi.Core.Manager.Permission.ManageOwnApp,
-						"select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application");
+					DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageOwnApp,
+									"select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application");
 
 					DataRowCollection apps = ds.Tables[0].Rows;
 
@@ -890,7 +884,7 @@ namespace Alchemi.Console
 			RefreshListItems(e.Node);
 		}
 
-		private void mnuView_Click(object sender, System.EventArgs e)
+		private void mnuView_Click(object sender, EventArgs e)
 		{
 			if (sender == mnuLargeIcons || sender == mnuContextLargeIcons)
 			{
@@ -914,7 +908,7 @@ namespace Alchemi.Console
 			//when the context menu appears in the list view, this menu doesnt disappear when clicked the first time.
 		}
 
-		private void mnuAction_Click(object sender, System.EventArgs e)
+		private void mnuAction_Click(object sender, EventArgs e)
 		{
 			//todo code for action items...
 			if (sender == mnuNew || sender == mnuContextNew)
@@ -932,7 +926,7 @@ namespace Alchemi.Console
 			RefreshUI();
 		}
 
-		private void tbar_ButtonClick(object sender, System.Windows.Forms.ToolBarButtonClickEventArgs e)
+		private void tbar_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
 		{
 			//todo all other buttons
 			if (e.Button == tbtnRefresh)

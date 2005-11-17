@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au), Rajkumar Buyya (raj@csse.unimelb.edu.au), and Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -238,7 +238,8 @@ namespace Alchemi.ExecutorExec
 			this.txLog.ReadOnly = true;
 			this.txLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.txLog.Size = new System.Drawing.Size(424, 96);
-			this.txLog.TabIndex = 1;
+			this.txLog.TabIndex = 11;
+			this.txLog.TabStop = false;
 			this.txLog.Text = "";
 			this.txLog.DoubleClick += new System.EventHandler(this.txLog_DoubleClick);
 			// 
@@ -396,7 +397,8 @@ namespace Alchemi.ExecutorExec
 			this.btReset.Location = new System.Drawing.Point(96, 296);
 			this.btReset.Name = "btReset";
 			this.btReset.Size = new System.Drawing.Size(224, 23);
-			this.btReset.TabIndex = 2;
+			this.btReset.TabIndex = 8;
+			this.btReset.TabStop = false;
 			this.btReset.Text = "Reset";
 			this.btReset.Click += new System.EventHandler(this.btReset_Click);
 			// 
@@ -406,7 +408,7 @@ namespace Alchemi.ExecutorExec
 			this.btDisconnect.Location = new System.Drawing.Point(208, 328);
 			this.btDisconnect.Name = "btDisconnect";
 			this.btDisconnect.Size = new System.Drawing.Size(112, 23);
-			this.btDisconnect.TabIndex = 1;
+			this.btDisconnect.TabIndex = 10;
 			this.btDisconnect.Text = "Disconnect";
 			this.btDisconnect.Click += new System.EventHandler(this.btDisconnect_Click);
 			// 
@@ -445,14 +447,14 @@ namespace Alchemi.ExecutorExec
 			this.txMgrPort.Location = new System.Drawing.Point(144, 40);
 			this.txMgrPort.Name = "txMgrPort";
 			this.txMgrPort.Size = new System.Drawing.Size(64, 20);
-			this.txMgrPort.TabIndex = 4;
+			this.txMgrPort.TabIndex = 2;
 			this.txMgrPort.Text = "";
 			// 
 			// txMgrHost
 			// 
 			this.txMgrHost.Location = new System.Drawing.Point(16, 40);
 			this.txMgrHost.Name = "txMgrHost";
-			this.txMgrHost.TabIndex = 3;
+			this.txMgrHost.TabIndex = 1;
 			this.txMgrHost.Text = "";
 			// 
 			// groupBox2
@@ -503,6 +505,7 @@ namespace Alchemi.ExecutorExec
 			this.txId.ReadOnly = true;
 			this.txId.Size = new System.Drawing.Size(192, 20);
 			this.txId.TabIndex = 5;
+			this.txId.TabStop = false;
 			this.txId.Text = "";
 			// 
 			// label4
@@ -519,7 +522,7 @@ namespace Alchemi.ExecutorExec
 			this.btConnect.Location = new System.Drawing.Point(96, 328);
 			this.btConnect.Name = "btConnect";
 			this.btConnect.Size = new System.Drawing.Size(104, 23);
-			this.btConnect.TabIndex = 0;
+			this.btConnect.TabIndex = 9;
 			this.btConnect.Text = "Connect";
 			this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
 			// 

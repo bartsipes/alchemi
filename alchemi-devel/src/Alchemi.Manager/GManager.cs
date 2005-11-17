@@ -12,7 +12,7 @@
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
 *					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), and Krishna Nadiminti (kna@cs.mu.oz.au)
+* Author         :  Akshay Luther (akshayl@csse.unimelb.edu.au), Rajkumar Buyya (raj@csse.unimelb.edu.au), and Krishna Nadiminti (kna@csse.unimelb.edu.au)
 * License        :  GPL
 *					This program is free software; you can redistribute it and/or 
 *					modify it under the terms of the GNU General Public
@@ -23,16 +23,15 @@
 */ 
 #endregion
 
-
 using System;
 using System.Data;
 using System.IO;
 using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Executor;
-using Alchemi.Core.Owner;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Owner;
 using Alchemi.Manager.Storage;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
@@ -741,31 +740,6 @@ namespace Alchemi.Manager
 			return _Applications.GetApplicationList(sc.Username);
 		}
 
-		/// <summary>
-		/// Executes a select query against the Manager database.
-		/// </summary>
-		/// <param name="sc"></param>
-		/// <param name="perm"></param>
-		/// <param name="query"></param>
-		/// <returns>results of the query as a Dataset</returns>
-    	public DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query)
-		{
-			AuthenticateUser(sc); 
-
-			//ensure the highest permission.
-			EnsurePermission(sc,perm);
-
-			logger.Debug("Running query: " + query);
-
-			//just make sure there is no mischief!
-			if (!query.Trim().ToLower().StartsWith("select"))
-			{
-				throw new Exception("Invalid Query");
-			}
-			DataSet result = InternalShared.Instance.Database.ExecSql_DataSet(query);
-			return result;
-		}
-
         //-----------------------------------------------------------------------------------------------       
         
 		/// <summary>
@@ -917,7 +891,41 @@ namespace Alchemi.Manager
 			return ManagerStorageFactory.ManagerStorage().GetExecutors();
 		}
 
-        //----------------------------------------------------------------------------------------------- 
+		/// <summary>
+		/// Executes a select query against the Manager database.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="perm"></param>
+		/// <param name="query"></param>
+		/// <returns>results of the query as a Dataset</returns>
+		public DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query)
+		{
+			DataSet result = null;
+			AuthenticateUser(sc); 
+			EnsurePermission(sc,perm);
+
+			//just make sure there is no mischief!
+			if (query.Trim().ToLower().StartsWith("select"))
+			{
+				logger.Warn("Query passed in: "+query);
+				try
+				{
+					result = ManagerStorageFactory.ManagerStorage().RunSqlReturnDataSet(query);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Admon_ExecQuery ERROR executing query :"+query, ex);
+				}
+			}
+			else
+			{
+				logger.Warn("Invalid query passed in: "+query);
+				//throw new Exception("Invalid Query");
+			}
+			return result;
+		}
+
+    	//----------------------------------------------------------------------------------------------- 
 
 		/// <summary>
 		/// Gets the summary of the system status.
@@ -932,11 +940,11 @@ namespace Alchemi.Manager
 		///	power_totalusage,
 		///	unfinished_threads.
 		/// </returns>
-        public DataTable Admon_GetSystemSummary(SecurityCredentials sc)
+        public SystemSummary Admon_GetSystemSummary(SecurityCredentials sc)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
-            return InternalShared.Instance.Database.ExecSql_DataTable("Admon_SystemSummary");
+			return ManagerStorageFactory.ManagerStorage().GetSystemSummary();
         }
 
         //----------------------------------------------------------------------------------------------- 

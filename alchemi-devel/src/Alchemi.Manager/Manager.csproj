@@ -164,11 +164,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SqlServer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Storage\GenericManagerDatabaseStorage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

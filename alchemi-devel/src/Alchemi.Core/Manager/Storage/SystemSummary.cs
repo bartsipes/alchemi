@@ -41,6 +41,7 @@ namespace Alchemi.Core.Manager.Storage
 		private Int32 m_powerAvailable;
 		private String m_powerTotalUsage;
 		private Int32 m_unfinishedThreads;
+		private Int32 m_unfinishedApps;
 
 		#endregion
 
@@ -93,6 +94,14 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		public Int32 UnfinishedApps
+		{
+			get
+			{
+				return m_unfinishedApps;
+			}
+		}
+
 		#endregion
 
 		/// <summary>
@@ -102,14 +111,16 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="totalExecutors"></param>
 		/// <param name="powerUsage"></param>
 		/// <param name="powerAvailable"></param>
-		/// <param name="m_powerTotalUsage"></param>
-		/// <param name="m_unfinishedThreads"></param>
+		/// <param name="powerTotalUsage"></param>
+		/// <param name="unfinishedApps"></param>
+		/// <param name="unfinishedThreads"></param>
 		public SystemSummary(
 			String maxPower, 
 			Int32 totalExecutors, 
 			Int32 powerUsage,
 			Int32 powerAvailable,
 			String powerTotalUsage,
+			Int32 unfinishedApps,
 			Int32 unfinishedThreads)
 		{
 			m_maxPower = maxPower;
@@ -117,6 +128,7 @@ namespace Alchemi.Core.Manager.Storage
 			m_powerUsage = powerUsage;
 			m_powerAvailable = powerAvailable;
 			m_powerTotalUsage = powerTotalUsage;
+			m_unfinishedApps = unfinishedApps;
 			m_unfinishedThreads = unfinishedThreads;
 		}
 	}
