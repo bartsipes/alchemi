@@ -89,16 +89,6 @@
                     AssemblyName = "System.Runtime.Remoting"
                     HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
-                <Reference
-                    Name = "ByteFX.MySqlClient"
-                    AssemblyName = "ByteFX.MySqlClient"
-                    HintPath = "..\..\lib\ByteFX.MySqlClient.dll"
-                />
-                <Reference
-                    Name = "Advanced.Data.Provider"
-                    AssemblyName = "Advanced.Data.Provider"
-                    HintPath = "..\..\lib\Advanced.Data.Provider.dll"
-                />
             </References>
         </Build>
         <Files>

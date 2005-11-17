@@ -1,19 +1,42 @@
+#region Alchemi copyright and license notice
+
+/*
+* Alchemi [.NET Grid Computing Framework]
+* http://www.alchemi.net
+*
+* Project		:	Alchemi Executor
+* Created on	:	October 2005
+* Copyright		:	Copyright © 2005 The University of Melbourne
+*					This technology has been developed with the support of 
+*					the Australian Research Council and the University of Melbourne
+*					research grants as part of the Gridbus Project
+*					within GRIDS Laboratory at the University of Melbourne, Australia.
+* Author         :  Akshay Luther (akshayl@cs.mu.oz.au), Rajkumar Buyya (raj@cs.mu.oz.au), Krishna Nadiminti (kna@cs.mu.oz.au) and many others.
+* License        :  GPL
+*					This program is free software; you can redistribute it and/or 
+*					modify it under the terms of the GNU General Public
+*					License as published by the Free Software Foundation;
+*					See the GNU General Public License 
+*					(http://www.gnu.org/copyleft/gpl.html) for more details.
+*
+*/ 
+#endregion
+
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 //
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Alchemi Executor Library")]
+[assembly: AssemblyDescription(".NET Grid Computing Framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("http://www.alchemi.net")]
+[assembly: AssemblyProduct("Alchemi")]
+[assembly: AssemblyCopyright("Copyright © 2005 The University of Melbourne")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -26,8 +49,8 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.*")]
-
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyInformationalVersion("1.0.0")]
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
 // Microsoft .NET Framework documentation for more information on assembly signing.

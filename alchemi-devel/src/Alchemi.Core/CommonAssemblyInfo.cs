@@ -24,7 +24,7 @@
 
 using System.Reflection;
 
-[assembly: AssemblyTitle("Alchemi")]
+[assembly: AssemblyTitle("Alchemi Core Library")]
 [assembly: AssemblyDescription(".NET Grid Computing Framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("http://www.alchemi.net")]

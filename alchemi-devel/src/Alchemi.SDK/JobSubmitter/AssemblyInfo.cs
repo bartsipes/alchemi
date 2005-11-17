@@ -32,7 +32,7 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("Alchemi DataBase Installer")]
+[assembly: AssemblyTitle("Alchemi Job Submitter")]
 [assembly: AssemblyDescription(".NET Grid Computing Framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("http://www.alchemi.net")]

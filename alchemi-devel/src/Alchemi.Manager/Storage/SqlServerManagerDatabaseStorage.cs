@@ -23,12 +23,9 @@ details.
 */
 #endregion
 
+//using Advanced.Data.Provider;
 using System;
-using System.Data;
-using System.Data.SqlClient;
-
-using Advanced.Data.Provider;
-
+using System.Data.OleDb;
 using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Manager.Storage
@@ -55,7 +52,7 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		public new SystemSummary GetSystemSummary()
 		{
-			using (AdpDataReader dataReader = RunSpReturnDataReader("Admon_SystemSummary"))
+			using (OleDbDataReader dataReader = RunSpReturnDataReader("Admon_SystemSummary"))
 			{
 				if (dataReader.Read())
 				{
@@ -87,6 +84,7 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
+
 
 		#region IManagerStorageSetup Members
 

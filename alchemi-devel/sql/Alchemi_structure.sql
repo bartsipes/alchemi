@@ -1,186 +1,184 @@
-use Alchemi
-
-/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_GetExecutors]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Admon_GetExecutors]
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_GetUserList]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Admon_GetUserList]
 GO
 
-/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Cleanup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Cleanup]
-GO
-
-/****** Object:  Stored Procedure dbo.Executor_Heartbeat    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_Heartbeat]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executor_Heartbeat]
-GO
-
-/****** Object:  Stored Procedure dbo.Executor_Insert    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_Insert]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executor_Insert]
-GO
-
-/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_SelectAvailableDedicated]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executor_SelectAvailableDedicated]
-GO
-
-/****** Object:  Stored Procedure dbo.Executor_SelectExists    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_SelectExists]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executor_SelectExists]
-GO
-
-/****** Object:  Stored Procedure dbo.Executors_DiscoverDisconnectedNDE    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executors_DiscoverDisconnectedNDE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executors_DiscoverDisconnectedNDE]
-GO
-
-/****** Object:  Stored Procedure dbo.Executors_SelectDedicatedRunningThreads    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executors_SelectDedicatedRunningThreads]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Executors_SelectDedicatedRunningThreads]
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_Reset    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_Reset]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Thread_Reset]
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_Schedule    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_Schedule]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Thread_Schedule]
-GO
-
-/****** Object:  Stored Procedure dbo.Threads_SelectLostNDE    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Threads_SelectLostNDE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Threads_SelectLostNDE]
-GO
-
-/****** Object:  Stored Procedure dbo.User_Authenticate    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_Authenticate]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[User_Authenticate]
-GO
-
-/****** Object:  Stored Procedure dbo.User_VerifyPermission    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_VerifyPermission]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[User_VerifyPermission]
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_Applications    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_Applications]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Admon_Applications]
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_SystemSummary    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_SystemSummary]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Admon_SystemSummary]
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_UserApplications    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_UserApplications]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Admon_UserApplications]
-GO
-
-/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Application_Insert]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Application_Insert]
 GO
 
-/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Application_Stop]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Application_Stop]
 GO
 
-/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Application_UpdateState]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Application_UpdateState]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Cleanup]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Cleanup]
+GO
+
+/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_SelectAvailableDedicated]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executor_SelectAvailableDedicated]
+GO
+
+/****** Object:  Stored Procedure dbo.Executors_SelectDedicatedRunningThreads    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executors_SelectDedicatedRunningThreads]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executors_SelectDedicatedRunningThreads]
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_Insert]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_Insert]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_InsertNonPrimary]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_InsertNonPrimary]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Thread_Reset    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_Reset]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Thread_Reset]
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_Schedule    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_Schedule]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Thread_Schedule]
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_SelectReady]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_SelectReady]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_SelectState]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_SelectState]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_SetFailed]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_SetFailed]
 GO
 
-/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Thread_UpdateState]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[Thread_UpdateState]
 GO
 
-/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 29/09/2005 8:03:11 PM ******/
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Threads_UpdateStateAndSelect]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[Threads_UpdateStateAndSelect]
+/****** Object:  Stored Procedure dbo.Threads_SelectLostNDE    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Threads_SelectLostNDE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Threads_SelectLostNDE]
 GO
 
-/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.User_Authenticate    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_Authenticate]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[User_Authenticate]
+GO
+
+/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_VerifyApplicationCreator]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[User_VerifyApplicationCreator]
 GO
 
-/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Stored Procedure dbo.User_VerifyPermission    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[User_VerifyPermission]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[User_VerifyPermission]
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_Applications    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_Applications]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Admon_Applications]
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_GetExecutors]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Admon_GetExecutors]
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_SystemSummary    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_SystemSummary]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Admon_SystemSummary]
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_UserApplications    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Admon_UserApplications]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Admon_UserApplications]
+GO
+
+/****** Object:  Stored Procedure dbo.Executor_Heartbeat    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_Heartbeat]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executor_Heartbeat]
+GO
+
+/****** Object:  Stored Procedure dbo.Executor_Insert    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_Insert]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executor_Insert]
+GO
+
+/****** Object:  Stored Procedure dbo.Executor_SelectExists    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executor_SelectExists]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executor_SelectExists]
+GO
+
+/****** Object:  Stored Procedure dbo.Executors_DiscoverDisconnectedNDE    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Executors_DiscoverDisconnectedNDE]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Executors_DiscoverDisconnectedNDE]
+GO
+
+/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 15/11/2005 11:43:14 AM ******/
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[Threads_UpdateStateAndSelect]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[Threads_UpdateStateAndSelect]
+GO
+
+/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[VerifyConnection]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
 drop procedure [dbo].[VerifyConnection]
 GO
 
-/****** Object:  Table [dbo].[application]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[application]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[application]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[application]
 GO
 
-/****** Object:  Table [dbo].[executor]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[executor]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[executor]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[executor]
 GO
 
-/****** Object:  Table [dbo].[grp]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[grp]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[grp]
 GO
 
-/****** Object:  Table [dbo].[grp_prm]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[grp_prm]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[grp_prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[grp_prm]
 GO
 
-/****** Object:  Table [dbo].[prm]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[prm]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[prm]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[prm]
 GO
 
-/****** Object:  Table [dbo].[thread]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[thread]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[thread]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[thread]
 GO
 
-/****** Object:  Table [dbo].[usr]    Script Date: 29/09/2005 8:03:11 PM ******/
+/****** Object:  Table [dbo].[usr]    Script Date: 15/11/2005 11:43:14 AM ******/
 if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[usr]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 drop table [dbo].[usr]
 GO
 
-/****** Object:  Table [dbo].[application]    Script Date: 29/09/2005 8:03:12 PM ******/
+/****** Object:  Table [dbo].[application]    Script Date: 15/11/2005 11:43:15 AM ******/
 CREATE TABLE [dbo].[application] (
 	[application_id] [uniqueidentifier] NOT NULL ,
 	[state] [int] NOT NULL ,
@@ -192,7 +190,7 @@ CREATE TABLE [dbo].[application] (
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[executor]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[executor]    Script Date: 15/11/2005 11:43:15 AM ******/
 CREATE TABLE [dbo].[executor] (
 	[executor_id] [uniqueidentifier] NOT NULL ,
 	[is_dedicated] [bit] NOT NULL ,
@@ -219,28 +217,28 @@ CREATE TABLE [dbo].[executor] (
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[grp]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[grp]    Script Date: 15/11/2005 11:43:16 AM ******/
 CREATE TABLE [dbo].[grp] (
 	[grp_id] [int] NOT NULL ,
 	[grp_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[grp_prm]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[grp_prm]    Script Date: 15/11/2005 11:43:16 AM ******/
 CREATE TABLE [dbo].[grp_prm] (
 	[grp_id] [int] NOT NULL ,
 	[prm_id] [int] NOT NULL 
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[prm]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[prm]    Script Date: 15/11/2005 11:43:16 AM ******/
 CREATE TABLE [dbo].[prm] (
 	[prm_id] [int] NOT NULL ,
 	[prm_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL 
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[thread]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[thread]    Script Date: 15/11/2005 11:43:16 AM ******/
 CREATE TABLE [dbo].[thread] (
 	[internal_thread_id] [int] IDENTITY (1, 1) NOT NULL ,
 	[application_id] [uniqueidentifier] NOT NULL ,
@@ -254,7 +252,7 @@ CREATE TABLE [dbo].[thread] (
 ) ON [PRIMARY]
 GO
 
-/****** Object:  Table [dbo].[usr]    Script Date: 29/09/2005 8:03:14 PM ******/
+/****** Object:  Table [dbo].[usr]    Script Date: 15/11/2005 11:43:16 AM ******/
 CREATE TABLE [dbo].[usr] (
 	[usr_name] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
 	[password] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL ,
@@ -262,10 +260,29 @@ CREATE TABLE [dbo].[usr] (
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[executor] ADD 
+	CONSTRAINT [DF_executor_cpu_max] DEFAULT (0) FOR [cpu_max],
+	CONSTRAINT [DF_executor_cpu_usage] DEFAULT (0) FOR [cpu_usage],
+	CONSTRAINT [DF_executor_cpu_avail] DEFAULT (0) FOR [cpu_avail],
+	CONSTRAINT [DF_executor_cpu_totalusage] DEFAULT (0) FOR [cpu_totalusage],
+	CONSTRAINT [DF_executor_mem_max] DEFAULT (0) FOR [mem_max],
+	CONSTRAINT [DF_executor_disk_max] DEFAULT (0) FOR [disk_max],
+	CONSTRAINT [DF_executor_num_cpus] DEFAULT (1) FOR [num_cpus],
+	CONSTRAINT [DF_executor_cpuLimit] DEFAULT (0) FOR [cpuLimit],
+	CONSTRAINT [DF_executor_memLimit] DEFAULT (0) FOR [memLimit],
+	CONSTRAINT [DF_executor_diskLimit] DEFAULT (0) FOR [diskLimit],
+	CONSTRAINT [DF_executor_costPerThread] DEFAULT (0) FOR [costPerThread],
+	CONSTRAINT [DF_executor_costPerDiskMB] DEFAULT (0) FOR [costPerDiskMB],
+	CONSTRAINT [DF_executor_arch] DEFAULT (0) FOR [arch],
+	CONSTRAINT [DF_executor_os] DEFAULT (0) FOR [os]
+GO
+
 SET QUOTED_IDENTIFIER ON 
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Admon_Applications    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Admon_Applications    Script Date: 29/09/2005 8:03:14 PM ******/
 
@@ -304,6 +321,59 @@ inner join application on #apps.application_id = application.application_id orde
 
 
 
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE             PROCEDURE Admon_GetExecutors
+
+AS
+
+select executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, convert(varchar, cpu_totalusage * cpu_max / (3600 * 1000)) as cpu_totalusage from executor order by is_connected desc
+
+
+
+
+
+
+
+
+
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -315,6 +385,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Admon_SystemSummary    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Admon_SystemSummary    Script Date: 29/09/2005 8:03:14 PM ******/
 
@@ -371,6 +443,7 @@ select * from #summary
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -382,6 +455,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Admon_UserApplications    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Admon_UserApplications    Script Date: 29/09/2005 8:03:14 PM ******/
 
@@ -415,115 +490,6 @@ inner join application on #apps.application_id = application.application_id orde
 
 
 
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE            PROCEDURE 
-
-Application_Insert
-(
-  @usr_name varchar(50)
-)
-
-AS
-
-set nocount on
-
-declare @id uniqueidentifier
-
-select @id = newid()
-
-insert application(application_id, state, is_primary, time_created, usr_name)
-  values(@id, 0, 1, getdate(), @usr_name)
-select @id as id
-
-
-
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE            PROCEDURE 
-
-Application_Stop
-(
-  @application_id uniqueidentifier
-)
-
-AS
-
-set nocount on
-
-create table #de_threads
-(
-  thread_id int,
-  executor_id uniqueidentifier,
-)
-
-insert into #de_threads
-select thread_id, executor_id from thread where state <> 4
-
-update thread set state = 4 where application_id = @application_id
-
-select * from #de_threads where executor_id <> null
-
-
-
 
 GO
 
@@ -537,537 +503,7 @@ GO
 SET ANSI_NULLS OFF 
 GO
 
-/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-CREATE    PROCEDURE Application_UpdateState
-(
-  @application_id uniqueidentifier,
-  @state int
-)
-
-AS
-
-update application set state = @state where application_id = @application_id
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE          PROCEDURE Thread_Insert
-(
-  @application_id uniqueidentifier,
-  @thread_id int
-)
-
-AS
-
-insert thread(application_id, thread_id, state)
-values (@application_id, @thread_id, 0)
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE          PROCEDURE Thread_InsertNonPrimary
-(
-  @application_id uniqueidentifier,
-  @thread_id int,
-  @priority int
-)
-
-AS
-
-if not exists (select application_id from application where application_id = @application_id) begin
-  insert application(application_id, state, is_primary)
-  values (@application_id, 0, 0)
-end
-
-insert thread(application_id, thread_id, state, priority)
-values (@application_id, @thread_id, 0, @priority)
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE               PROCEDURE Thread_SelectReady
-AS
-
-
-select * from thread where state = 0 order by newid()/*priority, internal_thread_id*/
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-CREATE      PROCEDURE Thread_SelectState
-(
-  @application_id uniqueidentifier,
-  @thread_id int
-)
-
-AS
-
-select state from thread where application_id = @application_id and thread_id = @thread_id
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 29/09/2005 8:03:14 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-CREATE     PROCEDURE Thread_SetFailed
-(
-  @application_id uniqueidentifier,
-  @thread_id int
-)
-
-AS
-
-update thread set failed = 1 where application_id = @application_id and thread_id = @thread_id
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-CREATE     PROCEDURE Thread_UpdateState
-(
-  @application_id uniqueidentifier,
-  @thread_id int,
-  @state int
-)
-
-AS
-
-update thread set state = @state where application_id = @application_id and thread_id = @thread_id
-
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-CREATE            PROCEDURE Threads_UpdateStateAndSelect
-(
-  @application_id uniqueidentifier,
-  @old_state int,
-  @new_state int
-)
-
-AS
-
-create table #return_table
-(
-  internal_thread_id int
-)
-
-insert #return_table
-  select internal_thread_id from thread where application_id = @application_id and state = @old_state
-
-update thread
-  set state = @new_state
-  where internal_thread_id in (select internal_thread_id from #return_table)
-
-select thread_id from thread inner join #return_table on thread.internal_thread_id = #return_table.internal_thread_id
-
-
-
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE         PROCEDURE User_VerifyApplicationCreator
-(
-  @usr_name varchar(50),
-  @application_id uniqueidentifier
-)
-
-AS
-
-select count(*) as verified from application usr where usr_name = @usr_name and application_id = @application_id
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-CREATE      PROCEDURE VerifyConnection
-
-AS
-
--- intentionally left blank
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Admon_GetExecutors    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE             PROCEDURE Admon_GetExecutors
-
-AS
-
-select executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, convert(varchar, cpu_totalusage * cpu_max / (3600 * 1000)) as cpu_totalusage from executor order by is_connected desc
-
-
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE         PROCEDURE Admon_GetUserList
-
-AS
-
-select usr_name, password, grp.grp_id from usr inner join grp on grp.grp_id = usr.grp_id
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-CREATE       PROCEDURE Cleanup
-AS
-
-delete thread
-delete executor
-delete application
-
-
-
-
-
-
-
-
-
-
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
+/****** Object:  Stored Procedure dbo.Executor_Heartbeat    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Executor_Heartbeat    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1107,6 +543,7 @@ update executor set ping_time = getdate(), is_connected = 1, cpu_usage = @cpu_us
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1118,6 +555,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Executor_Insert    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Executor_Insert    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1174,43 +613,6 @@ select @id as id
 
 
 
-GO
-
-SET QUOTED_IDENTIFIER OFF 
-GO
-SET ANSI_NULLS ON 
-GO
-
-SET QUOTED_IDENTIFIER ON 
-GO
-SET ANSI_NULLS OFF 
-GO
-
-/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 29/09/2005 8:03:15 PM ******/
-
-/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 9/08/2005 3:33:03 PM ******/
-
-
-
-
-
-
-
-
-
-
-
-create              PROCEDURE Executor_SelectAvailableDedicated
-AS
-
-select * from executor
-where executor_id not in(
-  select executor_id from thread where state in (1, 2)
-)
-and is_dedicated = 1 and is_connected = 1
-
-
-
 
 GO
 
@@ -1223,6 +625,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Executor_SelectExists    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Executor_SelectExists    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1269,6 +673,7 @@ select @executor_exists as executor_exists
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1280,6 +685,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS OFF 
 GO
+
+/****** Object:  Stored Procedure dbo.Executors_DiscoverDisconnectedNDE    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Executors_DiscoverDisconnectedNDE    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1314,6 +721,7 @@ update executor set is_connected = 0 where datediff(s, ping_time, getdate()) > @
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1325,6 +733,383 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS OFF 
 GO
+
+/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Threads_UpdateStateAndSelect    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+CREATE            PROCEDURE Threads_UpdateStateAndSelect
+(
+  @application_id uniqueidentifier,
+  @old_state int,
+  @new_state int
+)
+
+AS
+
+create table #return_table
+(
+  internal_thread_id int
+)
+
+insert #return_table
+  select internal_thread_id from thread where application_id = @application_id and state = @old_state
+
+update thread
+  set state = @new_state
+  where internal_thread_id in (select internal_thread_id from #return_table)
+
+select thread_id from thread inner join #return_table on thread.internal_thread_id = #return_table.internal_thread_id
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.VerifyConnection    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+CREATE      PROCEDURE VerifyConnection
+
+AS
+
+-- intentionally left blank
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Admon_GetUserList    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE         PROCEDURE Admon_GetUserList
+
+AS
+
+select usr_name, password, grp.grp_id from usr inner join grp on grp.grp_id = usr.grp_id
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Application_Insert    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE            PROCEDURE 
+
+Application_Insert
+(
+  @usr_name varchar(50)
+)
+
+AS
+
+set nocount on
+
+declare @id uniqueidentifier
+
+select @id = newid()
+
+insert application(application_id, state, is_primary, time_created, usr_name)
+  values(@id, 0, 1, getdate(), @usr_name)
+select @id as id
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Application_Stop    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE            PROCEDURE 
+
+Application_Stop
+(
+  @application_id uniqueidentifier
+)
+
+AS
+
+set nocount on
+
+create table #de_threads
+(
+  thread_id int,
+  executor_id uniqueidentifier,
+)
+
+insert into #de_threads
+select thread_id, executor_id from thread where state <> 4
+
+update thread set state = 4 where application_id = @application_id
+
+select * from #de_threads where executor_id <> null
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Application_UpdateState    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+CREATE    PROCEDURE Application_UpdateState
+(
+  @application_id uniqueidentifier,
+  @state int
+)
+
+AS
+
+update application set state = @state where application_id = @application_id
+
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Cleanup    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+CREATE       PROCEDURE Cleanup
+AS
+
+delete thread
+delete executor
+delete application
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Executor_SelectAvailableDedicated    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+create              PROCEDURE Executor_SelectAvailableDedicated
+AS
+
+select * from executor
+where executor_id not in(
+  select executor_id from thread where state in (1, 2)
+)
+and is_dedicated = 1 and is_connected = 1
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Executors_SelectDedicatedRunningThreads    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Executors_SelectDedicatedRunningThreads    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1352,6 +1137,106 @@ select thread.executor_id, application_id, thread_id from thread inner join exec
 
 
 
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_Insert    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE          PROCEDURE Thread_Insert
+(
+  @application_id uniqueidentifier,
+  @thread_id int
+)
+
+AS
+
+insert thread(application_id, thread_id, state)
+values (@application_id, @thread_id, 0)
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_InsertNonPrimary    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE          PROCEDURE Thread_InsertNonPrimary
+(
+  @application_id uniqueidentifier,
+  @thread_id int,
+  @priority int
+)
+
+AS
+
+if not exists (select application_id from application where application_id = @application_id) begin
+  insert application(application_id, state, is_primary)
+  values (@application_id, 0, 0)
+end
+
+insert thread(application_id, thread_id, state, priority)
+values (@application_id, @thread_id, 0, @priority)
+
+
+
+
+
+
+
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1363,6 +1248,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.Thread_Reset    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Thread_Reset    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1391,6 +1278,7 @@ update thread set state = 0, executor_id = null, time_started = null where appli
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1402,6 +1290,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS OFF 
 GO
+
+/****** Object:  Stored Procedure dbo.Thread_Schedule    Script Date: 15/11/2005 11:43:16 AM ******/
 
 /****** Object:  Stored Procedure dbo.Thread_Schedule    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1492,6 +1382,7 @@ end
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1503,6 +1394,164 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS OFF 
 GO
+
+/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SelectReady    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE               PROCEDURE Thread_SelectReady
+AS
+
+
+select * from thread where state = 0 order by newid()/*priority, internal_thread_id*/
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SelectState    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+CREATE      PROCEDURE Thread_SelectState
+(
+  @application_id uniqueidentifier,
+  @thread_id int
+)
+
+AS
+
+select state from thread where application_id = @application_id and thread_id = @thread_id
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 29/09/2005 8:03:14 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_SetFailed    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+CREATE     PROCEDURE Thread_SetFailed
+(
+  @application_id uniqueidentifier,
+  @thread_id int
+)
+
+AS
+
+update thread set failed = 1 where application_id = @application_id and thread_id = @thread_id
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 15/11/2005 11:43:16 AM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.Thread_UpdateState    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+CREATE     PROCEDURE Thread_UpdateState
+(
+  @application_id uniqueidentifier,
+  @thread_id int,
+  @state int
+)
+
+AS
+
+update thread set state = @state where application_id = @application_id and thread_id = @thread_id
+
+
+
+
+
+
+
+
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.Threads_SelectLostNDE    Script Date: 15/11/2005 11:43:17 AM ******/
 
 /****** Object:  Stored Procedure dbo.Threads_SelectLostNDE    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1544,6 +1593,7 @@ and thread.state not in (0)
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1555,6 +1605,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS OFF 
 GO
+
+/****** Object:  Stored Procedure dbo.User_Authenticate    Script Date: 15/11/2005 11:43:17 AM ******/
 
 /****** Object:  Stored Procedure dbo.User_Authenticate    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1586,6 +1638,53 @@ select count(*) as authenticated from usr where usr_name = @usr_name and passwor
 
 
 
+
+GO
+
+SET QUOTED_IDENTIFIER OFF 
+GO
+SET ANSI_NULLS ON 
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS OFF 
+GO
+
+/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 15/11/2005 11:43:17 AM ******/
+
+/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 29/09/2005 8:03:15 PM ******/
+
+/****** Object:  Stored Procedure dbo.User_VerifyApplicationCreator    Script Date: 9/08/2005 3:33:03 PM ******/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE         PROCEDURE User_VerifyApplicationCreator
+(
+  @usr_name varchar(50),
+  @application_id uniqueidentifier
+)
+
+AS
+
+select count(*) as verified from application usr where usr_name = @usr_name and application_id = @application_id
+
+
+
+
+
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
@@ -1597,6 +1696,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON 
 GO
+
+/****** Object:  Stored Procedure dbo.User_VerifyPermission    Script Date: 15/11/2005 11:43:17 AM ******/
 
 /****** Object:  Stored Procedure dbo.User_VerifyPermission    Script Date: 29/09/2005 8:03:15 PM ******/
 
@@ -1635,16 +1736,11 @@ where usr.usr_name = @usr_name and prm.prm_id >= @prm_id
 
 
 
+
 GO
 
 SET QUOTED_IDENTIFIER OFF 
 GO
 SET ANSI_NULLS ON 
-GO
-
-
-exec sp_addextendedproperty N'MS_Description', N'Default priority=5 on a scale of 1 to 10', N'user', N'dbo', N'table', N'thread', N'column', N'priority'
-
-
 GO
 

@@ -712,7 +712,7 @@ namespace Alchemi.ManagerExec
 			if (_container == null)
 				_container = new ManagerContainer();
 			_container.Config = Config;
-			_container.RemotingConfigFile = "Manager.exe.config";
+			_container.RemotingConfigFile = "Alchemi.ManagerExec.exe.config";
 
 			try
 			{

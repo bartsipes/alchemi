@@ -98,14 +98,6 @@ namespace Alchemi.Manager
                 executor.PingExecutor(); //connect back to executor.
                 success = true;
 				logger.Debug("Connected dedicated. Executor_id="+_Id);
-            }
-            catch (Exception e)
-            {
-				logger.Error("Error connecting to exec: "+_Id,e);
-                throw new ExecutorCommException(_Id, e);
-            }
-            finally
-            {
 				ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
 
 				executorStorage.Connected = success;
@@ -117,13 +109,17 @@ namespace Alchemi.Manager
 				ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
 				
 				logger.Debug("Updated db after ping back to executor. dedicated executor_id="+_Id + ", dedicated = true, connected = "+success);
-            }
-
-            // update hashtable
-            if (!_DedicatedExecutors.ContainsKey(_Id))
+				// update hashtable
+				if (!_DedicatedExecutors.ContainsKey(_Id))
+				{
+					_DedicatedExecutors.Add(_Id, executor);
+					logger.Debug("Added to list of dedicated executors: executor_id="+_Id);
+				}
+			}
+            catch (Exception e)
             {
-                _DedicatedExecutors.Add(_Id, executor);
-				logger.Debug("Added to list of dedicated executors: executor_id="+_Id);
+				logger.Error("Error connecting to exec: "+_Id,e);
+                throw new ExecutorCommException(_Id, e);
             }
         }
 

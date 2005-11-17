@@ -62,12 +62,17 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// The configuration file used to set remoting parameters for the Manager.
 		/// </summary>
-		public string RemotingConfigFile = "Manager.exe.config";
+		public string RemotingConfigFile = "Alchemi.Manager.exe.config"; //this will be changed by the service/exec application and set to the right value.
 
 		/// <summary>
 		/// Specifies if the Manager is started.
 		/// </summary>
 		public bool Started = false;
+
+		//since starting and stopping may take a while, we better avoid calling start/stop twice,
+		//when the process of start/stop is in progress
+		private bool _Starting = false;
+		private bool _Stopping = false;
 
 		private TcpChannel _Chnl;
 
@@ -82,6 +87,7 @@ namespace Alchemi.Manager
 		private bool _stopScheduler = false;
 
 		private static readonly Logger logger = new Logger();
+
 
 		//----------------------------------------------------------------------------------------------
 		// events
@@ -109,8 +115,10 @@ namespace Alchemi.Manager
 		/// </summary>
         public void Start()
         {
-			if (Started)
+			if (Started || _Starting)
 				return;
+
+			_Starting = true;
 
             try
             {
@@ -143,7 +151,7 @@ namespace Alchemi.Manager
 
 				// build sql server configuration string
 				string sqlConnStr = string.Format(
-					"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=10; Max Pool Size=5; Min Pool Size=5",
+					"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
 					Config.DbServer,
 					Config.DbUsername,
 					Config.DbPassword,
@@ -263,6 +271,7 @@ namespace Alchemi.Manager
 					ManagerStartEvent("Started Manager",100);
 
 				Started = true;
+				_Starting = false;
 
 			}
             catch (Exception e)
@@ -324,8 +333,10 @@ namespace Alchemi.Manager
 		/// </summary>
         public void Stop()
         {
-			if (!Started)
+			if (!Started && !_Stopping)
 				return;
+
+			_Stopping = true;
 
 			if (_InitExecutorsThread != null)
 			{
@@ -359,6 +370,7 @@ namespace Alchemi.Manager
 			Config.Slz();
 
 			Started = false;
+			_Stopping = false;
         }
 
 		private void CleanUpApps()
@@ -438,7 +450,7 @@ namespace Alchemi.Manager
 					}
 					catch (ThreadAbortException)
 					{
-						logger.Debug("Scheduler Thread aborting...");
+						logger.Debug("Scheduler Thread resetting abort (1)...");
 						Thread.ResetAbort();
 					}
 					catch (Exception e)
@@ -449,7 +461,7 @@ namespace Alchemi.Manager
 			}
 			catch (ThreadAbortException)
 			{
-				logger.Debug("Scheduler Thread aborting...");
+				logger.Debug("Scheduler Thread resetting abort (2)...");
 				Thread.ResetAbort();
 			}
 			catch (Exception e)
