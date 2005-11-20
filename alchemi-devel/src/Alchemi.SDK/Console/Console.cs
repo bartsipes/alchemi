@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using Alchemi.Core;
 using log4net;
 
 // Configure log4net using the .config file
@@ -45,7 +46,8 @@ namespace Alchemi.Console
 		static void Main() 
 		{
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
+			Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+			Logger.LogHandler += new LogEventHandler(LogHandler);
 			if (!System.IO.Directory.Exists("dat"))
 			{
 				System.IO.Directory.CreateDirectory("dat");
@@ -58,11 +60,28 @@ namespace Alchemi.Console
 			Application.Run(new ConsoleParentForm());
 		}
 
+		private static void LogHandler(object sender, LogEventArgs e)
+		{
+			switch (e.Level)
+			{
+				case LogLevel.Debug:
+					string message = e.Source  + ":" + e.Member + " - " + e.Message;
+					logger.Debug(message,e.Exception);
+					break;
+				case LogLevel.Info:
+					logger.Info(e.Message);
+					break;
+				case LogLevel.Error:
+					logger.Error(e.Message,e.Exception);
+					break;
+				case LogLevel.Warn:
+					logger.Warn(e.Message);
+					break;
+			}
+		}
+
 		public Console()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 
 		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -71,10 +90,17 @@ namespace Alchemi.Console
 			HandleAllUnknownErrors(sender.ToString(),ex);
 		}
 
+
+		private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+		{
+			HandleAllUnknownErrors(sender.ToString(),e.Exception);
+		}
+
 		private static void HandleAllUnknownErrors(string sender, Exception ex)
 		{
 			logger.Error("Unknown Error from: " + sender,ex);
 			MessageBox.Show("Error occured: (continuing after error...)\n"+ex.ToString(), "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
+
 	}
 }

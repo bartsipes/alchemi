@@ -26,12 +26,11 @@
 using System;
 using System.ComponentModel;
 using System.Data;
-using System.Reflection;
 using System.Windows.Forms;
+using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
-using log4net;
 
 namespace Alchemi.Console
 {
@@ -42,6 +41,7 @@ namespace Alchemi.Console
 	{
 		private bool connected = false;
 		private ConsoleNode console = null;
+		private SysPerfForm sysForm = null;
 
 		//we need to keep a reference to these nodes, since they are special and 
 		//need to be access across functions
@@ -50,7 +50,7 @@ namespace Alchemi.Console
 		private SpecialParentNode appParentNode;
 
 		// Create a logger for use in this class
-		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		private static readonly Logger logger = new Logger();
 
 		private IContainer components;
 
@@ -87,7 +87,7 @@ namespace Alchemi.Console
 		private ToolBarButton tbtnProperties;
 		private ToolBarButton tbtnRefresh;
 		private ToolBarButton tbtnNew;
-		private ToolBarButton tbtDelete;
+		private ToolBarButton tbtnDelete;
 		private ToolBarButton tbtnSep1;
 		private ToolBar tbar;
 		private ToolBarButton tbtnSep2;
@@ -95,6 +95,8 @@ namespace Alchemi.Console
 		private ColumnHeader ch1;
 		private ColumnHeader ch2;
 		private ToolBarButton tbtnConnect;
+		private System.Windows.Forms.ToolBarButton tbtnSep3;
+		private System.Windows.Forms.ToolBarButton tbtnSysSummaryGraph;
 		private MenuItem mnuContextAction;
 
 		public ConsoleForm()
@@ -116,6 +118,11 @@ namespace Alchemi.Console
 				if(components != null)
 				{
 					components.Dispose();
+				}
+
+				if (sysForm!=null)
+				{
+					sysForm.Dispose();
 				}
 			}
 			base.Dispose( disposing );
@@ -156,10 +163,11 @@ namespace Alchemi.Console
 			this.imgListSmall = new System.Windows.Forms.ImageList(this.components);
 			this.sbar = new System.Windows.Forms.StatusBar();
 			this.tbar = new System.Windows.Forms.ToolBar();
+			this.tbtnConnect = new System.Windows.Forms.ToolBarButton();
 			this.tbtnRefresh = new System.Windows.Forms.ToolBarButton();
 			this.tbtnSep1 = new System.Windows.Forms.ToolBarButton();
 			this.tbtnNew = new System.Windows.Forms.ToolBarButton();
-			this.tbtDelete = new System.Windows.Forms.ToolBarButton();
+			this.tbtnDelete = new System.Windows.Forms.ToolBarButton();
 			this.tbtnSep2 = new System.Windows.Forms.ToolBarButton();
 			this.tbtnProperties = new System.Windows.Forms.ToolBarButton();
 			this.imgLstTbar = new System.Windows.Forms.ImageList(this.components);
@@ -168,7 +176,8 @@ namespace Alchemi.Console
 			this.lv = new System.Windows.Forms.ListView();
 			this.ch1 = new System.Windows.Forms.ColumnHeader();
 			this.ch2 = new System.Windows.Forms.ColumnHeader();
-			this.tbtnConnect = new System.Windows.Forms.ToolBarButton();
+			this.tbtnSep3 = new System.Windows.Forms.ToolBarButton();
+			this.tbtnSysSummaryGraph = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -348,9 +357,11 @@ namespace Alchemi.Console
 																					this.tbtnRefresh,
 																					this.tbtnSep1,
 																					this.tbtnNew,
-																					this.tbtDelete,
+																					this.tbtnDelete,
 																					this.tbtnSep2,
-																					this.tbtnProperties});
+																					this.tbtnProperties,
+																					this.tbtnSep3,
+																					this.tbtnSysSummaryGraph});
 			this.tbar.DropDownArrows = true;
 			this.tbar.ImageList = this.imgLstTbar;
 			this.tbar.Location = new System.Drawing.Point(0, 0);
@@ -359,6 +370,11 @@ namespace Alchemi.Console
 			this.tbar.Size = new System.Drawing.Size(864, 28);
 			this.tbar.TabIndex = 4;
 			this.tbar.ButtonClick += new System.Windows.Forms.ToolBarButtonClickEventHandler(this.tbar_ButtonClick);
+			// 
+			// tbtnConnect
+			// 
+			this.tbtnConnect.ImageIndex = 4;
+			this.tbtnConnect.ToolTipText = "Connect...";
 			// 
 			// tbtnRefresh
 			// 
@@ -376,8 +392,8 @@ namespace Alchemi.Console
 			// 
 			// tbtDelete
 			// 
-			this.tbtDelete.ImageIndex = 2;
-			this.tbtDelete.ToolTipText = "Delete...";
+			this.tbtnDelete.ImageIndex = 2;
+			this.tbtnDelete.ToolTipText = "Delete...";
 			// 
 			// tbtnSep2
 			// 
@@ -443,10 +459,14 @@ namespace Alchemi.Console
 			this.ch2.Text = "";
 			this.ch2.Width = 150;
 			// 
-			// tbtnConnect
+			// tbtnSep3
 			// 
-			this.tbtnConnect.ImageIndex = 4;
-			this.tbtnConnect.ToolTipText = "Connect...";
+			this.tbtnSep3.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
+			// 
+			// tbtnSysSummaryGraph
+			// 
+			this.tbtnSysSummaryGraph.ImageIndex = 6;
+			this.tbtnSysSummaryGraph.ToolTipText = "System Performance Summary";
 			// 
 			// ConsoleForm
 			// 
@@ -462,14 +482,13 @@ namespace Alchemi.Console
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Alchemi Console";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-			this.Activated += new EventHandler(ConsoleForm_Activated);
 			this.Closing += new System.ComponentModel.CancelEventHandler(this.ConsoleForm_Closing);
 			this.ResumeLayout(false);
 
 		}
 		#endregion
 
-		#region "user-generated methods"
+		#region "User-generated methods"
 		
 		private void RefreshUI()
 		{
@@ -480,6 +499,11 @@ namespace Alchemi.Console
 			else
 			{
 				sbar.Text = "Not connected.";
+				if (sysForm!=null)
+				{
+					sysForm.Dispose();
+				}
+				sysForm = null;
 			}
 
 			SetColumnHeaders();
@@ -879,6 +903,35 @@ namespace Alchemi.Console
 
 		#endregion
 
+		#region "Show System Form"
+		
+		private void ShowSystem()
+		{
+			if (!connected)
+			{
+				//MessageBox.Show("No connection available.");
+				return;
+			}
+
+			//first check if the system form is already showing.
+			//if not show it.
+			if (sysForm == null || !sysForm.Created)
+			{
+				sysForm = new SysPerfForm(console);
+				sysForm.Closing += new CancelEventHandler(sysForm_Closing);
+				sysForm.MdiParent = this.MdiParent;
+				sysForm.Text = "System Performance Monitor:  "+console.ManagerEP.Host+":"+console.ManagerEP.Port;
+				sysForm.WindowState = this.WindowState;
+			}
+
+			sysForm.Show();
+			sysForm.ShowSystem();
+			sysForm.Activate();
+		}
+
+		#endregion
+
+
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			RefreshListItems(e.Node);
@@ -947,9 +1000,21 @@ namespace Alchemi.Console
 				}
 				RefreshUI();
 			}
+			else if (e.Button == tbtnNew)
+			{
+				MessageBox.Show("To be implemented...");
+			}
+			else if (e.Button == tbtnDelete)
+			{
+				MessageBox.Show("To be implemented...");
+			}
 			else if (e.Button == tbtnProperties)
 			{
 				ShowProperties();
+			}
+			else if (e.Button == tbtnSysSummaryGraph)
+			{
+				ShowSystem();
 			}
 		}
 
@@ -1181,13 +1246,9 @@ namespace Alchemi.Console
 			Disconnect();
 		}
 
-		private void ConsoleForm_Activated(object sender, EventArgs e)
+		private void sysForm_Closing(object sender, CancelEventArgs e)
 		{
-			//everytime it is activated, if it is not connected, show the connection dialog.
-			if (!connected)
-			{
-				Connect();
-			}
+			this.Activate();
 		}
 	}
 }

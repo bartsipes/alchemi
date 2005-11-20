@@ -31,6 +31,7 @@ namespace Alchemi.Core.Manager.Storage
 	/// Returned by GetSystemSummary.
 	/// Contains various information about the application status
 	/// </summary>
+	[Serializable]
 	public class SystemSummary
 	{
 		#region "Private variables"

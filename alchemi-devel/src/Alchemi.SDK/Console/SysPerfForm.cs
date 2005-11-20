@@ -24,34 +24,27 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
-using Alchemi.Core.Owner;
-using System.Xml;
-using System.IO;
-using System.Drawing.Drawing2D;
 using NPlot;
+using PlotSurface2D = NPlot.Windows.PlotSurface2D;
 
 namespace Alchemi.Console
 {
 	/// <summary>
 	/// Summary description for SysPerfForm.
 	/// </summary>
-	public class SysPerfForm : System.Windows.Forms.Form
+	public class SysPerfForm : Form
 	{
-		private System.ComponentModel.IContainer components;
-
-		//TODO : fix this remove from here
-		private bool connected=false;
-		private ConsoleNode console=null;
+		private IContainer components;
 
 		// Create a logger for use in this class
-		private static readonly Alchemi.Core.Logger logger = new Logger();
+		private static readonly Logger logger = new Logger();
 
 		//For the summary graph
 		private ArrayList x1 = new ArrayList();
@@ -61,26 +54,28 @@ namespace Alchemi.Console
 		private LinePlot lineUsage = new LinePlot();
 		private LinePlot lineAvail = new LinePlot();
 		//
-		private NPlot.Windows.PlotSurface2D plotSurface;
+		private PlotSurface2D plotSurface;
 		//
-		private System.Windows.Forms.Panel panelGraph;
-		private System.Windows.Forms.Panel panelSummaryLabels;
-		private System.Windows.Forms.Label lbTotalPowerUsage;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label lbNumExec;
-		private System.Windows.Forms.Label lbRunningJobs;
-		private System.Windows.Forms.Label lbRunningApps;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Label lbCurPowerUsage;
-		private System.Windows.Forms.Label lbCurPowerAvail;
-		private System.Windows.Forms.Timer tmRefreshSystem;
-		private System.Windows.Forms.Panel panelPlotContainer;
-		private System.Windows.Forms.Label lbMaxPowerAvail;
+		private Panel panelGraph;
+		private Panel panelSummaryLabels;
+		private Label lbTotalPowerUsage;
+		private Label label2;
+		private Label label3;
+		private Label label4;
+		private Label lbNumExec;
+		private Label lbRunningJobs;
+		private Label lbRunningApps;
+		private Label label1;
+		private Label label5;
+		private Label label6;
+		private Label label7;
+		private Label lbCurPowerUsage;
+		private Label lbCurPowerAvail;
+		private Timer tmRefreshSystem;
+		private Panel panelPlotContainer;
+		private Label lbMaxPowerAvail;
+
+		private ConsoleNode console = null;
 
 		public SysPerfForm()
 		{
@@ -88,6 +83,12 @@ namespace Alchemi.Console
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
+			InitSystemPlot();
+		}
+
+		public SysPerfForm(ConsoleNode console): this()
+		{
+			this.console = console;
 		}
 
 		/// <summary>
@@ -376,21 +377,21 @@ namespace Alchemi.Console
 
 		}
 		#endregion
-
-		#region "user-generated methods"
+		
+		#region "Init-system Plot"
 		
 		public void InitSystemPlot()
 		{
 			try
 			{
 				plotSurface.Clear();
-				this.plotSurface.RightMenu = NPlot.Windows.PlotSurface2D.DefaultContextMenu;
+				this.plotSurface.RightMenu = PlotSurface2D.DefaultContextMenu;
 
 				plotSurface.Add( lineAvail );
 				plotSurface.Add( lineUsage );
 
 				plotSurface.PlotBackColor = plotSurface.BackColor;
-				plotSurface.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+				plotSurface.SmoothingMode = SmoothingMode.AntiAlias;
 
 				plotSurface.Title = "CPU Power - Availability & Usage";
 				//plotSurface.TitleFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
@@ -407,17 +408,17 @@ namespace Alchemi.Console
 				//plotSurface.YAxis1.LabelFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
 				//plotSurface.YAxis1.TickTextFont = new Font(new FontFamily("Microsoft Sans Serif" ), 9.75f, FontStyle.Bold);
 
-				NPlot.Grid gridPlotSurface = new NPlot.Grid();
-				gridPlotSurface.HorizontalGridType = NPlot.Grid.GridType.None;
-				gridPlotSurface.VerticalGridType = NPlot.Grid.GridType.Fine;
+				Grid gridPlotSurface = new Grid();
+				gridPlotSurface.HorizontalGridType = Grid.GridType.None;
+				gridPlotSurface.VerticalGridType = Grid.GridType.Fine;
 				gridPlotSurface.MajorGridPen.Color = Color.DarkGray;
 				plotSurface.Add(gridPlotSurface);
 
-				plotSurface.Legend = new NPlot.Legend();
+				plotSurface.Legend = new Legend();
 				plotSurface.Legend.NeverShiftAxes = false;
 				plotSurface.Legend.AttachTo( NPlot.PlotSurface2D.XAxisPosition.Bottom , NPlot.PlotSurface2D.YAxisPosition.Left);
-				plotSurface.Legend.HorizontalEdgePlacement = NPlot.Legend.Placement.Inside;
-				plotSurface.Legend.VerticalEdgePlacement = NPlot.Legend.Placement.Inside;
+				plotSurface.Legend.HorizontalEdgePlacement = Legend.Placement.Inside;
+				plotSurface.Legend.VerticalEdgePlacement = Legend.Placement.Inside;
 
 				lineAvail.Label = "usage";
 				lineAvail.Pen   = new Pen(Color.Crimson, 2.0f);
@@ -425,12 +426,12 @@ namespace Alchemi.Console
 				lineUsage.Label = "avail";
 				lineUsage.Pen   = new Pen(Color.SteelBlue, 2.0f);
 
-				plotSurface.AddInteraction(new NPlot.Windows.PlotSurface2D.Interactions.HorizontalDrag());
-				plotSurface.AddInteraction(new NPlot.Windows.PlotSurface2D.Interactions.VerticalDrag());
-				plotSurface.AddInteraction(new NPlot.Windows.PlotSurface2D.Interactions.AxisDrag(true));
+				plotSurface.AddInteraction(new PlotSurface2D.Interactions.HorizontalDrag());
+				plotSurface.AddInteraction(new PlotSurface2D.Interactions.VerticalDrag());
+				plotSurface.AddInteraction(new PlotSurface2D.Interactions.AxisDrag(true));
 				
 				plotSurface.PlotBackColor = Color.White;
-				plotSurface.BackColor = System.Drawing.SystemColors.Control;
+				plotSurface.BackColor = SystemColors.Control;
 				plotSurface.XAxis1.Color = Color.Black;
 				plotSurface.YAxis1.Color = Color.Black;
 
@@ -446,33 +447,35 @@ namespace Alchemi.Console
 	
 		#region "System Summary Graph" 
 		
-		private void ShowSystem()
+		public void ShowSystem()
 		{
-			tmRefreshSystem.Enabled = true;
-			InitSystemPlot();
 			RefreshSystemPlot();
+			tmRefreshSystem.Enabled = true;
 		}
-
 
 		private void RefreshSystemPlot()
 		{
-			if (connected)
-			{
-				try
-				{
-					SystemSummary summary = console.Manager.Admon_GetSystemSummary(console.Credentials);
+			try
+			{				
+				SystemSummary summary = console.Manager.Admon_GetSystemSummary(console.Credentials);
 
+				if (summary == null)
+				{
+					logger.Debug("Summary is null!");
+				}
+				else
+				{
 					this.lbMaxPowerAvail.Text =  summary.MaxPower.ToString();
 					this.lbTotalPowerUsage.Text = summary.PowerTotalUsage.ToString();
-				
+					
 					this.lbCurPowerAvail.Text = summary.PowerAvailable.ToString()+ " %";
 					this.lbCurPowerUsage.Text = summary.PowerUsage.ToString() + " %";
-				
+					
 					this.lbNumExec.Text = summary.TotalExecutors.ToString();
 					this.lbRunningApps.Text = summary.UnfinishedApps.ToString();
 					this.lbRunningJobs.Text = summary.UnfinishedThreads.ToString();
 					xVal++;
-           
+	           
 					x1.Add(xVal);
 
 					y1.Add(Convert.ToDouble(summary.PowerUsage));
@@ -484,8 +487,8 @@ namespace Alchemi.Console
 						y1.RemoveAt(0);
 						y2.RemoveAt(0);
 					}
-          
-        
+	          
+	        
 					int npt=31;
 					int []xTime  = new int[npt];
 					double []yAvail = new double[npt];
@@ -506,30 +509,20 @@ namespace Alchemi.Console
 					lineUsage.OrdinateData = yUsage;
 
 					plotSurface.Refresh();
-
+					
 				}
-				catch (System.Net.Sockets.SocketException se)
-				{
-					//sbar.Text = "Could not refresh system. Error: " + se.Message;
-					//Disconnect();
-					//need to throw an error or something here...
-					MessageBox.Show("Could not refresh system. Error: "+se.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
-				}
-				catch (Exception)
-				{
-					//sbar.Text = "Could not refresh system. Error: " + e.Message; 
-				}
+			}
+			catch (Exception ex)
+			{
+				logger.Error("Could not refresh system. Error: ",ex);
 			}
 		}
 
 		#endregion
 
-		private void tmRefreshSystem_Tick(object sender, System.EventArgs e)
+		private void tmRefreshSystem_Tick(object sender, EventArgs e)
 		{
-			if (connected)
-			{
-				RefreshSystemPlot();
-			}
+			RefreshSystemPlot();
 		}
 	}
 }

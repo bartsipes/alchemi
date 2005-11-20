@@ -192,7 +192,10 @@ namespace Alchemi.Core.Owner
 				{
 					Manager.Owner_CleanupApplication(Credentials,_Id);
 				}
-				catch{}
+				catch (Exception ex)
+				{
+					logger.Debug("Error while cleanUp: Dispose: ",ex);
+				}
 
 				if(components != null)
 				{

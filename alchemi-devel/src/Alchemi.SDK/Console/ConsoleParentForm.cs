@@ -24,7 +24,6 @@
 #endregion
 
 using System;
-using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -34,29 +33,29 @@ namespace Alchemi.Console
 	/// <summary>
 	/// Summary description for ConsoleParentForm.
 	/// </summary>
-	public class ConsoleParentForm : System.Windows.Forms.Form
+	public class ConsoleParentForm : Form
 	{
 		private ConsoleForm mainchild = null;
 		private ArrayList consoleForms;
 
-		private System.Windows.Forms.MainMenu mainMenu1;
-		private System.Windows.Forms.MenuItem mnuWindow;
-		private System.Windows.Forms.MenuItem mnuCascade;
-		private System.Windows.Forms.MenuItem mnuTileH;
-		private System.Windows.Forms.MenuItem mnuTileV;
-		private System.Windows.Forms.MenuItem mnuHelp;
-		private System.Windows.Forms.MenuItem mnuAbout;
-		private System.Windows.Forms.MenuItem mnuFile;
-		private System.Windows.Forms.MenuItem mnuExit;
-		private System.Windows.Forms.MenuItem mnuGridConnect;
-		private System.Windows.Forms.MenuItem mnuFileSep1;
-		private System.Windows.Forms.MenuItem mnuClose;
-		private System.Windows.Forms.MenuItem mnuFileSep2;
+		private MainMenu mainMenu1;
+		private MenuItem mnuWindow;
+		private MenuItem mnuCascade;
+		private MenuItem mnuTileH;
+		private MenuItem mnuTileV;
+		private MenuItem mnuHelp;
+		private MenuItem mnuAbout;
+		private MenuItem mnuFile;
+		private MenuItem mnuExit;
+		private MenuItem mnuGridConnect;
+		private MenuItem mnuFileSep1;
+		private MenuItem mnuClose;
+		private MenuItem mnuFileSep2;
 
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		public ConsoleParentForm()
 		{
@@ -220,7 +219,7 @@ namespace Alchemi.Console
 			mnuClose.Enabled = disable;
 		}
 
-		private void mnuExit_Click(object sender, System.EventArgs e)
+		private void mnuExit_Click(object sender, EventArgs e)
 		{
 			//todo disconnect everything before we close.
 			//close all forms.
@@ -236,7 +235,7 @@ namespace Alchemi.Console
 			Application.Exit();
 		}
 
-		private void mnuGridConnect_Click(object sender, System.EventArgs e)
+		private void mnuGridConnect_Click(object sender, EventArgs e)
 		{
 			//new grid connection
 			ConsoleForm cf = new ConsoleForm();
@@ -246,12 +245,12 @@ namespace Alchemi.Console
 			consoleForms.Add(cf);
 		}
 
-		private void mnuWindow_Click(object sender, System.EventArgs e)
+		private void mnuWindow_Click(object sender, EventArgs e)
 		{
 			//todo
 		}
 
-		private void mnuAbout_Click(object sender, System.EventArgs e)
+		private void mnuAbout_Click(object sender, EventArgs e)
 		{
 			//todo
 		}
@@ -266,7 +265,7 @@ namespace Alchemi.Console
 			}
 		}
 
-		private void mnuClose_Click(object sender, System.EventArgs e)
+		private void mnuClose_Click(object sender, EventArgs e)
 		{
 			if (this.ActiveMdiChild != null)
 			{

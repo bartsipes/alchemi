@@ -1006,38 +1006,72 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		public SystemSummary GetSystemSummary()
 		{
-			using (SqlDataReader dataReader = RunSpReturnDataReader("Admon_SystemSummary"))
+			//build the System_Summary SQLs
+						
+			string sqlQuery1 = 
+							"select count(*) as total_executors, "+
+							"convert(varchar, cast(isnull(sum(cpu_max), 0) as float)/1000 ) + ' GHz' as max_power,"+
+							"isnull(avg(cpu_usage), 0) as power_usage, isnull(avg(cpu_avail), 0) as power_avail,"+
+							"convert(varchar, isnull(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0)) + ' GHz*Hr' as power_totalusage "+ 
+							"from executor where is_connected = 1 ";
+
+			string sqlQuery2 = 
+							"select count(*) as unfinished_threads from thread where state not in (3, 4)";
+
+			string sqlQuery3 = 
+							"select count(*) as unfinished_apps " +
+							"from application,thread " +
+							"where application.application_id=thread.application_id " +
+							"and thread.state not in (3,4) ";
+
+			//logger.Debug(String.Format("SQL Query = {0}\n\n{1}\n\n{3}",sqlQuery1, sqlQuery2, sqlQuery3));
+			
+			SystemSummary summary = null;
+			String maxPower= null;
+			Int32 totalExecutors = 0;
+			Int32 powerUsage = 0;
+			Int32 powerAvailable = 0;
+			String powerTotalUsage = null;
+			Int32 unfinishedApps = 0;
+			Int32 unfinishedThreads = 0;
+			
+			try
 			{
-				if (dataReader.Read())
+				//query1, to get power usage and other details
+				using (SqlDataReader dataReader = RunSqlReturnDataReader(sqlQuery1))
 				{
-					String maxPower;
-					Int32 totalExecutors;
-					Int32 powerUsage;
-					Int32 powerAvailable;
-					String powerTotalUsage;
-					Int32 unfinishedApps;
-					Int32 unfinishedThreads;
-
-					maxPower = dataReader.GetString(dataReader.GetOrdinal("max_power"));
-					totalExecutors = dataReader.GetInt32(dataReader.GetOrdinal("total_executors"));
-					powerUsage = dataReader.GetInt32(dataReader.GetOrdinal("power_usage"));
-					powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
-					powerTotalUsage = dataReader.GetString(dataReader.GetOrdinal("power_totalusage"));
-					unfinishedApps = dataReader.GetInt32(dataReader.GetOrdinal("unfinished_apps"));
-					unfinishedThreads = dataReader.GetInt32(dataReader.GetOrdinal("unfinished_threads"));
-
-					return new SystemSummary(
-						maxPower, 
-						totalExecutors,
-						powerUsage,
-						powerAvailable,
-						powerTotalUsage,
-						unfinishedApps,
-						unfinishedThreads);
+					if (dataReader.Read())
+					{
+						maxPower = dataReader.GetString(dataReader.GetOrdinal("max_power"));
+						totalExecutors = dataReader.GetInt32(dataReader.GetOrdinal("total_executors"));
+						powerUsage = dataReader.GetInt32(dataReader.GetOrdinal("power_usage"));
+						powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
+						powerTotalUsage = dataReader.GetString(dataReader.GetOrdinal("power_totalusage"));
+					}
 				}
+			
+				//query2 to get thread count
+				unfinishedThreads = (Int32)RunSqlReturnScalar(sqlQuery2);
+
+				//query3 to get app count
+				unfinishedApps = (Int32)RunSqlReturnScalar(sqlQuery3);
+				
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Error getting system summary:",ex);
 			}
 
-			return null;
+			summary = new SystemSummary(
+				maxPower, 
+				totalExecutors,
+				powerUsage,
+				powerAvailable,
+				powerTotalUsage,
+				unfinishedApps,
+				unfinishedThreads);
+
+			return summary;
 		}
 
 		public DataSet RunSqlReturnDataSet(string query)
@@ -1111,7 +1145,6 @@ namespace Alchemi.Manager.Storage
 
 		public void TearDownStorage()
 		{
-			//RunSql("if exists (select * from dbo.sysobjects where id = object_id(N'dbo.User_Authenticate') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure dbo.User_Authenticate");
 			RunSql("DROP TABLE dbo.usr");
 			RunSql("DROP TABLE dbo.grp");
 

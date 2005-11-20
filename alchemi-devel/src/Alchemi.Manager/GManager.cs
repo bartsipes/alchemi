@@ -944,7 +944,9 @@ namespace Alchemi.Manager
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
-			return ManagerStorageFactory.ManagerStorage().GetSystemSummary();
+			IManagerStorage mstore = ManagerStorageFactory.ManagerStorage();
+			logger.Debug(mstore.GetType().ToString());
+			return mstore.GetSystemSummary();
         }
 
         //----------------------------------------------------------------------------------------------- 
@@ -1038,7 +1040,6 @@ namespace Alchemi.Manager
 			if (!result)
 			{
 				logger.Debug("User"+sc.Username+" doesnt have permission "+perm.ToString());
-				logger.Debug(string.Format("----------- User_VerifyPermission '{0}', '{1}'", sc.Username, Convert.ToInt32(perm)));
 				throw new AuthorizationException(
 					string.Format("User '{0}' is not associated with permission '{1}'", sc.Username, perm.ToString()),
 					null
