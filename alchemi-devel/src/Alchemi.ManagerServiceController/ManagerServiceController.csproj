@@ -135,7 +135,6 @@
             <Include>
                 <File
                     RelPath = "App.config"
-                    Link = "..\Alchemi.ManagerExec\App.config"
                     BuildAction = "None"
                 />
                 <File

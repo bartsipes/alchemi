@@ -158,7 +158,6 @@ namespace Alchemi.Core
             if (_Initted)
             {
                 return;
-                //throw new InvalidOperationException("Node has already been initialised.");
             }
             
             if (_Connection != null)

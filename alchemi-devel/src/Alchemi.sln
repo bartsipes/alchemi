@@ -30,14 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerExec", "Alchemi.Mana
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerServiceController", "Alchemi.ManagerServiceController\ManagerServiceController.csproj", "{85660E73-08EB-4927-9C77-4009B8533F01}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorServiceController", "Alchemi.ExecutorServiceController\ExecutorServiceController.csproj", "{23CC92DA-8780-4A17-BF9A-E567CB0548C5}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Tester", "Alchemi.Tester\Alchemi.Tester.csproj", "{C11636CD-14B6-4526-80DA-AFF5DFA84298}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -92,14 +84,6 @@ Global
 		{11F1CF0B-5526-4534-9784-0543E29D4292}.Debug.Build.0 = Debug|.NET
 		{11F1CF0B-5526-4534-9784-0543E29D4292}.Release.ActiveCfg = Release|.NET
 		{11F1CF0B-5526-4534-9784-0543E29D4292}.Release.Build.0 = Release|.NET
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug.ActiveCfg = Debug|.NET
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug.Build.0 = Debug|.NET
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Release.ActiveCfg = Release|.NET
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Release.Build.0 = Release|.NET
-		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug.ActiveCfg = Debug|.NET
-		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug.Build.0 = Debug|.NET
-		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Release.ActiveCfg = Release|.NET
-		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Release.Build.0 = Release|.NET
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug.ActiveCfg = Debug|.NET
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug.Build.0 = Debug|.NET
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release.ActiveCfg = Release|.NET

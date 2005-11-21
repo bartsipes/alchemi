@@ -74,6 +74,10 @@ namespace Alchemi.Examples.Mandelbrot
                 {
                     components.Dispose();
                 }
+				if (ga!=null)
+				{
+					ga.Dispose();
+				}
             }
             base.Dispose( disposing );
         }

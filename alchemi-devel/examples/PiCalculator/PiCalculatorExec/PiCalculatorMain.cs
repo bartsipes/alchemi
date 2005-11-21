@@ -145,7 +145,7 @@ namespace Alchemi.Examples.PiCalculator
                 result,
                 DateTime.Now - StartTime);
 
-			Console.WriteLine("Thread finished fired: " + th + " times");
+			//Console.WriteLine("Thread finished fired: " + th + " times");
 			Console.WriteLine("Application Finished");
         }
     }

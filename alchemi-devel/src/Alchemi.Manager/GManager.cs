@@ -32,6 +32,7 @@ using Alchemi.Core.Executor;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Utility;
 using Alchemi.Manager.Storage;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
@@ -92,7 +93,20 @@ namespace Alchemi.Manager
 		/// <param name="sc">security credentials of the user</param>
         public void AuthenticateUser(SecurityCredentials sc)
         {
+			//the password in the db is Md-5 hashed.
+
+			string temp = sc.Password;
+
+			//first try non-hashed version.i.e assume we dont have hashed password, MD5Hash it and check
+			sc.Password = HashUtil.GetHash(sc.Password, HashUtil.HashType.MD5);
 			bool result = ManagerStorageFactory.ManagerStorage().AuthenticateUser(sc);
+
+			if (!result)
+			{
+				//now, try again...with original password, in case the user is giving us a MD5-hashed password
+				sc.Password = temp;
+				result = ManagerStorageFactory.ManagerStorage().AuthenticateUser(sc);
+			}
 
 			if (!result)
             {
@@ -945,7 +959,6 @@ namespace Alchemi.Manager
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
 			IManagerStorage mstore = ManagerStorageFactory.ManagerStorage();
-			logger.Debug(mstore.GetType().ToString());
 			return mstore.GetSystemSummary();
         }
 

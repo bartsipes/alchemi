@@ -22,9 +22,9 @@ insert grp_prm values(2, 1)
 insert grp_prm values(3, 2)
 
 -- usr
-insert usr values('admin', 'admin', 1)
-insert usr values('executor', 'executor', 2)
-insert usr values('user', 'user', 3)
+insert usr values('admin', '19a2854144b63a8f7617a6f225019b12', 1)
+insert usr values('executor', '63c2867ae3b5ea1dccf158f6b084a9ec', 2)
+insert usr values('user', '9ce4b5879f3fcb5a9842547bebe191e1', 3)
 
 
 
