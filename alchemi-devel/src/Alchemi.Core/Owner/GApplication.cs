@@ -128,8 +128,14 @@ namespace Alchemi.Core.Owner
 		/// <returns>ThreadState indicating its status</returns>
 		internal ThreadState GetThreadState(GThread thread)
 		{
-			EnsureRunning();
-			return Manager.Owner_GetThreadState(Credentials, new ThreadIdentifier(_Id, thread.Id));
+			if (_Running)
+			{
+				return Manager.Owner_GetThreadState(Credentials, new ThreadIdentifier(_Id, thread.Id));			
+			}
+			else
+			{
+				return ThreadState.Unknown;
+			}
 		}
 
 		//----------------------------------------------------------------------------------------------- 
@@ -276,18 +282,19 @@ namespace Alchemi.Core.Owner
 		/// </summary>
 		public void Stop()
 		{
-			EnsureRunning();
-
-			Manager.Owner_StopApplication(Credentials, this._Id);
-            
-			if (_GetFinishedThreadsThread != null)
+			if (_Running)
 			{
-				_stopGetFinished = true;
-				//_GetFinishedThreadsThread.Abort();
-				_GetFinishedThreadsThread.Join();
-			}
 
-			_Running = false;
+				Manager.Owner_StopApplication(Credentials, this._Id);
+            
+				if (_GetFinishedThreadsThread != null && _GetFinishedThreadsThread.IsAlive)
+				{
+					_stopGetFinished = true;
+					//_GetFinishedThreadsThread.Abort();
+					_GetFinishedThreadsThread.Join();
+				}
+			}
+			_Running = false; //just making sure again
 		}
         
 		//----------------------------------------------------------------------------------------------- 
@@ -298,8 +305,10 @@ namespace Alchemi.Core.Owner
 		/// <param name="thread">thread to abort</param>
 		internal void AbortThread(GThread thread)
 		{
-			EnsureRunning();
-			Manager.Owner_AbortThread(Credentials, new ThreadIdentifier(_Id, thread.Id));
+			if (_Running)
+			{
+				Manager.Owner_AbortThread(Credentials, new ThreadIdentifier(_Id, thread.Id));
+			}
 		}
         
 		//----------------------------------------------------------------------------------------------- 
@@ -476,28 +485,6 @@ namespace Alchemi.Core.Owner
 			}
 
 			logger.Info("GetFinishedThreads thread exited..");
-		}
-
-		//----------------------------------------------------------------------------------------------- 
-
-		//make sure the app is running, otherwise throw an exception
-		private void EnsureRunning()
-		{
-			if (!_Running)
-			{
-				throw new InvalidOperationException("The grid application is not running.");
-			}
-		}
-        
-		//----------------------------------------------------------------------------------------------- 
-        
-		//make sure the app is NOT running. other wise throw an exception
-		private void EnsureNotRunning()
-		{
-			if (_Running)
-			{
-				throw new InvalidOperationException("The grid application is running.");
-			}
 		}
         
 		//----------------------------------------------------------------------------------------------- 

@@ -1072,7 +1072,7 @@ namespace Alchemi.Manager
             if (executorId == null)
             {
                 // not being executed on any executor
-				logger.Debug("Null executorID passed in to AbortThread");
+				logger.Debug(string.Format("Null executorID passed in to AbortThread: {0}:{1}. Not aborting...",ti.ApplicationId,ti.ThreadId));
                 return;
             }
 

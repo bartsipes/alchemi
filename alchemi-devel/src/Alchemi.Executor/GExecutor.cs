@@ -828,13 +828,20 @@ namespace Alchemi.Core.Executor
         {
 			try
 			{
-				_ThreadExecutorThread.Abort();
-				_ThreadExecutorThread.Join();
-				logger.Debug("Aborted Executor Thread: "+ti.ThreadId);
+				if (_ThreadExecutorThread!=null && _ThreadExecutorThread.IsAlive)
+				{
+					_ThreadExecutorThread.Abort();
+					_ThreadExecutorThread.Join();
+					logger.Debug(string.Format("Aborted Executor Thread: {0}:{1}", ti.ApplicationId, ti.ThreadId));
+				}
+				else
+				{
+					logger.Debug(string.Format("AbortThread: Thread {0}:{1} not alive. Not doing anything.",ti.ApplicationId , ti.ThreadId));
+				}
 			}
 			catch (Exception e)
 			{
-				logger.Warn("Error aborting thread: " + ti.ThreadId + ". Continuing...",e);
+				logger.Warn(string.Format("Error aborting thread: {0}:{1}. Continuing...", ti.ApplicationId, ti.ThreadId),e);
 			}
 		}
 	}

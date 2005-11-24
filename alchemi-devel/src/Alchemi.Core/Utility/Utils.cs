@@ -30,6 +30,21 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Alchemi.Core.Utility
 {
+	public enum DateTimeInterval
+	{
+		Tick,
+		Millisecond,
+		Second,
+		Minute,
+		Hour,
+		Day,
+		Week,
+		Fortnight,
+		Month,
+		Quarter,
+		Year
+	}
+
 	/// <summary>
 	/// This class contains some convenient utility function used in various classes in the Alchemi framework
 	/// </summary>
@@ -223,6 +238,74 @@ namespace Alchemi.Core.Utility
                 return val;
             }
         }
+
+
+		/// <summary>
+		/// same common params similar to the VBScript DateDiff: 
+		/// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/script56/html/vsfctdatediff.asp
+		///   /*
+		///    * Sample Code:
+		///    * System.DateTime dt1 = new System.DateTime(1974,12,16);
+		///    * System.DateTime dt2 = new System.DateTime(1973,12,16);
+		///    * double diff = DateDiff(DateTimeInterval.Day, dt1, dt2);
+		///    * 
+		///    */
+		/// </summary>
+		/// <param name="howtocompare"></param>
+		/// <param name="startDate"></param>
+		/// <param name="endDate"></param>
+		/// <returns></returns>
+		//adapted from http://authors.aspalliance.com/nothingmn/default.aspx?whichpoll=nothingmn_117&aid=117
+		public static double DateDiff(DateTimeInterval howtocompare, System.DateTime startDate, System.DateTime endDate) 
+		{
+			double diff=0;
+			try 
+			{
+				System.TimeSpan TS = new System.TimeSpan(startDate.Ticks-endDate.Ticks);
+				switch (howtocompare) 
+				{
+					case DateTimeInterval.Tick:
+						diff = Convert.ToDouble(TS.Ticks);
+						break;
+					case DateTimeInterval.Millisecond:
+						diff = Convert.ToDouble(TS.TotalMilliseconds);
+						break;
+					case DateTimeInterval.Second:
+						diff = Convert.ToDouble(TS.TotalSeconds);
+						break;
+					case DateTimeInterval.Minute:
+						diff = Convert.ToDouble(TS.TotalMinutes);
+						break;
+					case DateTimeInterval.Hour:
+						diff = Convert.ToDouble(TS.TotalHours);
+						break;
+					case DateTimeInterval.Day:
+						diff = Convert.ToDouble(TS.TotalDays);
+						break;
+					case DateTimeInterval.Week:
+						diff = Convert.ToDouble(TS.TotalDays/7);
+						break;
+					case DateTimeInterval.Fortnight:
+						diff = Convert.ToDouble(TS.TotalDays/15);
+						break;
+					case DateTimeInterval.Month:
+						diff = Convert.ToDouble((TS.TotalDays/365)/12);
+						break;
+					case DateTimeInterval.Quarter:
+						diff = Convert.ToDouble((TS.TotalDays/365)/4);
+						break;
+					case DateTimeInterval.Year:
+						diff = Convert.ToDouble(TS.TotalDays/365);
+						break;
+				}
+
+			} 
+			catch 
+			{
+				diff = -1;
+			}
+			return diff;
+		}
 
     }
 }

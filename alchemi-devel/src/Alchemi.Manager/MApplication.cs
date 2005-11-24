@@ -201,14 +201,33 @@ namespace Alchemi.Manager
 		/// </summary>
 		public void Stop()
 		{
-			ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(_Id);
+			//first check if the application is all finished
+			IManagerStorage store = ManagerStorageFactory.ManagerStorage();
+			ApplicationStorageView app = store.GetApplication(_Id);
 
-			foreach (ThreadStorageView thread in threads)
+			if (app.State!=ApplicationState.Stopped)
 			{
-				GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);
-			}
+				ThreadStorageView[] threads = store.GetThreads(_Id);
 
-			logger.Debug("Stopped the current application."+_Id);
+				foreach (ThreadStorageView thread in threads)
+				{
+					if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
+					{
+						GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);					
+					}
+				}
+
+				//update the application
+				app.State = ApplicationState.Stopped;
+				store.UpdateApplication(app);
+
+				logger.Debug("Stopped the current application."+_Id);				
+			}
+			else
+			{
+				logger.Debug(string.Format("Application {0} already stopped.",_Id));
+			}
+			
 		}
 	}
 }
