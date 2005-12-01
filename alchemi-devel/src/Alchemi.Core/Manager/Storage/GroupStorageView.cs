@@ -39,10 +39,25 @@ namespace Alchemi.Core.Manager.Storage
 		
 		private Int32 m_groupId; 
 		private String m_groupName;
+		private String m_description; 
+		private bool m_is_system;
 
 		#endregion
 
 		#region "Properties"
+
+		public bool IsSystem
+		{
+			get
+			{
+				return m_is_system;
+			}
+			set
+			{
+				m_is_system = value;
+			}
+		}
+
 		public String GroupName
 		{
 			get
@@ -56,6 +71,18 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_groupId;
+			}
+		}
+
+		public String Description
+		{
+			get
+			{
+				return m_description;
+			}
+			set
+			{
+				m_description = value;
 			}
 		}
 

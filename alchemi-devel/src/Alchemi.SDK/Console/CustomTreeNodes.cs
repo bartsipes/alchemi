@@ -24,150 +24,107 @@
 #endregion
 
 using System;
+using System.Windows.Forms;
+using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Console
 {
+	public enum DataFormModeEnum
+	{
+		Add,
+		Edit,
+		Properties
+	}
 
 	public enum SpecialParentNodeType
 	{
 		None,
 		Users,
+		Groups,
+		Permissions,
+		Auth,
 		Executors,
-		Applications
+		Applications,
+		AllApps
 	}
 
 	//a dummy node is there just for having a '+' for its parent. It doesnt have any text.
-	public class DummyTreeNode : System.Windows.Forms.TreeNode
+	public class DummyTreeNode : TreeNode
 	{
 
-		public DummyTreeNode(System.String text) : base("")
+		public DummyTreeNode(String text) : base("")
 		{
 		}
 
-		public DummyTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base("", imageIndex, selectedImageIndex)
+		public DummyTreeNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base("", imageIndex, selectedImageIndex)
 		{
 		}
 
 	}
 
-	public class SpecialParentNode : System.Windows.Forms.TreeNode
+	public class SpecialParentNode : TreeNode
 	{
-		public SpecialParentNodeType NodeType = SpecialParentNodeType.None;
+		private SpecialParentNodeType _NodeType = SpecialParentNodeType.None; 
+		private bool _Fillable = false;
 
-		public SpecialParentNode(System.String text) : base(text)
+		public bool Fillable //if true, will get data from the manager.
+		{
+			get
+			{
+				return _Fillable;
+			}
+		}
+
+		public SpecialParentNodeType NodeType
+		{
+			get
+			{
+				return _NodeType;	
+			}
+			set
+			{
+				_NodeType = value;
+				switch (_NodeType)
+				{
+					case SpecialParentNodeType.Applications:
+					case SpecialParentNodeType.Users :
+					case SpecialParentNodeType.Groups :
+					case SpecialParentNodeType.Permissions :
+					case SpecialParentNodeType.Executors :
+						_Fillable = true;
+					break;
+					default:
+						_Fillable = false;
+					break;
+				}
+			}
+		}
+
+
+		public SpecialParentNode(String text) : base(text)
 		{
 		}
 
-		public SpecialParentNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
+		public SpecialParentNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
 		{
 		}
 
 	}
 
-	public class ApplicationTreeNode : System.Windows.Forms.TreeNode
+	public class ApplicationTreeNode : SpecialParentNode
 	{
+		public ApplicationStorageView AlchemiApplication;
 
-		public string application_id;
-		public Alchemi.Core.Owner.ApplicationState state;
-		public string time_created;
-		public bool is_primary;
-		public string usr_name;
-		public string application_name;
-		public string time_completed;
-
-		public int num_threads;
-
-		//application_id, [state], time_created, is_primary, usr_name, application_name, time_completed
-		//num_threads
-		public ApplicationTreeNode(System.String text) : base(text)
+		public ApplicationTreeNode(String text) : base(text)
 		{
+			this.NodeType = SpecialParentNodeType.Applications;
 		}
 
-		public ApplicationTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
+		public ApplicationTreeNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
 		{
+			this.NodeType = SpecialParentNodeType.Applications;
 		}
 
 	}
 
-	public class ThreadTreeNode : System.Windows.Forms.TreeNode
-	{
-		public string thread_id;
-		public Alchemi.Core.Owner.ThreadState state;
-		public string time_started;
-		public string time_finished;
-		public string executor_id;
-		public int priority;
-		public bool failed;
-		public string appId;
-
-		//thread_id, state, time_started, time_finished, executor_id, priority, failed, appId
-
-		public ThreadTreeNode(System.String text) : base(text)
-		{
-		}
-
-		public ThreadTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
-		{
-		}
-	}
-
-	public class ExecutorTreeNode : System.Windows.Forms.TreeNode
-	{
-
-		public string executor_id;
-		public string host;
-		public string port;
-		public string usr_name;
-		public bool is_connected;
-		public bool is_dedicated;
-		public string cpu_max;
-		public string cpu_totalusage;
-		
-		//executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, 
-		//convert(varchar, cpu_totalusage * cpu_max / (3600 * 1000)) as cpu_totalusage
-
-		public ExecutorTreeNode(System.String text) : base(text)
-		{
-		}
-
-		public ExecutorTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
-		{
-		}
-
-	}
-
-	public class UserTreeNode : System.Windows.Forms.TreeNode
-	{
-		public string usr_name;
-		public string grp_id;
-		
-		//usr_name, password, grp.grp_id
-
-
-		public UserTreeNode(System.String text) : base(text)
-		{
-		}
-
-		public UserTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
-		{
-		}
-
-	}
-
-	public class GroupTreeNode : System.Windows.Forms.TreeNode
-	{
-		public string grp_id;
-		public string grp_name;
-
-		//grp_id, grp_name
-
-		public GroupTreeNode(System.String text) : base(text)
-		{
-		}
-
-		public GroupTreeNode (System.String text, System.Int32 imageIndex,  System.Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
-		{
-		}
-
-	}
 }

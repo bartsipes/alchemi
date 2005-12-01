@@ -23,11 +23,11 @@ details.
 */
 #endregion
 
-//using Advanced.Data.Provider;
 using System;
 using System.Collections;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Text;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
@@ -43,8 +43,11 @@ namespace Alchemi.Manager.Storage
 	/// 
 	/// TODO: The Executors are updated very often so database updates will probably be very expensive. Change the update functions to only update data that actually changed since the last load.
 	/// </summary>
-	public abstract class GenericManagerDatabaseStorage : IManagerStorage
+	public abstract class GenericManagerDatabaseStorage : IManagerStorage, IManagerStorageSetup 
 	{
+		// Create a logger for use in this class
+		protected static readonly Logger logger = new Logger();
+
 		protected String m_connectionString;
 
 		public GenericManagerDatabaseStorage(String connectionString)
@@ -52,152 +55,147 @@ namespace Alchemi.Manager.Storage
 			m_connectionString = connectionString;
 		}
 
-		#region Generic database manipulation routines
-		
-		/// <summary>
-		/// Run a stored procedure and return a data reader.
-		/// The caller is responsible for closing the database connection.
-		/// </summary>
-		/// <param name="storedProcedure"></param>
-		/// <returns></returns>
-		protected OleDbDataReader RunSpReturnDataReader(String storedProcedure)
-		{
-			OleDbConnection connection = new OleDbConnection(m_connectionString);
-			OleDbCommand command = new OleDbCommand();
-			//AdpConnection connection = new AdpConnection(m_connectionString);
-			//AdpCommand command = new AdpCommand();
-
-			command.Connection = connection;
-			command.CommandText = storedProcedure;
-			command.CommandType = CommandType.StoredProcedure;
-		
-			connection.Open();
-
-			// the connection must remain open until the reader is closed
-			return command.ExecuteReader(CommandBehavior.CloseConnection);
-		}
-
-		protected OleDbDataReader RunSqlReturnDataReader(String sqlQuery)
-		{
-			OleDbConnection connection = new OleDbConnection(m_connectionString);
-			OleDbCommand command = new OleDbCommand();
-
-			command.Connection = connection;
-			command.CommandText = sqlQuery;
-			command.CommandType = CommandType.Text;
-		
-			connection.Open();
-
-			// the connection must remain open until the reader is closed
-			return command.ExecuteReader(CommandBehavior.CloseConnection);
-		}
+		#region IManagerStorageSetup Members
 
 		/// <summary>
-		/// Run a stored procedure and return a scalar.
+		/// Create the tables, stored procedures and other structures needed by this storage.
 		/// </summary>
-		/// <param name="storedProcedure"></param>
-		/// <param name="parameters"></param>
-		/// <returns></returns>
-		protected object RunSpReturnScalar(String storedProcedure, params OleDbParameter[] parameters)
+		public void SetUpStorage()
 		{
-			using(OleDbConnection connection = new OleDbConnection(m_connectionString))
+			// TODO: load scripts from resources to do this
+			// TODO: it should also contain constrains
+
+			//load it from sql files for now. later make use of resources.
+			using (FileStream fs = File.OpenRead("Alchemi_database.sql"))
 			{
-				OleDbCommand command = new OleDbCommand();
-
-				command.Connection = connection;
-				command.CommandText = storedProcedure;
-				command.CommandType = CommandType.StoredProcedure;
-
-				foreach (OleDbParameter parameter in parameters)
-				{
-					command.Parameters.Add(parameter);
-				}
-		
-				connection.Open();
-
-				return command.ExecuteScalar();
+				StreamReader sr = new StreamReader(fs);
+				String sql = sr.ReadToEnd();
+				sr.Close();
+				fs.Close();
+				RunSql(sql);
 			}
-		}
 
-		protected void RunSql(String sqlQuery)
-		{
-			RunSql(sqlQuery, null);
-		}
-
-		protected void RunSql(String sqlQuery, params OleDbParameter[] parameters)
-		{
-			using(OleDbConnection connection = new OleDbConnection(m_connectionString))
+			using (FileStream fs = File.OpenRead("Alchemi_structure.sql"))
 			{
-				OleDbCommand command = new OleDbCommand();
-
-				command.Connection = connection;
-				command.CommandText = sqlQuery;
-				command.CommandType = CommandType.Text;
-
-				if (parameters != null)
-				{
-					foreach(OleDbParameter parameter in parameters)
-					{
-						command.Parameters.Add(parameter);
-					}
-				}
-		
-				connection.Open();
-
-				command.ExecuteNonQuery();
+				StreamReader sr = new StreamReader(fs);
+				String sql = sr.ReadToEnd();
+				sr.Close();
+				fs.Close();
+				RunSql(sql);
 			}
+			
 		}
 
-		protected object RunSqlReturnScalar(String sqlQuery)
+		public void InitializeStorageData()
 		{
-			return RunSqlReturnScalar(sqlQuery, null);
-		}
-
-		protected object RunSqlReturnScalar(String sqlQuery, params OleDbParameter[] parameters)
-		{
-			using(OleDbConnection connection = new OleDbConnection(m_connectionString))
+			using (FileStream fs = File.OpenRead("Alchemi_data.sql"))
 			{
-				OleDbCommand command = new OleDbCommand();
+				StreamReader sr = new StreamReader(fs);
+				String sql = sr.ReadToEnd();
+				sr.Close();
+				fs.Close();
+				RunSql(sql);
+			}		
+		}
 
-				command.Connection = connection;
-				command.CommandText = sqlQuery;
-				command.CommandType = CommandType.Text;
-
-				if (parameters != null)
-				{
-					foreach(OleDbParameter parameter in parameters)
-					{
-						command.Parameters.Add(parameter);
-					}
-				}
-		
-				connection.Open();
-
-				return command.ExecuteScalar();
-			}
+		public void TearDownStorage()
+		{
+			using (FileStream fs = File.OpenRead("Alchemi_structure_drop.sql"))
+			{
+				StreamReader sr = new StreamReader(fs);
+				String sql = sr.ReadToEnd();
+				sr.Close();
+				fs.Close();
+				RunSql(sql);
+			}				
 		}
 
 		#endregion
 
 		#region IManagerStorage Members
-
+		/// <summary>
+		/// GetSystemSummary implementation for RDBMS.
+		/// </summary>
+		/// <returns></returns>
 		public SystemSummary GetSystemSummary()
 		{
-			throw new Exception("Not implemented");
+			//build the System_Summary SQLs
+						
+			string sqlQuery1 = 
+				"select count(*) as total_executors, "+
+				"convert(varchar, cast(isnull(sum(cpu_max), 0) as float)/1000 ) + ' GHz' as max_power,"+
+				"isnull(avg(cpu_usage), 0) as power_usage, isnull(avg(cpu_avail), 0) as power_avail,"+
+				"convert(varchar, isnull(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0)) + ' GHz*Hr' as power_totalusage "+ 
+				"from executor where is_connected = 1 ";
+
+			string sqlQuery2 = 
+				"select count(*) as unfinished_threads from thread where state not in (3, 4)";
+
+			string sqlQuery3 = 
+				"select count(*) as unfinished_apps " +
+				"from application " +
+				"where [state] not in (0,1) ";
+			
+			SystemSummary summary = null;
+			String maxPower= null;
+			Int32 totalExecutors = 0;
+			Int32 powerUsage = 0;
+			Int32 powerAvailable = 0;
+			String powerTotalUsage = null;
+			Int32 unfinishedApps = 0;
+			Int32 unfinishedThreads = 0;
+			
+			try
+			{
+				//query1, to get power usage and other details
+				using (IDataReader dataReader = RunSqlReturnDataReader(sqlQuery1))
+				{
+					if (dataReader.Read())
+					{
+						maxPower = dataReader.GetString(dataReader.GetOrdinal("max_power"));
+						totalExecutors = dataReader.GetInt32(dataReader.GetOrdinal("total_executors"));
+						powerUsage = dataReader.GetInt32(dataReader.GetOrdinal("power_usage"));
+						powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
+						powerTotalUsage = dataReader.GetString(dataReader.GetOrdinal("power_totalusage"));
+					}
+				}
+			
+				//query2 to get thread count
+				unfinishedThreads = (Int32)RunSqlReturnScalar(sqlQuery2);
+
+				//query3 to get app count
+				unfinishedApps = (Int32)RunSqlReturnScalar(sqlQuery3);
+				
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Error getting system summary:",ex);
+			}
+
+			summary = new SystemSummary(
+				maxPower, 
+				totalExecutors,
+				powerUsage,
+				powerAvailable,
+				powerTotalUsage,
+				unfinishedApps,
+				unfinishedThreads);
+
+			return summary;
 		}
 
 		public DataSet RunSqlReturnDataSet(string query)
 		{
 			DataSet result = null;
-			using (OleDbConnection connection = new OleDbConnection(m_connectionString))
+			using (IDbConnection connection = GetConnection(m_connectionString))
 			{
-				OleDbCommand command = new OleDbCommand();
+				IDbCommand command = GetCommand();
 				command.Connection = connection;
 				command.CommandText = query;
 				command.CommandType = CommandType.Text;
 			
 				connection.Open();
-				OleDbDataAdapter da = new OleDbDataAdapter(command);
+				IDataAdapter da = GetDataAdapter(command);
 				result = new DataSet();
 				da.Fill(result);
 			}
@@ -220,14 +218,26 @@ namespace Alchemi.Manager.Storage
 			{
 				String sqlQuery;
 				
-				sqlQuery = String.Format("insert usr values('{0}', '{1}', {2})", 
-					user.Username.Replace("'", "''"), 
-					user.Password.Replace("'", "''"), 
+//				sqlQuery = String.Format("insert usr(usr_id, usr_name, password) values({0}, '{1}', '{2}')",
+//					user.UserId,
+//					Utils.MakeSqlSafe(user.Username), 
+//					Utils.MakeSqlSafe(user.Password), 
+//					);
+
+				sqlQuery = String.Format("insert usr values('{0}', '{1}', {2})",
+					Utils.MakeSqlSafe(user.Username), 
+					Utils.MakeSqlSafe(user.Password), 
 					user.GroupId);
 				
 				RunSql(sqlQuery);
 			}
 		}
+
+//		public void UpdateGroupMembership(GroupStorageView group, UserStorageView[] users)
+//		{
+//			//todo : usr_grp //put this in the parent interface also
+//			//delete all existing members, and add these members.
+//		}
 
 		public void UpdateUsers(UserStorageView[] updates)
 		{
@@ -240,10 +250,25 @@ namespace Alchemi.Manager.Storage
 			{
 				String sqlQuery;
 				
-				sqlQuery = String.Format("update usr set password='{1}', grp_id={2} where usr_name='{0}'", 
-					user.Username.Replace("'", "''"), 
-					user.Password.Replace("'", "''"), 
-					user.GroupId);
+				if (user.Password != null && user.Password != "")
+				{
+					logger.Debug("Updating password AND group id...."+user.Password);
+
+					user.Password = HashUtil.GetHash(user.Password, HashUtil.HashType.MD5);
+
+					sqlQuery = String.Format("update usr set password='{1}', grp_id={2} where usr_name='{0}'", 
+						Utils.MakeSqlSafe(user.Username), 
+						Utils.MakeSqlSafe(user.Password), 
+						user.GroupId);
+				}
+				else
+				{
+					logger.Debug("Updating only group id....");
+					//just change only the group. dont touch the password.	
+					sqlQuery = String.Format("update usr set grp_id={1} where usr_name='{0}'", 
+						Utils.MakeSqlSafe(user.Username), 
+						user.GroupId);
+				}
 				
 				RunSql(sqlQuery);
 			}
@@ -253,16 +278,22 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList userList = new ArrayList();
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader("select usr_name, password, grp_id from usr"))
+			using(IDataReader dataReader = RunSqlReturnDataReader("select usr_name, password, grp_id, is_system from usr"))
 			{
 				while(dataReader.Read())
 				{
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 					String password = dataReader.GetString(dataReader.GetOrdinal("password"));
 					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
+					bool isSystem = false;
+
+					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
+					{
+						isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
+					}
 
 					UserStorageView user = new UserStorageView(username, password, groupId);
-
+					user.IsSystem = isSystem;
 					userList.Add(user);
 				}
 			}
@@ -270,6 +301,11 @@ namespace Alchemi.Manager.Storage
 			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
 		}
 
+		/// <summary>
+		/// Authenticate a user's security credentials
+		/// </summary>
+		/// <param name="sc">Security credentials to authenticate</param>
+		/// <returns>True if the authentication is successful, false otherwise.</returns>		
 		public bool AuthenticateUser(SecurityCredentials sc)
 		{
 			if (sc == null || sc.Username == null || sc.Password == null)
@@ -278,8 +314,9 @@ namespace Alchemi.Manager.Storage
 			}
 
 			object userCount = RunSqlReturnScalar(String.Format("select count(*) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
-				sc.Username.Replace("'", "''"),
-				sc.Password.Replace("'", "''")));
+				Utils.MakeSqlSafe(sc.Username),
+				Utils.MakeSqlSafe(sc.Password))
+				);
 
 			return Convert.ToBoolean(userCount);
 		}
@@ -295,9 +332,11 @@ namespace Alchemi.Manager.Storage
 			{
 				String sqlQuery;
 				
-				sqlQuery = String.Format("insert grp(grp_id, grp_name) values({0}, '{1}')", 
+				sqlQuery = String.Format("insert grp(grp_id, grp_name, is_system) values({0}, '{1}', {2})", 
 					group.GroupId,
-					group.GroupName.Replace("'", "''"));
+					Utils.MakeSqlSafe(group.GroupName),
+					Utils.BoolToSqlBit(group.IsSystem)
+					);
 				
 				RunSql(sqlQuery);
 			}
@@ -307,14 +346,19 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList groupList = new ArrayList();
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader("select grp_id, grp_name from grp"))
+			using(IDataReader dataReader = RunSqlReturnDataReader("select grp_id, grp_name, is_system from grp"))
 			{
 				while(dataReader.Read())
 				{
 					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
 					String groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
-
+					bool isSystem = false;
+					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
+					{
+						isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
+					}
 					GroupStorageView group = new GroupStorageView(groupId, groupName);
+					group.IsSystem = isSystem;
 
 					groupList.Add(group);
 				}
@@ -341,11 +385,16 @@ namespace Alchemi.Manager.Storage
 			RunSql(sqlQuery);
 		}
 
+		/// <summary>
+		/// Returns the Group permissions read from a SQL server database
+		/// </summary>
+		/// <param name="groupId"></param>
+		/// <returns></returns>
 		public Permission[] GetGroupPermissions(Int32 groupId)
 		{
 			ArrayList permissions = new ArrayList();
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select prm_id from grp_prm where grp_id={0}", groupId)))
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select prm_id from grp_prm where grp_id={0}", groupId)))
 			{
 				while(dataReader.Read())
 				{
@@ -358,10 +407,16 @@ namespace Alchemi.Manager.Storage
 			return (Permission[])permissions.ToArray(typeof(Permission));
 		}
 
+		/// <summary>
+		/// Check if a permisson is set.
+		/// </summary>
+		/// <param name="sc">Security credentials to use in the check.</param>
+		/// <param name="perm">Permission to check for</param>
+		/// <returns>true if the permission is set, false otherwise</returns>
 		public bool CheckPermission(SecurityCredentials sc, Permission perm)
 		{
 			String query = String.Format("select count(*) as permitted from usr inner join grp on grp.grp_id = usr.grp_id inner join grp_prm on grp_prm.grp_id = grp.grp_id inner join prm on prm.prm_id = grp_prm.prm_id where usr.usr_name = '{0}' and prm.prm_id >= {1}", 
-				sc.Username.Replace("'", "''"),
+				Utils.MakeSqlSafe(sc.Username),
 				(int)perm);
 
 			return Convert.ToBoolean(RunSqlReturnScalar(query));
@@ -380,7 +435,7 @@ namespace Alchemi.Manager.Storage
 				executorId,
 				Convert.ToInt16(executor.Dedicated),
 				Convert.ToInt16(executor.Connected),
-				executor.Username.Replace("'", "''")
+				Utils.MakeSqlSafe(executor.Username)
 				));
 
 			UpdateExecutorPingTime(executorId, executor.PingTime);
@@ -394,35 +449,31 @@ namespace Alchemi.Manager.Storage
 			return executorId;
 		}
 
-		private void UpdateExecutorPingTime(String executorId, DateTime pingTime)
+		protected void UpdateExecutorPingTime(String executorId, DateTime pingTime)
 		{
-			OleDbParameter dateTimeParameter = new OleDbParameter("@ping_time", pingTime);
+			IDataParameter dateTimeParameter = GetParameter("@ping_time", pingTime, DbType.DateTime);
 			
 			if (pingTime != DateTime.MinValue)
 			{
-				RunSql(String.Format("update executor set ping_time=? where executor_id='{0}'",
-					executorId
-					), 
+				RunSql(String.Format("update executor set ping_time=@ping_time where executor_id='{0}'", executorId), 
 					dateTimeParameter);
 			}
 			else
 			{
-				RunSql(String.Format("update executor set ping_time=null where executor_id='{0}'",
-					executorId
-					));
+				RunSql(String.Format("update executor set ping_time=null where executor_id='{0}'", executorId));
 			}
 		}
 
-		private void UpdateExecutorHostAddress(String executorId, String hostName, Int32 port)
+		protected void UpdateExecutorHostAddress(String executorId, String hostName, Int32 port)
 		{
 			RunSql(String.Format("update executor set host='{1}', port={2} where executor_id='{0}'",
 				executorId,
-				hostName.Replace("'", "''"),
+				Utils.MakeSqlSafe(hostName),
 				port
 				));
 		}
 
-		private void UpdateExecutorCpuUsage(String executorId, Int32 maxCpu, Int32 cpuUsage, Int32 availableCpu, float totalCpuUsage)
+		protected void UpdateExecutorCpuUsage(String executorId, Int32 maxCpu, Int32 cpuUsage, Int32 availableCpu, float totalCpuUsage)
 		{
 			RunSql(String.Format("update executor set cpu_max={1}, cpu_usage={2}, cpu_avail={3}, cpu_totalusage={4} where executor_id='{0}'",
 				executorId,
@@ -433,25 +484,25 @@ namespace Alchemi.Manager.Storage
 				));
 		}
 
-		private void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
+		protected void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
 		{
 			RunSql(String.Format("update executor set is_dedicated='{1}', is_connected='{2}', usr_name='{3}' where executor_id='{0}'",
 				executorId,
 				Convert.ToInt16(dedicated),
 				Convert.ToInt16(connected),
-				userName.Replace("'", "''")
+				Utils.MakeSqlSafe(userName)
 				));
 		}
 		
-		private void UpdateExecutorAdditionalInformation(String executorId, float maxMemory, float maxDisk, Int32 numberOfCpu, String os, String architecture)
+		protected void UpdateExecutorAdditionalInformation(String executorId, float maxMemory, float maxDisk, Int32 numberOfCpu, String os, String architecture)
 		{
 			RunSql(String.Format("update executor set mem_max = {1}, disk_max = {2}, num_cpus = {3}, os = '{4}', arch = '{5}' where executor_id='{0}'",
 				executorId,
 				maxMemory, 
 				maxDisk, 
 				numberOfCpu, 
-				os.Replace("'", "''"), 
-				architecture.Replace("'", "''")
+				Utils.MakeSqlSafe(os), 
+				Utils.MakeSqlSafe(architecture)
 				));
 		}
 
@@ -518,7 +569,7 @@ namespace Alchemi.Manager.Storage
 				query.AppendFormat(" is_connected = {0}", connected == TriStateBoolean.True ? 1 : 0);
 			}
 		
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeExecutorFromDataReader(dataReader);
 			}
@@ -526,7 +577,7 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView GetExecutor(String executorId)
 		{
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where executor_id='{0}'",
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where executor_id='{0}'",
 					  executorId)))
 			{
 				ExecutorStorageView[] executors = DecodeExecutorFromDataReader(dataReader);
@@ -542,7 +593,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		private ExecutorStorageView[] DecodeExecutorFromDataReader(OleDbDataReader dataReader)
+		private ExecutorStorageView[] DecodeExecutorFromDataReader(IDataReader dataReader)
 		{
 			ArrayList executors = new ArrayList();
 
@@ -602,13 +653,13 @@ namespace Alchemi.Manager.Storage
 
 			String applicationId = Guid.NewGuid().ToString();
 
-			OleDbParameter dateTimeParameter = new OleDbParameter("@time_created", application.TimeCreated);
+			IDataParameter dateTimeParameter = GetParameter("@time_created", application.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, ?, '{2}', '{3}')",
+			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, @time_created, '{2}', '{3}')",
 				applicationId,
 				(int)application.State,
 				Convert.ToInt16(application.Primary),
-				application.Username.Replace("'", "''")
+				Utils.MakeSqlSafe(application.Username)
 				), 
 				dateTimeParameter);
 
@@ -622,13 +673,13 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			OleDbParameter dateTimeParameter = new OleDbParameter("@time_created", updatedApplication.TimeCreated);
+			IDataParameter dateTimeParameter = GetParameter("@time_created", updatedApplication.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("update application set state = {1}, time_created = ?, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
+			RunSql(String.Format("update application set state = {1}, time_created = @time_created, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
 				updatedApplication.ApplicationId,
 				(int)updatedApplication.State,
 				Convert.ToInt16(updatedApplication.Primary),
-				updatedApplication.Username.Replace("'", "''")
+				Utils.MakeSqlSafe(updatedApplication.Username)
 				), 
 				dateTimeParameter);
 		}
@@ -642,7 +693,9 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList applications = new ArrayList();
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application")))
+			string sql = string.Format("select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application");
+
+			using(IDataReader dataReader = RunSqlReturnDataReader(sql))
 			{
 				while(dataReader.Read())
 				{
@@ -661,6 +714,16 @@ namespace Alchemi.Manager.Storage
 						primary,
 						username
 						);
+
+					if (dataReader.IsDBNull(dataReader.GetOrdinal("application_name")))
+					{
+						application.ApplicationName = String.Format("Noname: [{0}]", applicationId);
+					}
+					else
+					{
+						application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));					
+					}
+					application.TimeCompleted = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 
 					if (populateThreadCount)
 					{
@@ -684,8 +747,9 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList applications = new ArrayList();
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where usr_name = '{0}'",
-					  userName.Replace("'", "''"))))
+			string sql = string.Format("select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application where usr_name = '{0}'", Utils.MakeSqlSafe(userName));
+
+			using(IDataReader dataReader = RunSqlReturnDataReader(sql))
 			{
 				while(dataReader.Read())
 				{
@@ -704,6 +768,9 @@ namespace Alchemi.Manager.Storage
 						primary,
 						username
 						);
+
+					application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));
+					application.TimeCompleted = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 
 					if (populateThreadCount)
 					{
@@ -725,7 +792,7 @@ namespace Alchemi.Manager.Storage
 
 		public ApplicationStorageView GetApplication(String applicationId)
 		{
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where application_id='{0}'", applicationId)))
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where application_id='{0}'", applicationId)))
 			{
 				if(dataReader.Read())
 				{
@@ -758,30 +825,30 @@ namespace Alchemi.Manager.Storage
 				return -1;
 			}
 
-			OleDbParameter timeStartedParameter = new OleDbParameter("@time_started", thread.TimeStarted);
+			IDataParameter timeStartedParameter = GetParameter("@time_started", thread.TimeStarted, DbType.DateTime);
 			if (!thread.TimeStartedSet)
 			{
 				timeStartedParameter.Value = DBNull.Value;
 			}
 
-			OleDbParameter timeFinishedParameter = new OleDbParameter("@time_finished", thread.TimeFinished);
+			IDataParameter timeFinishedParameter = GetParameter("@time_finished", thread.TimeFinished, DbType.DateTime);
 			if (!thread.TimeFinishedSet)
 			{
 				timeFinishedParameter.Value = DBNull.Value;
 			}
 
-			OleDbParameter executorIdParameter;
+			IDataParameter executorIdParameter;
 			
 			if (thread.ExecutorId != null)
 			{
-				executorIdParameter = new OleDbParameter("@executor_id", thread.ExecutorId);
+				executorIdParameter = GetParameter("@executor_id", thread.ExecutorId, DbType.Guid);
 			}
 			else
 			{
-				executorIdParameter = new OleDbParameter("@executor_id", DBNull.Value);
+				executorIdParameter = GetParameter("@executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', ?, {2}, {3}, ?, ?, {4}, '{5}')",
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', @executor_id, {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
 				thread.ApplicationId,
 				thread.ExecutorId,
 				thread.ThreadId,
@@ -801,30 +868,30 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			OleDbParameter timeStartedParameter = new OleDbParameter("@time_started", updatedThread.TimeStarted);
+			IDataParameter timeStartedParameter = GetParameter("@time_started", updatedThread.TimeStarted, DbType.DateTime);
 			if (!updatedThread.TimeStartedSet)
 			{
 				timeStartedParameter.Value = DBNull.Value;
 			}
 
-			OleDbParameter timeFinishedParameter = new OleDbParameter("@time_finished", updatedThread.TimeFinished);
+			IDataParameter timeFinishedParameter = GetParameter("@time_finished", updatedThread.TimeFinished, DbType.DateTime);
 			if (!updatedThread.TimeFinishedSet)
 			{
 				timeFinishedParameter.Value = DBNull.Value;
 			}
 
-			OleDbParameter executorIdParameter;
+			IDataParameter executorIdParameter;
 			
 			if (updatedThread.ExecutorId != null)
 			{
-				executorIdParameter = new OleDbParameter("@executor_id", updatedThread.ExecutorId);
+				executorIdParameter = GetParameter("@executor_id", updatedThread.ExecutorId, DbType.Guid);
 			}
 			else
 			{
-				executorIdParameter = new OleDbParameter("@executor_id", DBNull.Value);
+				executorIdParameter = GetParameter("@executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			RunSql(String.Format("update thread set application_id = '{1}', executor_id = ?, thread_id = {3}, state = {4}, time_started = ?, time_finished = ?, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+			RunSql(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
@@ -844,7 +911,7 @@ namespace Alchemi.Manager.Storage
 				applicationId,
 				threadId);
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				ThreadStorageView[] threads = DecodeThreadFromDataReader(dataReader);
 
@@ -908,7 +975,7 @@ namespace Alchemi.Manager.Storage
 			}
 			
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeThreadFromDataReader(dataReader);
 			}
@@ -943,7 +1010,7 @@ namespace Alchemi.Manager.Storage
 				query.Append(")");
 			}
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeThreadFromDataReader(dataReader);
 			}
@@ -975,7 +1042,7 @@ namespace Alchemi.Manager.Storage
 				query.Append(")");
 			}
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeThreadFromDataReader(dataReader);
 			}
@@ -1009,13 +1076,13 @@ namespace Alchemi.Manager.Storage
 				query.Append(")");
 			}
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
 			{
 				return DecodeThreadFromDataReader(dataReader);
 			}
 		}
 
-		private ThreadStorageView[] DecodeThreadFromDataReader(OleDbDataReader dataReader)
+		private ThreadStorageView[] DecodeThreadFromDataReader(IDataReader dataReader)
 		{
 			if (dataReader == null)
 			{
@@ -1065,7 +1132,7 @@ namespace Alchemi.Manager.Storage
 		{
 			totalThreads = unfinishedThreads = 0;
 
-			using(OleDbDataReader dataReader = RunSqlReturnDataReader(String.Format("select state from thread where application_id = '{0}'",
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select state from thread where application_id = '{0}'",
 					  applicationId)))
 			{
 				while(dataReader.Read())
@@ -1127,5 +1194,171 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
+
+		#region Generic implementation for database-specific objects
+
+		//default is using OleDbConnections.
+		protected virtual IDbConnection GetConnection(String connectionString)
+		{
+			return new OleDbConnection(connectionString);
+		}
+
+		//default uses OleDbCommands.
+		protected virtual IDbCommand GetCommand()
+		{
+			return new OleDbCommand();
+		}
+
+		protected virtual IDataAdapter GetDataAdapter(IDbCommand command)
+		{
+			return new OleDbDataAdapter(command as OleDbCommand);
+		}
+
+		protected virtual IDataParameter GetParameter(string name, object paramValue, DbType datatype)
+		{
+			object value = paramValue;
+			if (datatype == DbType.Guid)
+			{
+				value = new Guid(paramValue.ToString());
+			}
+			OleDbParameter param = new OleDbParameter(name, value);
+			param.DbType = datatype;
+			return param;
+		}
+
+		#endregion
+
+		#region Generic database manipulation routines
+
+		/// <summary>
+		/// Run a stored procedure and return a data reader.
+		/// The caller is responsible for closing the database connection.
+		/// </summary>
+		/// <param name="storedProcedure"></param>
+		/// <returns></returns>
+		protected IDataReader RunSpReturnDataReader(String storedProcedure)
+		{
+			IDbConnection connection = GetConnection(m_connectionString);
+			IDbCommand command = GetCommand();
+			command.Connection = connection;
+			command.CommandText = storedProcedure;
+			command.CommandType = CommandType.StoredProcedure;
+		
+			connection.Open();
+
+			// the connection must remain open until the reader is closed
+			return command.ExecuteReader(CommandBehavior.CloseConnection);
+		}
+
+		protected IDataReader RunSqlReturnDataReader(String sqlQuery)
+		{
+			IDbConnection connection = GetConnection(m_connectionString);
+			IDbCommand command = GetCommand();
+
+			command.Connection = connection;
+			command.CommandText = sqlQuery;
+			command.CommandType = CommandType.Text;
+		
+			connection.Open();
+
+			// the connection must remain open until the reader is closed
+			return command.ExecuteReader(CommandBehavior.CloseConnection);
+		}
+
+		/// <summary>
+		/// Run a stored procedure and return a scalar.
+		/// </summary>
+		/// <param name="storedProcedure"></param>
+		/// <param name="parameters"></param>
+		/// <returns></returns>
+		protected object RunSpReturnScalar(String storedProcedure, params IDataParameter[] parameters)
+		{
+			using(IDbConnection connection = GetConnection(m_connectionString))
+			{
+				IDbCommand command = GetCommand();
+
+				command.Connection = connection;
+				command.CommandText = storedProcedure;
+				command.CommandType = CommandType.StoredProcedure;
+
+				foreach (IDataParameter parameter in parameters)
+				{
+					command.Parameters.Add(parameter);
+				}
+		
+				connection.Open();
+
+				return command.ExecuteScalar();
+			}
+		}
+
+		protected void RunSql(String sqlQuery)
+		{
+			RunSql(sqlQuery, null);
+		}
+
+		protected void RunSql(String sqlQuery, params IDataParameter[] parameters)
+		{
+			try
+			{
+				using(IDbConnection connection = GetConnection(m_connectionString))
+				{
+					IDbCommand command = GetCommand();
+
+					command.Connection = connection;
+					command.CommandText = sqlQuery;
+					command.CommandType = CommandType.Text;
+
+					if (parameters != null)
+					{
+						foreach(IDataParameter parameter in parameters)
+						{
+							command.Parameters.Add(parameter);
+						}
+					}
+		
+					connection.Open();
+
+					command.ExecuteNonQuery();
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Exception RunSql:"+sqlQuery, ex);
+				throw ex;
+			}
+		}
+
+		protected object RunSqlReturnScalar(String sqlQuery)
+		{
+			return RunSqlReturnScalar(sqlQuery, null);
+		}
+
+		protected object RunSqlReturnScalar(String sqlQuery, params IDataParameter[] parameters)
+		{
+			using(IDbConnection connection = GetConnection(m_connectionString))
+			{
+				IDbCommand command = GetCommand();
+
+				command.Connection = connection;
+				command.CommandText = sqlQuery;
+				command.CommandType = CommandType.Text;
+
+				if (parameters != null)
+				{
+					foreach(IDataParameter parameter in parameters)
+					{
+						command.Parameters.Add(parameter);
+					}
+				}
+		
+				connection.Open();
+
+				return command.ExecuteScalar();
+			}
+		}
+
+		#endregion
+
 	}
 }

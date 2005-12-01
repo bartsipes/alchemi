@@ -1416,7 +1416,7 @@ namespace Alchemi.ExecutorExec
 					logger.Error(e.Message,e.Exception);
 					break;
 				case LogLevel.Warn:
-					logger.Warn(e.Message);
+					logger.Warn(e.Message, e.Exception);
 					break;
 			}
 		}

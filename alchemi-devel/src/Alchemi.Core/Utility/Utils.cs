@@ -307,5 +307,23 @@ namespace Alchemi.Core.Utility
 			return diff;
 		}
 
+		public static string MakeSqlSafe(string inString)
+		{
+			return inString.Replace("'","").Replace("\"","");
+		}
+
+		public static bool IsSqlSafe(string text)
+		{
+			//if the result returned by MakeSqlSafe is same as the original string, then it is safe.
+			return (text == MakeSqlSafe(text));
+		}
+
+		public static object GetDbValue(object value)
+		{
+			object val = null;
+			if (val!=DBNull.Value)
+				val = value;
+			return val;
+		}
     }
 }

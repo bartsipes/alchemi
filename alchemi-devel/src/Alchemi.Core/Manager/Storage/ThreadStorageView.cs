@@ -258,5 +258,32 @@ namespace Alchemi.Core.Manager.Storage
 			m_priority = priority;
 			m_failed = failed;
 		}
+
+		public string StateString
+		{
+			get
+			{
+				string state = "Unknown";
+				switch (this.State)
+				{
+					case ThreadState.Dead:
+						state = "Dead";
+						break;
+					case ThreadState.Ready:
+						state = "Ready";
+						break;
+					case ThreadState.Finished:
+						state = "Finished";
+						break;
+					case ThreadState.Scheduled:
+						state = "Scheduled";
+						break;
+					case ThreadState.Started:
+						state = "Started";
+						break;
+				}
+				return state;
+			}
+		}
 	}
 }

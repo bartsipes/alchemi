@@ -185,7 +185,7 @@ namespace Alchemi.Manager
             {
 				ThreadStorageView threadStorage = ManagerStorageFactory.ManagerStorage().GetThread(_AppId, _Id);
 
-                // TODO: if state can be verfified on the executor, verify it
+                // TODO: if state can be verified on the executor, verify it
                 return threadStorage.State;
             }
             set

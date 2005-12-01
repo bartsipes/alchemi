@@ -213,7 +213,8 @@ namespace Alchemi.Manager
 				{
 					if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
 					{
-						GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);					
+						GManager.AbortThread(new ThreadIdentifier(_Id, thread.ThreadId), thread.ExecutorId);
+						thread.State = ThreadState.Dead; //this will update the thread
 					}
 				}
 

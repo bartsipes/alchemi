@@ -212,13 +212,13 @@ namespace Alchemi.Manager
 
             MThread thread = _Applications[ti.ApplicationId][ti.ThreadId];
             
-            thread.State = ThreadState.Dead;
             logger.Debug("Owner called abort thread:"+ti.ThreadId);
 
             // if running on an executor, ask it to abort the thread
-            if (thread.State == ThreadState.Started | thread.State == ThreadState.Scheduled)
+            if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
             {
-                AbortThread(ti);
+				AbortThread(ti, thread.CurrentExecutorId);
+				thread.State = ThreadState.Dead;
             }
         }
         
@@ -609,7 +609,11 @@ namespace Alchemi.Manager
 
             if (_Applications[ti.ApplicationId].IsPrimary)
             {
-                t.Value = thread;
+				if (thread!=null)
+				{
+					t.Value = thread;
+				}
+
 				if (e != null)
 				{
 					logger.Debug("thread failed. ti: " + ti.ThreadId + ", e: " + e.ToString());
@@ -733,6 +737,11 @@ namespace Alchemi.Manager
 				EnsurePermission(sc,Permission.ManageOwnApp);
 				logger.Debug("Getting list of live applications for user: "+sc.Username);
 				return _Applications.GetApplicationList(sc.Username);
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Error getting list of applications...",ex);
+				throw ex;
 			}
 		}
 
@@ -918,8 +927,10 @@ namespace Alchemi.Manager
 			AuthenticateUser(sc); 
 			EnsurePermission(sc,perm);
 
-			//just make sure there is no mischief!
-			if (query.Trim().ToLower().StartsWith("select"))
+			//just make sure there is no mischief, such as dropping tables!
+			string temp = query.Trim().ToLower();
+
+			if (temp.IndexOf("drop")==-1 && (temp.StartsWith("select") || temp.StartsWith("insert") || temp.StartsWith("update") || temp.StartsWith("delete")))
 			{
 				logger.Warn("Query passed in: "+query);
 				try
@@ -1100,14 +1111,7 @@ namespace Alchemi.Manager
 			}
         }
 
-        //-----------------------------------------------------------------------------------------------          
-
-		//abort thread convenience method
-        private void AbortThread(ThreadIdentifier ti)
-        {
-            MThread t = new MThread(ti);
-            AbortThread(ti, t.CurrentExecutorId);
-        }
+        //-----------------------------------------------------------------------------------------------
     }
 }
 

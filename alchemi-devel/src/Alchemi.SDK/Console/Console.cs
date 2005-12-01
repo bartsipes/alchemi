@@ -38,7 +38,6 @@ namespace Alchemi.Console
 	/// </summary>
 	public class Console
 	{
-
 		// Create a logger for use in this class
 		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -75,7 +74,7 @@ namespace Alchemi.Console
 					logger.Error(e.Message,e.Exception);
 					break;
 				case LogLevel.Warn:
-					logger.Warn(e.Message);
+					logger.Warn(e.Message,e.Exception);
 					break;
 			}
 		}
@@ -90,7 +89,6 @@ namespace Alchemi.Console
 			HandleAllUnknownErrors(sender.ToString(),ex);
 		}
 
-
 		private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
 		{
 			HandleAllUnknownErrors(sender.ToString(),e.Exception);
@@ -101,6 +99,5 @@ namespace Alchemi.Console
 			logger.Error("Unknown Error from: " + sender,ex);
 			MessageBox.Show("Error occured: (continuing after error...)\n"+ex.ToString(), "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
-
 	}
 }

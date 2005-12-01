@@ -45,6 +45,8 @@ namespace Alchemi.Core.Manager.Storage
 		private DateTime m_timeCreated;
 		private bool m_primary;
 		private String m_username;
+		private String m_appName;
+		private DateTime m_timeCompleted;
 
 		// these values are set by calculating the number of threads in various states
 		private Int32 m_totalThreads = c_valueNotSet;
@@ -53,6 +55,19 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		#region "Properties"
+
+		public String ApplicationName
+		{
+			get
+			{
+				return m_appName;
+			}
+			set
+			{
+				m_appName = value;
+			}
+		}
+
 		public String ApplicationId
 		{
 			get
@@ -82,6 +97,18 @@ namespace Alchemi.Core.Manager.Storage
 			get
 			{
 				return m_timeCreated;
+			}
+		}
+
+		public DateTime TimeCompleted
+		{
+			get
+			{
+				return m_timeCompleted;
+			}
+			set
+			{
+				m_timeCompleted = value;
 			}
 		}
 
@@ -189,5 +216,27 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		
 		}
+
+		public string StateString
+		{
+			get
+			{
+				string state = "";
+				switch (this.State)
+				{
+					case ApplicationState.AwaitingManifest:
+						state = "Awaiting Manifest";
+						break;
+					case ApplicationState.Ready:
+						state = "Running";
+						break;
+					case ApplicationState.Stopped:
+						state = "Finished";
+						break;
+				}
+				return state;
+			}
+		}
+
 	}
 }

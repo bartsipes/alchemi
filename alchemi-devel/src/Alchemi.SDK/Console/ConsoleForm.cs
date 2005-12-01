@@ -22,11 +22,11 @@
 */ 
 #endregion
 
-//using NPlot;
 using System;
 using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
+using Alchemi.Console.PropertiesDialogs;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
@@ -39,15 +39,35 @@ namespace Alchemi.Console
 	/// </summary>
 	public class ConsoleForm : Form
 	{
+		private enum ViewState
+		{
+			User,
+			Group,
+			Permission,
+			Executor,
+			Application,
+			Thread,
+			None
+		}
+
+		private const int MAGIC_ITEM_NUMBER = 699;
+
 		private bool connected = false;
 		private ConsoleNode console = null;
 		private SysPerfForm sysForm = null;
 
 		//we need to keep a reference to these nodes, since they are special and 
 		//need to be access across functions
+		private SpecialParentNode authParentNode;
 		private SpecialParentNode userParentNode;
+		private SpecialParentNode grpParentNode;
+		private SpecialParentNode prmParentNode;
+
 		private SpecialParentNode execParentNode;
 		private SpecialParentNode appParentNode;
+
+		private bool filling = false; //filling property - specifies if filling is currently happening
+		private bool stopFillingRequest = false; //specifies if the stopFilling command has been called.
 
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
@@ -70,14 +90,12 @@ namespace Alchemi.Console
 		private MenuItem mnuList;
 		private MenuItem mnuDetails;
 		private MenuItem mnuContextNew;
-		private MenuItem mnuContextEdit;
 		private MenuItem mnuContextLargeIcons;
 		private MenuItem mnuContextSmallIcons;
 		private MenuItem mnuContextList;
 		private MenuItem mnuContextDetails;
 		private MenuItem mnuContextProperties;
 		private MenuItem mnuNew;
-		private MenuItem mnuEdit;
 		private MenuItem mnuDelete;
 		private MenuItem mnuProperties;
 		private MenuItem mnuContextDelete;
@@ -95,8 +113,9 @@ namespace Alchemi.Console
 		private ColumnHeader ch1;
 		private ColumnHeader ch2;
 		private ToolBarButton tbtnConnect;
-		private System.Windows.Forms.ToolBarButton tbtnSep3;
-		private System.Windows.Forms.ToolBarButton tbtnSysSummaryGraph;
+		private ToolBarButton tbtnSep3;
+		private ToolBarButton tbtnSysSummaryGraph;
+		private ToolBarButton tbtnStop;
 		private MenuItem mnuContextAction;
 
 		public ConsoleForm()
@@ -140,7 +159,6 @@ namespace Alchemi.Console
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.mnuAction = new System.Windows.Forms.MenuItem();
 			this.mnuNew = new System.Windows.Forms.MenuItem();
-			this.mnuEdit = new System.Windows.Forms.MenuItem();
 			this.mnuDelete = new System.Windows.Forms.MenuItem();
 			this.mnuProperties = new System.Windows.Forms.MenuItem();
 			this.mnuView = new System.Windows.Forms.MenuItem();
@@ -149,7 +167,6 @@ namespace Alchemi.Console
 			this.mnuList = new System.Windows.Forms.MenuItem();
 			this.mnuDetails = new System.Windows.Forms.MenuItem();
 			this.mnuContextNew = new System.Windows.Forms.MenuItem();
-			this.mnuContextEdit = new System.Windows.Forms.MenuItem();
 			this.mnuContextDelete = new System.Windows.Forms.MenuItem();
 			this.mnuContextLargeIcons = new System.Windows.Forms.MenuItem();
 			this.mnuContextSmallIcons = new System.Windows.Forms.MenuItem();
@@ -170,14 +187,15 @@ namespace Alchemi.Console
 			this.tbtnDelete = new System.Windows.Forms.ToolBarButton();
 			this.tbtnSep2 = new System.Windows.Forms.ToolBarButton();
 			this.tbtnProperties = new System.Windows.Forms.ToolBarButton();
+			this.tbtnSep3 = new System.Windows.Forms.ToolBarButton();
+			this.tbtnSysSummaryGraph = new System.Windows.Forms.ToolBarButton();
+			this.tbtnStop = new System.Windows.Forms.ToolBarButton();
 			this.imgLstTbar = new System.Windows.Forms.ImageList(this.components);
 			this.tv = new System.Windows.Forms.TreeView();
 			this.split = new System.Windows.Forms.Splitter();
 			this.lv = new System.Windows.Forms.ListView();
 			this.ch1 = new System.Windows.Forms.ColumnHeader();
 			this.ch2 = new System.Windows.Forms.ColumnHeader();
-			this.tbtnSep3 = new System.Windows.Forms.ToolBarButton();
-			this.tbtnSysSummaryGraph = new System.Windows.Forms.ToolBarButton();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -191,7 +209,6 @@ namespace Alchemi.Console
 			this.mnuAction.Index = 0;
 			this.mnuAction.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																					  this.mnuNew,
-																					  this.mnuEdit,
 																					  this.mnuDelete,
 																					  this.mnuProperties});
 			this.mnuAction.Text = "Action";
@@ -202,21 +219,15 @@ namespace Alchemi.Console
 			this.mnuNew.Text = "New...";
 			this.mnuNew.Click += new System.EventHandler(this.mnuAction_Click);
 			// 
-			// mnuEdit
-			// 
-			this.mnuEdit.Index = 1;
-			this.mnuEdit.Text = "Edit...";
-			this.mnuEdit.Click += new System.EventHandler(this.mnuAction_Click);
-			// 
 			// mnuDelete
 			// 
-			this.mnuDelete.Index = 2;
+			this.mnuDelete.Index = 1;
 			this.mnuDelete.Text = "Delete";
 			this.mnuDelete.Click += new System.EventHandler(this.mnuAction_Click);
 			// 
 			// mnuProperties
 			// 
-			this.mnuProperties.Index = 3;
+			this.mnuProperties.Index = 2;
 			this.mnuProperties.Text = "Properties";
 			this.mnuProperties.Click += new System.EventHandler(this.mnuAction_Click);
 			// 
@@ -260,15 +271,9 @@ namespace Alchemi.Console
 			this.mnuContextNew.Text = "New...";
 			this.mnuContextNew.Click += new System.EventHandler(this.mnuAction_Click);
 			// 
-			// mnuContextEdit
-			// 
-			this.mnuContextEdit.Index = 1;
-			this.mnuContextEdit.Text = "Edit...";
-			this.mnuContextEdit.Click += new System.EventHandler(this.mnuAction_Click);
-			// 
 			// mnuContextDelete
 			// 
-			this.mnuContextDelete.Index = 2;
+			this.mnuContextDelete.Index = 1;
 			this.mnuContextDelete.Text = "Delete";
 			this.mnuContextDelete.Click += new System.EventHandler(this.mnuAction_Click);
 			// 
@@ -318,7 +323,6 @@ namespace Alchemi.Console
 			this.mnuContextAction.Index = 1;
 			this.mnuContextAction.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
 																							 this.mnuContextNew,
-																							 this.mnuContextEdit,
 																							 this.mnuContextDelete});
 			this.mnuContextAction.Text = "Action";
 			// 
@@ -361,7 +365,8 @@ namespace Alchemi.Console
 																					this.tbtnSep2,
 																					this.tbtnProperties,
 																					this.tbtnSep3,
-																					this.tbtnSysSummaryGraph});
+																					this.tbtnSysSummaryGraph,
+																					this.tbtnStop});
 			this.tbar.DropDownArrows = true;
 			this.tbar.ImageList = this.imgLstTbar;
 			this.tbar.Location = new System.Drawing.Point(0, 0);
@@ -390,7 +395,7 @@ namespace Alchemi.Console
 			this.tbtnNew.ImageIndex = 0;
 			this.tbtnNew.ToolTipText = "New...";
 			// 
-			// tbtDelete
+			// tbtnDelete
 			// 
 			this.tbtnDelete.ImageIndex = 2;
 			this.tbtnDelete.ToolTipText = "Delete...";
@@ -403,6 +408,21 @@ namespace Alchemi.Console
 			// 
 			this.tbtnProperties.ImageIndex = 3;
 			this.tbtnProperties.ToolTipText = "Properties";
+			// 
+			// tbtnSep3
+			// 
+			this.tbtnSep3.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
+			// 
+			// tbtnSysSummaryGraph
+			// 
+			this.tbtnSysSummaryGraph.ImageIndex = 6;
+			this.tbtnSysSummaryGraph.ToolTipText = "System Performance Summary";
+			// 
+			// tbtnStop
+			// 
+			this.tbtnStop.ImageIndex = 7;
+			this.tbtnStop.ToolTipText = "Stop";
+			this.tbtnStop.Visible = false;
 			// 
 			// imgLstTbar
 			// 
@@ -418,14 +438,14 @@ namespace Alchemi.Console
 			this.tv.ImageList = this.imgListSmall;
 			this.tv.Location = new System.Drawing.Point(0, 28);
 			this.tv.Name = "tv";
-			this.tv.Size = new System.Drawing.Size(208, 531);
+			this.tv.Size = new System.Drawing.Size(224, 531);
 			this.tv.TabIndex = 5;
 			this.tv.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
 			this.tv.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
 			// 
 			// split
 			// 
-			this.split.Location = new System.Drawing.Point(208, 28);
+			this.split.Location = new System.Drawing.Point(224, 28);
 			this.split.Name = "split";
 			this.split.Size = new System.Drawing.Size(3, 531);
 			this.split.TabIndex = 6;
@@ -441,13 +461,14 @@ namespace Alchemi.Console
 			this.lv.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.lv.HideSelection = false;
 			this.lv.LargeImageList = this.imgListBig;
-			this.lv.Location = new System.Drawing.Point(211, 28);
+			this.lv.Location = new System.Drawing.Point(227, 28);
 			this.lv.MultiSelect = false;
 			this.lv.Name = "lv";
-			this.lv.Size = new System.Drawing.Size(653, 531);
+			this.lv.Size = new System.Drawing.Size(637, 531);
 			this.lv.SmallImageList = this.imgListSmall;
 			this.lv.TabIndex = 7;
 			this.lv.DoubleClick += new System.EventHandler(this.lv_DoubleClick);
+			this.lv.SelectedIndexChanged += new EventHandler(lv_SelectedIndexChanged);
 			// 
 			// ch1
 			// 
@@ -458,15 +479,6 @@ namespace Alchemi.Console
 			// 
 			this.ch2.Text = "";
 			this.ch2.Width = 150;
-			// 
-			// tbtnSep3
-			// 
-			this.tbtnSep3.Style = System.Windows.Forms.ToolBarButtonStyle.Separator;
-			// 
-			// tbtnSysSummaryGraph
-			// 
-			this.tbtnSysSummaryGraph.ImageIndex = 6;
-			this.tbtnSysSummaryGraph.ToolTipText = "System Performance Summary";
 			// 
 			// ConsoleForm
 			// 
@@ -487,14 +499,12 @@ namespace Alchemi.Console
 
 		}
 		#endregion
-
-		#region "User-generated methods"
-		
+	
 		private void RefreshUI()
 		{
 			if (connected)
 			{
-				sbar.Text = string.Format("Connected to grid at {0}:{1}.", console.Connection.Host, console.Connection.Port);
+				sbar.Text = string.Format("Connected to grid as {0}@{1}:{2}.", console.Credentials.Username, console.Connection.Host, console.Connection.Port);
 			}
 			else
 			{
@@ -513,17 +523,104 @@ namespace Alchemi.Console
 			this.Refresh();
 		}
 
+		private ViewState GetViewState()
+		{
+			ViewState view = ViewState.None;
+			
+			//set the state based on the listview selected item.
+			if (lv.SelectedItems != null && lv.SelectedItems.Count>0)
+			{
+				ListViewItem li = lv.SelectedItems[0];
+				if (li is UserItem)
+					view = ViewState.User;
+				else if (li is GroupItem)
+					view = ViewState.Group;
+				else if (li is PermissionItem)
+					view = ViewState.Permission;
+				else if (li is ExecutorItem)
+					view = ViewState.Executor;
+				else if (li is ApplicationItem)
+					view = ViewState.Application;
+				else if (li is ThreadItem)
+					view = ViewState.Thread;
+			}
+			else
+			{
+				//nothing in the list is selected OR there are no list items
+				TreeNode node = tv.SelectedNode;
+				if (node!=null && node is SpecialParentNode)
+				{
+					SpecialParentNode spn = (SpecialParentNode)node;
+					if (spn.NodeType == SpecialParentNodeType.Users)
+						view = ViewState.User;
+					else if (spn.NodeType == SpecialParentNodeType.Groups)
+						view = ViewState.Group;
+					else if (spn.NodeType == SpecialParentNodeType.Applications)
+						view = ViewState.Application;
+					else if (spn.NodeType == SpecialParentNodeType.Executors)
+						view = ViewState.Executor;
+				}
+			}
+
+			return view;
+		}
+
 		private void SetMenuState()
 		{
-			//todo
 
-			//todo also right click menus and their events
+			ViewState view = GetViewState();
+			
+			if (view == ViewState.None)
+			{
+				//enable the add/edit/delete menus.
+				mnuNew.Enabled = false;
+				mnuDelete.Enabled = false;
+				mnuProperties.Enabled = false;
+
+				mnuContextNew.Enabled = false;
+				mnuContextDelete.Enabled = false;
+				mnuContextProperties.Enabled = false;
+
+				mnuNew.Text = "New ...";
+				mnuDelete.Text = "Delete ...";
+			}
+			else 
+			{
+				if (view==ViewState.User || view==ViewState.Group)
+				{
+					mnuNew.Enabled = true;	
+					mnuContextNew.Enabled = true;
+
+				}
+
+				//we can delete users, groups, threads and appications.
+				if (lv.SelectedItems.Count>0 && 
+					(view==ViewState.User || view==ViewState.Group || view==ViewState.Application || view==ViewState.Thread))
+				{
+					mnuDelete.Enabled = true;
+					mnuContextDelete.Enabled = true;
+				}
+
+				if (view==ViewState.User)
+				{
+					mnuNew.Text = "New User...";
+					mnuDelete.Text = "Delete User...";
+				}
+				else if (view==ViewState.Group)
+				{
+					mnuNew.Text = "New Group...";
+					mnuDelete.Text = "Delete Group...";										
+				}
+
+				mnuProperties.Enabled = true;
+				mnuContextProperties.Enabled = true;
+			}
+
+			//todo also right click menus events
 		}
 
 		private void SetToolbarState()
 		{
-			//todo other button states
-
 			if (connected)
 			{
 				tbtnConnect.ImageIndex = 5;
@@ -534,32 +631,43 @@ namespace Alchemi.Console
 				tbtnConnect.ImageIndex = 4;
 				tbtnConnect.ToolTipText = "Connect...";
 			}
+
+			//assuming SetMenuState() has already been called.
+			tbtnNew.Enabled = mnuNew.Enabled;
+			tbtnDelete.Enabled = mnuDelete.Enabled;
+			tbtnProperties.Enabled = mnuProperties.Enabled;
+
+			tbtnNew.ToolTipText = mnuNew.Text;
+			tbtnDelete.ToolTipText = mnuDelete.Text;
+			tbtnProperties.ToolTipText = mnuProperties.Text;
 		}
 
 		private void SetColumnHeaders()
 		{
-			//set the column headers according to the view.
-			if (tv.SelectedNode!=null)
+			TreeNode node=null;
+			//set the state based on the listview selected item.
+			if (lv.SelectedItems != null && lv.SelectedItems.Count>0 && lv.SelectedItems[0]!=null)
+			{
+				node = (TreeNode)lv.SelectedItems[0].Tag;
+			}
+
+			if (node!=null)
 			{
 				lv.Columns[1].Width=200;
-				if (tv.SelectedNode is ExecutorTreeNode)
+				if (node is SpecialParentNode)
 				{
-					lv.Columns[1].Text = "Host : Port";
-				}
-				else if (tv.SelectedNode is UserTreeNode)
-				{
-					lv.Columns[1].Text = "Group";
-				}
-				else if (tv.SelectedNode is ThreadTreeNode)
-				{
-					lv.Columns[1].Text = "Application";
-				}
-				else if (tv.SelectedNode is SpecialParentNode)
-				{
-					SpecialParentNode spn = (SpecialParentNode)tv.SelectedNode;
-					if (spn.NodeType == SpecialParentNodeType.Users) 
+					SpecialParentNode spn = (SpecialParentNode)node;
+					if (spn.NodeType == SpecialParentNodeType.Auth) 
 					{
-						lv.Columns[1].Text = "# of users";
+						lv.Columns[1].Text = "# of items";
+					}
+					else if (spn.NodeType == SpecialParentNodeType.Executors) 
+					{
+						lv.Columns[1].Text = "Host : Port";
+					}
+					else if (spn.NodeType == SpecialParentNodeType.Applications) 
+					{
+						lv.Columns[1].Text = "Application";
 					}
 					else
 					{
@@ -579,7 +687,6 @@ namespace Alchemi.Console
 		{
 			try
 			{
-				logger.Debug("Showing connection dialog...");
 				GConnectionDialog gcd = new GConnectionDialog();
 				if (gcd.ShowDialog() == DialogResult.OK)
 				{
@@ -594,13 +701,41 @@ namespace Alchemi.Console
 				MessageBox.Show("Error trying to connect..." + ex.Message);
 			}
 		}
-
+		
 		private void Disconnect()
 		{
+			if (filling)
+			{
+				StopFilling();
+				WaitFilling();
+			}
 			console = null;
 			connected = false;
 			ShowDisconnectedMessage();
 			RefreshUI();
+		}
+
+		private void WaitFilling()
+		{
+			while (filling)
+			{
+				Application.DoEvents();
+			}
+			SetFilling(false);
+		}
+
+		private void SetFilling(bool filling)
+		{
+			this.filling = filling;
+			stopFillingRequest = false; //reset it, so that the current filling sequence wont stop
+			//show the stop button, if it is filling
+			tbtnStop.Visible = filling;
+		}
+
+		private void StopFilling()
+		{
+			//request to stop filling
+			stopFillingRequest = true;
 		}
 
 		private void ShowDisconnectedMessage()
@@ -625,20 +760,30 @@ namespace Alchemi.Console
 			if (connected)
 			{
 				//Add Console Root
-				TreeNode root = new TreeNode("Console Root", 1, 1);
+				TreeNode root = new TreeNode("Console Root", 4, 4);
 
-				userParentNode = new SpecialParentNode("Users and Groups",8,8);
+				userParentNode = new SpecialParentNode("Users", 1, 1);
 				userParentNode.NodeType = SpecialParentNodeType.Users;
-				userParentNode.Nodes.Add(new DummyTreeNode("", 999, 999));
-				root.Nodes.Add(userParentNode);
 
-				execParentNode = new SpecialParentNode("Executors",9,9);
+				grpParentNode = new SpecialParentNode("Groups", 1, 1);
+				grpParentNode.NodeType = SpecialParentNodeType.Groups;
+
+				prmParentNode = new SpecialParentNode("Permissions", 1, 1);
+				prmParentNode.NodeType = SpecialParentNodeType.Permissions;
+
+				authParentNode = new SpecialParentNode("Users and Groups", 8, 8);
+				authParentNode.NodeType = SpecialParentNodeType.Auth;
+				authParentNode.Nodes.Add(userParentNode);
+				authParentNode.Nodes.Add(grpParentNode);
+				authParentNode.Nodes.Add(prmParentNode);
+				root.Nodes.Add(authParentNode);
+
+				execParentNode = new SpecialParentNode("Executors", 9, 9);
 				execParentNode.NodeType = SpecialParentNodeType.Executors;
-				execParentNode.Nodes.Add(new DummyTreeNode("", 999, 999));
 				root.Nodes.Add(execParentNode);
 
-				appParentNode = new SpecialParentNode("Applications",10,10);
-				appParentNode.NodeType = SpecialParentNodeType.Applications;
+				appParentNode = new SpecialParentNode("Applications", 10, 10);
+				appParentNode.NodeType = SpecialParentNodeType.AllApps;
 				appParentNode.Nodes.Add(new DummyTreeNode("", 999, 999));
 				root.Nodes.Add(appParentNode);
 
@@ -655,59 +800,231 @@ namespace Alchemi.Console
 			RefreshUI();
 		}
 
-		#endregion
-
-		#region "Users and Groups" 
-		
-		private void ShowUsers()
+		private void RefreshTreeNode(TreeNode node, bool refreshList)
 		{
-			if (connected)
+			//if the node is a special parent node do stuff here to fill its child nodes.
+			if (node is SpecialParentNode)
+			{
+				SpecialParentNode spn = (SpecialParentNode) node;
+				if (spn.NodeType == SpecialParentNodeType.AllApps)
+				{
+					FillApplicationsTree();
+				}
+			}
+
+			if (refreshList)
+				RefreshListItems(node);
+
+		}
+
+		private void RefreshListItems(TreeNode tnode)
+		{
+			if (!connected || filling || tnode==null)
+				return;
+
+
+
+			if (tnode.GetNodeCount(false)==0)
+			{
+				if (tnode is SpecialParentNode)
+				{
+					FillListItems(tnode as SpecialParentNode); //to fill final leaf items
+				}
+			}
+			else
+			{
+				SetFilling(true);
+				lv.Items.Clear();
+				int itemCount = 0;
+				//selected node has children
+				foreach (TreeNode node in tnode.Nodes)
+				{
+					//add the node to the listview.
+					ListViewItem li;
+					
+					//special cases.
+					if (node is ApplicationTreeNode)
+					{
+						ApplicationTreeNode appNode = (ApplicationTreeNode)node;
+						li = new ApplicationItem(node.Text);
+						((ApplicationItem)li).AlchemiApplication = appNode.AlchemiApplication;
+					}
+					else
+					{
+						li = new ListViewItem(node.Text);
+					}
+
+					li.ImageIndex = node.ImageIndex;
+
+					//store a reference to the tree-view node in the listview item's tag
+					li.Tag = node;
+
+					lv.Items.Add(li);
+
+					itemCount++;
+					if (itemCount >= MAGIC_ITEM_NUMBER)
+					{
+						itemCount = 0;
+						Application.DoEvents(); //to make sure the GUI is responsive
+					}
+					//here just make sure the stop has not been called.
+					if (stopFillingRequest)
+					{
+						break;
+					}
+				}				
+				SetFilling(false);
+			}
+		}
+
+		private void FillListItems(SpecialParentNode spn)
+		{
+			//fill the list with child items based on what type of node was passed in
+			if (spn.NodeType == SpecialParentNodeType.Users)
+			{
+				FillUsersList();
+			}
+			else if (spn.NodeType == SpecialParentNodeType.Groups)
+			{
+				FillGroupsList();
+			}
+			else if (spn.NodeType == SpecialParentNodeType.Permissions)
+			{
+				FillPermissionsList();
+			}
+			else if (spn.NodeType == SpecialParentNodeType.Applications)
+			{
+				FillThreadsList(spn);
+			}
+			else if (spn.NodeType == SpecialParentNodeType.Executors)
+			{
+				FillExecutorsList();
+			}
+			else
+			{
+				//dunno what kind of node this is.
+				//no nodes are meant to be shown here.
+				//so just clear the list
+				lv.Items.Clear();
+			}
+		}
+
+		#region "Users, Groups and Permissions" 
+
+		private void FillPermissionsList()
+		{
+			if (connected && !filling)
 			{
 				try
 				{
-					TreeNode rootNode = userParentNode; //use the Users parent node as root
-					rootNode.Nodes.Clear();
+					SetFilling(true);
+					//get permissions.
+					string sql = "select prm_id, prm_name from prm";
+					DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
+					DataRowCollection permissions = ds.Tables[0].Rows;
+					int iterations = 0;
+					lv.Items.Clear();
+					foreach (DataRow permission in permissions)
+					{
+						if (permission != null)
+						{
+							int id = (int)permission["prm_id"];
+							string name = (string)permission["prm_name"];
+							PermissionItem prm = new PermissionItem(name);
+							prm.ImageIndex = 12;
+							prm.Permission = new PermissionStorageView(id, name);
+							lv.Items.Add(prm);
+						}
 
-					//get users and groups.
-					//select grp_id, grp_name from grp 
+						iterations++;
+						if (iterations > MAGIC_ITEM_NUMBER)
+						{
+							iterations = 0;
+							Application.DoEvents();
+						}
+
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
+					}					
+				}
+				catch (Exception ex)
+				{
+					if (ex is AuthorizationException)
+					{
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+					}
+					else
+					{
+						logger.Error("Could not get list of permissions. Error: "+ex.Message, ex);
+						MessageBox.Show("Could not get list of permissions. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+						sbar.Text = "Couldnot get list of permissions. Error: " + ex.Message;
+					}
+				}
+				finally
+				{
+					SetFilling(false);
+				}
+			}
+			else
+			{
+				ShowDisconnectedMessage();
+			}
+			RefreshUI();
+		}
+
+		private void FillGroupsList()
+		{
+			if (connected && !filling)
+			{
+				try
+				{
+					SetFilling(true);
+					//get groups.
 					GroupStorageView[] groups = console.Manager.Admon_GetGroups(console.Credentials);
-					//select usr_name, password, grp.grp_id from usr inner join grp on grp.grp_id = usr.grp_id
-					UserStorageView[] users = console.Manager.Admon_GetUserList(console.Credentials);
 
+					int iterations = 0;
+					lv.Items.Clear();
 					foreach (GroupStorageView group in groups)
 					{
 						if (group.GroupName != null)
 						{
-							GroupTreeNode grpNode = new GroupTreeNode(group.GroupName, 2, 2);
-							string grpId = group.GroupId.ToString(); //keep the grp_id in the tag for later
-							grpNode.grp_id = grpId;
-							grpNode.grp_name = group.GroupName;
-							rootNode.Nodes.Add(grpNode);
-
-							//filter the users table.
-							//DataRow[] grpUsers = users.Select("grp_id="+grpId , "usr_name");
-							foreach (UserStorageView user in users)
-							{
-								if (user.Username != null && user.GroupId == group.GroupId)
-								{
-									UserTreeNode usrNode = new UserTreeNode(user.Username, 3, 3);
-									usrNode.usr_name = user.Username;
-									usrNode.grp_id = grpId;
-									//add this user to the parent grp node.
-									grpNode.Nodes.Add(usrNode);
-								}
-							}
+							GroupItem grp = new GroupItem(group.GroupName);
+							grp.ImageIndex = 2;
+							grp.Group = group;
+							lv.Items.Add(grp);
 						}
-						tv.Refresh();
-						Application.DoEvents();
-					}
 
+						iterations++;
+						if (iterations > MAGIC_ITEM_NUMBER)
+						{
+							iterations = 0;
+							Application.DoEvents();
+						}
+
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
+					}					
 				}			
 				catch (Exception ex)
 				{
-					logger.Error("Could not get list of users. Error: "+ex.Message, ex);
-					MessageBox.Show("Could not get list of users. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-					sbar.Text = "Couldnot get list of users. Error: " + ex.Message;
+					if (ex is AuthorizationException)
+					{
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+					}
+					else
+					{
+						logger.Error("Could not get list of groups. Error: "+ex.Message, ex);
+						MessageBox.Show("Could not get list of groups. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+						sbar.Text = "Couldnot get list of groups. Error: " + ex.Message;
+					}
+				}
+				finally
+				{
+					SetFilling(false);
 				}
 			}
 			else
@@ -717,56 +1034,131 @@ namespace Alchemi.Console
 			RefreshUI();
 		}
 
+		private void FillUsersList()
+		{
+			if (connected && !filling)
+			{
+				try
+				{
+					SetFilling(true);
+					//get users.
+					UserStorageView[] users = console.Manager.Admon_GetUserList(console.Credentials);
+					int iterations = 0;
+					lv.Items.Clear();
+					foreach (UserStorageView user in users)
+					{
+						if (user.Username != null)
+						{
+							UserItem usr = new UserItem(user.Username);
+							usr.ImageIndex = 3;
+							usr.User = user;
+							logger.Debug("User "+user.Username+" is system ? "+ user.IsSystem);
+							lv.Items.Add(usr);
+						}
+
+						iterations++;
+						if (iterations > MAGIC_ITEM_NUMBER)
+						{
+							iterations = 0;
+							Application.DoEvents();
+						}
+
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
+					}			
+				}			
+				catch (Exception ex)
+				{
+					if (ex is AuthorizationException)
+					{
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+					}
+					else
+					{
+						logger.Error("Could not get list of users. Error: "+ex.Message, ex);
+						MessageBox.Show("Could not get list of users. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+						sbar.Text = "Couldnot get list of users. Error: " + ex.Message;
+					}
+				}
+				finally
+				{
+					SetFilling(false);
+				}
+			}
+			else
+			{
+				ShowDisconnectedMessage();
+			}
+			RefreshUI();
+		}
+
+		
 		#endregion
 
 		#region "Executors" 
 		
-		private void ShowExecutors()
+		private void FillExecutorsList()
 		{
-			if (connected)
+			if (connected && !filling)
 			{
 				try
 				{
-					TreeNode rootNode = execParentNode; //use the Executors parent node as root
-					rootNode.Nodes.Clear();
-
-					//select executor_id, host, port, usr_name, is_connected, is_dedicated, cpu_max, convert(varchar, cpu_totalusage * cpu_max / (3600 * 1000)) as cpu_totalusage from executor order by is_connected desc
+					SetFilling(true);
 					ExecutorStorageView[] executors = console.Manager.Admon_GetExecutors(console.Credentials);
+					int iterations = 0;
+					lv.Items.Clear();
 					foreach (ExecutorStorageView executor in executors)
 					{
 						if (executor.HostName != null)
 						{
-							ExecutorTreeNode exNode = new ExecutorTreeNode(executor.HostName);
-							exNode.cpu_max = executor.MaxCpu.ToString();
-							exNode.cpu_totalusage = executor.TotalCpuUsage.ToString();
-							exNode.executor_id = executor.ExecutorId;
-							exNode.host = executor.HostName;
-							exNode.is_connected = executor.Connected;
-							exNode.is_dedicated = executor.Dedicated;
-							exNode.port = executor.Port.ToString();
-							exNode.usr_name = executor.Username;
+							ExecutorItem exi = new ExecutorItem(executor.HostName);
+							exi.Executor = executor;
 
-							if (exNode.is_connected)
+							if (exi.Executor.Connected)
 							{
-								exNode.ImageIndex = 5;
+								exi.ImageIndex = 5;
 							}
 							else
 							{
-								exNode.ImageIndex = 6;
+								exi.ImageIndex = 6;
 							}
-							exNode.SelectedImageIndex = exNode.ImageIndex;
-							rootNode.Nodes.Add(exNode);
+							lv.Items.Add(exi);
 						}
-						tv.Refresh();
-						Application.DoEvents();
+
+						iterations++;
+
+						if (iterations > MAGIC_ITEM_NUMBER)
+						{
+							iterations = 0;
+							Application.DoEvents();
+						}
+
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
 					}
 
+					
 				}			
 				catch (Exception ex)
 				{
-					logger.Error("Could not get list of executors. Error: "+ex.Message, ex);
-					MessageBox.Show("Could not get list of executors. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
-					sbar.Text = "Couldnot get list of executors. Error: " + ex.Message;
+					if (ex is AuthorizationException)
+					{
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+					}
+					else
+					{
+						logger.Error("Could not get list of executors. Error: "+ex.Message, ex);
+						MessageBox.Show("Could not get list of executors. Error: "+ex.Message,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
+						sbar.Text = "Couldnot get list of executors. Error: " + ex.Message;
+					}
+				}
+				finally
+				{
+					SetFilling(false);
 				}
 			}
 			else
@@ -776,83 +1168,66 @@ namespace Alchemi.Console
 			RefreshUI();
 		}
 
+		
 		#endregion
 
-		#region "Applications" 
-		
-		private void ShowApplications()
+		#region "Applications and Threads" 
+		private void FillApplicationsTree()
 		{
-			if (connected)
+			if (connected && !filling)
 			{
 				try
 				{
-					TreeNode rootNode = appParentNode; //use the Apps parent node as root
+					SetFilling(true);
+					
+					TreeNode rootNode = appParentNode;
 					rootNode.Nodes.Clear();
 
-					//get apps and jobs
-					//select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application
-					DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageOwnApp,
-									"select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application");
+					//get apps
+					ApplicationStorageView[] apps = console.Manager.Admon_GetLiveApplicationList(console.Credentials);
 
-					DataRowCollection apps = ds.Tables[0].Rows;
-
-					foreach (DataRow app in apps)
+					int iterations = 0;
+					foreach (ApplicationStorageView app in apps)
 					{
-						string nodeText = app.IsNull("application_name") ? "Noname: "+app["application_id"].ToString() : app["application_name"].ToString();
-						string appId = app["application_id"].ToString(); //keep the id in the tag for later
+						string nodeText = app.ApplicationName;
 						
 						ApplicationTreeNode appNode = new ApplicationTreeNode(nodeText, 7, 7);
-						appNode.application_id = appId;
-						appNode.application_name = app["application_name"].ToString();
-						appNode.is_primary = (bool)app["is_primary"];
-						appNode.state = (ApplicationState)app["state"];
-						appNode.time_completed = app["time_completed"].ToString();
-						appNode.time_created = app["time_created"].ToString();
-						appNode.usr_name = app["usr_name"].ToString();
-
+						appNode.AlchemiApplication = app;
 						rootNode.Nodes.Add(appNode);
 
-						//select thread_id, state, time_started, time_finished, executor_id, priority, failed from thread where application_id = {appId}
-						ThreadStorageView[] threads = console.Manager.Admon_GetThreadList(console.Credentials, appId);
-						int iterations = 0;
-						foreach (ThreadStorageView thread in threads)
+						iterations++;
+
+						//this is there to make the app more responsive as a GUI to the user,
+						//in case there are lots and lots of threads.
+						if (iterations >= MAGIC_ITEM_NUMBER)
 						{
-							ThreadTreeNode thrNode = new ThreadTreeNode(thread.ThreadId.ToString(), 7, 7);
-							thrNode.appId = appId; //keep the id in the tag for later
-							thrNode.executor_id = thread.ExecutorId;
-							thrNode.failed = thread.Failed; 
-							thrNode.priority = thread.Priority;
-							thrNode.state = thread.State;
-							thrNode.thread_id = thread.ThreadId.ToString();
-							thrNode.time_finished = thread.TimeFinished.ToString();
-							thrNode.time_started = thread.TimeStarted.ToString();
-
-							//add this thread to the parent app node.
-							appNode.Nodes.Add(thrNode);
-							iterations++;
-
-							//this is there to make the app more responsive as a GUI to the user,
-							//in case there are lots and lots of threads.
-							if (iterations >= 49)
-							{
-								iterations = 0;
-								Application.DoEvents();
-							}
+							iterations = 0;
+							Application.DoEvents();
 						}
-						
-						//set the # of threads here
-						appNode.num_threads = threads.Length;
 
-						tv.Refresh();
-						Application.DoEvents();
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
 					}
-
+					
 				}			
 				catch (Exception ex)
 				{
-					logger.Error("Could not get list of applications. Error: "+ex.Message, ex);
-					MessageBox.Show("Couldnot get list of applications. Error: "+ex.StackTrace,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
-					sbar.Text = "Couldnot get list of applications. Error: " + ex.Message;
+					if (ex is AuthorizationException)
+					{
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+					}
+					else
+					{
+						logger.Error("Could not get list of applications. Error: "+ex.Message, ex);
+						MessageBox.Show("Couldnot get list of applications. Error: "+ex.StackTrace,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
+						sbar.Text = "Couldnot get list of applications. Error: " + ex.Message;
+					}
+				}
+				finally
+				{
+					SetFilling(false);
 				}
 			}
 			else
@@ -861,44 +1236,67 @@ namespace Alchemi.Console
 			}
 			RefreshUI();
 		}
-
-		#endregion
-
-		#region "Show Properties"
-
-		//Show properties always shows the properties for the selected ListView Item. it it exists.
-		private void ShowProperties()
+		
+		private void FillThreadsList(SpecialParentNode appNode)
 		{
-			if (connected)
+			if (connected && !filling)
 			{
-				TreeNode node = null;
-				
-				if (lv.SelectedItems!=null && lv.SelectedItems.Count > 0)
-					node = (TreeNode) lv.SelectedItems[0].Tag;
-
-				if (node != null)
+				try
 				{
-					if (node is UserTreeNode)
+					SetFilling(true);
+					ApplicationTreeNode appTreeNode = (ApplicationTreeNode)appNode;
+					string appId = (appTreeNode).AlchemiApplication.ApplicationId;
+					//get jobs
+					ThreadStorageView[] threads = console.Manager.Admon_GetThreadList(console.Credentials, appId);
+					int iterations = 0;
+					lv.Items.Clear();
+
+					foreach (ThreadStorageView thread in threads)
 					{
-						//show user dialog. .. //todo
+						ThreadItem thrItem = new ThreadItem(thread.ThreadId.ToString());
+						thrItem.ImageIndex = 7;
+						thrItem.AlchemiThread =  thread;
+
+						lv.Items.Add(thrItem);
+						iterations++;
+
+						//this is there to make the app more responsive as a GUI to the user,
+						//in case there are lots and lots of threads.
+						if (iterations >= MAGIC_ITEM_NUMBER)
+						{
+							iterations = 0;
+							Application.DoEvents();
+						}
+
+						if (stopFillingRequest)
+						{
+							break; //To make sure we dont get stuck in this loop when asked to stop.
+						}
 					}
-					else if (node is GroupTreeNode)
+				}			
+				catch (Exception ex)
+				{
+					if (ex is AuthorizationException)
 					{
-						//show the group dialog .. //todo
+						MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
 					}
-					else if (node is ExecutorTreeNode)
+					else
 					{
-						//show the executor dialog 
-						ExecutorForm ef = new ExecutorForm();
-						ef.SetData((ExecutorTreeNode)node);
-						ef.ShowDialog(this);
-					}
-					else if (node is ApplicationTreeNode)
-					{
-						//show the application dialog ..//todo
+						logger.Error("Could not get list of applications. Error: "+ex.Message, ex);
+						MessageBox.Show("Couldnot get list of applications. Error: "+ex.StackTrace,"Console Error",MessageBoxButtons.OK,MessageBoxIcon.Error );
+						sbar.Text = "Couldnot get list of applications. Error: " + ex.Message;
 					}
 				}
+				finally
+				{
+					SetFilling(false);
+				}
 			}
+			else
+			{
+				ShowDisconnectedMessage();
+			}
+			RefreshUI();
 		}
 
 		#endregion
@@ -907,7 +1305,7 @@ namespace Alchemi.Console
 		
 		private void ShowSystem()
 		{
-			if (!connected)
+			if (!connected || filling)
 			{
 				//MessageBox.Show("No connection available.");
 				return;
@@ -918,7 +1316,7 @@ namespace Alchemi.Console
 			if (sysForm == null || !sysForm.Created)
 			{
 				sysForm = new SysPerfForm(console);
-				sysForm.Closing += new CancelEventHandler(sysForm_Closing);
+				sysForm.Closing += new CancelEventHandler(SysForm_Closing);
 				sysForm.MdiParent = this.MdiParent;
 				sysForm.Text = "System Performance Monitor:  "+console.ManagerEP.Host+":"+console.ManagerEP.Port;
 				sysForm.WindowState = this.WindowState;
@@ -931,14 +1329,82 @@ namespace Alchemi.Console
 
 		#endregion
 
+		#region GUI Events
+
+		private void lv_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			RefreshUI();
+		}
+		private void lv_DoubleClick(object sender, EventArgs e)
+		{
+			//this event is raised only when an item is double-clicked
+			try
+			{
+				ListViewItem li = null;
+				TreeNode node = null;
+				if (lv.SelectedItems != null && lv.SelectedItems.Count>0 && lv.SelectedItems[0]!=null)
+				{
+					li = lv.SelectedItems[0];
+				}
+
+				if (li!=null && li.Tag!=null && li.Tag is TreeNode)
+				{
+					node = (TreeNode)li.Tag; //when the node is SPN, we store the node in the tag
+				}
+				
+				if (node!=null)
+				{
+					//expand it and then select it.
+					//selecting the node will fire the tv_selected event, which will fill in the SPN children if needed.
+					node.Expand();
+					node.EnsureVisible();
+					tv.SelectedNode = node;
+					RefreshUI();
+				}
+				else
+				{
+					//for the selected list item.
+					DoProperties();
+				}
+			}
+			catch (Exception ex)
+			{
+				logger.Debug("Error lv_Double_Click:"+ex.ToString());
+			} //ignore
+		}
+
+		private void tv_AfterExpand(object sender, TreeViewEventArgs e)
+		{
+			RefreshTreeNode(e.Node, false);
+			RefreshUI();
+		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			RefreshListItems(e.Node);
+			if (e.Node is SpecialParentNode)
+			{
+				SpecialParentNode spn = (SpecialParentNode)e.Node;
+				if (spn.Fillable)
+				{
+					FillListItems(spn);
+				}
+				else
+				{
+					RefreshListItems(e.Node);
+				}
+			}
+			else
+			{
+				RefreshListItems(e.Node);
+			}
+			RefreshUI();
 		}
 
 		private void mnuView_Click(object sender, EventArgs e)
 		{
+			if (filling)
+				return;
+
 			if (sender == mnuLargeIcons || sender == mnuContextLargeIcons)
 			{
 				lv.View = View.LargeIcon;
@@ -957,35 +1423,44 @@ namespace Alchemi.Console
 			}
 
 			RefreshUI();
-			//need to make double sure.??
-			//when the context menu appears in the list view, this menu doesnt disappear when clicked the first time.
 		}
 
 		private void mnuAction_Click(object sender, EventArgs e)
 		{
-			//todo code for action items...
+			if (filling)
+				return;
+
 			if (sender == mnuNew || sender == mnuContextNew)
 			{
-			}
-			else if (sender == mnuEdit || sender == mnuContextEdit)
-			{
+				DoAdd();
 			}
 			else if (sender == mnuDelete || sender == mnuContextDelete)
 			{
+				DoDelete();
 			}
 			else if (sender == mnuProperties || sender == mnuContextProperties)
 			{
+				DoProperties();
 			}
 			RefreshUI();
 		}
 
 		private void tbar_ButtonClick(object sender, ToolBarButtonClickEventArgs e)
 		{
-			//todo all other buttons
+			if (e.Button == tbtnStop)
+			{
+				//make the filling stop.
+				StopFilling();
+				return;	
+			}
+
+			if (filling)
+				return;
+
 			if (e.Button == tbtnRefresh)
 			{
 				//if any of the SpecialParentNodes are selected, we better refresh their contents here again.
-				RefreshTreeNode(tv.SelectedNode);
+				RefreshTreeNode(tv.SelectedNode, true);
 				RefreshUI();
 			}
 			else if (e.Button == tbtnConnect)
@@ -1002,242 +1477,20 @@ namespace Alchemi.Console
 			}
 			else if (e.Button == tbtnNew)
 			{
-				MessageBox.Show("To be implemented...");
+				DoAdd();
 			}
 			else if (e.Button == tbtnDelete)
 			{
-				MessageBox.Show("To be implemented...");
+				DoDelete();
 			}
 			else if (e.Button == tbtnProperties)
 			{
-				ShowProperties();
+				DoProperties();
 			}
 			else if (e.Button == tbtnSysSummaryGraph)
 			{
 				ShowSystem();
 			}
-		}
-
-		//still need to finish this.... need to pop up 
-//		private void treelist_MouseUp(object sender, MouseEventArgs e)
-//		{
-////			if (!connected)
-////				return;
-////
-////			Control senderControl = (Control)sender;
-////			CurrentView view = findCurrentView();
-////			bool showMenu = false;
-////			if (e.Button == MouseButtons.Right)
-////			{
-////				//set the appropriate state for menus
-////				mnuNew.Visible = false;
-////				if (view == CurrentView.Executors)
-////				{
-////					mnuDel.Enabled = false; //should be enabled in the future...and need to check before deleting, if a thread is running on this Executor...
-////					
-////					//showMenu only if an Executor node is selected.
-////					if (tv.SelectedNode != null && tv.SelectedNode is ExecutorTreeNode)
-////						showMenu = true;
-////				}
-////				else if (view == CurrentView.Users)
-////				{
-////					mnuNew.Visible = true;
-////					mnuEdit.Visible = true;
-////					//showMenu only if an Usr/Grp node is selected.
-////					if (tv.SelectedNode != null && (tv.SelectedNode is UserTreeNode || tv.SelectedNode is GroupTreeNode))
-////						showMenu = true;
-////				}
-////				else if (view == CurrentView.Applications)
-////				{
-////					//showMenu only if an App/Thread node is selected.
-////					if (tv.SelectedNode != null && (tv.SelectedNode is ApplicationTreeNode || tv.SelectedNode is ThreadTreeNode))
-////						showMenu = true;
-////				}
-////
-////				if (showMenu)
-////					senderControl.ContextMenu.Show(senderControl, new Point(e.X, e.Y));
-////			}
-//		}
-
-//		private void mnuRightClick_Click(object sender, System.EventArgs e)
-//		{
-//			if (!connected)
-//				return;
-//
-//			CurrentView view = findCurrentView();
-//			if (sender == mnuNew)
-//			{
-//				//view can only be users.
-//				//find if we are adding a user/group and proceed
-//			}
-//			else if (sender == mnuEdit)
-//			{
-//				//view can only be users.
-//				//find if we are editing a user/group and proceed
-//			}
-//			else if (sender == mnuDel)
-//			{
-//				//view can be user/executor/application
-//			}
-//			else if (sender == mnuProperties)
-//			{
-//				//view can be users/executors/applications
-//				if (view == CurrentView.Executors)
-//				{
-//					//find out if any executor node is selected.
-//					TreeNode node = tv.SelectedNode;
-//					if (node!=null && node is ExecutorTreeNode)
-//					{
-//						ExecutorForm ef = new ExecutorForm();
-//						ef.SetData((ExecutorTreeNode)node);
-//						ef.ShowDialog(this);
-//					}
-//				}
-//			}
-		//		}
-
-		private void tv_AfterExpand(object sender, TreeViewEventArgs e)
-		{
-			RefreshTreeNode(e.Node);
-		}
-
-		
-		//RefreshTreeNode is the function to be called if both the treeview, listview items should be reloaded.
-		//this calls the RefreshListItems.
-		private void RefreshTreeNode(TreeNode node)
-		{
-			//if the node is a special parent node do stuff here to fill its child nodes.
-			if (node is SpecialParentNode)
-			{
-				SpecialParentNode spn = (SpecialParentNode) node;
-				if (spn.NodeType == SpecialParentNodeType.Users)
-				{
-					ShowUsers();
-				}
-				else if (spn.NodeType == SpecialParentNodeType.Executors)
-				{
-					ShowExecutors();
-				}
-				else if (spn.NodeType == SpecialParentNodeType.Applications)
-				{
-					ShowApplications();
-				}
-			}
-			RefreshListItems(node);
-		}
-
-		
-		private void RefreshListItems(TreeNode tnode)
-		{
-			if (!connected)
-				return;
-
-			lv.Items.Clear();
-
-			if (tnode==null)
-				return;
-
-			//show the items in the list view.
-			if (tnode.GetNodeCount(false)!=0)
-			{
-				
-				//selected node has children
-				foreach (TreeNode node in tnode.Nodes)
-				{
-					//add the node to the listview.
-					ListViewItem li = new ListViewItem(node.Text);
-					li.ImageIndex = node.ImageIndex;
-
-					//store a reference to the tree-view node in the listview item's tag
-					li.Tag = node;
-
-					//special cases
-					if (tnode is SpecialParentNode)
-					{
-						SpecialParentNode spn = (SpecialParentNode)tnode;
-						if (spn.NodeType == SpecialParentNodeType.Users)
-						{
-							if (!(node is DummyTreeNode))
-								li.SubItems.Add(node.GetNodeCount(false).ToString());
-						}
-					}
-
-					lv.Items.Add(li);
-					lv.Refresh();
-					Application.DoEvents(); //to make sure the GUI is responsive
-				}
-			}
-			else
-			{
-				//add the node to the listview.
-				ListViewItem li = new ListViewItem(tnode.Text);
-				li.ImageIndex = tnode.ImageIndex;
-
-				//special cases
-				if (tnode is UserTreeNode)
-				{
-					UserTreeNode utn = (UserTreeNode)tnode;
-					li.SubItems.Add(utn.Parent.Text);
-				} 
-				else if (tnode is ExecutorTreeNode)
-				{
-					ExecutorTreeNode etn = (ExecutorTreeNode)tnode;
-					li.SubItems.Add(etn.host+":"+etn.port);
-				}
-				else if (tnode is ThreadTreeNode)
-				{
-					ThreadTreeNode ttn = (ThreadTreeNode)tnode;
-					li.SubItems.Add(ttn.Parent.Text);
-				}
-
-				//store a reference to the tree-view node in the listview item's tag
-				li.Tag = tnode;
-				lv.Items.Add(li);
-				lv.Refresh();
-			}
-
-			//just select the first list item if it exists.
-			if (lv.Items.Count > 0)
-			{
-				lv.Items[0].Selected = true;
-			}
-		}
-
-
-		private void lv_DoubleClick(object sender, EventArgs e)
-		{
-			//this should do the same thing as the tree-view expansion.
-			//this event is raised only when an item is clicked
-			try
-			{
-				if (lv.SelectedItems != null && lv.SelectedItems.Count>0 && lv.SelectedItems[0]!=null)
-				{
-					ListViewItem li = lv.SelectedItems[0];
-
-					//we know that we would have stored the tree-node corresponding to it in the tag;
-					TreeNode node = (TreeNode)li.Tag;
-					if (node!=null)
-					{
-						if (node.GetNodeCount(false) > 0)
-						{
-							//expand/collapse it. and then select it.
-							node.Expand();
-							node.EnsureVisible();
-							tv.SelectedNode = node;
-							RefreshUI();
-						}
-						else
-						{
-							//for the selected list item.
-							ShowProperties();
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				logger.Debug(ex.ToString());
-			} //ignore
 		}
 
 		private void ConsoleForm_Closing(object sender, CancelEventArgs e)
@@ -1246,9 +1499,225 @@ namespace Alchemi.Console
 			Disconnect();
 		}
 
-		private void sysForm_Closing(object sender, CancelEventArgs e)
+		private void SysForm_Closing(object sender, CancelEventArgs e)
 		{
 			this.Activate();
 		}
+		#endregion
+
+		#region actions
+		private void DoProperties()
+		{
+			if (!connected || filling)
+				return;
+
+			//li is the selected list view item for which we show properties.
+			ListViewItem li = null;
+			if (lv.SelectedItems!=null && lv.SelectedItems.Count > 0)
+				li = lv.SelectedItems[0];
+
+			if (li != null)
+			{
+				if (li is UserItem)
+				{
+					//show user dialog.
+					UserItem uitem = (UserItem)li;
+
+					UserProperties userProps = new UserProperties(console);
+					userProps.SetData(uitem.User);
+					userProps.ShowDialog(this);
+				}
+				else if (li is GroupItem)
+				{
+					//show the group dialog
+					GroupItem gitem = (GroupItem)li;
+
+					GroupProperties groupProps = new GroupProperties(console);
+					groupProps.SetData(gitem.Group);
+					groupProps.ShowDialog(this);	
+				}
+				else if (li is PermissionItem)
+				{
+					//show the permission dialog
+					PermissionItem pitem = (PermissionItem)li;
+
+					PermissionProperties prmProps = new PermissionProperties();
+					prmProps.SetData(pitem.Permission);
+					prmProps.ShowDialog(this);	
+				}
+				else if (li is ExecutorItem)
+				{
+					//show executor props.
+					ExecutorItem eItem = (ExecutorItem)li;
+
+					ExecutorProperties exProps = new ExecutorProperties(console);
+					exProps.SetData(eItem.Executor);
+					exProps.ShowDialog(this);
+				}
+				else if (li is ApplicationItem)
+				{
+					//show the apps dialog
+					ApplicationItem appItem = (ApplicationItem)li;
+
+					ApplicationProperties appProps = new ApplicationProperties(this.console);
+					appProps.SetData(appItem.AlchemiApplication);
+					appProps.ShowDialog(this);
+				}
+				else if (li is ThreadItem)
+				{
+					//show thread props. 	
+					ThreadItem threadItem = (ThreadItem)li;
+
+					ThreadProperties threadProps = new ThreadProperties(console);
+					threadProps.SetData(threadItem.AlchemiThread);
+					threadProps.ShowDialog(this);
+				}
+			}
+			
+		}
+
+		private void DoAdd()
+		{
+			ViewState view = GetViewState();
+			
+			try
+			{
+				//add can be done only for users / groups
+					if (view==ViewState.User)
+					{
+						AddUserForm addUserForm = new AddUserForm(console);
+						addUserForm.ShowDialog(this);
+						if (addUserForm.AddedUser)
+							FillUsersList();
+					}
+					else if (view==ViewState.Group)
+					{
+						AddGroupForm addGroupForm = new AddGroupForm(console);
+						addGroupForm.ShowDialog(this);
+						if (addGroupForm.AddedGroup)
+							FillGroupsList();
+					}
+					//Doesnt make sense to add Executors / Apps / Threads /Permissions manually.
+					//permissions cant be added yet. they can only be assigned to groups
+			}
+			catch (AuthorizationException)
+			{
+				MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+			}
+		}
+
+		private void DoDelete()
+		{
+			//delete can be done only for users / groups.
+			//cannot delete self-user / group
+			try
+			{
+				ListViewItem item = null;
+				if (lv.SelectedItems != null && lv.SelectedItems.Count>0 && lv.SelectedItems[0]!=null)
+				{
+					item = lv.SelectedItems[0];
+				}
+
+				if (item!=null)
+				{
+					if (item is UserItem)
+					{
+						//first check the user is trying to delete himself
+						UserItem uitem = (UserItem)item;
+						if (console.Credentials.Username != uitem.User.Username)
+						{
+							DialogResult result = 
+								MessageBox.Show("Are you sure you want to delete this user? ", "Delete User", 
+														MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+							if (result == DialogResult.Yes)
+							{
+								string sql = string.Format("DELETE FROM usr WHERE usr_name='{0}';", uitem.User.Username);
+								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
+								//refresh users list
+								FillUsersList();
+							}
+						}
+						else
+						{
+							MessageBox.Show("Cannot delete self!","Delete User", MessageBoxButtons.OK, MessageBoxIcon.Warning);	
+						}
+					}
+					else if (item is GroupItem)
+					{
+						GroupItem gitem = (GroupItem)item;
+						DialogResult result = 
+							MessageBox.Show("This group and all the users who are part of it will be deleted. Are you sure you want to delete this group? ", 
+													"Delete Group", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+						if (result == DialogResult.Yes)
+						{
+							string sql = string.Format("DELETE FROM usr WHERE grp_id='{0}'; DELETE FROM grp WHERE grp_id='{0}';", gitem.Group.GroupId);
+							console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
+							//refresh groups list
+							FillGroupsList();
+						}
+					}
+					else if (item is ApplicationItem)
+					{
+						ApplicationItem appItem = (ApplicationItem)item;
+						if (appItem.AlchemiApplication.State!=ApplicationState.Stopped)
+						{
+							MessageBox.Show("This application is still running. Only stopped applications can be deleted.", "Delete Application", MessageBoxButtons.OK, MessageBoxIcon.Information);
+							
+						}
+						else
+						{
+							DialogResult result = 
+								MessageBox.Show("This application and all the threads within it, will be deleted. Are you sure you want to delete this application? ", 
+								"Delete Application", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+							if (result == DialogResult.Yes)
+							{
+								string sql = string.Format("DELETE FROM application WHERE application_id='{0}'; DELETE FROM thread WHERE application_id='{0}';", appItem.AlchemiApplication.ApplicationId );
+								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageAllApps, sql);
+								//refresh apps
+								FillApplicationsTree();
+								RefreshListItems(appParentNode);
+							}	
+						}						
+					}
+					else if (item is ThreadItem)
+					{
+						ThreadItem appItem = (ThreadItem)item;
+						if (appItem.AlchemiThread.State!=ThreadState.Dead && appItem.AlchemiThread.State!=ThreadState.Finished)
+						{
+							MessageBox.Show("This thread is still running. Only stopped threads can be deleted.", 
+												"Delete Thread", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						}
+						else
+						{
+							DialogResult result = 
+								MessageBox.Show("Are you sure you want to delete this thread? ", 
+								"Delete Thread", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+							if (result == DialogResult.Yes)
+							{
+								string sql = string.Format("DELETE FROM thread WHERE thread_id='{0}';", appItem.AlchemiThread.ThreadId );
+								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageAllApps, sql);
+								//refresh threads
+								//check if there is an application tree node that is selected
+								if(tv.SelectedNode != null && tv.SelectedNode is ApplicationTreeNode)
+								{
+									FillThreadsList(tv.SelectedNode as SpecialParentNode);
+								}
+								else
+								{
+									FillApplicationsTree();	
+								}
+								
+							}	
+						}						
+					}
+				}		
+			}
+			catch (AuthorizationException)
+			{
+				MessageBox.Show("Access denied. You do not have adequate permissions for this operation.","Authorization Error",MessageBoxButtons.OK,  MessageBoxIcon.Error);
+			}		
+		}
+
+		#endregion
 	}
 }

@@ -673,19 +673,16 @@ namespace Alchemi.Core.Executor
 			catch (Exception e)
 			{
 				logger.Warn(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()),e);
-				if (rawThread!=null)
+				try
 				{
-					try
-					{
-						Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
-					}
-					catch (Exception ex1)
-					{
-						if (_CurTi!=null)
-							logger.Warn("Error trying to set failed thread for App: "+_CurTi.ApplicationId+", thread="+_CurTi.ThreadId,ex1);	
-						else
-							logger.Warn("Error trying to set failed thread: ",ex1);	
-					}
+					Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
+				}
+				catch (Exception ex1)
+				{
+					if (_CurTi!=null)
+						logger.Warn("Error trying to set failed thread for App: "+_CurTi.ApplicationId+", thread="+_CurTi.ThreadId,ex1);	
+					else
+						logger.Warn("Error trying to set failed thread: ",ex1);	
 				}
 			}
 			finally

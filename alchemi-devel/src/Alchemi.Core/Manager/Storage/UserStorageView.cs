@@ -36,18 +36,50 @@ namespace Alchemi.Core.Manager.Storage
 	{
 		#region "Private variables"
 		
+		//private Int32 m_userId; 
 		private String m_username;
 		private String m_password;
 		private Int32 m_groupId; 
 
+		private bool m_is_system;
+
 		#endregion
 
 		#region "Properties"
+
+//		public Int32 UserId
+//		{
+//			get
+//			{
+//				return m_userId;	
+//			}
+//			set
+//			{
+//				m_userId = value;
+//			}
+//		}
+
+		public bool IsSystem
+		{
+			get
+			{
+				return m_is_system;
+			}
+			set
+			{
+				m_is_system = value;
+			}
+		}
+
 		public String Username
 		{
 			get
 			{
 				return m_username;
+			}
+			set
+			{
+				m_username = value;
 			}
 		}
 		
