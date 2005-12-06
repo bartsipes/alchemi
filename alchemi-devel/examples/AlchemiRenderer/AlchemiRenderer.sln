@@ -1,9 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemiRenderer", "AlchemiRenderer.csproj", "{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemiRenderer", "AlchemiRendererExec\AlchemiRenderer.csproj", "{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{9C912A86-D566-49D9-A940-14672768B4A8} = {9C912A86-D566-49D9-A940-14672768B4A8}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cropper", "..\Cropper\Cropper.csproj", "{9C912A86-D566-49D9-A940-14672768B4A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderLibrary", "RendererLibrary\RenderLibrary.csproj", "{9C912A86-D566-49D9-A940-14672768B4A8}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

@@ -134,8 +134,15 @@ namespace Alchemi.Manager
 
 				logger.Debug("Configuring remoting");
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Configuring remoting",10);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Configuring remoting",10);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
             	RemotingConfiguration.Configure(AppDomain.CurrentDomain.BaseDirectory+RemotingConfigFile);
 				//TODO: for hierarchical grids
@@ -161,8 +168,15 @@ namespace Alchemi.Manager
                 	logger.Error("Error registering channel...",ex);
                 }
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Registered tcp channel on port: "+ownEP.Port,30);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Registered tcp channel on port: "+ownEP.Port,30);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
 				//since this is a single call thing, thread safety isnt an issue
 
@@ -217,8 +231,15 @@ namespace Alchemi.Manager
 					logger.Debug("Data directory not found. Creating a new one:"+datDir);
                 }
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Initialising a new scheduler",50);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Initialising a new scheduler",50);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
 				logger.Debug("Initialising a new scheduler");
                 IScheduler scheduler = new DefaultScheduler();
@@ -238,15 +259,29 @@ namespace Alchemi.Manager
 				logger.Debug("Initialising scheduler - done");
 				logger.Debug("Starting scheduler thread");
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Starting scheduler thread",60);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Starting scheduler thread",60);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
                 _stopScheduler = false;
 				_DedicatedSchedulerThread = new Thread(new ThreadStart(ScheduleDedicated));
                 _DedicatedSchedulerThread.Start();
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Starting watchdog thread",70);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Starting watchdog thread",70);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
 				logger.Info("Starting watchdog thread");
 				
@@ -254,8 +289,15 @@ namespace Alchemi.Manager
                 _WatchDogThread = new Thread(new ThreadStart(Watchdog));
                 _WatchDogThread.Start();
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Updating configuration",80);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Updating configuration",80);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
 				//start a seperate thread to init-known executors, since this may take a while.
 				_InitExecutorsThread = new Thread(new ThreadStart(InitExecutors));
@@ -263,8 +305,15 @@ namespace Alchemi.Manager
 
 				Config.Slz();
 
-				if (ManagerStartEvent!=null)
-					ManagerStartEvent("Started Manager",100);
+				try
+				{
+					if (ManagerStartEvent!=null)
+						ManagerStartEvent("Started Manager",100);
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
+				}
 
 				Started = true;
 				_Starting = false;

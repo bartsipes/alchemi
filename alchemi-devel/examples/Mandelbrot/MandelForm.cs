@@ -555,12 +555,9 @@ namespace Alchemi.Examples.Mandelbrot
 
         private void MandelForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (ga != null)
+            if (ga != null && ga.Running)
             {
-                if (ga.Running)
-                {
-                    ga.Stop();
-                }
+				ga.Stop();
             }
         }
     }

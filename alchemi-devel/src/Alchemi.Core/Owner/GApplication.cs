@@ -234,14 +234,6 @@ namespace Alchemi.Core.Owner
 
 			logger.Debug("Completed Init...for GApp");
 
-//			//stop the previous GetFinishedThread stuff,... in case the GApp is being re-used. to avoid it from accessing the collection
-//			if (_GetFinishedThreadsThread!=null && _GetFinishedThreadsThread.IsAlive)
-//			{
-//				_stopGetFinished = true;
-//				_GetFinishedThreadsThread.Join();
-//				_GetFinishedThreadsThread = null;
-//			}
-
 			//lock it to make doubly sure that the collection enumeration is sync-ed.
 			lock(_Threads)
 			{
@@ -418,7 +410,14 @@ namespace Alchemi.Core.Owner
 								if (ThreadFinish!=null)
 								{
 									logger.Debug("Raising thread finish event...");
-									ThreadFinish(th);
+									try
+									{
+										ThreadFinish(th); //TODO: Need to see the effect of calling it async. 
+									}
+									catch (Exception eventhandlerEx)
+									{
+										logger.Debug("Error in ThreadFinish Event handler: "+eventhandlerEx);
+									}
 								}
 							}
 							else
@@ -428,32 +427,48 @@ namespace Alchemi.Core.Owner
 								if (ThreadFailed!=null)
 								{
 									logger.Debug("Raising thread failed event...");
-									ThreadFailed(th, ex);									
+									try
+									{
+										ThreadFailed(th, ex); //TODO: Need to see the effect of calling it async. 
+									}
+									catch (Exception eventhandlerEx)
+									{
+										logger.Debug("Error in ThreadFailed Event handler: "+eventhandlerEx);
+									}
 								}
 							}
 						}
         
 						if (_NumThreadsFinished == Threads.Count)
 						{
+							logger.Debug("Application finished!"+_Id);
+
 							if (!appCleanedup)
 							{
-								logger.Debug("Application finished!"+_Id);
-
 								//clean up manager,executor.
 								if (!_MultiUse)
 								{
+									logger.Debug("SingleUse-Application finished cleaning up..."+_Id);
 									Manager.Owner_CleanupApplication(Credentials,_Id);
 									appCleanedup = true;
 								}
 							}
-							if (ApplicationFinish != null)
+							if (ApplicationFinish != null && !this._MultiUse)
 							{
-								logger.Debug("AppFinish event being raised."+_Id);
+								logger.Debug("Raising AppFinish event (for single-use app)..."+_Id);
 								_Running = false;
-								ApplicationFinish.BeginInvoke(null, null);
-								break;
+								try
+								{
+									ApplicationFinish.BeginInvoke(null, null);
+								}
+								catch (Exception ex)
+								{
+									logger.Debug("ApplicationFinish Event-handler error: "+ex.ToString());
+								}
 							}
-							logger.Debug("App finished, but still looping since some-one might subscribe to this event, and we can send it to them now.");
+							break;
+							//we break here since there is no point raising events mutliple times.!!! :kna: dec 3, 2005.
+							//logger.Debug("App finished, but still looping since some-one might subscribe to this event, and we can send it to them now.");
 						}
 					}
 					catch (SocketException se)

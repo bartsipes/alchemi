@@ -146,9 +146,13 @@ namespace Alchemi.Core
 				}
 			}catch {}
 
-			//Raise the log event
-			if (LogHandler != null)
-				LogHandler(source,new LogEventArgs(source,member,msg,level,ex));
+			try
+			{
+				//Raise the log event
+				if (LogHandler != null)
+					LogHandler(source,new LogEventArgs(source,member,msg,level,ex));
+			}catch {} //always handle errors when raising events. (since event-handlers are not in our control).
+
 		}
 	}
 

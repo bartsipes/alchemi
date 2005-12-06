@@ -1099,6 +1099,7 @@ namespace Alchemi.Manager
 			{
 				logger.Debug("Aborting thread "+ ti.ThreadId +" on executor:"+executorId);
 				me.RemoteRef.Manager_AbortThread(ti);
+				logger.Debug("Aborting thread "+ ti.ThreadId +" on executor:"+executorId + ":: Complete.");
 			}
 			catch (ExecutorCommException ece)
 			{

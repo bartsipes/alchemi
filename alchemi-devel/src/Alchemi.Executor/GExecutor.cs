@@ -364,9 +364,17 @@ namespace Alchemi.Core.Executor
 
                 _ExecutingNonDedicated = true;
 
-				//raise an event to indicate the status change into non-dedicated execution mode.
-				if (NonDedicatedExecutingStatusChanged!=null)
-					NonDedicatedExecutingStatusChanged();
+
+				try
+				{
+					//raise an event to indicate the status change into non-dedicated execution mode.
+					if (NonDedicatedExecutingStatusChanged!=null)
+						NonDedicatedExecutingStatusChanged();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in NonDedicatedExecutingStatusChanged event-handler: "+ex.ToString());
+				}
 
 				//start the heartbeat thread.
 				logger.Debug("Starting heart-beat thread: non-dedicated mode");
@@ -407,9 +415,18 @@ namespace Alchemi.Core.Executor
 				}
 
                 _ExecutingNonDedicated = false;
+				
 				logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
-				if (NonDedicatedExecutingStatusChanged!=null)
-					NonDedicatedExecutingStatusChanged();
+				
+				try
+				{
+					if (NonDedicatedExecutingStatusChanged!=null)
+						NonDedicatedExecutingStatusChanged();
+				}
+				catch (Exception ex)
+				{
+					logger.Debug("Error in NonDedicatedExecutingStatusChanged event-handler: "+ex.ToString());
+				}
             }
         }
 
@@ -554,7 +571,14 @@ namespace Alchemi.Core.Executor
 				{
 					//raise status changed event
 					logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
-					NonDedicatedExecutingStatusChanged();
+					try
+					{
+						NonDedicatedExecutingStatusChanged();
+					}
+					catch (Exception ex)
+					{
+						logger.Debug("Error in NonDedicatedExecutingStatusChanged event-handler: "+ex.ToString());
+					}
 				}
 
 				logger.Debug("Non-dedicated executor: Unremoting self");
@@ -651,9 +675,14 @@ namespace Alchemi.Core.Executor
 				}
 
 				//get thread from manager
-				
 				GridAppDomain gad = (GridAppDomain) _GridAppDomains[_CurTi.ApplicationId];
+
+				//we need to get the exception from the AppDomain as well, to see what went wrong with the GThread/GJob that
+				//is executed in this seperate GridAppDomain.
+				//gad.Domain.UnhandledException += new UnhandledExceptionEventHandler(GridAppDomain_UnhandledException);
+
 				rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
+				logger.Debug("Got thread from manager. executing it: "+_CurTi.ThreadId);
 				//execute it
 				byte[] finishedThread = gad.Executor.ExecuteThread(rawThread);
 				//set its status to finished
@@ -675,7 +704,10 @@ namespace Alchemi.Core.Executor
 				logger.Warn(string.Format("grid thread # {0}.{1} failed ({2})", _CurTi.ApplicationId, _CurTi.ThreadId, e.GetType()),e);
 				try
 				{
-					Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, e);
+					//some exceptions such as Win32Exception caused problems when passed directly into this method.
+					//so better create another new exception object and send it over.
+					Exception eNew = new Exception(e.ToString());
+					Manager.Executor_SetFinishedThread(Credentials, _CurTi, rawThread, eNew);
 				}
 				catch (Exception ex1)
 				{
@@ -827,7 +859,9 @@ namespace Alchemi.Core.Executor
 			{
 				if (_ThreadExecutorThread!=null && _ThreadExecutorThread.IsAlive)
 				{
+					logger.Debug(string.Format("Starting to abort executor Thread: {0}:{1}", ti.ApplicationId, ti.ThreadId));
 					_ThreadExecutorThread.Abort();
+					logger.Debug("Waiting for thread to join:"+ti.ThreadId);
 					_ThreadExecutorThread.Join();
 					logger.Debug(string.Format("Aborted Executor Thread: {0}:{1}", ti.ApplicationId, ti.ThreadId));
 				}
@@ -841,6 +875,14 @@ namespace Alchemi.Core.Executor
 				logger.Warn(string.Format("Error aborting thread: {0}:{1}. Continuing...", ti.ApplicationId, ti.ThreadId),e);
 			}
 		}
+
+		/*
+		private void GridAppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			//this error handler handles errors that occur in the GridAppDomain in which the GThread/GJob runs
+			logger.Warn("Unhandled Error in GridAppDomain. Sender = "+sender, (Exception)e.ExceptionObject);
+		}
+		*/
 	}
 }
 

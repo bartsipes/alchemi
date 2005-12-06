@@ -266,16 +266,24 @@ namespace Alchemi.Core.Executor
 
 		private void GExecutor_GotDisconnected()
 		{
-			//bubble the event to whoever handles this.
-			if (GotDisconnected!=null)
-				GotDisconnected();
+			//always handle errors when raising events
+			try
+			{
+				//bubble the event to whoever handles this.
+				if (GotDisconnected!=null)
+					GotDisconnected();
+			}catch {}
 		}
 
 		private void GExecutor_NonDedicatedExecutingStatusChanged()
 		{
-			//bubble the event up
-			if (NonDedicatedExecutingStatusChanged!=null)
-				NonDedicatedExecutingStatusChanged();
+			//always handle errors when raising events
+			try
+			{
+				//bubble the event up
+				if (NonDedicatedExecutingStatusChanged!=null)
+					NonDedicatedExecutingStatusChanged();
+			}catch {}
 		}
 	}
 }
