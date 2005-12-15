@@ -24,6 +24,7 @@
 #endregion
 
 
+using System;
 using System.Collections;
 using System.Data;
 using System.IO;
@@ -72,14 +73,39 @@ namespace Alchemi.Manager
         {
             set 
             {
-            	Utils.SerializeToFile(value, Path.Combine(DataDir, "manifest.dat"));
-                this.State = ApplicationState.Ready;
+				try
+				{
+					if (!Directory.Exists(DataDir))
+						Directory.CreateDirectory(DataDir);
+
+					Utils.SerializeToFile(value, Path.Combine(DataDir, "manifest.dat"));
+					this.State = ApplicationState.Ready;
+				}
+				catch (Exception ex)
+				{
+					//some error. just convert to a ManifestFileException.
+					ManifestFileException mfe = new ManifestFileException("Error saving manifest file", ex);
+					mfe.ApplicationId = _Id;
+					throw mfe;
+				}
             }
 
             get 
             {
-                return (FileDependencyCollection) Utils.DeserializeFromFile(
-                    Path.Combine(DataDir, "manifest.dat"));
+				try
+				{
+					//here there is no point "creating" the directory now, since the manifest file wouldnt be there
+					//if the dir itself isnt there in the first place!
+					return (FileDependencyCollection) Utils.DeserializeFromFile(
+						Path.Combine(DataDir, "manifest.dat"));
+				}
+				catch (Exception ex)
+				{
+					//some error. just convert to a ManifestFileException.
+					ManifestFileException mfe = new ManifestFileException("Error saving manifest file", ex);
+					mfe.ApplicationId = _Id;
+					throw mfe;
+				}
             }
         }
 

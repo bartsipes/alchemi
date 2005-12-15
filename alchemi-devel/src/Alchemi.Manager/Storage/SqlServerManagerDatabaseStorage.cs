@@ -57,7 +57,7 @@ namespace Alchemi.Manager.Storage
 			object value = paramValue;
 			if (datatype == DbType.Guid && value!=DBNull.Value)
 			{
-				logger.Debug("GUID GIVEN = "+value.ToString());
+				//logger.Debug("GUID GIVEN = "+value.ToString());
 				value = new Guid(paramValue.ToString());
 			}
 			SqlParameter param  = new SqlParameter(name, value);

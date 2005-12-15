@@ -95,7 +95,7 @@ namespace Alchemi.Manager
 						ApplicationState.AwaitingManifest, 
 						DateTime.Now, 
 						false,
-						""/*What's the username here?*/);
+						""/* TODO: What's the username here?*/);
 
 					ManagerStorageFactory.ManagerStorage().AddApplication(applicationStorage);
 				}
@@ -113,11 +113,35 @@ namespace Alchemi.Manager
         {
             set
             {
-                Utils.WriteByteArrayToFile(DataFile, value);
+				try
+				{
+					string DataDir = Directory.GetParent(DataFile).Name;
+					if (!Directory.Exists(DataDir))
+						Directory.CreateDirectory(DataDir);
+
+					Utils.WriteByteArrayToFile(DataFile, value);
+				}
+				catch (Exception ex)
+				{
+					ThreadDatFileException te = new ThreadDatFileException("Error saving thread data file.", ex);
+					te.ApplicationId = _AppId;
+					te.ThreadId = _Id;
+					throw te;
+				}
             }
             get
             {
-                return Utils.ReadByteArrayFromFile(DataFile);
+				try
+				{
+					return Utils.ReadByteArrayFromFile(DataFile);
+				}
+				catch (Exception ex)
+				{
+					ThreadDatFileException te = new ThreadDatFileException("Error reading thread data file.", ex);
+					te.ApplicationId = _AppId;
+					te.ThreadId = _Id;
+					throw te;
+				}
             }
         }
 
@@ -128,7 +152,21 @@ namespace Alchemi.Manager
         {
             set
             {
-                Utils.SerializeToFile(value, ExceptionFile);
+				try
+				{
+					string DataDir = Directory.GetParent(ExceptionFile).Name;
+					if (!Directory.Exists(DataDir))
+						Directory.CreateDirectory(DataDir);
+
+					Utils.SerializeToFile(value, ExceptionFile);
+				}
+				catch (Exception ex)
+				{
+					ThreadDatFileException te = new ThreadDatFileException("Error saving thread exception file.", ex);
+					te.ApplicationId = _AppId;
+					te.ThreadId = _Id;
+					throw te;
+				}
             }
             get
             {
@@ -137,7 +175,8 @@ namespace Alchemi.Manager
                     return (Exception) Utils.DeserializeFromFile(ExceptionFile);
                 }
                 catch
-                {
+                {	//TODO: if there is no file, we just assume there is no exception?
+					//may be we should have a better way to make sure of this as well.
                     return null;
                 }
             }

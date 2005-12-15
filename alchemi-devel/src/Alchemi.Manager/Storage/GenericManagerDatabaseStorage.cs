@@ -1292,7 +1292,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		protected void RunSql(String sqlQuery)
+		public void RunSql(String sqlQuery)
 		{
 			RunSql(sqlQuery, null);
 		}

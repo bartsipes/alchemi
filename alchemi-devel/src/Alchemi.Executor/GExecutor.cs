@@ -23,7 +23,6 @@
 */ 
 #endregion
 
-
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -68,9 +67,6 @@ namespace Alchemi.Core.Executor
 
 		private bool _stopHeartBeat = false;
 		private bool _stopNonDedicatedMonitor = false;
-
-		//TODO: check what is this : using this for counting # of times CleanUP App is called?! why?
-		private int ca = 0;
 
 		/// <summary>
 		/// Raised when the connection status of a non-dedicated Executor is changed.
@@ -322,9 +318,8 @@ namespace Alchemi.Core.Executor
 				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",ex);
 			}
 
-            UnRemoteSelf();
-
             RelinquishIncompleteThreads();
+            UnRemoteSelf();
             
 			logger.Debug("Unloading AppDomains on this executor...");
             foreach (object gad in _GridAppDomains.Values)
@@ -469,15 +464,12 @@ namespace Alchemi.Core.Executor
 			try
 			{
 				//unload the app domain and clean up all the files here, for this application.
-				ca++;
-				logger.Debug("CleanupApp called " + ca + " times");
 				try
-				{
-					logger.Debug("Unloading AppDomain for application:" + appid);
-	
+				{	
 					GridAppDomain gad = (GridAppDomain)_GridAppDomains[appid];
-					if (gad!=null)
-					{
+					if (gad!=null && _GridAppDomains.ContainsKey(appid))
+					{	
+						logger.Debug("Unloading AppDomain for application:" + appid);
 						AppDomain.Unload(gad.Domain);
 						_GridAppDomains.Remove(appid);
 					}

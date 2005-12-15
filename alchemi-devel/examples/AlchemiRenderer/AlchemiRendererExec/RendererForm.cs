@@ -545,7 +545,7 @@ namespace Alchemi.Examples.Renderer
 				GConnectionDialog gcd = new GConnectionDialog();
 				gcd.ShowDialog();
 
-				ga = new GApplication();
+				ga = new GApplication(true);
 				ga.Connection = gcd.Connection;
 				ga.ThreadFinish += new GThreadFinish(ga_ThreadFinish);
 				ga.ThreadFailed += new GThreadFailed(ga_ThreadFailed);
@@ -668,7 +668,7 @@ namespace Alchemi.Examples.Renderer
 
 		private void ga_ApplicationFinish()
 		{
-			initted = false;
+			//initted = false;
 			UpdateStatus();
 			logger.Debug("Application Finished");
 			//displayImages();

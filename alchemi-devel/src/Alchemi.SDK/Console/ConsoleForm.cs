@@ -1254,7 +1254,7 @@ namespace Alchemi.Console
 					foreach (ThreadStorageView thread in threads)
 					{
 						ThreadItem thrItem = new ThreadItem(thread.ThreadId.ToString());
-						thrItem.ImageIndex = 7;
+						thrItem.ImageIndex = 11;
 						thrItem.AlchemiThread =  thread;
 
 						lv.Items.Add(thrItem);

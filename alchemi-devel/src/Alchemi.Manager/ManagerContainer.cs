@@ -500,7 +500,19 @@ namespace Alchemi.Manager
 					}
 					catch (Exception e)
 					{
-						logger.Error("ScheduleDedicated thread error. Continuing...",e);
+						if (e is System.Data.SqlClient.SqlException || e is System.Data.OleDb.OleDbException)
+						{
+							//some problem contacting database
+							//wait for a bit and try again
+							logger.Debug("Error contacting database:",e);
+							Thread.Sleep(30000); 
+							//TODO: need to provide fault tolerance here: what if the database/storage cannot be contacted.?
+							//TODO: in that case, just raise an event, and let the Service/exec deal with it.
+						}
+						else
+						{
+							logger.Error("ScheduleDedicated thread error. Continuing...",e);
+						}
 					}
 				} //while
 			}

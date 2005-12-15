@@ -287,6 +287,9 @@ namespace Alchemi.Core.Owner
 				}
 			}
 			_Running = false; //just making sure again
+
+			//TODO: may be we need not have a seperate "state" for the application. if all threads are dead, app should have state: stopped as well isnt it?
+			//how do we handle multi-use apps then?
 		}
         
 		//----------------------------------------------------------------------------------------------- 

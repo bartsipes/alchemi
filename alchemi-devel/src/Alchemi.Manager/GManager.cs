@@ -540,11 +540,12 @@ namespace Alchemi.Manager
 
             MApplication a = _Applications[appId];
 
+			FileDependencyCollection manifest = a.Manifest;
 			logger.Debug("Returning application manifest for app:"+appId);
             // TODO: hierarchical grids ignored until after v1.0.0
             //if (a.IsPrimary)
             //{
-            return a.Manifest;
+            return manifest;
             //}
             //else
             //{
@@ -605,19 +606,52 @@ namespace Alchemi.Manager
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ExecuteThread);
 
+			MApplication app = _Applications[ti.ApplicationId];
             MThread t = _Applications[ti.ApplicationId][ti.ThreadId];
 
-            if (_Applications[ti.ApplicationId].IsPrimary)
+			if (app == null)
+			{
+				//invalid application id passed. normally this should not happen.
+				throw new InvalidApplicationException("Invalid application id: "+ti.ApplicationId, null);
+			}
+
+			if (t == null)
+			{
+				//invalid thread id. this should normally not happen.
+				throw new InvalidThreadException("Invalid thread id: "+ti.ApplicationId+":"+ti.ThreadId, null);
+			}
+
+            if (app.IsPrimary)
             {
 				if (thread!=null)
 				{
-					t.Value = thread;
+					try
+					{
+						t.Value = thread;
+					}
+					catch(Exception ex)
+					{
+						logger.Debug("Error saving thread to disk:"+ex.Message);
+						//thread could not be saved to disk on the Manager
+						//so set it as failed!
+
+						//if e is not null, then let us get the exception which caused it to fail anyway.
+						if (e==null) 
+							e = ex; 
+					}
 				}
 
 				if (e != null)
 				{
-					logger.Debug("thread failed. ti: " + ti.ThreadId + ", e: " + e.ToString());
-					t.FailedThreadException = e;
+					try
+					{
+						logger.Debug("thread failed. ti: " + ti.ThreadId + "," + e.Message);
+						t.FailedThreadException = e;
+					}
+					catch (Exception ex)
+					{
+						logger.Debug("error saving thread-exception for failed thread to disk: threadId="+ti.ThreadId+", thread-fail-reason:" + e.Message, ex);
+					}
 				}
 				else
 				{

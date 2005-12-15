@@ -68,7 +68,11 @@ namespace Alchemi.Manager.Storage
 		public DataSet RunSqlReturnDataSet(string query)
 		{
 			throw new NotImplementedException();
-		}
+		}//TODO: need to get rid of this from the interface
+		public void RunSql(string sqlQuery)
+		{
+			throw new NotImplementedException();
+		} //TODO: need to clean this up, and get rid of this from the interface
 
 		public void AddUsers(UserStorageView[] users)
 		{

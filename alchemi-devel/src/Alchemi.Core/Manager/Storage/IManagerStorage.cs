@@ -145,5 +145,7 @@ namespace Alchemi.Core.Manager.Storage
 
 		//for generic queries
 		DataSet RunSqlReturnDataSet(string query);
+
+		void RunSql(string sqlQuery);
 	}
 }

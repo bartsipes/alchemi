@@ -109,20 +109,49 @@
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
                 />
+                <Reference
+                    Name = "Manager"
+                    Project = "{3122055C-044A-4C0C-80BB-82232FB333C5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Core"
+                    Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
             <Include>
+                <File
+                    RelPath = "Alchemi_data.sql"
+                    Link = "..\..\..\sql\Alchemi_data.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Alchemi_database.sql"
+                    Link = "..\..\..\sql\Alchemi_database.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Alchemi_structure.sql"
+                    Link = "..\..\..\sql\Alchemi_structure.sql"
+                    BuildAction = "Content"
+                />
                 <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Configuration.cs"
-                    Link = "..\..\Alchemi.Manager\Configuration.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
+                    RelPath = "CleanAll.sql"
+                    Link = "..\..\..\sql\CleanAll.sql"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "CleanAllExceptExec.sql"
+                    Link = "..\..\..\sql\CleanAllExceptExec.sql"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "DbInstaller.cs"
@@ -133,12 +162,6 @@
                     RelPath = "DbInstaller.resx"
                     DependentUpon = "DbInstaller.cs"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Utils.cs"
-                    Link = "..\..\Alchemi.Core\Utility\Utils.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

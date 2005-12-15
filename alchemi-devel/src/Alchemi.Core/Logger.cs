@@ -107,8 +107,8 @@ namespace Alchemi.Core
 
 		private void RaiseLogEvent(string msg, LogLevel level, Exception ex)
 		{
-			string source = "";
-			string member = "";
+			string source = "?source?";
+			string member = "?member?";
 			try
 			{
 
@@ -135,7 +135,7 @@ namespace Alchemi.Core
 
 				//make sure two stackframes above, we have the actually call to the logger! otherwise we get the wrong name!
 				//for this, make sure the RaiseLogEvent method is private..and is called by all other logger.XXXX methods
-				StackFrame s = new StackFrame(2,true);
+				StackFrame s = new StackFrame(2, true);
 				if(s!=null)
 				{
 					if (s.GetMethod().DeclaringType!=null)

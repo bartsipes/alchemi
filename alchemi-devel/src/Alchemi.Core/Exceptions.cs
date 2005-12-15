@@ -107,6 +107,46 @@ namespace Alchemi.Core
 		public InvalidExecutorException(SerializationInfo info, StreamingContext context) : base(info, context) {}
     }
 
+	/// <summary>
+	/// Represents an exception that occurs when the application id is invalid.
+	/// </summary>
+	[Serializable]
+	public class InvalidApplicationException : ApplicationException
+	{
+		/// <summary>
+		/// Creates an instance of the InvalidApplicationException
+		/// </summary>
+		/// <param name="message">message</param>
+		/// <param name="innerException">innerException causing this exception</param>
+		public InvalidApplicationException(string message, Exception innerException) : base(message, innerException) {}
+		/// <summary>
+		/// Creates an instance of the InvalidApplicationException
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
+		public InvalidApplicationException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	}
+
+	/// <summary>
+	/// Represents an exception that occurs when the thread id is invalid.
+	/// </summary>
+	[Serializable]
+	public class InvalidThreadException : ApplicationException
+	{
+		/// <summary>
+		/// Creates an instance of the InvalidThreadException
+		/// </summary>
+		/// <param name="message">message</param>
+		/// <param name="innerException">innerException causing this exception</param>
+		public InvalidThreadException(string message, Exception innerException) : base(message, innerException) {}
+		/// <summary>
+		/// Creates an instance of the InvalidThreadException
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
+		public InvalidThreadException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	}
+
     //-----------------------------------------------------------------------------------------------          
   
 	/// <summary>
@@ -131,7 +171,62 @@ namespace Alchemi.Core
 
     //-----------------------------------------------------------------------------------------------          
 
-    /*
+	/// <summary>
+	/// Represents an exception used to indicate that there is an error related to saving/retrieving the Application Manifest file.
+	/// </summary>
+	[Serializable]
+	public class ManifestFileException : ApplicationException
+	{
+		/// <summary>
+		/// Id of the ApplicationId
+		/// </summary>
+		public string ApplicationId;
+
+		/// <summary>
+		/// Creates an instance of the ManifestException class
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="innerException"></param>
+		public ManifestFileException(string message, Exception innerException) : base(message, innerException){}
+		/// <summary>
+		/// Creates an instance of the ManifestFileException
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
+		public ManifestFileException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	}
+
+	/// <summary>
+	/// Represents an exception used to indicate that there is an error related to saving/retrieving the Thread Data file.
+	/// </summary>
+	[Serializable]
+	public class ThreadDatFileException : ApplicationException
+	{
+		/// <summary>
+		/// Id of the Application
+		/// </summary>
+		public string ApplicationId;
+
+		/// <summary>
+		/// Id of the Thread
+		/// </summary>
+		public int ThreadId;
+
+		/// <summary>
+		/// Creates an instance of the ThreadDatFileException class
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="innerException"></param>
+		public ThreadDatFileException(string message, Exception innerException) : base(message, innerException){}
+		/// <summary>
+		/// Creates an instance of the ThreadDatFileException
+		/// </summary>
+		/// <param name="info"></param>
+		/// <param name="context"></param>
+		public ThreadDatFileException(SerializationInfo info, StreamingContext context) : base(info, context) {}
+	}
+
+	/*
     [Serializable]
     public class FrameworkException : ApplicationException
     {
