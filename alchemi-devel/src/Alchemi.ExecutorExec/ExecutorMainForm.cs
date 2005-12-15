@@ -30,7 +30,7 @@ using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
 using Alchemi.Core;
-using Alchemi.Core.Executor;
+using Alchemi.Executor;
 
 //using Alchemi.Updater;
 

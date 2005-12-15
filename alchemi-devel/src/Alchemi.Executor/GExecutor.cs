@@ -31,10 +31,12 @@ using System.Net.Sockets;
 using System.Security;
 using System.Security.Policy;
 using System.Threading;
+using Alchemi.Core;
 using Alchemi.Core.Owner;
+using Alchemi.Core.Executor;
 using Microsoft.Win32;
 
-namespace Alchemi.Core.Executor
+namespace Alchemi.Executor
 {
     public delegate void NonDedicatedExecutingStatusChangedEventHandler();
     public delegate void GotDisconnectedEventHandler();

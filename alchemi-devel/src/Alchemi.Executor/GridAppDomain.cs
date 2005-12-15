@@ -27,7 +27,7 @@
 using System;
 using System.Reflection;
 
-namespace Alchemi.Core.Executor
+namespace Alchemi.Executor
 {
 	/// <summary>
 	/// This class is a container for the AppDomainExecutor and AppDomain.

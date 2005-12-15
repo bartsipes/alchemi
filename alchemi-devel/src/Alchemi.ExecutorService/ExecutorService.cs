@@ -32,7 +32,7 @@ using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using Alchemi.Core;
-using Alchemi.Core.Executor;
+using Alchemi.Executor;
 using Alchemi.Core.Utility;
 using log4net;
 using log4net.Config;

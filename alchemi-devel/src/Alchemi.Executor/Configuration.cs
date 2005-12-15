@@ -27,7 +27,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Alchemi.Core.Executor
+namespace Alchemi.Executor
 {
 	/// <summary>
 	/// This class stores the configuration information for the Alchemi Executor

@@ -24,10 +24,11 @@
 #endregion
 
 using System;
+using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
-namespace Alchemi.Core.Executor
+namespace Alchemi.Executor
 {
 	/// <summary>
 	/// This class executes the thread on the executor in a seperate application domain.

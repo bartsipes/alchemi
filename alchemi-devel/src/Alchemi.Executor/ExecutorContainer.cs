@@ -26,8 +26,9 @@
 
 using System;
 using System.Threading;
+using Alchemi.Core;
 
-namespace Alchemi.Core.Executor
+namespace Alchemi.Executor
 {
 	public delegate void ExecutorConnectStatusEventHandler(string statusMessage, int percentDone);
 	

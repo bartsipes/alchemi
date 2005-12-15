@@ -62,16 +62,18 @@ namespace Alchemi.Manager.Storage
 
 		public SystemSummary GetSystemSummary()
 		{
-			throw new Exception("Not implemented");
+			//throw new Exception("Not implemented");
+			return null;
 		}
 
 		public DataSet RunSqlReturnDataSet(string query)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			return null;
 		}//TODO: need to get rid of this from the interface
 		public void RunSql(string sqlQuery)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		} //TODO: need to clean this up, and get rid of this from the interface
 
 		public void AddUsers(UserStorageView[] users)

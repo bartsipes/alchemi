@@ -31,44 +31,71 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimeNumberGenerator", "Pri
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\src\Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
+		ServiceRelease = ServiceRelease
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Debug.ActiveCfg = Debug|.NET
 		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Debug.Build.0 = Debug|.NET
 		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Release.ActiveCfg = Release|.NET
 		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.Release.Build.0 = Release|.NET
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.ServiceRelease.ActiveCfg = Release|.NET
+		{D3031C51-D06E-4AC1-B308-BC0E4DDC04AA}.ServiceRelease.Build.0 = Release|.NET
 		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Debug.ActiveCfg = Debug|.NET
 		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Debug.Build.0 = Debug|.NET
 		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Release.ActiveCfg = Release|.NET
 		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.Release.Build.0 = Release|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.ServiceRelease.ActiveCfg = Release|.NET
+		{3D1035BB-67C2-4B6A-B7DB-0D6FFA18C048}.ServiceRelease.Build.0 = Release|.NET
 		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Debug.ActiveCfg = Debug|.NET
 		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Debug.Build.0 = Debug|.NET
 		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Release.ActiveCfg = Release|.NET
 		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.Release.Build.0 = Release|.NET
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.ServiceRelease.ActiveCfg = Release|.NET
+		{03F4A84D-AC81-43B0-85CB-63A9CCB9AEDD}.ServiceRelease.Build.0 = Release|.NET
 		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.Debug.ActiveCfg = Debug|.NET
 		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.Debug.Build.0 = Debug|.NET
 		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.Release.ActiveCfg = Release|.NET
 		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.Release.Build.0 = Release|.NET
+		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.ServiceRelease.ActiveCfg = Release|.NET
+		{15A0F48C-183C-4170-AC37-8E3D6D329CEA}.ServiceRelease.Build.0 = Release|.NET
 		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.Debug.ActiveCfg = Debug|.NET
 		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.Debug.Build.0 = Debug|.NET
 		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.Release.ActiveCfg = Release|.NET
 		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.Release.Build.0 = Release|.NET
+		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.ServiceRelease.ActiveCfg = Release|.NET
+		{184FA2DB-F0C7-4E55-9331-E25DAC1E17D8}.ServiceRelease.Build.0 = Release|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Debug.ActiveCfg = Debug|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Debug.Build.0 = Debug|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.ActiveCfg = Release|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.Build.0 = Release|.NET
+		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.ServiceRelease.ActiveCfg = Release|.NET
+		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.ServiceRelease.Build.0 = Release|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Debug.ActiveCfg = Debug|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Debug.Build.0 = Debug|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.ActiveCfg = Release|.NET
 		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.Release.Build.0 = Release|.NET
+		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.ServiceRelease.ActiveCfg = Release|.NET
+		{11713720-F90D-4AD7-88FC-A328C1BF62F3}.ServiceRelease.Build.0 = Release|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Debug.ActiveCfg = Debug|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Debug.Build.0 = Debug|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Release.ActiveCfg = Release|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Release.Build.0 = Release|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.ServiceRelease.ActiveCfg = Release|.NET
+		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.ServiceRelease.Build.0 = Release|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.ActiveCfg = Debug|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.Build.0 = Debug|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.ActiveCfg = Release|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.Build.0 = Release|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease.ActiveCfg = ServiceRelease|.NET
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease.Build.0 = ServiceRelease|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
