@@ -658,7 +658,7 @@ namespace Alchemi.Executor
 					//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
 
 					//kna changed this to get the AppDomainExecutor type from the Alchemi.Executor.dll assembly.
-					AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Core.Executor.AppDomainExecutor");
+					AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Executor.AppDomainExecutor");
 
 					_GridAppDomains.Add(
 						_CurTi.ApplicationId,
