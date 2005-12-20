@@ -188,6 +188,26 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "Storage\SetupFiles\storageSetupNotes.txt"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\SqlServer\Alchemi_data.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\SqlServer\Alchemi_database.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\SqlServer\Alchemi_structure.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\SqlServer\Alchemi_structure_drop.sql"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>

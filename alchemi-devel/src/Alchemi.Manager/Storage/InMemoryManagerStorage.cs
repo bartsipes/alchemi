@@ -106,7 +106,7 @@ namespace Alchemi.Manager.Storage
 				{
 					if (userInList.Username == userInUpdates.Username)
 					{
-						userInList.Password = userInUpdates.Password;
+						userInList.Password = HashUtil.GetHash(userInUpdates.Password, HashUtil.HashType.MD5);
 						userInList.GroupId = userInUpdates.GroupId;
 					}
 				}

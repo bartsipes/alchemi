@@ -189,7 +189,7 @@ namespace Alchemi.Tester.Manager.Storage
 			
 			Assert.AreEqual(1, users.Length);
 			Assert.AreEqual("username1", users[0].Username);
-			Assert.AreEqual("password2", users[0].Password);
+			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), users[0].Password);
 			Assert.AreEqual(1, users[0].GroupId);
 		}
 

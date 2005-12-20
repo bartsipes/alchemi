@@ -56,6 +56,13 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			String connectionString = ConfigurationSettings.AppSettings["SqlTesterConnectionString"];
 			connectionString = "Provider=SQLOLEDB;User ID=alchemi;Password=alchemi;Initial Catalog=AlchemiTester;Data Source=localhost;Connect Timeout=30";
+			connectionString = string.Format(
+				"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+				"localhost",
+				"alchemi",
+				"alchemi",
+				"AlchemiTester"
+				);
 
 			m_managerStorage = new SqlServerManagerDatabaseStorage(connectionString);
 

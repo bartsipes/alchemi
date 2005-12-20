@@ -28,6 +28,7 @@ using System.Collections;
 using System.Data;
 using System.Data.OleDb;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
@@ -57,57 +58,35 @@ namespace Alchemi.Manager.Storage
 
 		#region IManagerStorageSetup Members
 
+		public void CreateStorage()
+		{
+			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_database.sql");
+
+			RunSql(sqlScript);
+		}
+
 		/// <summary>
 		/// Create the tables, stored procedures and other structures needed by this storage.
 		/// </summary>
 		public void SetUpStorage()
 		{
-			// TODO: load scripts from resources to do this
-			// TODO: it should also contain constrains
+			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_structure.sql");
 
-			//load it from sql files for now. later make use of resources.
-			using (FileStream fs = File.OpenRead("Alchemi_database.sql"))
-			{
-				StreamReader sr = new StreamReader(fs);
-				String sql = sr.ReadToEnd();
-				sr.Close();
-				fs.Close();
-				RunSql(sql);
-			}
-
-			using (FileStream fs = File.OpenRead("Alchemi_structure.sql"))
-			{
-				StreamReader sr = new StreamReader(fs);
-				String sql = sr.ReadToEnd();
-				sr.Close();
-				fs.Close();
-				RunSql(sql);
-			}
-			
+			RunSql(sqlScript);			
 		}
 
 		public void InitializeStorageData()
 		{
-			using (FileStream fs = File.OpenRead("Alchemi_data.sql"))
-			{
-				StreamReader sr = new StreamReader(fs);
-				String sql = sr.ReadToEnd();
-				sr.Close();
-				fs.Close();
-				RunSql(sql);
-			}		
+			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_data.sql");
+
+			RunSql(sqlScript);
 		}
 
 		public void TearDownStorage()
 		{
-			using (FileStream fs = File.OpenRead("Alchemi_structure_drop.sql"))
-			{
-				StreamReader sr = new StreamReader(fs);
-				String sql = sr.ReadToEnd();
-				sr.Close();
-				fs.Close();
-				RunSql(sql);
-			}				
+			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_structure_drop.sql");
+
+			RunSql(sqlScript);
 		}
 
 		#endregion
@@ -224,10 +203,11 @@ namespace Alchemi.Manager.Storage
 //					Utils.MakeSqlSafe(user.Password), 
 //					);
 
-				sqlQuery = String.Format("insert usr values('{0}', '{1}', {2})",
+				sqlQuery = String.Format("insert usr(usr_name, password, grp_id, is_system) values('{0}', '{1}', {2}, {3})",
 					Utils.MakeSqlSafe(user.Username), 
 					Utils.MakeSqlSafe(user.Password), 
-					user.GroupId);
+					user.GroupId,
+					user.IsSystem ? 1 : 0);
 				
 				RunSql(sqlQuery);
 			}
@@ -769,7 +749,7 @@ namespace Alchemi.Manager.Storage
 						username
 						);
 
-					application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));
+					application.ApplicationName = dataReader.IsDBNull(dataReader.GetOrdinal("application_name")) ? "" : dataReader.GetString(dataReader.GetOrdinal("application_name"));
 					application.TimeCompleted = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
 
 					if (populateThreadCount)
@@ -1359,6 +1339,26 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
+
+		private String GetStringFromEmbededScriptFile(String folder, String scriptFileName)
+		{
+			Stream inputStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+				String.Format("Alchemi.Manager.Storage.SetupFiles.{0}.{1}", folder, scriptFileName));
+
+			if (inputStream == null)
+			{
+				throw new ArgumentException(String.Format("Unable to find script file {1} under folder {0}", folder, scriptFileName));
+			}
+
+			using(StreamReader reader = new StreamReader(inputStream))
+			{
+				String data = reader.ReadToEnd();
+				
+				reader.Close();
+
+				return data;
+			}
+		}
 
 	}
 }
