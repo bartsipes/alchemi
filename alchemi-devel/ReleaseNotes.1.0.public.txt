@@ -1,0 +1,41 @@
+----------------------------------
+Alchemi v.1.0 Release Notes
+Dec 15, 2005
+----------------------------------
+
+Alchemi is an open source software framework that allows you to painlessly aggregate the computing power of networked machines into a virtual supercomputer (computational grid) and to develop applications to run on the grid.It has been developed at the GRIDS laboratory, Computer Science and Software Engineering Department, The University of Melbourne, as part of the Gridbus project, partially sponsored by the Australian Research Council (ARC).
+
+It has been designed with the primary goal of being easy to use without sacrificing power and flexibility and enbales what we call "plug-and-play" grid computing.
+
+The Alchemi release packaging includes:
+
+    * The runtime machinery (Windows executables) to construct computational grids.
+    * A .NET API and tools to develop .NET grid applications and grid-enable legacy applications.
+
+The main features of Alchemi v.1.0 include:
+- A central Manager which controls and orchestrates operations on an Alchemi grid.
+- Executors that are installed on each grid node, and run the work units given by the manager
+- Voluntary (cycle-stealing) / Dedicate mode of execution
+- Role-based security
+- Enables a LAN / WAN / Internet wide grid (Executors can be configured to work across NAT/Firewalls : voluntary execution mode)
+- Threads-based grid application programming environment
+- File-based job execution to grid-enable legacy batch-mode programs
+- .Net based infrastructure providing a range of development options
+
+
+Alchemi has been very popular and is used by people from all over the world. some examples include:
+- CSIRO, Australia (Alchemi-based natural resource modelling)
+- Tier Technologie, USA (Large scale document processing on Alchemi)
+- stochastiX GmBH, Germany (Managed XLL, Alchemi plugin to distribute spreadsheet computations)
+- FMI Biomedical research institute, Switzerland (Detection of transcription factor patterns of mammalian genes)
+- Any many other academic activities using and developing Alchemi
+
+We would like thank all the contributors some of whom are listed below:
+- Akshay Luther (Founder developer)
+- Rajkumar Buyya (Mentor)
+- Krishna Nadiminti (Active developer)
+- Tibor Biro (Developer)
+- And many others part of source-forge user/developer community who have contributed their time and effort towards advancing Alchemi.
+
+To download the GridSim software, please visit the Gridbus Project Web site at
+http://www.alchemi.net

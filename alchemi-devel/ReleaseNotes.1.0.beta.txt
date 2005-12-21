@@ -1,0 +1,73 @@
+----------------------------------
+Alchemi v.1.0 (beta) Release Notes
+July 5, 2005
+----------------------------------
+
+Changes from v0.8.0:
+--------------------
+- The Manager and Executor can both now run in two modes: 
+	- as a normal desktop application
+	- as a windows service
+
+- The Service mode includes a GUI Service controller, which looks exactly like the desktop application version. This can be used to start/stop the service and change the settings for the Manager/Executor. The Services are configured to startup automatically by default. This can be changed using the standard Windows Service Control Manager.
+
+- The Manager and Executor have advanced logging capabilities enabling easier reporting of errors. The logging is enabled by default, and uses the log4net APIs. This includes detailed debug information which is useful while tracking possible bugs. The logging settings can be changed using the Alchemi.Manager.exe.config/Alchemi.ManagerService.exe.config for the Manager and the Alchemi.Executor.exe.config/Alchemi.ExecutorService.exe.config file for the Executor. The Manager produces the log file: alchemi-manager.log while the Executor logs its information in alchemi-executor.log.
+
+- The Executor can now detect if a Manager is disconnected and this launches a seperate thread to try and connect to the manager again.
+
+- The Executor Heart-beat and other additional connection settings (such as those which define parameters for actions when a Manager is disconnected) are configurable through the Executor form.
+
+- The GApplication now cleans up files properly after completion.
+
+- A new constructor in the GApplication class defines if it can be re-used. By default a GApplication is only single use.
+
+- Added a new method to ThreadCollection to enable removing threads from the application. This API feature is under review, and is not guaranteed to remain unchanged in future versions.
+
+- The Alchemi console interface is re-designed with a Explorer-like interface, and ability to connect to multiple managers at the same time.
+
+--------------
+BUG-FIXES:
+--------------
+
+- On Non-dedicated executor disconnect finished threads were reset. In v.1.0 threads are reset only if they are not already finished/dead.
+
+- Due to an error in the way the number of completed threads are counted and maintained, the Application_Finish event used to be called before all threads were actually completed. This lead to various problems including loss of some threads. In v.1.0, the thread count is maintained in the database and the correct count is always maintained. Hence the Application_Finish would be called at the right time.
+
+- The Executor used to carry the context of all previously loaded AppDomains (one for each grid-application) and this caused memory/performance issues. The Executor now recieves the new "CleanUp" event from the GApplication, and unloads AppDomains so that the overhead is avoided as soon as an application finishes. 
+
+- A thread that is relinquished by an Executor and it has already been aborted, the Manager used to reschedule it. This issue has been fixed in v.1.0. and the Manager verifies threads and re-schedules only those which are not already aborted.
+
+- When the same GApplication is used multiple times containing a large number of grid threads, synchronization problems appeared due to different threads accessing/modifying the list of grid-threads. This is fixed in v.1.0 as the code-block that accesses/modifies the thread-collection is now synchronized. Furthermore, a GApplication is now clearly defined as either single-use (default) or multi-use. Only multi-use GApplications can be used more than once, and threads can be added to it after the first set of threads are completed.
+
+- The Manager/Executor status-area which shows the recently logged messages is limited in length. Due to this, after a certain number of messages, the text-area didnot show any new information. This is fixed now, with the text-area always showing only the last 10 lines of logged messages. Older messages can be found in the log files: (alchemi-manager.log, alchemi-executor.log).
+
+- The Alchemi Console used to stop abruptly on unhandled errors. This has been fixed to have a catch-all-errors handler which  provides the default error-handling mechanism and graceful exit from unexpected situations.
+
+------------------
+Packaging Changes:
+------------------
+
+- The Alchemi distribution now includes a new LGPL Client library that can be used to develop Alchemi clients and grid-enable applications. All other components are GPL.
+
+- The distribution includes Alchemi.Core.dll for the main core, and two new dlls: Alchemi.Manager.dll and Alchemi.Executor.dll for the Manager, Executor respectively.
+
+
+------------------
+Breaking Changes:
+------------------
+- A new namespace Alchemi.Core.Owner has been introduced and the following classes have been re-arranged to be part of this namespace:
+	- ApplicationState
+	- EmbeddedFileDependency
+	- FileDependency
+	- FileDepenedencyCollection
+	- GApplication
+	- GConnection
+	- GConnectionDialog
+	- GConnectionDialogForm
+	- GJob
+	- GThread
+	- ModuleDependency
+	- ThreadCollection
+	- ThreadIdentifier
+	- ThreadState
+
