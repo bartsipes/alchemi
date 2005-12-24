@@ -93,5 +93,9 @@ namespace Alchemi.Core.Manager.Storage
 			m_groupId = groupId;
 			m_groupName = groupName;
 		}
+
+		public GroupStorageView(Int32 groupId) : this(groupId, null)
+		{
+		}
 	}
 }

@@ -281,6 +281,24 @@ namespace Alchemi.Manager.Storage
 			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
 		}
 
+		public void DeleteUser(UserStorageView userToDelete)
+		{
+			if (userToDelete == null)
+			{
+				return;
+			}
+
+			String sqlQuery;
+			
+			sqlQuery = String.Format("delete usr where usr_name='{0}'", 
+				Utils.MakeSqlSafe(userToDelete.Username));
+			
+			logger.Debug(String.Format("Deleting user {0}", userToDelete.Username));
+
+			RunSql(sqlQuery);
+		}
+
+
 		/// <summary>
 		/// Authenticate a user's security credentials
 		/// </summary>
@@ -347,6 +365,32 @@ namespace Alchemi.Manager.Storage
 			return (GroupStorageView[])groupList.ToArray(typeof(GroupStorageView));
 		}
 
+		public GroupStorageView GetGroup(Int32 groupId)
+		{
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select grp_id, grp_name, is_system from grp where grp_id={0}", groupId)))
+			{
+				if(dataReader.Read())
+				{
+					String groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
+					bool isSystem = false;
+					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
+					{
+						isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
+					}
+
+					GroupStorageView group = new GroupStorageView(groupId, groupName);
+					group.IsSystem = isSystem;
+
+					return group;
+				}
+				else
+				{
+					return null;
+				}
+
+			}
+		}
+
 		public void AddGroupPermission(Int32 groupId, Permission permission)
 		{
 			String sqlQuery;
@@ -385,6 +429,37 @@ namespace Alchemi.Manager.Storage
 			}
 
 			return (Permission[])permissions.ToArray(typeof(Permission));
+		}
+
+		public PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId)
+		{
+			ArrayList result = new ArrayList();
+
+			foreach(Permission permission in GetGroupPermissions(groupId))
+			{
+				PermissionStorageView storageView = new PermissionStorageView((Int32)permission, permission.ToString());
+
+				result.Add(storageView);
+			}
+
+			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
+		}
+
+		public void DeleteGroup(GroupStorageView groupToDelete)
+		{
+			if (groupToDelete == null)
+			{
+				return;
+			}
+
+			String sqlQuery;
+			
+			sqlQuery = String.Format("DELETE FROM usr WHERE grp_id='{0}'; DELETE FROM grp WHERE grp_id='{0}';", 
+				groupToDelete.GroupId);
+			
+			logger.Debug(String.Format("Deleting group {0} and all users associated with it.", groupToDelete.GroupId));
+
+			RunSql(sqlQuery);
 		}
 
 		/// <summary>
@@ -798,6 +873,23 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+		public void DeleteApplication(ApplicationStorageView applicationToDelete)
+		{
+			if (applicationToDelete == null)
+			{
+				return;
+			}
+
+			String sqlQuery;
+			
+			sqlQuery = string.Format("DELETE FROM application WHERE application_id='{0}'; DELETE FROM thread WHERE application_id='{0}';",
+				applicationToDelete.ApplicationId);
+			
+			logger.Debug(String.Format("Deleting application {0} and all threads associated with it.", applicationToDelete.ApplicationId));
+
+			RunSql(sqlQuery);
+		}
+
 		public Int32 AddThread(ThreadStorageView thread)
 		{
 			if (thread == null)
@@ -1171,6 +1263,24 @@ namespace Alchemi.Manager.Storage
 
 			return Convert.ToInt32(threadCount);
 
+		}
+
+		public void DeleteThread(ThreadStorageView threadToDelete)
+		{
+			if (threadToDelete == null)
+			{
+				return;
+			}
+
+			String sqlQuery;
+			
+			sqlQuery = string.Format("DELETE FROM thread WHERE application_id='{1}' and thread_id={0};", 
+				threadToDelete.ThreadId,
+				threadToDelete.ApplicationId);
+			
+			logger.Debug(String.Format("Deleting thread {0} in application {1}.", threadToDelete.ThreadId, threadToDelete.ApplicationId));
+
+			RunSql(sqlQuery);
 		}
 
 		#endregion

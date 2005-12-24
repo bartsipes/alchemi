@@ -308,6 +308,20 @@ namespace Alchemi.Core
 		GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
 
 		/// <summary>
+		/// Gets group details
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <returns>Group details</returns>
+		GroupStorageView Admon_GetGroup(SecurityCredentials sc, Int32 groupId);
+
+		/// <summary>
+		/// Delete a group and all the associated users.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="groupToDelete"></param>
+		void Admon_DeleteGroup(SecurityCredentials sc, GroupStorageView groupToDelete);
+
+		/// <summary>
 		/// Updates the Manager database with the given table of users.
 		/// </summary>
 		/// <param name="sc"></param>
@@ -320,6 +334,13 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="users"></param>
 		void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] users);
+
+		/// <summary>
+		/// Remove a user from the database;
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="userToDelete"></param>
+		void Admon_DeleteUser(SecurityCredentials sc, UserStorageView userToDelete);
 
 		/// <summary>
 		/// Gets the system summary information
@@ -343,5 +364,22 @@ namespace Alchemi.Core
 		/// <param name="query"></param>
 		/// <returns>results of the query as a Dataset</returns>
 		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
+
+		/// <summary>
+		/// Delete the given thread form the database.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="threadToDelete"></param>
+		void Admon_DeleteThread(SecurityCredentials sc, ThreadStorageView threadToDelete);
+
+		/// <summary>
+		/// Delete an application and alal associated threads.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="applicationToDelete"></param>
+		void Admon_DeleteApplication(SecurityCredentials sc, ApplicationStorageView applicationToDelete);
+
+		PermissionStorageView[] Admon_GetGroupPermissions(SecurityCredentials sc, GroupStorageView group);
+
     }
 }

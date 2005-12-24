@@ -1631,8 +1631,8 @@ namespace Alchemi.Console
 														MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 							if (result == DialogResult.Yes)
 							{
-								string sql = string.Format("DELETE FROM usr WHERE usr_name='{0}';", uitem.User.Username);
-								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
+								console.Manager.Admon_DeleteUser(console.Credentials, uitem.User);
+
 								//refresh users list
 								FillUsersList();
 							}
@@ -1650,8 +1650,8 @@ namespace Alchemi.Console
 													"Delete Group", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 						if (result == DialogResult.Yes)
 						{
-							string sql = string.Format("DELETE FROM usr WHERE grp_id='{0}'; DELETE FROM grp WHERE grp_id='{0}';", gitem.Group.GroupId);
-							console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
+							console.Manager.Admon_DeleteGroup(console.Credentials, gitem.Group);
+							
 							//refresh groups list
 							FillGroupsList();
 						}
@@ -1671,8 +1671,8 @@ namespace Alchemi.Console
 								"Delete Application", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 							if (result == DialogResult.Yes)
 							{
-								string sql = string.Format("DELETE FROM application WHERE application_id='{0}'; DELETE FROM thread WHERE application_id='{0}';", appItem.AlchemiApplication.ApplicationId );
-								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageAllApps, sql);
+								console.Manager.Admon_DeleteApplication(console.Credentials, appItem.AlchemiApplication);
+
 								//refresh apps
 								FillApplicationsTree();
 								RefreshListItems(appParentNode);
@@ -1694,8 +1694,8 @@ namespace Alchemi.Console
 								"Delete Thread", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 							if (result == DialogResult.Yes)
 							{
-								string sql = string.Format("DELETE FROM thread WHERE thread_id='{0}';", appItem.AlchemiThread.ThreadId );
-								console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageAllApps, sql);
+								console.Manager.Admon_DeleteThread(console.Credentials, appItem.AlchemiThread);
+
 								//refresh threads
 								//check if there is an application tree node that is selected
 								if(tv.SelectedNode != null && tv.SelectedNode is ApplicationTreeNode)

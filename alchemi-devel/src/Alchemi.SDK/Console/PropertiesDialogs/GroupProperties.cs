@@ -96,31 +96,16 @@ namespace Alchemi.Console.PropertiesDialogs
 			try
 			{
 				//get the group this user belongs to.
-				string sql = string.Format("SELECT prm.prm_id, prm.prm_name FROM prm, grp_prm WHERE prm.prm_id=grp_prm.prm_id AND grp_prm.grp_id={0}", _Group.GroupId);
-				DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql); 
-				DataTable dt = ds.Tables[0];
+				PermissionStorageView[] permissions = console.Manager.Admon_GetGroupPermissions(console.Credentials, _Group);
 
-				foreach (DataRow dr in dt.Rows)
-				{
-					int prmId = -1;
-					string prmName = null;
-					if (Utils.GetDbValue(dr["prm_id"])!=null)
-					{
-						prmId = (int)dr["prm_id"];
-					}
-					if (Utils.GetDbValue(dr["prm_name"])!=null)
-					{
-						prmName = dr["prm_name"].ToString();
-					}
-					
-					PermissionItem prmItem = new PermissionItem(prmName);
-					prmItem.Permission = new PermissionStorageView(prmId, prmName);
+				foreach (PermissionStorageView permission in permissions)
+				{					
+					PermissionItem prmItem = new PermissionItem(permission.PermissionName);
+					prmItem.Permission = new PermissionStorageView(permission.PermissionId, permission.PermissionName);
 					prmItem.ImageIndex = 12;
 					lvPrm.Items.Add(prmItem);
 				}
 
-				dt.Dispose();
-				ds.Dispose();
 			}
 			catch (Exception ex)
 			{

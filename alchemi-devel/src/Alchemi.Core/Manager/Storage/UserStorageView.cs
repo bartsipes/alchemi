@@ -115,5 +115,10 @@ namespace Alchemi.Core.Manager.Storage
 			m_password = password;
 			m_groupId = groupId; 
 		}
+
+		public UserStorageView(String username) : this(username, "", -1)
+		{
+		}
+
 	}
 }

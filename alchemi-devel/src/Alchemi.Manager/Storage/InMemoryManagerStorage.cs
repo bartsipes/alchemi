@@ -113,6 +113,28 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+		public void DeleteUser(UserStorageView userToDelete)
+		{
+			if (m_users == null || userToDelete == null)
+			{
+				return;
+			}
+
+			ArrayList remainingUsers = new ArrayList();
+
+			for(int indexInList=0; indexInList<m_users.Count; indexInList++)
+			{
+				UserStorageView userInList = (UserStorageView)m_users[indexInList];
+
+				if (userInList.Username != userToDelete.Username)
+				{
+					remainingUsers.Add(userInList);
+				}
+			}
+
+			m_users = remainingUsers;
+		}
+
 		public bool AuthenticateUser(SecurityCredentials sc)
 		{
 			if (sc == null || m_users == null)
@@ -172,6 +194,24 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+		public GroupStorageView GetGroup(Int32 groupId)
+		{
+			if (m_groups == null)
+			{
+				return null;
+			}
+
+			foreach (GroupStorageView group in m_groups)
+			{
+				if (group.GroupId == groupId)
+				{
+					return group;
+				}
+			}
+
+			return null;
+		}
+
 		public void AddGroupPermission(Int32 groupId, Permission permission)
 		{
 			if (m_groupPermissions == null)
@@ -213,6 +253,53 @@ namespace Alchemi.Manager.Storage
 			ArrayList permissions = (ArrayList)m_groupPermissions[groupId];
 
 			return (Permission[])permissions.ToArray(typeof(Permission));
+		}
+
+		public PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId)
+		{
+			ArrayList result = new ArrayList();
+
+			foreach(Permission permission in GetGroupPermissions(groupId))
+			{
+				PermissionStorageView storageView = new PermissionStorageView((Int32)permission, permission.ToString());
+
+				result.Add(storageView);
+			}
+
+			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
+		}
+
+		public void DeleteGroup(GroupStorageView groupToDelete)
+		{
+			if (m_groups == null || groupToDelete == null)
+			{
+				return;
+			}
+
+			ArrayList remainingGroups = new ArrayList();
+			ArrayList remainingUsers = new ArrayList();
+
+			if (m_users != null)
+			{
+				foreach (UserStorageView user in m_users)
+				{
+					if (user.GroupId != groupToDelete.GroupId)
+					{
+						remainingUsers.Add(user);
+					}
+				}
+			}
+
+			foreach (GroupStorageView group in m_groups)
+			{
+				if (group.GroupId != groupToDelete.GroupId)
+				{
+					remainingGroups.Add(group);
+				}
+			}
+
+			m_groups = remainingGroups;
+			m_users = remainingUsers;
 		}
 
 		public bool CheckPermission(SecurityCredentials sc, Permission perm)
@@ -486,6 +573,39 @@ namespace Alchemi.Manager.Storage
 
 		}
 
+		public void DeleteApplication(ApplicationStorageView applicationToDelete)
+		{
+			if (m_applications == null || applicationToDelete == null)
+			{
+				return;
+			}
+
+			ArrayList remainingApplications = new ArrayList();
+			ArrayList remainingThreads = new ArrayList();
+
+			if (m_threads != null)
+			{
+				foreach (ThreadStorageView thread in m_threads)
+				{
+					if (thread.ApplicationId != applicationToDelete.ApplicationId)
+					{
+						remainingThreads.Add(thread);
+					}
+				}
+			}
+
+			foreach (ApplicationStorageView application in m_applications)
+			{
+				if (application.ApplicationId != applicationToDelete.ApplicationId)
+				{
+					remainingApplications.Add(application);
+				}
+			}
+
+			m_threads= remainingThreads;
+			m_applications= remainingApplications;
+		}
+
 
 		public Int32 AddThread(ThreadStorageView thread)
 		{
@@ -750,6 +870,27 @@ namespace Alchemi.Manager.Storage
 
 			return threadCount;
 		}
+
+		public void DeleteThread(ThreadStorageView threadToDelete)
+		{
+			if (m_threads == null || threadToDelete == null)
+			{
+				return;
+			}
+
+			ArrayList remainingThreads = new ArrayList();
+
+			foreach (ThreadStorageView thread in m_threads)
+			{
+				if (thread.ApplicationId != threadToDelete.ApplicationId || thread.ThreadId != threadToDelete.ThreadId)
+				{
+					remainingThreads.Add(thread);
+				}
+			}
+
+			m_threads = remainingThreads;
+		}
+
 
 		#endregion
 

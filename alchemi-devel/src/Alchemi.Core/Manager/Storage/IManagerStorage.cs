@@ -72,15 +72,30 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns></returns>
 		UserStorageView[] GetUsers();
 
+		/// <summary>
+		/// Delete the given user.
+		/// Only the username has to be set in the UserStorageView structure, all other data is ignored.
+		/// </summary>
+		/// <param name="userToDelete"></param>
+		void DeleteUser(UserStorageView userToDelete);
 		
 		void AddGroups(GroupStorageView[] groups);
 		
 		GroupStorageView[] GetGroups();
 
+		GroupStorageView GetGroup(Int32 groupId);
+
 		void AddGroupPermission(Int32 groupId, Permission permission);
 
 		Permission[] GetGroupPermissions(Int32 groupId);
 
+		PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId);
+
+		/// <summary>
+		/// Delete the given group and all the users associated with it.
+		/// </summary>
+		/// <param name="groupToDelete"></param>
+		void DeleteGroup(GroupStorageView groupToDelete);
 
 		String AddExecutor(ExecutorStorageView executor);
 
@@ -101,6 +116,12 @@ namespace Alchemi.Core.Manager.Storage
 		ApplicationStorageView[] GetApplications();
 
 		ApplicationStorageView[] GetApplications(bool populateThreadCount);
+
+		/// <summary>
+		/// Delete application and all associated threads
+		/// </summary>
+		/// <param name="applicationToDelete"></param>
+		void DeleteApplication(ApplicationStorageView applicationToDelete);
 
 		/// <summary>
 		/// Get the user's applications
@@ -133,6 +154,8 @@ namespace Alchemi.Core.Manager.Storage
 		Int32 GetApplicationThreadCount(String applicationId, ThreadState threadState);
 
 		Int32 GetExecutorThreadCount(String executorId, params ThreadState[] threadState);
+
+		void DeleteThread(ThreadStorageView threadToDelete);
 
 
 		/// <summary>

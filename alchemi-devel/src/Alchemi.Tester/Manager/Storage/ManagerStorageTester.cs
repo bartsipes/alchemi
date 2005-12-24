@@ -234,6 +234,64 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "DeleteUser Tests"
+		
+		/// <summary>
+		/// Add a new user.
+		/// Delete the user.
+		/// </summary>
+		[Test]
+		public void DeleteUserTest1()
+		{
+			AddUser("username1", "password1", 0);
+
+			UserStorageView[] usersBefore = ManagerStorage.GetUsers();
+
+			ManagerStorage.DeleteUser(new UserStorageView("username1"));
+
+			UserStorageView[] usersAfter = ManagerStorage.GetUsers();
+			
+			Assert.AreEqual(1, usersBefore.Length);
+			Assert.AreEqual(0, usersAfter.Length);
+		}
+
+		/// <summary>
+		/// Add no user
+		/// Delete a user
+		/// The user list should be empty, no errors are expected.
+		/// </summary>
+		[Test]
+		public void DeleteUserTest2()
+		{
+			ManagerStorage.DeleteUser(new UserStorageView("username1"));
+
+			UserStorageView[] users = ManagerStorage.GetUsers();
+			
+			Assert.AreEqual(0, users.Length);
+		}
+
+		/// <summary>
+		/// Add a new user
+		/// Set the delete user object to null;
+		/// The user list should not be modified, no errors are expected.
+		/// </summary>
+		[Test]
+		public void DeleteUserTest3()
+		{
+			AddUser("username1", "password1", 0);
+
+			ManagerStorage.DeleteUser(null);
+
+			UserStorageView[] users = ManagerStorage.GetUsers();
+			
+			Assert.AreEqual(1, users.Length);
+			Assert.AreEqual("username1", users[0].Username);
+			Assert.AreEqual("password1", users[0].Password);
+			Assert.AreEqual(0, users[0].GroupId);
+		}
+
+		#endregion
+
 		#region "AuthenticateUser Tests"
 		
 		/// <summary>
@@ -452,6 +510,44 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "GetGroup Tests"
+
+		/// <summary>
+		/// Add a new group.
+		/// Get the group
+		/// </summary>
+		[Test]
+		public void GetGroupTestSimpleScenario()
+		{
+			AddGroup(12, "group0");
+			
+			GroupStorageView group = ManagerStorage.GetGroup(12);
+
+			Assert.AreEqual(12, group.GroupId);
+			Assert.AreEqual("group0", group.GroupName);
+		}
+
+		[Test]
+		public void GetGroupNotFound()
+		{			
+			AddGroup(12, "group0");
+
+			GroupStorageView group = ManagerStorage.GetGroup(1);
+
+			Assert.IsNull(group);
+		}
+
+		[Test]
+		public void GetGroupNothingAdded()
+		{			
+			GroupStorageView group = ManagerStorage.GetGroup(1);
+
+			Assert.IsNull(group);
+		}
+
+
+		#endregion
+
 		#region "AddGroupPermission Tests"
 		/// <summary>
 		/// Add a permission to a group
@@ -524,6 +620,150 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.AreEqual(1, result.Length);
 			Assert.AreEqual(Permission.ExecuteThread, result[0]);
+		}
+
+		#endregion
+
+		#region "GetGroupPermissionStorageView Tests"
+
+		/// <summary>
+		/// Add a permission to a group
+		/// Get the permissions, it should be there
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionStorageViewTestSimpleScenario()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+
+			PermissionStorageView[] result = ManagerStorage.GetGroupPermissionStorageView(groupId);
+
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual((Int32)Permission.ExecuteThread, result[0].PermissionId);
+		}
+
+		/// <summary>
+		/// Add no permissions
+		/// Get the permissions, there should be none
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionStorageViewTestNoPermissions()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			PermissionStorageView[] result = ManagerStorage.GetGroupPermissionStorageView(groupId);
+
+			Assert.AreEqual(0, result.Length);
+		}
+
+		/// <summary>
+		/// Add the same permission several times
+		/// Get the permissions, there should be only one
+		/// </summary>
+		[Test]
+		public void GetGroupPermissionStorageViewTestDuplicates()
+		{
+			Int32 groupId = 1;
+
+			AddGroup(groupId, "test");
+
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+			ManagerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+
+			PermissionStorageView[] result = ManagerStorage.GetGroupPermissionStorageView(groupId);
+
+			Assert.AreEqual(1, result.Length);
+			Assert.AreEqual((Int32)Permission.ExecuteThread, result[0].PermissionId);
+		}
+
+		#endregion
+
+		#region "DeleteGroup Tests"
+		
+		/// <summary>
+		/// Add a new group.
+		/// Delete the group.
+		/// </summary>
+		[Test]
+		public void DeleteGroupTest1()
+		{
+			AddGroup(1, "group1");
+
+			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
+
+			ManagerStorage.DeleteGroup(new GroupStorageView(1));
+
+			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
+			
+			Assert.AreEqual(1, groupsBefore.Length);
+			Assert.AreEqual(0, groupsAfter.Length);
+		}
+
+		/// <summary>
+		/// Add no group
+		/// Delete a group
+		/// The group list should be empty, no errors are expected.
+		/// </summary>
+		[Test]
+		public void DeleteGroupTest2()
+		{
+			ManagerStorage.DeleteGroup(new GroupStorageView(1));
+
+			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
+			
+			Assert.AreEqual(0, groupsAfter.Length);
+		}
+
+		/// <summary>
+		/// Add a new group
+		/// Set the delete group object to null;
+		/// The group list should not be modified, no errors are expected.
+		/// </summary>
+		[Test]
+		public void DeleteGroupTest3()
+		{
+			AddGroup(1, "group1");
+
+			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
+
+			ManagerStorage.DeleteGroup(null);
+
+			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
+			
+			Assert.AreEqual(1, groupsBefore.Length);
+			Assert.AreEqual(1, groupsAfter.Length);
+		}
+
+		/// <summary>
+		/// The users associated with the group should also be removed.
+		/// </summary>
+		[Test]
+		public void DeleteGroupTestDeleteGroupWithUsers()
+		{
+			AddGroup(1, "group1");
+			AddGroup(2, "group2");
+			AddUser("username1", "password1", 1);
+			AddUser("username2", "password2", 1);
+			AddUser("username3", "password3", 2);
+			AddUser("username4", "password4", 2);
+
+			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
+
+			ManagerStorage.DeleteGroup(new GroupStorageView(2));
+
+			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
+
+			UserStorageView[] usersAfter = ManagerStorage.GetUsers();
+			
+			Assert.AreEqual(2, groupsBefore.Length);
+			Assert.AreEqual(1, groupsAfter.Length);
+			Assert.AreEqual(2, usersAfter.Length);
 		}
 
 		#endregion
@@ -889,6 +1129,90 @@ namespace Alchemi.Tester.Manager.Storage
 			ApplicationStorageView application = ManagerStorage.GetApplication(Guid.NewGuid().ToString());
 
 			Assert.IsNull(application);
+		}
+
+
+		#endregion
+
+		#region "DeleteApplication Tests"
+
+		/// <summary>
+		/// Add a new application.
+		/// Delete the application.
+		/// </summary>
+		[Test]
+		public void DeleteApplicationTestSimpleScenario()
+		{
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			
+			ApplicationStorageView[] applicationsBefore = ManagerStorage.GetApplications();
+
+			ManagerStorage.DeleteApplication(new ApplicationStorageView(applicationId, ApplicationState.Ready, DateTime.Now, false, "username1"));
+			
+			ApplicationStorageView[] applicationsAfter = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(1, applicationsBefore.Length);
+			Assert.AreEqual(0, applicationsAfter.Length);
+		}
+
+		[Test]
+		public void DeleteApplicationTestNullApplicationToDelete()
+		{
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			
+			ApplicationStorageView[] applicationsBefore = ManagerStorage.GetApplications();
+
+			ManagerStorage.DeleteApplication(null);
+			
+			ApplicationStorageView[] applicationsAfter = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(1, applicationsBefore.Length);
+			Assert.AreEqual(1, applicationsAfter.Length);
+		}
+
+		[Test]
+		public void DeleteApplicationTestNoApplicationAdded()
+		{
+			ManagerStorage.DeleteApplication(new ApplicationStorageView(Guid.NewGuid().ToString(), ApplicationState.Ready, DateTime.Now, false, "username1"));
+			
+			ApplicationStorageView[] applicationsAfter = ManagerStorage.GetApplications();
+
+			Assert.AreEqual(0, applicationsAfter.Length);
+		}
+
+		/// <summary>
+		/// Threads should also be removed
+		/// </summary>
+		[Test]
+		public void DeleteApplicationWithThreads()
+		{
+			DateTime now = DateTime.Now;
+			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			String applicationId1 = AddApplication(ApplicationState.Ready, timeCreated, true, "username1");
+			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+
+			AddThread(applicationId1, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId1, null, 2, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId2, null, 3, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			AddThread(applicationId2, null, 4, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+			
+			ApplicationStorageView[] applicationsBefore = ManagerStorage.GetApplications();
+
+			ManagerStorage.DeleteApplication(new ApplicationStorageView(applicationId1, ApplicationState.Ready, DateTime.Now, false, "username1"));
+			
+			ApplicationStorageView[] applicationsAfter = ManagerStorage.GetApplications();
+			ThreadStorageView[] threadsAfter = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(2, applicationsBefore.Length);
+			Assert.AreEqual(1, applicationsAfter.Length);
+			Assert.AreEqual(2, threadsAfter.Length);
 		}
 
 
@@ -2075,6 +2399,65 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(1, finished);
 			Assert.AreEqual(0, dead);
 			Assert.AreEqual(3, notDeadOrFinished);
+		}
+
+		#endregion
+
+		#region "DeleteThread Tests"
+
+		/// <summary>
+		/// Add a thread
+		/// Delete the thread
+		/// </summary>
+		[Test]
+		public void DeleteThreadTestSimpleDelete()
+		{
+			String executorId = Guid.NewGuid().ToString();
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+
+			ThreadStorageView[] threadsBefore = ManagerStorage.GetThreads();
+
+			ManagerStorage.DeleteThread(new ThreadStorageView(applicationId, 1));
+
+			ThreadStorageView[] threadsAfter = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(1, threadsBefore.Length);
+			Assert.AreEqual(0, threadsAfter.Length);
+		}
+
+		[Test]
+		public void DeleteThreadTestNothingAdded()
+		{
+			String executorId = Guid.NewGuid().ToString();
+			String applicationId = Guid.NewGuid().ToString();
+
+			ManagerStorage.DeleteThread(new ThreadStorageView(applicationId, 1));
+
+			ThreadStorageView[] threadsAfter = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(0, threadsAfter.Length);
+		}
+
+		[Test]
+		public void DeleteThreadTestNullThreadToDelete()
+		{
+			String executorId = Guid.NewGuid().ToString();
+			String applicationId = Guid.NewGuid().ToString();
+			String executorId1 = Guid.NewGuid().ToString();
+
+			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
+
+			ThreadStorageView[] threadsBefore = ManagerStorage.GetThreads();
+
+			ManagerStorage.DeleteThread(null);
+
+			ThreadStorageView[] threadsAfter = ManagerStorage.GetThreads();
+
+			Assert.AreEqual(1, threadsBefore.Length);
+			Assert.AreEqual(1, threadsAfter.Length);
 		}
 
 		#endregion

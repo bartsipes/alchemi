@@ -54,19 +54,15 @@ namespace Alchemi.Console.PropertiesDialogs
 			{
 				lvGrp.Items.Clear();
 				//get the group this user belongs to.
-				string sql = string.Format("SELECT grp_name FROM grp WHERE grp_id={0}", _User.GroupId);
-				DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql); 
-				DataTable dt = ds.Tables[0];
+				GroupStorageView groupStorageView = console.Manager.Admon_GetGroup(console.Credentials, _User.GroupId);
 
-				//we expect only one value, so:
-				string groupName = dt.Rows[0]["grp_name"].ToString();
-				GroupItem grpItem = new GroupItem(groupName);
-				grpItem.Group = new GroupStorageView(_User.GroupId, groupName);
-				grpItem.ImageIndex = 2;
-				lvGrp.Items.Add(grpItem);
-
-				dt.Dispose();
-				ds.Dispose();
+				if (groupStorageView != null)
+				{
+					GroupItem grpItem = new GroupItem(groupStorageView.GroupName);
+					grpItem.Group = groupStorageView;
+					grpItem.ImageIndex = 2;
+					lvGrp.Items.Add(grpItem);
+				}
 			}
 			catch (Exception ex)
 			{

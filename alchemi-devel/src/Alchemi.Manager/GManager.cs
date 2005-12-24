@@ -881,6 +881,48 @@ namespace Alchemi.Manager
 			return ManagerStorageFactory.ManagerStorage().GetGroups();
 		}
 
+		public GroupStorageView Admon_GetGroup(SecurityCredentials sc, Int32 groupId)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			logger.Debug(String.Format("Getting of group details from the db for group {0}", groupId));
+
+			return ManagerStorageFactory.ManagerStorage().GetGroup(groupId);
+		}
+
+		/// <summary>
+		/// Delete group and all associated users.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="groupToDelete"></param>
+		public void Admon_DeleteGroup(SecurityCredentials sc, GroupStorageView groupToDelete)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			logger.Debug(String.Format("Deleting group.", groupToDelete.GroupId));
+
+			ManagerStorageFactory.ManagerStorage().DeleteGroup(groupToDelete);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="group"></param>
+		/// <returns></returns>
+		public PermissionStorageView[] Admon_GetGroupPermissions(SecurityCredentials sc, GroupStorageView group)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			logger.Debug(String.Format("Getting group permission for group ", group.GroupId));
+
+			return ManagerStorageFactory.ManagerStorage().GetGroupPermissionStorageView(group.GroupId);
+		}
+
+
         //-----------------------------------------------------------------------------------------------          
 
 		/// <summary>
@@ -921,6 +963,14 @@ namespace Alchemi.Manager
 			EnsurePermission(sc, Permission.ManageUsers);
 
 			ManagerStorageFactory.ManagerStorage().AddUsers(adds);
+		}
+
+		public void Admon_DeleteUser(SecurityCredentials sc, UserStorageView userToDelete)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			ManagerStorageFactory.ManagerStorage().DeleteUser(userToDelete);
 		}
 
         //-----------------------------------------------------------------------------------------------          
@@ -1145,6 +1195,26 @@ namespace Alchemi.Manager
 				logger.Debug("Exception aborting thread on executor : " + e.Message,e);
 			}
         }
+
+		public void Admon_DeleteThread(SecurityCredentials sc, ThreadStorageView threadToDelete)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageAllApps);
+
+			logger.Debug(String.Format("Deleting thread.", threadToDelete.ThreadId));
+
+			ManagerStorageFactory.ManagerStorage().DeleteThread(threadToDelete);
+		}
+
+		public void Admon_DeleteApplication(SecurityCredentials sc, ApplicationStorageView applicationToDelete)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageAllApps);
+
+			logger.Debug(String.Format("Deleting application.", applicationToDelete.ApplicationId));
+
+			ManagerStorageFactory.ManagerStorage().DeleteApplication(applicationToDelete);
+		}
 
         //-----------------------------------------------------------------------------------------------
     }
