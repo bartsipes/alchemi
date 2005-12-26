@@ -97,6 +97,8 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="groupToDelete"></param>
 		void DeleteGroup(GroupStorageView groupToDelete);
 
+		UserStorageView[] GetGroupUsers(Int32 groupId);
+
 		String AddExecutor(ExecutorStorageView executor);
 
 		void UpdateExecutor(ExecutorStorageView executor);

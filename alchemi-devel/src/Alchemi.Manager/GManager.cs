@@ -906,6 +906,16 @@ namespace Alchemi.Manager
 			ManagerStorageFactory.ManagerStorage().DeleteGroup(groupToDelete);
 		}
 
+		public UserStorageView[] GetGroupUsers(SecurityCredentials sc, Int32 groupId)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			logger.Debug(String.Format("Getting group {0} users.", groupId));
+
+			return ManagerStorageFactory.ManagerStorage().GetGroupUsers(groupId);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -920,6 +930,14 @@ namespace Alchemi.Manager
 			logger.Debug(String.Format("Getting group permission for group ", group.GroupId));
 
 			return ManagerStorageFactory.ManagerStorage().GetGroupPermissionStorageView(group.GroupId);
+		}
+
+		public PermissionStorageView[] Admon_GetPermissions(SecurityCredentials sc)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageUsers);
+
+			return PermissionStorageView.GetPermissionStorageView((Permission[])Enum.GetValues(typeof(Permission)));
 		}
 
 
@@ -996,6 +1014,16 @@ namespace Alchemi.Manager
 			logger.Debug("Getting list of executors from database");
 
 			return ManagerStorageFactory.ManagerStorage().GetExecutors();
+		}
+
+		public ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId)
+		{
+			AuthenticateUser(sc);
+			EnsurePermission(sc, Permission.ManageOwnApp);
+
+			logger.Debug(String.Format("Getting details for executor {0} from database", executorId));
+
+			return ManagerStorageFactory.ManagerStorage().GetExecutor(executorId);
 		}
 
 		/// <summary>

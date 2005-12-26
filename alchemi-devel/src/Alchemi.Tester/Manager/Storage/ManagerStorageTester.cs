@@ -768,6 +768,45 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "GetGroupUsers Tests"
+		
+		[Test]
+		public void GetGroupUsersTestSimpleScenario()
+		{
+			AddGroup(1, "group1");
+			AddGroup(2, "group2");
+			AddUser("username1", "password1", 1);
+			AddUser("username2", "password2", 1);
+			AddUser("username3", "password3", 2);
+			AddUser("username4", "password4", 2);
+			AddUser("username5", "password4", 2);
+
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			
+			Assert.AreEqual(3, users.Length);
+		}
+
+		[Test]
+		public void GetGroupUsersTestNoUsers()
+		{
+			AddGroup(1, "group1");
+			AddGroup(2, "group2");
+
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			
+			Assert.AreEqual(0, users.Length);
+		}
+
+		[Test]
+		public void GetGroupUsersTestNoGroups()
+		{
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			
+			Assert.AreEqual(0, users.Length);
+		}
+
+		#endregion
+
 		#region "CheckPermission Tests"
 
 		/// <summary>

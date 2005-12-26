@@ -321,6 +321,8 @@ namespace Alchemi.Core
 		/// <param name="groupToDelete"></param>
 		void Admon_DeleteGroup(SecurityCredentials sc, GroupStorageView groupToDelete);
 
+		UserStorageView[] GetGroupUsers(SecurityCredentials sc, Int32 groupId);
+
 		/// <summary>
 		/// Updates the Manager database with the given table of users.
 		/// </summary>
@@ -356,6 +358,8 @@ namespace Alchemi.Core
 		/// <returns></returns>
 		ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
+		ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId);
+
 		/// <summary>
 		/// Executes a select query against the Manager database.
 		/// </summary>
@@ -380,6 +384,13 @@ namespace Alchemi.Core
 		void Admon_DeleteApplication(SecurityCredentials sc, ApplicationStorageView applicationToDelete);
 
 		PermissionStorageView[] Admon_GetGroupPermissions(SecurityCredentials sc, GroupStorageView group);
+
+		/// <summary>
+		/// Get a list of all permissions defined in the application
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <returns></returns>
+		PermissionStorageView[] Admon_GetPermissions(SecurityCredentials sc);
 
     }
 }

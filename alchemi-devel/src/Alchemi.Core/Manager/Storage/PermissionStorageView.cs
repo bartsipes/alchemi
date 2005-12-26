@@ -24,6 +24,7 @@ details.
 #endregion
 
 using System;
+using System.Collections;
 
 namespace Alchemi.Core.Manager.Storage
 {
@@ -74,6 +75,27 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			m_prmId = id;
 			m_prmname = name;
+		}
+
+		public PermissionStorageView(Permission perm)
+		{
+			m_prmId = (Int32)perm;
+			m_prmname = perm.ToString();
+		}
+
+		public static PermissionStorageView[] GetPermissionStorageView(Permission[] permissions)
+		{
+			ArrayList result = new ArrayList();
+
+			foreach(Permission permission in permissions)
+			{
+				PermissionStorageView storageView = new PermissionStorageView(permission);
+
+				result.Add(storageView);
+			}
+
+			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
+			
 		}
 	}
 }

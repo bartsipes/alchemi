@@ -59,22 +59,17 @@ namespace Alchemi.Console.PropertiesDialogs
 			lvMembers.Items.Clear();
 			try
 			{
+				UserStorageView[] users = console.Manager.GetGroupUsers(console.Credentials, _Group.GroupId);
 				//get the group this user belongs to.
-				string sql = string.Format("SELECT usr_name FROM usr WHERE grp_id={0}", _Group.GroupId);
-				DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql); 
-				DataTable dt = ds.Tables[0];
 
-				foreach (DataRow dr in dt.Rows)
+				foreach (UserStorageView user in users)
 				{
-					string username = dr["usr_name"].ToString();
-					UserItem usrItem = new UserItem(username);
-					usrItem.User = new UserStorageView(username, "", _Group.GroupId);
+					UserItem usrItem = new UserItem(user.Username);
+					usrItem.User = user;
 					usrItem.ImageIndex = 3;
 					lvMembers.Items.Add(usrItem);
 				}
 
-				dt.Dispose();
-				ds.Dispose();
 			}
 			catch (Exception ex)
 			{

@@ -433,16 +433,7 @@ namespace Alchemi.Manager.Storage
 
 		public PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId)
 		{
-			ArrayList result = new ArrayList();
-
-			foreach(Permission permission in GetGroupPermissions(groupId))
-			{
-				PermissionStorageView storageView = new PermissionStorageView((Int32)permission, permission.ToString());
-
-				result.Add(storageView);
-			}
-
-			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
+			return PermissionStorageView.GetPermissionStorageView(GetGroupPermissions(groupId));
 		}
 
 		public void DeleteGroup(GroupStorageView groupToDelete)
@@ -461,6 +452,33 @@ namespace Alchemi.Manager.Storage
 
 			RunSql(sqlQuery);
 		}
+
+		public UserStorageView[] GetGroupUsers(Int32 groupId)
+		{
+			ArrayList userList = new ArrayList();
+
+			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select usr_name, password, grp_id, is_system from usr where grp_id={0}", groupId)))
+			{
+				while(dataReader.Read())
+				{
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					String password = dataReader.GetString(dataReader.GetOrdinal("password"));
+					bool isSystem = false;
+
+					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
+					{
+						isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
+					}
+
+					UserStorageView user = new UserStorageView(username, password, groupId);
+					user.IsSystem = isSystem;
+					userList.Add(user);
+				}
+			}
+
+			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
+		}
+
 
 		/// <summary>
 		/// Check if a permisson is set.

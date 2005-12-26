@@ -64,20 +64,10 @@ namespace Alchemi.Console.PropertiesDialogs
 				txState.Text = _thread.StateString;
 				txPriority.Text = _thread.Priority.ToString();
 
-				string sql = string.Format("SELECT host FROM executor WHERE executor_id='{0}'", _thread.ExecutorId);
-				DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageOwnApp, sql);
-				if (ds!=null)
+				ExecutorStorageView executor = console.Manager.Admon_GetExecutor(console.Credentials, _thread.ExecutorId);
+				if (executor != null && executor.HostName != null)
 				{
-					DataTable dt = ds.Tables[0];
-					if (dt.Rows.Count>0 && !dt.Rows[0].IsNull("host"))
-					{
-						string exhost = dt.Rows[0]["host"].ToString();
-						txExecutor.Text = exhost;			
-					}
-
-					dt.Dispose();
-					ds.Dispose();
-
+						txExecutor.Text = executor.HostName;			
 				}
 			}
 			catch (Exception ex)

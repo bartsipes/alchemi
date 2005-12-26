@@ -257,16 +257,7 @@ namespace Alchemi.Manager.Storage
 
 		public PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId)
 		{
-			ArrayList result = new ArrayList();
-
-			foreach(Permission permission in GetGroupPermissions(groupId))
-			{
-				PermissionStorageView storageView = new PermissionStorageView((Int32)permission, permission.ToString());
-
-				result.Add(storageView);
-			}
-
-			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
+			return PermissionStorageView.GetPermissionStorageView(GetGroupPermissions(groupId));
 		}
 
 		public void DeleteGroup(GroupStorageView groupToDelete)
@@ -300,6 +291,26 @@ namespace Alchemi.Manager.Storage
 
 			m_groups = remainingGroups;
 			m_users = remainingUsers;
+		}
+
+		public UserStorageView[] GetGroupUsers(Int32 groupId)
+		{
+			if (m_users == null)
+			{
+				return new UserStorageView[0];
+			}
+
+			ArrayList result = new ArrayList();
+
+			foreach (UserStorageView user in m_users)
+			{
+				if (user.GroupId == groupId)
+				{
+					result.Add(user);
+				}
+			}
+
+			return (UserStorageView[])result.ToArray(typeof(UserStorageView));
 		}
 
 		public bool CheckPermission(SecurityCredentials sc, Permission perm)
