@@ -32,24 +32,19 @@ namespace Alchemi.ManagerService
 {
 	/// <summary>
 	/// Summary description for ManagerServiceController.
-	/// This class uses the ManagerMainForm which can also acts as the service controller for the ManagerService.
+	/// This class uses the ManagerMainForm which acts as the service controller for the ManagerService.
 	/// </summary>
 	public class ManagerServiceController
 	{
 
 		public ManagerServiceController()
 		{
-			try
-			{
-				System.IO.Directory.CreateDirectory("dat");
-			}
-			catch {}
 		}
 
 		[STAThread]
 		static void Main() 
 		{
-			Application.Run(new ManagerMainForm(true));
+			Application.Run(new ManagerMainForm());
 		}
 	}
 }

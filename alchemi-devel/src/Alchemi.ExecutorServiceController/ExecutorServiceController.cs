@@ -43,7 +43,7 @@ namespace Alchemi.ExecutorService
 		[STAThread]
 		static void Main() 
 		{
-			Application.Run(new ExecutorMainForm(true));
+			Application.Run(new ExecutorMainForm());
 		}
 	}
 }

@@ -144,13 +144,11 @@
                 />
                 <File
                     RelPath = "ManagerMainForm.cs"
-                    Link = "..\Alchemi.ManagerExec\ManagerMainForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "ManagerMainForm.resx"
-                    Link = "..\Alchemi.ManagerExec\ManagerMainForm.resx"
                     DependentUpon = "ManagerMainForm.cs"
                     BuildAction = "EmbeddedResource"
                 />
@@ -158,6 +156,18 @@
                     RelPath = "ManagerServiceController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ManagerTemplateForm.cs"
+                    Link = "..\Alchemi.ManagerExec\ManagerTemplateForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ManagerTemplateForm.resx"
+                    Link = "..\Alchemi.ManagerExec\ManagerTemplateForm.resx"
+                    DependentUpon = "ManagerTemplateForm.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "SplashScreen.cs"

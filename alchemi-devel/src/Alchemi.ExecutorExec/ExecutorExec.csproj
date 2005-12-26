@@ -158,6 +158,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ExecutorTemplateForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorTemplateForm.resx"
+                    DependentUpon = "ExecutorTemplateForm.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "SplashScreen.cs"
                     SubType = "Form"
                     BuildAction = "Compile"

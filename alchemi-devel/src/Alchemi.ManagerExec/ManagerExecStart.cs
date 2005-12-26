@@ -41,15 +41,12 @@ namespace Alchemi.ManagerExec
 		}
 
 		[STAThread]
-		static int Main() 
+		static void Main() 
 		{
 			Application.EnableVisualStyles();
-			ManagerMainForm f = new ManagerMainForm(false);
+			ManagerMainForm f = new ManagerMainForm();
 			Application.DoEvents();
 			Application.Run(f);
-			int returnCode = f.returnCode;
-			f = null;
-			return returnCode;
 		}
 	}
 }

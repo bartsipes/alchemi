@@ -144,13 +144,11 @@
                 />
                 <File
                     RelPath = "ExecutorMainForm.cs"
-                    Link = "..\Alchemi.ExecutorExec\ExecutorMainForm.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "ExecutorMainForm.resx"
-                    Link = "..\Alchemi.ExecutorExec\ExecutorMainForm.resx"
                     DependentUpon = "ExecutorMainForm.cs"
                     BuildAction = "EmbeddedResource"
                 />
@@ -158,6 +156,18 @@
                     RelPath = "ExecutorServiceController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorTemplateForm.cs"
+                    Link = "..\Alchemi.ExecutorExec\ExecutorTemplateForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutorTemplateForm.resx"
+                    Link = "..\Alchemi.ExecutorExec\ExecutorTemplateForm.resx"
+                    DependentUpon = "ExecutorTemplateForm.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "SplashScreen.cs"
