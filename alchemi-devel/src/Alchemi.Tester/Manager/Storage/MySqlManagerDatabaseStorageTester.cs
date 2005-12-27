@@ -24,9 +24,11 @@ details.
 #endregion
 
 using System;
+using System.Configuration;
 
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Manager.Storage;
 
 using NUnit.Framework;
 
@@ -35,19 +37,41 @@ namespace Alchemi.Tester.Manager.Storage
 	/// <summary>
 	/// Summary description for MySqlManagerDatabaseStorageTester.
 	/// </summary>
-	//[TestFixture]
-	public class MySqlManagerDatabaseStorageTester// : ManagerStorageTester
+	[TestFixture]
+	public class MySqlManagerDatabaseStorageTester : ManagerStorageTester
 	{
-//		private MySqlManagerDatabaseStorage m_managerStorage;
-//
-//		public override IManagerStorage ManagerStorage
-//		{
-//			get
-//			{
-//				String connectionString = "";
-//				return new MySqlManagerDatabaseStorage(connectionString);
-//			}
-//		}
+		private MySqlManagerDatabaseStorage m_managerStorage;
+
+		public override IManagerStorage ManagerStorage
+		{
+			get
+			{
+				return m_managerStorage;
+			}
+		}
+
+		[SetUp]
+		public void TestStartUp()
+		{
+			String connectionString = ConfigurationSettings.AppSettings["SqlTesterConnectionString"];
+			connectionString = string.Format(
+				"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5;",
+				"localhost",
+				"alchemi",
+				"alchemi",
+				"AlchemiTester"
+				);
+			m_managerStorage = new MySqlManagerDatabaseStorage(connectionString);
+
+			m_managerStorage.SetUpStorage();
+			m_managerStorage.InitializeStorageData();
+		}
+
+		[TearDown]
+		public void TestShutDown()
+		{
+			m_managerStorage.TearDownStorage();
+		}
 
 		public MySqlManagerDatabaseStorageTester()
 		{

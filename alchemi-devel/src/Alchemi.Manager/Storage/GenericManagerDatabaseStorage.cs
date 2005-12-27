@@ -36,6 +36,9 @@ using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
+
 namespace Alchemi.Manager.Storage
 {
 	/// <summary>
@@ -58,9 +61,15 @@ namespace Alchemi.Manager.Storage
 
 		#region IManagerStorageSetup Members
 
+		protected virtual String GetSetupFileLocation()
+		{
+			return "SqlServer";
+		}
+
+
 		public void CreateStorage()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_database.sql");
+			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_database.sql");
 
 			RunSql(sqlScript);
 		}
@@ -70,21 +79,21 @@ namespace Alchemi.Manager.Storage
 		/// </summary>
 		public void SetUpStorage()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_structure.sql");
+			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure.sql");
 
 			RunSql(sqlScript);			
 		}
 
 		public void InitializeStorageData()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_data.sql");
+			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_data.sql");
 
 			RunSql(sqlScript);
 		}
 
 		public void TearDownStorage()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile("SqlServer", "Alchemi_structure_drop.sql");
+			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure_drop.sql");
 
 			RunSql(sqlScript);
 		}
@@ -113,7 +122,7 @@ namespace Alchemi.Manager.Storage
 			string sqlQuery3 = 
 				"select count(*) as unfinished_apps " +
 				"from application " +
-				"where [state] not in (0,1) ";
+				"where state not in (0,1) ";
 			
 			SystemSummary summary = null;
 			String maxPower= null;
@@ -137,6 +146,8 @@ namespace Alchemi.Manager.Storage
 						powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
 						powerTotalUsage = dataReader.GetString(dataReader.GetOrdinal("power_totalusage"));
 					}
+
+					dataReader.Close();
 				}
 			
 				//query2 to get thread count
@@ -276,6 +287,8 @@ namespace Alchemi.Manager.Storage
 					user.IsSystem = isSystem;
 					userList.Add(user);
 				}
+
+				dataReader.Close();
 			}
 
 			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
@@ -290,7 +303,7 @@ namespace Alchemi.Manager.Storage
 
 			String sqlQuery;
 			
-			sqlQuery = String.Format("delete usr where usr_name='{0}'", 
+			sqlQuery = String.Format("delete from usr where usr_name='{0}'", 
 				Utils.MakeSqlSafe(userToDelete.Username));
 			
 			logger.Debug(String.Format("Deleting user {0}", userToDelete.Username));
@@ -360,6 +373,8 @@ namespace Alchemi.Manager.Storage
 
 					groupList.Add(group);
 				}
+
+				dataReader.Close();
 			}
 
 			return (GroupStorageView[])groupList.ToArray(typeof(GroupStorageView));
@@ -381,10 +396,12 @@ namespace Alchemi.Manager.Storage
 					GroupStorageView group = new GroupStorageView(groupId, groupName);
 					group.IsSystem = isSystem;
 
+					dataReader.Close();
 					return group;
 				}
 				else
 				{
+					dataReader.Close();
 					return null;
 				}
 
@@ -396,7 +413,7 @@ namespace Alchemi.Manager.Storage
 			String sqlQuery;
 			
 			// in case there is a duplicate remove the permission first
-			sqlQuery = String.Format("delete grp_prm where grp_id={0} and prm_id={1}", 
+			sqlQuery = String.Format("delete from grp_prm where grp_id={0} and prm_id={1}", 
 				groupId,
 				(Int32)permission);
 
@@ -426,6 +443,8 @@ namespace Alchemi.Manager.Storage
 
 					permissions.Add(permission);
 				}
+
+				dataReader.Close();
 			}
 
 			return (Permission[])permissions.ToArray(typeof(Permission));
@@ -474,6 +493,8 @@ namespace Alchemi.Manager.Storage
 					user.IsSystem = isSystem;
 					userList.Add(user);
 				}
+
+				dataReader.Close();
 			}
 
 			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
@@ -524,11 +545,13 @@ namespace Alchemi.Manager.Storage
 
 		protected void UpdateExecutorPingTime(String executorId, DateTime pingTime)
 		{
-			IDataParameter dateTimeParameter = GetParameter("@ping_time", pingTime, DbType.DateTime);
+			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "ping_time", pingTime, DbType.DateTime);
 			
 			if (pingTime != DateTime.MinValue)
 			{
-				RunSql(String.Format("update executor set ping_time=@ping_time where executor_id='{0}'", executorId), 
+				RunSql(String.Format("update executor set ping_time={0}ping_time where executor_id='{1}'", 
+					DatabaseParameterDecoration(),
+					executorId), 
 					dateTimeParameter);
 			}
 			else
@@ -657,12 +680,15 @@ namespace Alchemi.Manager.Storage
 
 				if (executors == null || executors.Length == 0)
 				{
+					dataReader.Close();
 					return null;
 				}
 				else
 				{
+					dataReader.Close();
 					return executors[0];
 				}
+
 			}
 		}
 
@@ -670,48 +696,53 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList executors = new ArrayList();
 
-			while(dataReader.Read())
+			using(dataReader)
 			{
-				// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-				String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
+				while(dataReader.Read())
+				{
+					// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
 
-				bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
-				bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
-				DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
-				String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
-				Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
-				String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-				Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
-				Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
-				Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
-				float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
+					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
+					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
+					DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
+					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
+					Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
+					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
+					Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
+					Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
+					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
 
-				float maxMemory = dataReader.IsDBNull(dataReader.GetOrdinal("mem_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("mem_max"));;
-				float maxDisk = dataReader.IsDBNull(dataReader.GetOrdinal("disk_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("disk_max"));
-				Int32 numberOfCpu = dataReader.IsDBNull(dataReader.GetOrdinal("num_cpus")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("num_cpus"));
-				String os = dataReader.IsDBNull(dataReader.GetOrdinal("os")) ? "" : dataReader.GetString(dataReader.GetOrdinal("os"));
-				String architecture = dataReader.IsDBNull(dataReader.GetOrdinal("arch")) ? "" : dataReader.GetString(dataReader.GetOrdinal("arch"));
+					float maxMemory = dataReader.IsDBNull(dataReader.GetOrdinal("mem_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("mem_max"));;
+					float maxDisk = dataReader.IsDBNull(dataReader.GetOrdinal("disk_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("disk_max"));
+					Int32 numberOfCpu = dataReader.IsDBNull(dataReader.GetOrdinal("num_cpus")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("num_cpus"));
+					String os = dataReader.IsDBNull(dataReader.GetOrdinal("os")) ? "" : dataReader.GetString(dataReader.GetOrdinal("os"));
+					String architecture = dataReader.IsDBNull(dataReader.GetOrdinal("arch")) ? "" : dataReader.GetString(dataReader.GetOrdinal("arch"));
 
-				ExecutorStorageView executor = new ExecutorStorageView(
-					executorId,
-					dedicated,
-					connected,
-					pingTime,
-					hostname,
-					port,
-					username,
-					maxCpu,
-					cpuUsage,
-					availableCpu,
-					totalCpuUsage,
-					maxMemory,
-					maxDisk,
-					numberOfCpu,
-					os,
-					architecture
-					);
+					ExecutorStorageView executor = new ExecutorStorageView(
+						executorId,
+						dedicated,
+						connected,
+						pingTime,
+						hostname,
+						port,
+						username,
+						maxCpu,
+						cpuUsage,
+						availableCpu,
+						totalCpuUsage,
+						maxMemory,
+						maxDisk,
+						numberOfCpu,
+						os,
+						architecture
+						);
 
-				executors.Add(executor);
+					executors.Add(executor);
+				}
+
+				dataReader.Close();
 			}
 
 			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
@@ -726,9 +757,10 @@ namespace Alchemi.Manager.Storage
 
 			String applicationId = Guid.NewGuid().ToString();
 
-			IDataParameter dateTimeParameter = GetParameter("@time_created", application.TimeCreated, DbType.DateTime);
+			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{0}', {1}, @time_created, '{2}', '{3}')",
+			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{1}', {2}, {0}time_created, '{3}', '{4}')",
+				DatabaseParameterDecoration(),
 				applicationId,
 				(int)application.State,
 				Convert.ToInt16(application.Primary),
@@ -746,9 +778,10 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			IDataParameter dateTimeParameter = GetParameter("@time_created", updatedApplication.TimeCreated, DbType.DateTime);
+			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", updatedApplication.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("update application set state = {1}, time_created = @time_created, is_primary = '{2}', usr_name = '{3}' where application_id = '{0}'",
+			RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, is_primary = '{3}', usr_name = '{4}' where application_id = '{1}'",
+				DatabaseParameterDecoration(),
 				updatedApplication.ApplicationId,
 				(int)updatedApplication.State,
 				Convert.ToInt16(updatedApplication.Primary),
@@ -766,7 +799,7 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList applications = new ArrayList();
 
-			string sql = string.Format("select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application");
+			string sql = string.Format("select application_id, state, time_created, is_primary, usr_name, application_name, time_completed from application");
 
 			using(IDataReader dataReader = RunSqlReturnDataReader(sql))
 			{
@@ -811,6 +844,8 @@ namespace Alchemi.Manager.Storage
 
 					applications.Add(application);
 				}
+
+				dataReader.Close();
 			}
 
 			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
@@ -820,7 +855,7 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList applications = new ArrayList();
 
-			string sql = string.Format("select application_id, [state], time_created, is_primary, usr_name, application_name, time_completed from application where usr_name = '{0}'", Utils.MakeSqlSafe(userName));
+			string sql = string.Format("select application_id, state, time_created, is_primary, usr_name, application_name, time_completed from application where usr_name = '{0}'", Utils.MakeSqlSafe(userName));
 
 			using(IDataReader dataReader = RunSqlReturnDataReader(sql))
 			{
@@ -858,6 +893,8 @@ namespace Alchemi.Manager.Storage
 
 					applications.Add(application);
 				}
+			
+				dataReader.Close();
 			}
 
 			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
@@ -882,12 +919,15 @@ namespace Alchemi.Manager.Storage
 						username
 						);
 
+					dataReader.Close();
 					return application;
 				}
 				else
 				{
+					dataReader.Close();
 					return null;
 				}
+			
 			}
 		}
 
@@ -915,13 +955,13 @@ namespace Alchemi.Manager.Storage
 				return -1;
 			}
 
-			IDataParameter timeStartedParameter = GetParameter("@time_started", thread.TimeStarted, DbType.DateTime);
+			IDataParameter timeStartedParameter = GetParameter(DatabaseParameterDecoration() + "time_started", thread.TimeStarted, DbType.DateTime);
 			if (!thread.TimeStartedSet)
 			{
 				timeStartedParameter.Value = DBNull.Value;
 			}
 
-			IDataParameter timeFinishedParameter = GetParameter("@time_finished", thread.TimeFinished, DbType.DateTime);
+			IDataParameter timeFinishedParameter = GetParameter(DatabaseParameterDecoration() + "time_finished", thread.TimeFinished, DbType.DateTime);
 			if (!thread.TimeFinishedSet)
 			{
 				timeFinishedParameter.Value = DBNull.Value;
@@ -931,14 +971,15 @@ namespace Alchemi.Manager.Storage
 			
 			if (thread.ExecutorId != null)
 			{
-				executorIdParameter = GetParameter("@executor_id", thread.ExecutorId, DbType.Guid);
+				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", thread.ExecutorId, DbType.Guid);
 			}
 			else
 			{
-				executorIdParameter = GetParameter("@executor_id", DBNull.Value, DbType.Guid);
+				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{0}', @executor_id, {2}, {3}, @time_started, @time_finished, {4}, '{5}')",
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{1}', {0}executor_id, {3}, {4}, {0}time_started, {0}time_finished, {5}, '{6}')",
+				DatabaseParameterDecoration(),
 				thread.ApplicationId,
 				thread.ExecutorId,
 				thread.ThreadId,
@@ -958,13 +999,13 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			IDataParameter timeStartedParameter = GetParameter("@time_started", updatedThread.TimeStarted, DbType.DateTime);
+			IDataParameter timeStartedParameter = GetParameter(DatabaseParameterDecoration() + "time_started", updatedThread.TimeStarted, DbType.DateTime);
 			if (!updatedThread.TimeStartedSet)
 			{
 				timeStartedParameter.Value = DBNull.Value;
 			}
 
-			IDataParameter timeFinishedParameter = GetParameter("@time_finished", updatedThread.TimeFinished, DbType.DateTime);
+			IDataParameter timeFinishedParameter = GetParameter(DatabaseParameterDecoration() + "time_finished", updatedThread.TimeFinished, DbType.DateTime);
 			if (!updatedThread.TimeFinishedSet)
 			{
 				timeFinishedParameter.Value = DBNull.Value;
@@ -974,14 +1015,15 @@ namespace Alchemi.Manager.Storage
 			
 			if (updatedThread.ExecutorId != null)
 			{
-				executorIdParameter = GetParameter("@executor_id", updatedThread.ExecutorId, DbType.Guid);
+				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", updatedThread.ExecutorId, DbType.Guid);
 			}
 			else
 			{
-				executorIdParameter = GetParameter("@executor_id", DBNull.Value, DbType.Guid);
+				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			RunSql(String.Format("update thread set application_id = '{1}', executor_id = @executor_id, thread_id = {3}, state = {4}, time_started = @time_started, time_finished = @time_finished, priority = {5}, failed = '{6}' where internal_thread_id = {0}",
+			RunSql(String.Format("update thread set application_id = '{2}', executor_id = {0}executor_id, thread_id = {4}, state = {5}, time_started = {0}time_started, time_finished = {0}time_finished, priority = {6}, failed = '{7}' where internal_thread_id = {1}",
+				DatabaseParameterDecoration(),
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
 				updatedThread.ExecutorId,
@@ -1007,10 +1049,12 @@ namespace Alchemi.Manager.Storage
 
 				if (threads.Length > 0)
 				{
+					dataReader.Close();
 					return threads[0];
 				}
 				else
 				{
+					dataReader.Close();
 					return null;
 				}
 			}
@@ -1181,37 +1225,42 @@ namespace Alchemi.Manager.Storage
 
 			ArrayList threads = new ArrayList();
 
-			while(dataReader.Read())
+			using(dataReader)
 			{
-				Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
+				while(dataReader.Read())
+				{
+					Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
 
-				// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-				String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
-				String executorId = dataReader.IsDBNull(dataReader.GetOrdinal("executor_id")) ? null : dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString();
+					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
+					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+					String executorId = dataReader.IsDBNull(dataReader.GetOrdinal("executor_id")) ? null : dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString();
 
-				Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
-				ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
+					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 
-				// for lack of a better default set the dates to DateTime.MinValue.
-				DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
-				DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+					// for lack of a better default set the dates to DateTime.MinValue.
+					DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
+					DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
 
-				Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
-				bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
+					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
+					bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
 
-				ThreadStorageView thread = new ThreadStorageView(
-					internalThreadId,
-					applicationId,
-					executorId,
-					threadId,
-					state,
-					timeStarted,
-					timeFinished,
-					priority,
-					failed
-					);
+					ThreadStorageView thread = new ThreadStorageView(
+						internalThreadId,
+						applicationId,
+						executorId,
+						threadId,
+						state,
+						timeStarted,
+						timeFinished,
+						priority,
+						failed
+						);
 
-				threads.Add(thread);
+					threads.Add(thread);
+				}
+
+				dataReader.Close();
 			}
 
 			return (ThreadStorageView[])threads.ToArray(typeof(ThreadStorageView));  
@@ -1237,6 +1286,8 @@ namespace Alchemi.Manager.Storage
 					}
 
 				}
+			
+				dataReader.Close();
 			}
 
 		}
@@ -1338,6 +1389,11 @@ namespace Alchemi.Manager.Storage
 
 		#region Generic database manipulation routines
 
+		protected virtual String DatabaseParameterDecoration()
+		{
+			return "@";
+		}
+
 		/// <summary>
 		/// Run a stored procedure and return a data reader.
 		/// The caller is responsible for closing the database connection.
@@ -1396,7 +1452,9 @@ namespace Alchemi.Manager.Storage
 		
 				connection.Open();
 
-				return command.ExecuteScalar();
+				object result = command.ExecuteScalar();
+
+				return result;
 			}
 		}
 
@@ -1428,6 +1486,8 @@ namespace Alchemi.Manager.Storage
 					connection.Open();
 
 					command.ExecuteNonQuery();
+
+					connection.Close();
 				}
 			}
 			catch (Exception ex)
@@ -1462,7 +1522,11 @@ namespace Alchemi.Manager.Storage
 		
 				connection.Open();
 
-				return command.ExecuteScalar();
+				object result = command.ExecuteScalar();
+				
+				connection.Close();
+
+				return result;
 			}
 		}
 

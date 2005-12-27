@@ -71,5 +71,11 @@ namespace Alchemi.Manager.Storage
 		}
 
 		#endregion
+
+		protected override String GetSetupFileLocation()
+		{
+			return "SqlServer";
+		}
+
 	}
 }

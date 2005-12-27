@@ -89,6 +89,11 @@
                     AssemblyName = "System.Runtime.Remoting"
                     HintPath = "C:\WINNT\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
                 />
+                <Reference
+                    Name = "MySql.Data"
+                    AssemblyName = "MySql.Data"
+                    HintPath = "..\..\lib\MySql.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -191,6 +196,22 @@
                 <File
                     RelPath = "Storage\SetupFiles\storageSetupNotes.txt"
                     BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\MySQL\Alchemi_data.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\MySQL\Alchemi_database.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\MySQL\Alchemi_structure.sql"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Storage\SetupFiles\MySQL\Alchemi_structure_drop.sql"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Storage\SetupFiles\SqlServer\Alchemi_data.sql"

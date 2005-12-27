@@ -24,6 +24,10 @@ details.
 #endregion
 
 using System;
+using System.Data;
+
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 
 namespace Alchemi.Manager.Storage
 {
@@ -31,13 +35,53 @@ namespace Alchemi.Manager.Storage
 	/// Override some generic database calls with mySQL specific calls.
 	/// This is usually done for performance reasons.
 	/// </summary>
-	public class MySqlManagerDatabaseStorage
+	public class MySqlManagerDatabaseStorage : GenericManagerDatabaseStorage
 	{
-		public MySqlManagerDatabaseStorage()
+		public MySqlManagerDatabaseStorage(String connectionString): base (connectionString)
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
+
+		#region Database objects (SQL server specific version)
+
+		protected override IDbConnection GetConnection (string connectionString)
+		{
+			return new MySqlConnection(connectionString);
+		}
+
+		protected override IDbCommand GetCommand()
+		{
+			return new MySqlCommand();
+		}
+
+		protected override IDataParameter GetParameter(string name, object paramValue, DbType datatype)
+		{
+			object value = paramValue;
+			if (datatype == DbType.Guid && value!=DBNull.Value)
+			{
+				//logger.Debug("GUID GIVEN = "+value.ToString());
+				value = new Guid(paramValue.ToString());
+			}
+			MySqlParameter param  = new MySqlParameter(name, value);
+			param.DbType = datatype;
+			return param;
+		}
+
+		protected override IDataAdapter GetDataAdapter(IDbCommand command)
+		{
+			return new MySqlDataAdapter(command as MySqlCommand);
+		}
+
+		#endregion
+
+		protected override String GetSetupFileLocation()
+		{
+			return "MySQL";
+		}
+
+		protected override String DatabaseParameterDecoration()
+		{
+			return "?";
+		}
+
 	}
 }
