@@ -77,7 +77,7 @@ namespace Alchemi.ManagerExec
 		private void LogHandler(object sender, LogEventArgs e)
 		{
 			// Create a logger for use in this class
-			ILog logger1 = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+			ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 			switch (e.Level)
 			{
 				case LogLevel.Debug:
