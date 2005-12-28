@@ -106,7 +106,7 @@ namespace Alchemi.Manager.Storage
 				{
 					if (userInList.Username == userInUpdates.Username)
 					{
-						userInList.Password = HashUtil.GetHash(userInUpdates.Password, HashUtil.HashType.MD5);
+						userInList.Password = userInUpdates.Password;
 						userInList.GroupId = userInUpdates.GroupId;
 					}
 				}
@@ -146,7 +146,7 @@ namespace Alchemi.Manager.Storage
 			{
 				UserStorageView user = (UserStorageView)m_users[index];
 
-				if (user.Username == sc.Username && user.Password == sc.Password)
+				if (user.Username == sc.Username && user.PasswordMd5Hash == sc.Password)
 				{
 					return true;
 				}
@@ -324,7 +324,7 @@ namespace Alchemi.Manager.Storage
 			Int32 groupId = -1;
 			foreach(UserStorageView user in m_users)
 			{
-				if(String.Compare(user.Username, sc.Username, true) == 0 && user.Password == sc.Password)
+				if(String.Compare(user.Username, sc.Username, true) == 0 && user.PasswordMd5Hash == sc.Password)
 				{
 					groupId = user.GroupId;
 					break;

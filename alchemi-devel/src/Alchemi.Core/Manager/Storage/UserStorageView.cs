@@ -25,6 +25,8 @@ details.
 
 using System;
 
+using Alchemi.Core.Utility;
+
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
@@ -38,7 +40,14 @@ namespace Alchemi.Core.Manager.Storage
 		
 		//private Int32 m_userId; 
 		private String m_username;
-		private String m_password;
+
+		private String m_password = null;
+
+		/// <summary>
+		/// use this sto store a hash if the plain password is unknown
+		/// </summary>
+		private String m_passwordMd5Hash = null;
+
 		private Int32 m_groupId; 
 
 		private bool m_is_system;
@@ -92,6 +101,25 @@ namespace Alchemi.Core.Manager.Storage
 			set
 			{
 				m_password = value;
+			}
+		}
+
+		public String PasswordMd5Hash
+		{
+			get
+			{
+				if (m_passwordMd5Hash != null)
+				{
+					return m_passwordMd5Hash;
+				}
+				else
+				{
+					return HashUtil.GetHash(m_password, HashUtil.HashType.MD5);
+				}
+			}
+			set
+			{
+				m_passwordMd5Hash = value;
 			}
 		}
 

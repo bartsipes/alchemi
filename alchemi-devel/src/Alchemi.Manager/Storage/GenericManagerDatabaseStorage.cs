@@ -216,7 +216,7 @@ namespace Alchemi.Manager.Storage
 
 				sqlQuery = String.Format("insert usr(usr_name, password, grp_id, is_system) values('{0}', '{1}', {2}, {3})",
 					Utils.MakeSqlSafe(user.Username), 
-					Utils.MakeSqlSafe(user.Password), 
+					Utils.MakeSqlSafe(user.PasswordMd5Hash), 
 					user.GroupId,
 					user.IsSystem ? 1 : 0);
 				
@@ -243,13 +243,11 @@ namespace Alchemi.Manager.Storage
 				
 				if (user.Password != null && user.Password != "")
 				{
-					logger.Debug("Updating password AND group id...."+user.Password);
-
-					user.Password = HashUtil.GetHash(user.Password, HashUtil.HashType.MD5);
+					logger.Debug("Updating password AND group id...." + user.PasswordMd5Hash);
 
 					sqlQuery = String.Format("update usr set password='{1}', grp_id={2} where usr_name='{0}'", 
 						Utils.MakeSqlSafe(user.Username), 
-						Utils.MakeSqlSafe(user.Password), 
+						Utils.MakeSqlSafe(user.PasswordMd5Hash), 
 						user.GroupId);
 				}
 				else
@@ -283,7 +281,9 @@ namespace Alchemi.Manager.Storage
 						isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
 					}
 
-					UserStorageView user = new UserStorageView(username, password, groupId);
+					UserStorageView user = new UserStorageView(username);
+					user.PasswordMd5Hash = password;
+					user.GroupId = groupId;
 					user.IsSystem = isSystem;
 					userList.Add(user);
 				}
