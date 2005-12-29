@@ -24,8 +24,8 @@ details.
 #endregion
 
 using System;
+using System.Configuration;
 
-using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 
 namespace Alchemi.Manager.Storage
@@ -39,9 +39,6 @@ namespace Alchemi.Manager.Storage
 
 		public ManagerStorageFactory()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 
 		public static IManagerStorage ManagerStorage()
@@ -70,9 +67,6 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		public static IManagerStorage CreateManagerStorage(Configuration config)
 		{
-			// TODO: implement different storages based on the current configuration file
-			// TODO: currently everything defaults to SQL Server
-
 			Configuration configuration = config;
 			
 			if (configuration==null)
@@ -80,22 +74,47 @@ namespace Alchemi.Manager.Storage
 				configuration = Configuration.GetConfiguration();
 			}
 
-			// build sql server configuration string
-			string sqlConnStr = string.Format(
-				"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
-				configuration.DbServer,
-				configuration.DbUsername,
-				configuration.DbPassword,
-				configuration.DbName
-				);
+			string sqlConnStr;
 
-//			String connectionString = String.Format("adpprovider=MsSql;server={0};database={1};User ID={2};Password={3}", 
-//				configuration.DbServer, 
-//				configuration.DbName, 
-//				configuration.DbUsername,
-//				configuration.DbPassword); 
+			switch(configuration.DbType)
+			{
+					case ManagerStorageEnum.SqlServer:
 
-			m_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
+					// build sql server configuration string
+					sqlConnStr = string.Format(
+						"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+						configuration.DbServer,
+						configuration.DbUsername,
+						configuration.DbPassword,
+						configuration.DbName
+						);
+
+					m_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
+					break;
+
+				case ManagerStorageEnum.MySql:
+
+					// build sql server configuration string
+					sqlConnStr = string.Format(
+						"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+						configuration.DbServer,
+						configuration.DbUsername,
+						configuration.DbPassword,
+						configuration.DbName
+						);
+
+					m_managerStorage = new MySqlManagerDatabaseStorage(sqlConnStr);
+					break;
+
+				case ManagerStorageEnum.InMemory:
+
+					m_managerStorage = new InMemoryManagerStorage();
+					break;
+
+				default:
+					throw new ConfigurationException(String.Format("Unknown storage type: {0}", configuration.DbType));
+			}
+
 			return m_managerStorage;
 		}
 

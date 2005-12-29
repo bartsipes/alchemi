@@ -36,9 +36,6 @@ using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
-using MySql.Data.MySqlClient;
-using MySql.Data.Types;
-
 namespace Alchemi.Manager.Storage
 {
 	/// <summary>

@@ -28,6 +28,8 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
+using Alchemi.Manager.Storage;
+
 namespace Alchemi.Manager
 {
 	/// <summary>
@@ -57,6 +59,13 @@ namespace Alchemi.Manager
 		/// Database name
 		/// </summary>
         public string DbName = "Alchemi";
+
+		/// <summary>
+		/// The storage used by this Manager.
+		/// Defaults to Sql Server.
+		/// </summary>
+		public ManagerStorageEnum DbType = ManagerStorageEnum.SqlServer;
+
 		/// <summary>
 		/// Manager id (valid only if the Manager is also an Executor)
 		/// </summary>

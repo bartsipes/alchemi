@@ -27,7 +27,6 @@ using System;
 using System.Data;
 
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 
 namespace Alchemi.Manager.Storage
 {

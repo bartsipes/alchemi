@@ -905,7 +905,9 @@ namespace Alchemi.Manager.Storage
 
 		#endregion
 
-		#region "XML storage persistence implementation"
+		#region "XML storage persistence implementation - incomplete"
+		/// THIS FUNCTIONALITY IS NOT FULLY IMPLEMENTED AND IT MIGHT BE DISCARDED ALTOGETHER
+		/// 
 		/// Loading from an XML file is the perfect tool for complex storage setups which would be useful for more in-depth unit testing
 		/// Saving to an XML file could be used to dump the current storage state for troubleshooting, for example to receive faulty storages from the field.
 
@@ -925,7 +927,7 @@ namespace Alchemi.Manager.Storage
 
 			XmlNode usersNode = storageDocument.SelectSingleNode("/storage/users");
 			XmlNode groupsNode = storageDocument.SelectSingleNode("/storage/groups");
-			XmlNode groupPermissionsNode = storageDocument.SelectSingleNode("/storage/group_permissions");
+			//XmlNode groupPermissionsNode = storageDocument.SelectSingleNode("/storage/group_permissions");
 			XmlNode executorsNode = storageDocument.SelectSingleNode("/storage/executors");
 			XmlNode applicationsNode = storageDocument.SelectSingleNode("/storage/applications");
 			XmlNode threadsNode = storageDocument.SelectSingleNode("/storage/threads");
