@@ -50,6 +50,9 @@ namespace Alchemi.Tester.Manager.Storage
 		public void TestStartUp()
 		{
 			m_managerStorage = new InMemoryManagerStorage();
+
+			m_managerStorage.SetUpStorage();
+			m_managerStorage.InitializeStorageData();
 		}
 
 		public InMemoryManagerStorageTester()

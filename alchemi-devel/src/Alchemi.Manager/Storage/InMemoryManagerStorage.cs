@@ -42,7 +42,7 @@ namespace Alchemi.Manager.Storage
 	/// This type of storage is not persistent but usefull for testing or for running 
 	/// lightweight managers.
 	/// </summary>
-	public class InMemoryManagerStorage : IManagerStorage
+	public class InMemoryManagerStorage : ManagerStorageBase, IManagerStorage, IManagerStorageSetup
 	{
 		private ArrayList m_users;
 		private ArrayList m_groups;
@@ -53,9 +53,6 @@ namespace Alchemi.Manager.Storage
 
 		public InMemoryManagerStorage()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 
 		#region IManagerStorage Members
@@ -1074,6 +1071,27 @@ namespace Alchemi.Manager.Storage
 		{
 			
 		}
+		#endregion
+
+		#region IManagerStorageSetup Members
+
+		public void TearDownStorage()
+		{
+		}
+
+		public void CreateStorage()
+		{
+		}
+
+		public void InitializeStorageData()
+		{
+			CreateDefaultObjects(this);
+		}
+
+		public void SetUpStorage()
+		{
+		}
+
 		#endregion
 	}
 }

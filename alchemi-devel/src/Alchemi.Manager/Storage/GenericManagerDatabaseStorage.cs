@@ -44,7 +44,7 @@ namespace Alchemi.Manager.Storage
 	/// 
 	/// TODO: The Executors are updated very often so database updates will probably be very expensive. Change the update functions to only update data that actually changed since the last load.
 	/// </summary>
-	public abstract class GenericManagerDatabaseStorage : IManagerStorage, IManagerStorageSetup 
+	public abstract class GenericManagerDatabaseStorage : ManagerStorageBase, IManagerStorage, IManagerStorageSetup 
 	{
 		// Create a logger for use in this class
 		protected static readonly Logger logger = new Logger();
@@ -86,6 +86,8 @@ namespace Alchemi.Manager.Storage
 			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_data.sql");
 
 			RunSql(sqlScript);
+
+			CreateDefaultObjects(this);
 		}
 
 		public void TearDownStorage()

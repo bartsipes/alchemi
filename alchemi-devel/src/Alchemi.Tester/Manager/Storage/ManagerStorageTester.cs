@@ -43,6 +43,9 @@ namespace Alchemi.Tester.Manager.Storage
 	/// </summary>
 	public abstract class ManagerStorageTester
 	{
+		private const Int32 c_DefaultGroupCount = 3;
+		private const Int32 c_DefaultUserCount = 3;
+
 		public abstract IManagerStorage ManagerStorage
 		{
 			get;
@@ -187,10 +190,10 @@ namespace Alchemi.Tester.Manager.Storage
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(1, users.Length);
-			Assert.AreEqual("username1", users[0].Username);
-			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), users[0].PasswordMd5Hash);
-			Assert.AreEqual(1, users[0].GroupId);
+			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
+			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
+			Assert.AreEqual(1, users[c_DefaultUserCount].GroupId);
 		}
 
 		/// <summary>
@@ -203,13 +206,13 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			UserStorageView[] userUpdates = new UserStorageView[1];
 
-			userUpdates[0] = new UserStorageView("username1", "password2", 1);
+			userUpdates[0] = new UserStorageView("username1", "password2", 55);
 
 			ManagerStorage.UpdateUsers(userUpdates);
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(0, users.Length);
+			Assert.AreEqual(c_DefaultUserCount, users.Length);
 		}
 
 		/// <summary>
@@ -226,10 +229,10 @@ namespace Alchemi.Tester.Manager.Storage
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(1, users.Length);
-			Assert.AreEqual("username1", users[0].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[0].PasswordMd5Hash);
-			Assert.AreEqual(0, users[0].GroupId);
+			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
+			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
+			Assert.AreEqual(0, users[c_DefaultUserCount].GroupId);
 		}
 
 		#endregion
@@ -251,8 +254,8 @@ namespace Alchemi.Tester.Manager.Storage
 
 			UserStorageView[] usersAfter = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(1, usersBefore.Length);
-			Assert.AreEqual(0, usersAfter.Length);
+			Assert.AreEqual(c_DefaultUserCount + 1, usersBefore.Length);
+			Assert.AreEqual(c_DefaultUserCount, usersAfter.Length);
 		}
 
 		/// <summary>
@@ -267,7 +270,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(0, users.Length);
+			Assert.AreEqual(c_DefaultUserCount, users.Length);
 		}
 
 		/// <summary>
@@ -284,10 +287,10 @@ namespace Alchemi.Tester.Manager.Storage
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(1, users.Length);
-			Assert.AreEqual("username1", users[0].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[0].PasswordMd5Hash);
-			Assert.AreEqual(0, users[0].GroupId);
+			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
+			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
+			Assert.AreEqual(0, users[c_DefaultUserCount].GroupId);
 		}
 
 		#endregion
@@ -390,9 +393,9 @@ namespace Alchemi.Tester.Manager.Storage
 
 			users = ManagerStorage.GetUsers();
 
-			Assert.AreEqual(1, users.Length);
-			Assert.AreEqual("username1", users[0].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[0].PasswordMd5Hash);
+			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
+			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
 
 		}
 
@@ -412,7 +415,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			users = ManagerStorage.GetUsers();
 
-			Assert.AreEqual(3, users.Length);
+			Assert.AreEqual(c_DefaultUserCount + 3, users.Length);
 		}
 
 		/// <summary>
@@ -427,7 +430,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			users = ManagerStorage.GetUsers();
 
-			Assert.AreEqual(0, users.Length);
+			Assert.AreEqual(c_DefaultUserCount, users.Length);
 		}
 
 
@@ -442,7 +445,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddGroupsTest1()
 		{
-			AddGroup(0, "group0");
+			AddGroup(87, "group0");
 		}
 
 		/// <summary>
@@ -467,13 +470,13 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupsTest1()
 		{
-			AddGroup(0, "group0");
+			AddGroup(78, "group0");
 			
 			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
-			Assert.AreEqual(1, groups.Length);
-			Assert.AreEqual(0, groups[0].GroupId);
-			Assert.AreEqual("group0", groups[0].GroupName);
+			Assert.AreEqual(c_DefaultGroupCount + 1, groups.Length);
+			Assert.AreEqual(78, groups[c_DefaultGroupCount].GroupId);
+			Assert.AreEqual("group0", groups[c_DefaultGroupCount].GroupName);
 
 		}
 
@@ -485,13 +488,13 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupsTest2()
 		{
-			AddGroup(0, "group0");
-			AddGroup(1, "group1");
-			AddGroup(2, "group2");
+			AddGroup(77, "group0");
+			AddGroup(78, "group1");
+			AddGroup(79, "group2");
 			
 			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
-			Assert.AreEqual(3, groups.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 3, groups.Length);
 		}
 
 		/// <summary>
@@ -504,7 +507,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			GroupStorageView[] groups = ManagerStorage.GetGroups();
 
-			Assert.AreEqual(0, groups.Length);
+			Assert.AreEqual(c_DefaultGroupCount, groups.Length);
 		}
 
 
@@ -532,7 +535,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{			
 			AddGroup(12, "group0");
 
-			GroupStorageView group = ManagerStorage.GetGroup(1);
+			GroupStorageView group = ManagerStorage.GetGroup(13);
 
 			Assert.IsNull(group);
 		}
@@ -540,7 +543,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupNothingAdded()
 		{			
-			GroupStorageView group = ManagerStorage.GetGroup(1);
+			GroupStorageView group = ManagerStorage.GetGroup(13);
 
 			Assert.IsNull(group);
 		}
@@ -573,7 +576,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestSimpleScenario()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -592,7 +595,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestNoPermissions()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -608,7 +611,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestDuplicates()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -633,7 +636,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestSimpleScenario()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -652,7 +655,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestNoPermissions()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -668,7 +671,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestDuplicates()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -693,16 +696,17 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTest1()
 		{
-			AddGroup(1, "group1");
+			Int32 groupId = 54;
+			AddGroup(groupId, "group1");
 
 			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
 
-			ManagerStorage.DeleteGroup(new GroupStorageView(1));
+			ManagerStorage.DeleteGroup(new GroupStorageView(groupId));
 
 			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
 			
-			Assert.AreEqual(1, groupsBefore.Length);
-			Assert.AreEqual(0, groupsAfter.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 1, groupsBefore.Length);
+			Assert.AreEqual(c_DefaultGroupCount, groupsAfter.Length);
 		}
 
 		/// <summary>
@@ -713,11 +717,11 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTest2()
 		{
-			ManagerStorage.DeleteGroup(new GroupStorageView(1));
+			ManagerStorage.DeleteGroup(new GroupStorageView(55));
 
 			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
 			
-			Assert.AreEqual(0, groupsAfter.Length);
+			Assert.AreEqual(c_DefaultGroupCount, groupsAfter.Length);
 		}
 
 		/// <summary>
@@ -728,7 +732,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTest3()
 		{
-			AddGroup(1, "group1");
+			Int32 groupId = 54;
+			AddGroup(groupId, "group1");
 
 			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
 
@@ -736,8 +741,8 @@ namespace Alchemi.Tester.Manager.Storage
 
 			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
 			
-			Assert.AreEqual(1, groupsBefore.Length);
-			Assert.AreEqual(1, groupsAfter.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 1, groupsBefore.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 1, groupsAfter.Length);
 		}
 
 		/// <summary>
@@ -746,24 +751,26 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTestDeleteGroupWithUsers()
 		{
-			AddGroup(1, "group1");
-			AddGroup(2, "group2");
-			AddUser("username1", "password1", 1);
-			AddUser("username2", "password2", 1);
-			AddUser("username3", "password3", 2);
-			AddUser("username4", "password4", 2);
+			Int32 groupId1 = 54;
+			Int32 groupId2 = 55;
+			AddGroup(groupId1, "group1");
+			AddGroup(groupId2, "group2");
+			AddUser("username1", "password1", groupId1);
+			AddUser("username2", "password2", groupId1);
+			AddUser("username3", "password3", groupId2);
+			AddUser("username4", "password4", groupId2);
 
 			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
 
-			ManagerStorage.DeleteGroup(new GroupStorageView(2));
+			ManagerStorage.DeleteGroup(new GroupStorageView(groupId2));
 
 			GroupStorageView[] groupsAfter = ManagerStorage.GetGroups();
 
 			UserStorageView[] usersAfter = ManagerStorage.GetUsers();
 			
-			Assert.AreEqual(2, groupsBefore.Length);
-			Assert.AreEqual(1, groupsAfter.Length);
-			Assert.AreEqual(2, usersAfter.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 2, groupsBefore.Length);
+			Assert.AreEqual(c_DefaultGroupCount + 1, groupsAfter.Length);
+			Assert.AreEqual(c_DefaultUserCount + 2, usersAfter.Length);
 		}
 
 		#endregion
@@ -773,15 +780,17 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupUsersTestSimpleScenario()
 		{
-			AddGroup(1, "group1");
-			AddGroup(2, "group2");
-			AddUser("username1", "password1", 1);
-			AddUser("username2", "password2", 1);
-			AddUser("username3", "password3", 2);
-			AddUser("username4", "password4", 2);
-			AddUser("username5", "password4", 2);
+			Int32 groupId1 = 54;
+			Int32 groupId2 = 55;
+			AddGroup(groupId1, "group1");
+			AddGroup(groupId2, "group2");
+			AddUser("username1", "password1", groupId1);
+			AddUser("username2", "password2", groupId1);
+			AddUser("username3", "password3", groupId2);
+			AddUser("username4", "password4", groupId2);
+			AddUser("username5", "password4", groupId2);
 
-			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(groupId2);
 			
 			Assert.AreEqual(3, users.Length);
 		}
@@ -789,10 +798,13 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupUsersTestNoUsers()
 		{
-			AddGroup(1, "group1");
-			AddGroup(2, "group2");
+			Int32 groupId1 = 54;
+			Int32 groupId2 = 55;
 
-			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			AddGroup(groupId1, "group1");
+			AddGroup(groupId2, "group2");
+
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(groupId2);
 			
 			Assert.AreEqual(0, users.Length);
 		}
@@ -800,7 +812,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupUsersTestNoGroups()
 		{
-			UserStorageView[] users = ManagerStorage.GetGroupUsers(2);
+			UserStorageView[] users = ManagerStorage.GetGroupUsers(55);
 			
 			Assert.AreEqual(0, users.Length);
 		}
@@ -818,7 +830,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void CheckPermissionTestSimpleScenario()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 56;
 
 			AddGroup(groupId, "test");
 
@@ -856,7 +868,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void CheckPermissionTestHigherLevelPermission()
 		{
-			Int32 groupId = 1;
+			Int32 groupId = 56;
 
 			AddGroup(groupId, "test");
 
