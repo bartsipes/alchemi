@@ -671,9 +671,8 @@ namespace Alchemi.Executor
 				//get thread from manager
 				GridAppDomain gad = (GridAppDomain) _GridAppDomains[_CurTi.ApplicationId];
 
-				//we need to get the exception from the AppDomain as well, to see what went wrong with the GThread/GJob that
-				//is executed in this seperate GridAppDomain.
-				//gad.Domain.UnhandledException += new UnhandledExceptionEventHandler(GridAppDomain_UnhandledException);
+				//if we have an exception in the secondary appdomain, it will raise an exception in this method, since the cross-app-domain call 
+				//uses remoting internally, and it is just as if a remote method has caused an exception. we have a handler for that below anyway.
 
 				rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
 				logger.Debug("Got thread from manager. executing it: "+_CurTi.ThreadId);
@@ -706,9 +705,13 @@ namespace Alchemi.Executor
 				catch (Exception ex1)
 				{
 					if (_CurTi!=null)
-						logger.Warn("Error trying to set failed thread for App: "+_CurTi.ApplicationId+", thread="+_CurTi.ThreadId,ex1);	
+					{
+						logger.Warn("Error trying to set failed thread for App: "+_CurTi.ApplicationId+", thread="+_CurTi.ThreadId + ". Original Exception = \n" + e.ToString(),ex1);
+					}
 					else
-						logger.Warn("Error trying to set failed thread: ",ex1);	
+					{
+						logger.Warn("Error trying to set failed thread: Original exception = " + e.ToString(), ex1);	
+					}
 				}
 			}
 			finally

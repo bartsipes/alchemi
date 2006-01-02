@@ -1,0 +1,93 @@
+Author: Krishna Nadiminti (kna@csse.unimelb.edu.au)
+
+Description: This document is an informal roadmap for Alchemi. Things may change over time.
+Features may be added / dropped / modified, based on many things including user feedback.
+This includes mainly the major features / issues. Time/priorities/milestones are not yet assigned.
+
+Last updated: 2 Jan 2006
+------------------------------------
+- Configuration and set-up improvements 
+	- Fix configuration and set up problems, particularly service-mode setup.
+	- Options in DBInstaller to check for existence of database and remove it. Re-install is default.
+	  also "verify option in database, so that the consistency is checked.".
+
+- Scheduling and policy enforcement at Manager
+	- Advanced scheduling (economy based, and other algorithms)
+	- Refine API for plugging in custom schedulers.
+	- Scheduling to take into account multi-user multi-app scenarios
+
+- Fix stability related issues
+	- Better error handling
+	- Recovering gracefully from missing files, manifests etc.
+	- Recovering from corrupt databases, automatically. easy manual reset / clean up of corrupt database
+
+- Data handling capabilities
+	- Problem: EmbeddedFileDependencies have limits. Huge files can't be passed across the network
+	  using remote methods.
+	- Develop a framework for handling data efficiently.
+
+- Security 
+	- Investigate security risks in the present design. Possible security enhancements include: 
+	  transport level security, secure authentication, code-security (TCPChannels?, PKI GSI Auth? CAS?)
+	- Check implementation of anonymous connections. (in both dedicated/non-dedicated modes).
+	- Prevent spread of viruses using code-access-security, sandbox-execution of user-code
+		
+- Migration to .net 2.0 version
+	- do we still keep v.1.x compatibility?
+
+- Console improvements
+	- Accurate reporting of application status : (it is now based on thread's status. need to fix this).
+	- Details thread statuses. (different icons for threads with different statuses)
+	- Job submitter GUI
+
+- API and debugging enhancements
+	- Inter-thread communication / shared memory
+	- Include pdb along with module dependency so user knows line number where error ocurred
+	- Restart thread 
+	- make sure manager emulates all executor behaviour 
+	  i.e. not only IExecutor interface (e.g. AbortThread), BUT stuff that an executor does 
+	  (e.g. notifyisalive, relinquishthread)
+	- decide whether the manager should be allowed to be a Non-dedicated node 
+	  i.e. should be only restrict intermediate managers to connecting as dedicated excutors
+	  * depends on #9, IF heirarchical architecture is implemented
+	- GGF (global grid forum) standard WSRF XPManager Webservices
+	- GGF-standard JSDL job interfaces
+
+- Thread execution improvements
+	- Find a way to return the actual standard error,output from the process to the client
+	- Executor to accept more than one thread at the same time in case of SMP machines
+
+- Robust multiclustering and scalability
+	- P2P? Hierarchical managers? 
+
+- Advanced configuration and policies for the Executor
+	- Set on Executor, Manager: with Executor over-riding manager policies during scheduling 
+	- Ability to specify, enforce all of the following policies, and a extensible framework that allows policy configuration:
+		- local disk space available for dat/ eg 100Mb)
+		- ram available to execute jobs (eg 16Mb)
+		- cpu cycles available to execute jobs (eg 5%)
+		- rate limit jobs (X per hour/day/week)
+		- per user policies?
+		- cost per usage : per Ghzhr, per MB, etc.
+
+- Feedback and usage tracking
+	- Options for users to email unexpected errors to the developers
+	- Reporting of location, usage information (like Condor) to a central server?
+
+- Executor GUI improvements
+	- show info (no. of ghz hr?, no. threads etc.) on Executor. 
+	- detailed reports like Console, but only for current Executor.
+	  (eg. Applications run. date, time, user. Threads which are run by the executor. 
+	  total time taken for app, threads etc...)
+	  
+- Performance monitoring and improvement
+	- Detailed profiling and benchmarks, alchemi start up overheads
+	  (eg. Linpack benchmarks for Alchemi?)
+	- Compare with Boinc, Condor-for-Windows, G2, Platform, DataSynapse, GridMP, and other such stuff and assess strengths and weaknesses.
+
+- Additional interfaces and tools
+	- VS.Net 2005 plugin
+	- Web-based Console interface
+
+- Platform independence
+	- Linux versions (manager / executor as daemons?) mono? java? both?
