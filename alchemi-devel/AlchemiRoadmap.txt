@@ -12,7 +12,7 @@ Last updated: 2 Jan 2006
 - Configuration and set-up improvements 
 	- Fix configuration and set up problems, particularly service-mode setup.
 (TB)	- Options in DBInstaller to check for existence of database and remove it. Re-install is default.
-	  also "verify option in database, so that the consistency is checked.".
+	  also "verify option in database, so that the consistency is checked.". Testing database setup.
 
 - Scheduling and policy enforcement at Manager
 	- Advanced scheduling (economy based, and other algorithms)
