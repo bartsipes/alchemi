@@ -4,11 +4,14 @@ Description: This document is an informal roadmap for Alchemi. Things may change
 Features may be added / dropped / modified, based on many things including user feedback.
 This includes mainly the major features / issues. Time/priorities/milestones are not yet assigned.
 
+Put your initials next to the task you would like to work on.
+(TB) = Tibor Biro (tb@tbiro.com)
+
 Last updated: 2 Jan 2006
 ------------------------------------
 - Configuration and set-up improvements 
 	- Fix configuration and set up problems, particularly service-mode setup.
-	- Options in DBInstaller to check for existence of database and remove it. Re-install is default.
+(TB)	- Options in DBInstaller to check for existence of database and remove it. Re-install is default.
 	  also "verify option in database, so that the consistency is checked.".
 
 - Scheduling and policy enforcement at Manager
