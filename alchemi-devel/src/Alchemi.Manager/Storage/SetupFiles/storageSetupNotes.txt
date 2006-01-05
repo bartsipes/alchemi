@@ -4,6 +4,3 @@ These files will be embeded in the DLL as resources and used for Unit testing an
 
 I think that using the exact same files during setup as the ones used in the unit tests is a great way to
 make sure that these scripts are complete and functional at all times.
-
-
-

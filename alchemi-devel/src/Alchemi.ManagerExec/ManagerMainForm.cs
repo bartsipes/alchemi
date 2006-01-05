@@ -56,19 +56,149 @@ namespace Alchemi.ManagerExec
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.tabPage1.SuspendLayout();
+			this.tabControl.SuspendLayout();
+			this.gpBoxNodeConfig.SuspendLayout();
+			this.gpBoxLog.SuspendLayout();
+			this.gpBoxDB.SuspendLayout();
+			this.gpBoxActions.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// btStart
+			// 
+			this.btStart.Name = "btStart";
+			// 
+			// txLog
+			// 
+			this.txLog.Name = "txLog";
+			// 
+			// txOwnPort
+			// 
+			this.txOwnPort.Name = "txOwnPort";
+			// 
+			// txManagerHost
+			// 
+			this.txManagerHost.Name = "txManagerHost";
+			// 
+			// txManagerPort
+			// 
+			this.txManagerPort.Name = "txManagerPort";
+			// 
+			// txId
+			// 
+			this.txId.Name = "txId";
 			// 
 			// cbIntermediate
 			// 
+			this.cbIntermediate.Name = "cbIntermediate";
 			this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
+			// 
+			// btStop
+			// 
+			this.btStop.Name = "btStop";
+			// 
+			// btReset
+			// 
+			this.btReset.Name = "btReset";
+			// 
+			// cbDedicated
+			// 
+			this.cbDedicated.Name = "cbDedicated";
+			// 
+			// txDbPassword
+			// 
+			this.txDbPassword.Name = "txDbPassword";
+			// 
+			// txDbUsername
+			// 
+			this.txDbUsername.Name = "txDbUsername";
+			// 
+			// txDbServer
+			// 
+			this.txDbServer.Name = "txDbServer";
+			// 
+			// txDbName
+			// 
+			this.txDbName.Name = "txDbName";
+			// 
+			// statusBar
+			// 
+			this.statusBar.Name = "statusBar";
+			// 
+			// tabPage1
+			// 
+			this.tabPage1.Name = "tabPage1";
+			// 
+			// pbar
+			// 
+			this.pbar.Name = "pbar";
+			// 
+			// tabControl
+			// 
+			this.tabControl.Name = "tabControl";
+			// 
+			// lbMgrHost
+			// 
+			this.lbMgrHost.Name = "lbMgrHost";
+			// 
+			// lbOwnPort
+			// 
+			this.lbOwnPort.Name = "lbOwnPort";
+			// 
+			// gpBoxNodeConfig
+			// 
+			this.gpBoxNodeConfig.Name = "gpBoxNodeConfig";
+			// 
+			// lbId
+			// 
+			this.lbId.Name = "lbId";
+			// 
+			// lbMgrPort
+			// 
+			this.lbMgrPort.Name = "lbMgrPort";
+			// 
+			// gpBoxLog
+			// 
+			this.gpBoxLog.Name = "gpBoxLog";
+			// 
+			// lbDBPassword
+			// 
+			this.lbDBPassword.Name = "lbDBPassword";
+			// 
+			// lbDBUsername
+			// 
+			this.lbDBUsername.Name = "lbDBUsername";
+			// 
+			// lbDBServer
+			// 
+			this.lbDBServer.Name = "lbDBServer";
+			// 
+			// lbDBName
+			// 
+			this.lbDBName.Name = "lbDBName";
+			// 
+			// gpBoxDB
+			// 
+			this.gpBoxDB.Name = "gpBoxDB";
+			// 
+			// gpBoxActions
+			// 
+			this.gpBoxActions.Name = "gpBoxActions";
 			// 
 			// ManagerMainForm
 			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			this.ClientSize = new System.Drawing.Size(458, 579);
 			this.Name = "ManagerMainForm";
-			this.Text = "Alchemi Manager";
 			this.Load += new System.EventHandler(this.ManagerMainForm_Load);
-
+			this.tabPage1.ResumeLayout(false);
+			this.tabControl.ResumeLayout(false);
+			this.gpBoxNodeConfig.ResumeLayout(false);
+			this.gpBoxLog.ResumeLayout(false);
+			this.gpBoxDB.ResumeLayout(false);
+			this.gpBoxActions.ResumeLayout(false);
 			this.ResumeLayout(false);
+
 		}
 		#endregion
 
@@ -200,12 +330,15 @@ namespace Alchemi.ManagerExec
 			pbar.Value = 0;
 			pbar.Show();
 
-			GetConfigFromUI();
+			Config = GetConfigFromUI();
 
 			if (_container == null)
 				_container = new ManagerContainer();
+
 			_container.Config = Config;
 			_container.RemotingConfigFile = "Alchemi.ManagerExec.exe.config";
+
+			Log("app name == " + System.IO.Path.GetFileName(Application.ExecutablePath));
 
 			try
 			{
@@ -235,5 +368,6 @@ namespace Alchemi.ManagerExec
 			RefreshUIControls();
 		}
 		#endregion
+
 	}
 }

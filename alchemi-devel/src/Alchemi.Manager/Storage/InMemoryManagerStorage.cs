@@ -57,6 +57,11 @@ namespace Alchemi.Manager.Storage
 
 		#region IManagerStorage Members
 
+		public bool VerifyConnection()
+		{
+			return true; //for a In-memory storage, the connection is always alive and valid.
+		}
+
 		public SystemSummary GetSystemSummary()
 		{
 			//throw new Exception("Not implemented");

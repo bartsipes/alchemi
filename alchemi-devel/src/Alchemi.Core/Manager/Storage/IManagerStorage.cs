@@ -42,6 +42,11 @@ namespace Alchemi.Core.Manager.Storage
 	/// </summary>
 	public interface IManagerStorage
 	{
+		/// <summary>
+		/// Verifies if the connection to the back-end storage is alive and valid
+		/// </summary>
+		/// <returns></returns>
+		bool VerifyConnection();
 
 		/// <summary>
 		/// Check if a permission is set.

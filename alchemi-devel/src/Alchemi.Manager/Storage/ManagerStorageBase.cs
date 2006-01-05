@@ -68,13 +68,17 @@ namespace Alchemi.Manager.Storage
 			managerStorage.AddGroups((GroupStorageView[])defaultGroups.ToArray(typeof(GroupStorageView)));
 
 			// set default permissions
+
+			//permissions for admins group
 			managerStorage.AddGroupPermission(c_AdminsGroupId, Permission.ExecuteThread);
 			managerStorage.AddGroupPermission(c_AdminsGroupId, Permission.ManageOwnApp);
 			managerStorage.AddGroupPermission(c_AdminsGroupId, Permission.ManageAllApps);
 			managerStorage.AddGroupPermission(c_AdminsGroupId, Permission.ManageUsers);
 
+			//permissions for executors group
 			managerStorage.AddGroupPermission(c_ExecutorsGroupId, Permission.ExecuteThread);
 
+			//permissions for users group
 			managerStorage.AddGroupPermission(c_UsersGroupId, Permission.ManageOwnApp);
 
 			// create default users

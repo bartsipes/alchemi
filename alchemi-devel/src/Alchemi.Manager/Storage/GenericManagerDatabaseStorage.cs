@@ -100,6 +100,23 @@ namespace Alchemi.Manager.Storage
 		#endregion
 
 		#region IManagerStorage Members
+
+		public bool VerifyConnection()
+		{
+			bool isValid = false;
+			try
+			{
+				RunSql("SELECT 1;");
+				isValid = true;
+			}
+			catch (Exception ex)
+			{
+				logger.Warn("VerifyConnection error: ", ex);
+				isValid = false; //just to confirm
+			}
+			return isValid;
+		}
+
 		/// <summary>
 		/// GetSystemSummary implementation for RDBMS.
 		/// </summary>

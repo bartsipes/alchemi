@@ -125,6 +125,7 @@ namespace Alchemi.Manager
 				if (Config==null)
 				{
 					ReadConfig(false);
+					logger.Debug("Config is null. Getting config from file...");
 				}
 
 				OwnEndPoint ownEP = new OwnEndPoint(
@@ -247,13 +248,20 @@ namespace Alchemi.Manager
                 scheduler.Applications = _Applications;
 
 				logger.Debug("Configuring internal shared class...");
-//                InternalShared common = InternalShared.GetInstance(
-//                    new SqlServer(sqlConnStr),
-//                    datDir,
-//                    scheduler
-//                    );
 
 				ManagerStorageFactory.CreateManagerStorage(Config);
+				
+				try
+				{
+					if (!ManagerStorageFactory.ManagerStorage().VerifyConnection())
+					{
+						throw new Exception("Error connecting to manager storage. Please check manager log file for details.");
+					}
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("Error connecting to manager storage.", ex);
+				}
 
 				InternalShared common = InternalShared.GetInstance(datDir,scheduler);
 				logger.Debug("Initialising scheduler - done");
