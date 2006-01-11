@@ -2,9 +2,12 @@ set nocount on;
 
 /*Default users and groups are added from code, examine ManagerStorageBase.cs for details*/
 
+/*
+TB: Do not change the database from these scripts as it messes up the test scripts which go to a different database
 use Alchemi;
-set nocount on;
 
+set nocount on;
+*/
 -- grp
 --insert grp values(1, 'Administrators', 'Administrators Group', 1);
 --insert grp values(2, 'Executors', 'Executors Group', 1);
