@@ -64,9 +64,12 @@ namespace Alchemi.Manager.Storage
 		}
 
 
-		public void CreateStorage()
+		public void CreateStorage(String databaseName)
 		{
 			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_database.sql");
+
+			/// The database name is unknown at compilation time so we have to replace it now
+			sqlScript = sqlScript.Replace("DATABASE_NAME_TOKEN", databaseName);
 
 			RunSql(sqlScript);
 		}

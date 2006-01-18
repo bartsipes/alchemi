@@ -36,6 +36,7 @@ namespace Alchemi.Manager.Storage
 	public class ManagerStorageFactory
 	{
 		private static IManagerStorage m_managerStorage = null;
+		private static object m_inMemoryManagerStorageLock = new object();
 
 		public ManagerStorageFactory()
 		{
@@ -62,10 +63,23 @@ namespace Alchemi.Manager.Storage
 		}
 
 		/// <summary>
-		/// Create the right manager storage object.
+		/// Create the right manager storage object based on the storage type in the configuration file.
+		/// This will set the default database to the one specified in the configuration file
 		/// </summary>
+		/// <param name="config"></param>
 		/// <returns></returns>
 		public static IManagerStorage CreateManagerStorage(Configuration config)
+		{
+			return CreateManagerStorage(config, true);
+		}
+
+		/// <summary>
+		/// Create the right manager storage object based on the storage type in the configuration file.
+		/// </summary>
+		/// <param name="config"></param>
+		/// <param name="overwriteDefaultDatabase">Specify if the default catalog is set to the database name in the config file.</param>
+		/// <returns></returns>
+		public static IManagerStorage CreateManagerStorage(Configuration config, bool overwriteDefaultDatabase)
 		{
 			Configuration configuration = config;
 			
@@ -80,35 +94,75 @@ namespace Alchemi.Manager.Storage
 			{
 					case ManagerStorageEnum.SqlServer:
 
-					// build sql server configuration string
-					sqlConnStr = string.Format(
-						"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
-						configuration.DbServer,
-						configuration.DbUsername,
-						configuration.DbPassword,
-						configuration.DbName
-						);
+					if (overwriteDefaultDatabase)
+					{ 
+						// build sql server configuration string
+						sqlConnStr = string.Format(
+							"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							configuration.DbServer,
+							configuration.DbUsername,
+							configuration.DbPassword,
+							configuration.DbName
+							);
+					}
+					else
+					{
+						sqlConnStr = string.Format(
+							"user id={1};password={2};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							configuration.DbServer,
+							configuration.DbUsername,
+							configuration.DbPassword
+							);
+					}
 
 					m_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
 					break;
 
 				case ManagerStorageEnum.MySql:
 
-					// build sql server configuration string
-					sqlConnStr = string.Format(
-						"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
-						configuration.DbServer,
-						configuration.DbUsername,
-						configuration.DbPassword,
-						configuration.DbName
-						);
+					if (overwriteDefaultDatabase)
+					{ 
+						// build sql server configuration string
+						sqlConnStr = string.Format(
+							"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							configuration.DbServer,
+							configuration.DbUsername,
+							configuration.DbPassword,
+							configuration.DbName
+							);
+					}
+					else
+					{
+						sqlConnStr = string.Format(
+							"user id={1};password={2};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							configuration.DbServer,
+							configuration.DbUsername,
+							configuration.DbPassword
+							);						
+					}
 
 					m_managerStorage = new MySqlManagerDatabaseStorage(sqlConnStr);
 					break;
 
 				case ManagerStorageEnum.InMemory:
+					/// in memory storage is volatile so we always return the same object
+					if (m_managerStorage == null)
+					{
+						lock (m_inMemoryManagerStorageLock)
+						{
+							// make sure that when we got the lock we are still uninitialized
+							if (m_managerStorage == null)
+							{
+								InMemoryManagerStorage inMemoryStorage = new InMemoryManagerStorage();
 
-					m_managerStorage = new InMemoryManagerStorage();
+								// volatile storage, we must initialize the data here
+								inMemoryStorage.InitializeStorageData();
+
+								m_managerStorage = inMemoryStorage;
+							}
+						}
+					}
+
 					break;
 
 				default:

@@ -545,6 +545,9 @@ using Alchemi.Manager;
 		{
 			Alchemi.Manager.Configuration conf = new Configuration();
 
+			// HACK: preserve the storage type, this is not displayed on the UI right now.
+			conf.DbType = Config.DbType;
+
 			conf.DbServer = txDbServer.Text;
 			conf.DbUsername = txDbUsername.Text;
 			conf.DbPassword = txDbPassword.Text;

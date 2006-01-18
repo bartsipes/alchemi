@@ -108,8 +108,20 @@ namespace Alchemi.Manager
 		/// <returns>Configuration object</returns>
         public static Configuration GetConfiguration()
         {
-			return DeSlz(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName));
+			return GetConfiguration(AppDomain.CurrentDomain.BaseDirectory);
         }
+
+		/// <summary>
+		/// Created:
+		/// Jan 18, 2006 - tb@tbiro.com
+		///		Needed by tools that edit the manager configuration file.
+		/// </summary>
+		/// <param name="location"></param>
+		/// <returns></returns>
+		public static Configuration GetConfiguration(String location)
+		{
+			return DeSlz(Path.Combine(location, ConfigFileName));
+		}
 
 		/// <summary>
 		/// Default constructor. ConfigFileName is set to "Alchemi.Manager.config.xml"
@@ -120,7 +132,7 @@ namespace Alchemi.Manager
 		}
 
 		/// <summary>
-		/// This Constructor for the Configuration class sets the ConfigFileName to the given location and "Alchemi.Manager.Congif.xml"
+		/// This Constructor for the Configuration class sets the ConfigFileName to the given location and "Alchemi.Manager.Config.xml"
 		/// </summary>
 		/// <param name="location">Location of the config file</param>
         public Configuration(string location)
@@ -145,6 +157,10 @@ namespace Alchemi.Manager
 
         /// <summary>
         /// Deserialises and reads the configuration from the given xml file
+        /// 
+        /// Updates:
+        /// Jan 18, 2006 - tb@tbiro.com
+        ///		Saved the file used to load into ConfigFile so serializing puts the file back to the original location.
         /// </summary>
         /// <param name="file">Name of the config file</param>
         /// <returns>Configuration object</returns>
@@ -154,6 +170,9 @@ namespace Alchemi.Manager
             FileStream fs = new FileStream(file, FileMode.Open);
             Configuration temp = (Configuration) xs.Deserialize(fs);
             fs.Close();
+
+			temp.ConfigFile = file;
+
             return temp;
         }
 

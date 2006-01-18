@@ -1,4 +1,4 @@
-IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'Alchemi')
-	DROP DATABASE [Alchemi];
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'DATABASE_NAME_TOKEN')
+	DROP DATABASE [DATABASE_NAME_TOKEN];
 
-CREATE DATABASE [Alchemi];
+CREATE DATABASE [DATABASE_NAME_TOKEN];

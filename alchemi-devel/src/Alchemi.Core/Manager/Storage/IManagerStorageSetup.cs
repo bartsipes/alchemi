@@ -40,7 +40,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// Create the physical storage.
 		/// For databases this means creating the actual database files.
 		/// </summary>
-		void CreateStorage();
+		void CreateStorage(String databaseName);
 
 		/// <summary>
 		/// Create the basic storage structures such as tables

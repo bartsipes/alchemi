@@ -1084,7 +1084,7 @@ namespace Alchemi.Manager.Storage
 		{
 		}
 
-		public void CreateStorage()
+		public void CreateStorage(String databaseName)
 		{
 		}
 
