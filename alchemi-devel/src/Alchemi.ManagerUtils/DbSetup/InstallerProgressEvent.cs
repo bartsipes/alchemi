@@ -3,9 +3,9 @@
 /*
 * Alchemi [.NET Grid Computing Framework]
 * http://www.alchemi.net
-* Title         :  Starter.cs
+* Title         :  InstallerProgressEvent.cs
 * Project       :  Alchemi.ManagerUtils.DbSetup
-* Created on    :  18 January 2005
+* Created on    :  19 January 2005
 * Copyright     :  Copyright © 2005 The University of Melbourne
 *                    This technology has been developed with the support of
 *                    the Australian Research Council and the University of Melbourne
@@ -24,32 +24,24 @@ details.
 #endregion
 
 using System;
-using System.Windows.Forms;
 
 namespace Alchemi.ManagerUtils.DbSetup
 {
 	/// <summary>
-	/// Starting up the application and parsing out the command line parameters.
+	/// Date used to send the installer progress information from the worker thread to the UI thread.
 	/// </summary>
-	public class Starter
+	public class InstallerProgressEvent : System.EventArgs
 	{
 		/// <summary>
-		/// The main entry point for the application.
+		/// The message to add to the bottom of the log.
 		/// </summary>
-		[STAThread]
-		static void Main(string[] args) 
+		public String Message;
+		public Int32 PercentDone;
+
+		public InstallerProgressEvent(String message, Int32 percentDone)
 		{
-			string installLocation = null;
-
-			if (args.Length >= 1)
-			{
-				installLocation = args[0];  
-			}
-
-			Application.EnableVisualStyles();
-
-			Application.Run(new Installer(installLocation));
+			Message = message;
+			PercentDone = percentDone;
 		}
-
 	}
 }

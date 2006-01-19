@@ -119,6 +119,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "InstallerProgressEvent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "InstallProgress.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
@@ -127,6 +132,11 @@
                     RelPath = "InstallProgress.resx"
                     DependentUpon = "InstallProgress.cs"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "ManagerStorageTypeDropdownItem.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Starter.cs"

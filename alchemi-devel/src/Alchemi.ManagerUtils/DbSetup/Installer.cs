@@ -28,7 +28,6 @@ using System.Collections;
 using System.IO;
 using System.Windows.Forms;
 
-using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager;
 using Alchemi.Manager.Storage;
 
@@ -39,28 +38,6 @@ namespace Alchemi.ManagerUtils.DbSetup
 	/// </summary>
 	public class Installer : System.Windows.Forms.Form
 	{
-		#region ManagerStorageTypeDropdownItem
-
-		private class ManagerStorageTypeDropdownItem
-		{
-			public String Description;
-
-			public ManagerStorageEnum StorageType;
-
-			public ManagerStorageTypeDropdownItem(String description, ManagerStorageEnum storageType)
-			{
-				Description = description;
-				StorageType = storageType;
-			}
-
-			public override string ToString()
-			{
-				return Description;
-			}
-		}
-
-		#endregion
-
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -104,16 +81,21 @@ namespace Alchemi.ManagerUtils.DbSetup
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public Installer()
+		public Installer(String managerLocation)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
+			if (managerLocation != null && managerLocation.Length != 0)
+			{
+				initialManagerLocation = managerLocation;
+			}
+			else
+			{
+				initialManagerLocation = AppDomain.CurrentDomain.BaseDirectory;
+			}
 		}
 
 		/// <summary>
@@ -456,9 +438,6 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 		private void Installer_Load(object sender, System.EventArgs e)
 		{
-			// this might be passed in as a parameter
-			initialManagerLocation = AppDomain.CurrentDomain.BaseDirectory;
-
 			firstInstall = false;
 			try
 			{

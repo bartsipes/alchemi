@@ -3,9 +3,9 @@
 /*
 * Alchemi [.NET Grid Computing Framework]
 * http://www.alchemi.net
-* Title         :  Starter.cs
+* Title         :  ManagerStorageTypeDropdownItem.cs
 * Project       :  Alchemi.ManagerUtils.DbSetup
-* Created on    :  18 January 2005
+* Created on    :  19 January 2005
 * Copyright     :  Copyright © 2005 The University of Melbourne
 *                    This technology has been developed with the support of
 *                    the Australian Research Council and the University of Melbourne
@@ -24,32 +24,29 @@ details.
 #endregion
 
 using System;
-using System.Windows.Forms;
+
+using Alchemi.Manager.Storage;
 
 namespace Alchemi.ManagerUtils.DbSetup
 {
 	/// <summary>
-	/// Starting up the application and parsing out the command line parameters.
+	/// Data stored in the manager storage type dropdown.
 	/// </summary>
-	public class Starter
+	public class ManagerStorageTypeDropdownItem
 	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main(string[] args) 
+		public String Description;
+
+		public ManagerStorageEnum StorageType;
+
+		public ManagerStorageTypeDropdownItem(String description, ManagerStorageEnum storageType)
 		{
-			string installLocation = null;
-
-			if (args.Length >= 1)
-			{
-				installLocation = args[0];  
-			}
-
-			Application.EnableVisualStyles();
-
-			Application.Run(new Installer(installLocation));
+			Description = description;
+			StorageType = storageType;
 		}
 
+		public override string ToString()
+		{
+			return Description;
+		}
 	}
 }
