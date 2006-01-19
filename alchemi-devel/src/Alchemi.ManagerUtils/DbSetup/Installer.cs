@@ -61,7 +61,6 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 		#endregion
 
-		private System.Windows.Forms.Button button3;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
@@ -90,7 +89,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 		private System.Windows.Forms.ComboBox managerStorageTypes;
 
 		private TabPage[] allTabs;
-		private Configuration managerConfiguration;
+		public Configuration managerConfiguration;
 		private System.Windows.Forms.TextBox databaseServer;
 		private System.Windows.Forms.TextBox databaseName;
 		private System.Windows.Forms.TextBox databasePassword;
@@ -166,7 +165,6 @@ namespace Alchemi.ManagerUtils.DbSetup
 			this.databaseUsername = new System.Windows.Forms.TextBox();
 			this.saveButton = new System.Windows.Forms.Button();
 			this.installButton = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
@@ -399,7 +397,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 			// saveButton
 			// 
 			this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.saveButton.Location = new System.Drawing.Point(104, 344);
+			this.saveButton.Location = new System.Drawing.Point(32, 344);
 			this.saveButton.Name = "saveButton";
 			this.saveButton.TabIndex = 1;
 			this.saveButton.Text = "Save";
@@ -407,20 +405,12 @@ namespace Alchemi.ManagerUtils.DbSetup
 			// 
 			// installButton
 			// 
-			this.installButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.installButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.installButton.Location = new System.Drawing.Point(376, 344);
 			this.installButton.Name = "installButton";
 			this.installButton.TabIndex = 2;
 			this.installButton.Text = "Install";
 			this.installButton.Click += new System.EventHandler(this.installButton_Click);
-			// 
-			// button3
-			// 
-			this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.button3.Location = new System.Drawing.Point(16, 344);
-			this.button3.Name = "button3";
-			this.button3.TabIndex = 3;
-			this.button3.Text = "button3";
 			// 
 			// pictureBox1
 			// 
@@ -447,11 +437,11 @@ namespace Alchemi.ManagerUtils.DbSetup
 			this.ClientSize = new System.Drawing.Size(496, 397);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.pictureBox1);
-			this.Controls.Add(this.button3);
 			this.Controls.Add(this.installButton);
 			this.Controls.Add(this.saveButton);
 			this.Controls.Add(this.tabs);
 			this.Name = "Installer";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Installer";
 			this.Load += new System.EventHandler(this.Installer_Load);
 			this.tabs.ResumeLayout(false);
@@ -726,48 +716,11 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 		private void installButton_Click(object sender, System.EventArgs e)
 		{
-			MessageBox.Show("All data collected, now install");
-
 			UpdateConfigurationFromForm(managerConfiguration);
 
+			InstallProgress progress = new InstallProgress(this);
 
-			try
-			{
-				/// Create a storage object with the initial catalogue left to the default one.
-				/// This is usually master for SQL Server or nothing for mySQL
-				IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(managerConfiguration, false);
-
-				// this storage object is also a storage setup object so it is safe to cast
-				IManagerStorageSetup setup = (IManagerStorageSetup)storage;
-
-				setup.CreateStorage(managerConfiguration.DbName);
-			}
-			catch (Exception ex1)
-			{
-				MessageBox.Show(ex1.Message);
-				return;
-			}
-
-			try
-			{
-				IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(managerConfiguration);
-
-				// this storage object is also a storage setup object so it is safe to cast
-				IManagerStorageSetup setup = (IManagerStorageSetup)storage;
-
-				// create storage structures
-				setup.SetUpStorage();
-
-				// insert the default values
-				setup.InitializeStorageData();
-			}
-			catch (Exception ex2)
-			{
-				MessageBox.Show(ex2.Message);
-				return;
-			}
-
-			MessageBox.Show("Database installed");
+			progress.ShowDialog();
 		}
 
 		private void browseForManagerLocation_Click(object sender, System.EventArgs e)

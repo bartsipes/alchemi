@@ -104,10 +104,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "App.ico"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -120,6 +116,16 @@
                 <File
                     RelPath = "Installer.resx"
                     DependentUpon = "Installer.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "InstallProgress.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "InstallProgress.resx"
+                    DependentUpon = "InstallProgress.cs"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
