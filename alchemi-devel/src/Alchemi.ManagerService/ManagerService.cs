@@ -7,7 +7,7 @@
 * Title			:	ManagerService.cs
 * Project		:	Alchemi Manager Service
 * Created on	:	August 2005
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -243,7 +243,7 @@ namespace Alchemi.ManagerService
 				if (_container!=null)
 					_container.Stop();	
 
-				logger.Info("Stopped Alchemi Manager Service");
+				logger.Info("Stopped Alchemi Manager Service.");
 			}
 			catch (Exception ex)
 			{

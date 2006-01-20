@@ -7,7 +7,7 @@
 * Title			:	MThread.cs
 * Project		:	Alchemi Core
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -48,6 +48,8 @@ namespace Alchemi.Manager
 	/// </summary>
     public class MThread
     {
+		private static readonly Logger logger = new Logger();
+
         private string _AppId;
         private int _Id;
         
@@ -115,10 +117,6 @@ namespace Alchemi.Manager
             {
 				try
 				{
-					string DataDir = Directory.GetParent(DataFile).Name;
-					if (!Directory.Exists(DataDir))
-						Directory.CreateDirectory(DataDir);
-
 					Utils.WriteByteArrayToFile(DataFile, value);
 				}
 				catch (Exception ex)
@@ -154,10 +152,6 @@ namespace Alchemi.Manager
             {
 				try
 				{
-					string DataDir = Directory.GetParent(ExceptionFile).Name;
-					if (!Directory.Exists(DataDir))
-						Directory.CreateDirectory(DataDir);
-
 					Utils.SerializeToFile(value, ExceptionFile);
 				}
 				catch (Exception ex)

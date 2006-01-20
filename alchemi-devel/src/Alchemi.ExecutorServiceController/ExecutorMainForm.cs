@@ -7,7 +7,7 @@
 * Title			:	ExecutorMainForm.cs
 * Project		:	Alchemi Core
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -70,19 +70,34 @@ namespace Alchemi.ExecutorService
         
 		private void ExecutorMainForm_Load(object sender, EventArgs e)
         {
-			Logger.LogHandler += new LogEventHandler(this.LogHandler);
+			//this should normally not create any problems, but then during design time it doesnt work, so we need to catch any exceptions
+			//that may occur during design time.
+			try
+			{
+				// avoid multiple instances
+				bool isOnlyInstance = false;
+				Mutex mtx = new Mutex(true, "AlchemiExecutorServiceController_Mutex", out isOnlyInstance);
+				if(!isOnlyInstance)
+				{
+					MessageBox.Show(this,"An instance of this application is already running. The program will now exit.", "Alchemi Executor Service Controller", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					Application.Exit();
+				}
 
-			//this is a service. just read the config.
-			ExecutorContainer ec = new ExecutorContainer();
-			ec.ReadConfig(false);
-			Config = ec.Config;
-			ec = null;
+				Logger.LogHandler += new LogEventHandler(this.LogHandler);
 
-			this.btConnect.Text = "Start";
-			this.btDisconnect.Text = "Stop";
+				//this is a service. just read the config.
+				ExecutorContainer ec = new ExecutorContainer();
+				ec.ReadConfig(false);
+				Config = ec.Config;
+				ec = null;
 
-			RefreshUIControls();
-			btConnect.Focus();
+				this.btConnect.Text = "Start";
+				this.btDisconnect.Text = "Stop";
+
+				RefreshUIControls();
+				btConnect.Focus();
+			}
+			catch {}
 
         }
 

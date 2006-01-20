@@ -7,7 +7,7 @@
 * Title			:	ExecutorServiceController.cs
 * Project		:	Alchemi Executor Service Controller
 * Created on	:	August 2005
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project

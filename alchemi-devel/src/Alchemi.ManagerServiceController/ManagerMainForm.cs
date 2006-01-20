@@ -7,7 +7,7 @@
 * Title			:	ManagerMainForm.cs
 * Project		:	Alchemi Manager Application
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -228,10 +228,10 @@ namespace Alchemi.ManagerService
 				ServiceController sc = new ServiceController(serviceName);
 				if (sc.Status != ServiceControllerStatus.Running && sc.Status != ServiceControllerStatus.StartPending)
 				{
-					//get latest config and serialize the  object, so that the service uses the latest config.
+					//get latest config from UI and serialize the  object, so that the service uses the latest config.
+					Config = GetConfigFromUI();
 					if (Config!=null)
-					{
-						GetConfigFromUI();
+					{					
 						Config.Slz();
 					}
 					sc.Start();
