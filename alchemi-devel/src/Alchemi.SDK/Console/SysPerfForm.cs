@@ -6,8 +6,8 @@
 *
 * Title			:	SysPerfForm.cs
 * Project		:	Alchemi Console
-* Created on	:	Sep 2005
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Created on	:	Sep 2006
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project

@@ -256,6 +256,7 @@ namespace Alchemi.Examples.Renderer
 			// 
 			this.stop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
+			this.stop.Enabled = false;
 			this.stop.Location = new System.Drawing.Point(488, 576);
 			this.stop.Name = "stop";
 			this.stop.Size = new System.Drawing.Size(120, 32);
@@ -509,6 +510,9 @@ namespace Alchemi.Examples.Renderer
 
 		private void render_Click(object sender, EventArgs e)
 		{
+			stop.Enabled = true;
+			render.Enabled = !stop.Enabled;
+			
 			drawnFirstSegment = false;
 			showSplash();
 
@@ -538,7 +542,7 @@ namespace Alchemi.Examples.Renderer
 			//runId = ""+DateTime.Now.Ticks;
 
 			// reset the display
-			//clearImage();
+			clearImage();
 			
 			if (!initted)
 			{
@@ -623,11 +627,15 @@ namespace Alchemi.Examples.Renderer
 				{
 					logger.Debug("Loading from bitmap");
 					displayImage(bit, rth.Col, rth.Row);
-	//				if (logger.IsDebugEnabled)
-	//				{
-	//					string filename = Path.Combine(runId, rth.TempFile); 
-	//					bit.Save(filename, ImageFormat.Png);
-	//				}
+					//				if (logger.IsDebugEnabled)
+					//				{
+					//					string filename = Path.Combine(runId, rth.TempFile); 
+					//					bit.Save(filename, ImageFormat.Png);
+					//				}
+				}
+				else
+				{
+					logger.Debug ("bit is null! " + thread.Id );
 				}
 
 
@@ -674,6 +682,10 @@ namespace Alchemi.Examples.Renderer
 			//displayImages();
 			MessageBox.Show("Rendering Finished");
 			//displayImages();
+
+			stop.Enabled = false;
+			render.Enabled = !stop.Enabled;
+
 		}
 
 		private void stop_Click(object sender, EventArgs e)
@@ -701,6 +713,9 @@ namespace Alchemi.Examples.Renderer
 						logger.Debug("ga running returned false...");
 					}
 				}
+
+				stop.Enabled = false;
+				render.Enabled = !stop.Enabled;
 			}
 			catch (Exception ex)
 			{

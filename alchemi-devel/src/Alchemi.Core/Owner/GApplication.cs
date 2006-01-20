@@ -7,7 +7,7 @@
 * Title			:	GApplication.cs
 * Project		:	Alchemi Core
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -470,7 +470,7 @@ namespace Alchemi.Core.Owner
 								}
 							}
 							break;
-							//we break here since there is no point raising events mutliple times.!!! :kna: dec 3, 2005.
+							//we break here since there is no point raising events mutliple times.!!! :kna: dec 3, 2006.
 							//logger.Debug("App finished, but still looping since some-one might subscribe to this event, and we can send it to them now.");
 						}
 					}

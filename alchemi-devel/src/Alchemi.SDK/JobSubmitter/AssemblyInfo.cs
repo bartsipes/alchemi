@@ -7,7 +7,7 @@
 * Title			:	AssemblyInfo.cs
 * Project		:	Alchemi Job Submitter 
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -37,7 +37,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("http://www.alchemi.net")]
 [assembly: AssemblyProduct("Alchemi")]
-[assembly: AssemblyCopyright("Copyright © 2005 The University of Melbourne")]
+[assembly: AssemblyCopyright("Copyright © 2006 The University of Melbourne")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

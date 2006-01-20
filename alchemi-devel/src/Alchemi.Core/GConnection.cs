@@ -3,7 +3,7 @@
 	Alchemi [.NET Grid Computing Framework]
 	http://www.alchemi.net
   
-	Copyright © 2005 The University of Melbourne
+	Copyright © 2006 The University of Melbourne
 	Created by Akshay Luther, Rajkumar Buyya and Krishna Nadiminti.
 
 	This technology has been developed with the support of the Australian Research Council

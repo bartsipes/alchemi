@@ -7,7 +7,7 @@
 * Title			:	GExecutor.cs
 * Project		:	Alchemi Core
 * Created on	:	2003
-* Copyright		:	Copyright © 2005 The University of Melbourne
+* Copyright		:	Copyright © 2006 The University of Melbourne
 *					This technology has been developed with the support of 
 *					the Australian Research Council and the University of Melbourne
 *					research grants as part of the Gridbus Project
@@ -615,6 +615,8 @@ namespace Alchemi.Executor
 				if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
 				{
 					// create application domain for newly encountered grid application
+					logger.Debug("app dir on executor: " + appDir);
+
 					Directory.CreateDirectory(appDir);
     
 					FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);

@@ -95,14 +95,14 @@
                     HintPath = "..\..\..\lib\log4net.dll"
                 />
                 <Reference
-                    Name = "Alchemi.Core"
-                    AssemblyName = "Alchemi.Core"
-                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
-                />
-                <Reference
                     Name = "RenderLibrary"
                     Project = "{9C912A86-D566-49D9-A940-14672768B4A8}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Alchemi.Core"
+                    AssemblyName = "Alchemi.Core"
+                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
                 />
             </References>
         </Build>

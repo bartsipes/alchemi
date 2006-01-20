@@ -197,10 +197,13 @@ Global
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
+		Alchemi.ndoc = Alchemi.ndoc
 		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
 		..\alchemiProjects Status.txt = ..\alchemiProjects Status.txt
+		..\AlchemiRoadmap.txt = ..\AlchemiRoadmap.txt
 		..\changesv.1.0.txt = ..\changesv.1.0.txt
 		..\dotNetPCs.txt = ..\dotNetPCs.txt
+		..\license.rtf = ..\license.rtf
 		..\lowLevelTodo.txt = ..\lowLevelTodo.txt
 		..\MessagesSFJun2005.txt = ..\MessagesSFJun2005.txt
 		..\ReleaseNotes.1.0.txt = ..\ReleaseNotes.1.0.txt
