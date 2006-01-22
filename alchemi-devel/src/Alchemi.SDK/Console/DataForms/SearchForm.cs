@@ -74,20 +74,13 @@ namespace Alchemi.Console.DataForms
 				{
 					lbMembers.Text = "&Permissions:";
 					this.Text = "Permissions";
-					string sql = "select prm_id, prm_name from prm";
-					DataSet ds = console.Manager.Admon_ExecQuery(console.Credentials, Permission.ManageUsers, sql);
-					DataRowCollection permissions = ds.Tables[0].Rows;
-					foreach (DataRow permission in permissions)
+					PermissionStorageView[] permissions = console.Manager.Admon_GetPermissions(console.Credentials);
+					foreach (PermissionStorageView permission in permissions)
 					{
-						if (permission != null)
-						{
-							int id = (int)permission["prm_id"];
-							string name = (string)permission["prm_name"];
-							PermissionItem prm = new PermissionItem(name);
-							prm.ImageIndex = 12;
-							prm.Permission = new PermissionStorageView(id, name);
-							lvMembers.Items.Add(prm);
-						}
+						PermissionItem prm = new PermissionItem(permission.PermissionName);
+						prm.ImageIndex = 12;
+						prm.Permission = new PermissionStorageView(permission.PermissionId, permission.PermissionName);
+						lvMembers.Items.Add(prm);
 					}
 				}
 			}

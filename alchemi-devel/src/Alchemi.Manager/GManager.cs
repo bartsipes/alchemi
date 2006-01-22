@@ -24,7 +24,6 @@
 #endregion
 
 using System;
-using System.Data;
 using System.IO;
 using System.Threading;
 using Alchemi.Core;
@@ -754,7 +753,6 @@ namespace Alchemi.Manager
 		/// </returns>
 		public ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc)
 		{
-			//DataSet ds = null;
 			AuthenticateUser(sc);
             
 			try
@@ -805,8 +803,7 @@ namespace Alchemi.Manager
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of threads, which is associated with the permission: ManageOwnApp / ManageAllApps(if querying an app which is not created by this user)).</param>
 		/// <param name="appId">Application id</param>
-		/// <returns>A DataSet containing the list of threads with attributes:
-		/// thread_id, state, time_started, time_finished
+		/// <returns>A ThreadStorageView array containing the thread list
 		/// </returns>
         public ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId)
         {
@@ -822,8 +819,7 @@ namespace Alchemi.Manager
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of threads, which is associated with the permission: ManageOwnApp / ManageAllApps(if querying an app which is not created by this user)).</param>
 		/// <param name="appId">Application id</param>
-		/// <returns>A DataSet containing the list of threads with attributes:
-		/// thread_id, state, time_started, time_finished
+		/// <returns>A ThreadStorageView array containing the thread list
 		/// </returns>
     	public ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status)
     	{
@@ -1028,39 +1024,45 @@ namespace Alchemi.Manager
 
 		/// <summary>
 		/// Executes a select query against the Manager database.
+		/// 
+		/// Updates: 
+		/// 
+		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
+		///	 Datasets should never be returned to the UI. 
+		///	 
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="perm"></param>
 		/// <param name="query"></param>
 		/// <returns>results of the query as a Dataset</returns>
-		public DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query)
-		{
-			DataSet result = null;
-			AuthenticateUser(sc); 
-			EnsurePermission(sc,perm);
-
-			//just make sure there is no mischief, such as dropping tables!
-			string temp = query.Trim().ToLower();
-
-			if (temp.IndexOf("drop")==-1 && (temp.StartsWith("select") || temp.StartsWith("insert") || temp.StartsWith("update") || temp.StartsWith("delete")))
-			{
-				logger.Warn("Query passed in: "+query);
-				try
-				{
-					result = ManagerStorageFactory.ManagerStorage().RunSqlReturnDataSet(query);
-				}
-				catch (Exception ex)
-				{
-					logger.Debug("Admon_ExecQuery ERROR executing query :"+query, ex);
-				}
-			}
-			else
-			{
-				logger.Warn("Invalid query passed in: "+query);
-				//throw new Exception("Invalid Query");
-			}
-			return result;
-		}
+//		public DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query)
+//		{
+//			DataSet result = null;
+//			AuthenticateUser(sc); 
+//			EnsurePermission(sc,perm);
+//
+//			//just make sure there is no mischief, such as dropping tables!
+//			string temp = query.Trim().ToLower();
+//
+//			if (temp.IndexOf("drop")==-1 && (temp.StartsWith("select") || temp.StartsWith("insert") || temp.StartsWith("update") || temp.StartsWith("delete")))
+//			{
+//				logger.Warn("Query passed in: "+query);
+//				try
+//				{
+//					result = ManagerStorageFactory.ManagerStorage().RunSqlReturnDataSet(query);
+//				}
+//				catch (Exception ex)
+//				{
+//					logger.Debug("Admon_ExecQuery ERROR executing query :"+query, ex);
+//				}
+//			}
+//			else
+//			{
+//				logger.Warn("Invalid query passed in: "+query);
+//				//throw new Exception("Invalid Query");
+//			}
+//			return result;
+//		}
 
     	//----------------------------------------------------------------------------------------------- 
 

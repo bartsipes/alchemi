@@ -24,9 +24,7 @@
 #endregion
 
 using System;
-using System.Data;
 using Alchemi.Core.Executor;
-using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Core.Owner;
 
@@ -269,7 +267,7 @@ namespace Alchemi.Core
 		/// 
 		/// Updates: 
 		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
+		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet DataSet 
 		///		to ApplicationStorageView
 		/// </summary>
 		/// <param name="sc"></param>
@@ -281,7 +279,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="appId"></param>
-		/// <returns>Dataset with thread information</returns>
+		/// <returns>ThreadStorageView array with thread list</returns>
         ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId);
 
 		/// <summary>
@@ -290,7 +288,7 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="appId"></param>
 		/// <param name="status"></param>
-		/// <returns>Dataset with thread information</returns>
+		/// <returns>ThreadStorageView array with thread list</returns>
 		ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
 		/// <summary>
@@ -362,12 +360,18 @@ namespace Alchemi.Core
 
 		/// <summary>
 		/// Executes a select query against the Manager database.
+		/// 
+		/// Updates: 
+		/// 
+		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
+		///	 Datasets should never be returned to the UI. 
+		///	 
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="perm"></param>
 		/// <param name="query"></param>
 		/// <returns>results of the query as a Dataset</returns>
-		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
+//		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
 
 		/// <summary>
 		/// Delete the given thread form the database.

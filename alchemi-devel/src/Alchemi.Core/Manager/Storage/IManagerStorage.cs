@@ -24,7 +24,6 @@ details.
 #endregion
 
 using System;
-using System.Data;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
@@ -174,8 +173,11 @@ namespace Alchemi.Core.Manager.Storage
 		SystemSummary GetSystemSummary();
 
 		//for generic queries
-		DataSet RunSqlReturnDataSet(string query);
+		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManagerStorage interface.
+		//DataSet RunSqlReturnDataSet(string query);
 
+		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Do not use through this interface!
+		///	This will be removed as soon as the DBInstall utility is retired.
 		void RunSql(string sqlQuery);
 	}
 }
