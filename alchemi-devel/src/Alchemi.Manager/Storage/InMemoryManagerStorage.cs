@@ -363,7 +363,15 @@ namespace Alchemi.Manager.Storage
 				m_executors = new ArrayList();
 			}
 
-			String executorId = Guid.NewGuid().ToString();
+			String executorId;
+			if (executor.ExecutorId == null)
+			{
+				executorId = Guid.NewGuid().ToString();
+			}
+			else
+			{
+				executorId = executor.ExecutorId;
+			}
 
 			executor.ExecutorId = executorId;
 

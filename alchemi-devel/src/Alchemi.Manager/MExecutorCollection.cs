@@ -61,41 +61,55 @@ namespace Alchemi.Manager
 		/// Registers a new executor with the manager
 		/// </summary>
 		/// <param name="sc">security credentials used to perform this operation.</param>
+		/// <param name="executorId">The preferred executor ID. Set it to null to generate a new ID.</param>
+		/// <param name="info">information about the executor (see ExecutorInfo)</param>
+		/// <returns></returns>
+		public string RegisterNew(SecurityCredentials sc, string executorId, ExecutorInfo info)
+		{
+			//NOTE: when registering, all executors are initially set to non-dedicated.non-connected.
+			//once they connect and can be pinged back, then these values are set accordingly.
+			ExecutorStorageView executorStorage = new ExecutorStorageView(
+				executorId,
+				false,
+				false,
+				info.Hostname,
+				sc.Username,
+				info.MaxCpuPower,
+				info.MaxMemory,
+				info.MaxDiskSpace,
+				info.Number_of_CPUs,
+				info.OS,
+				info.Architecture
+				);
+
+			if (this[executorId].VerifyExists())
+			{
+				// executor already exists, just update the details
+				ManagerStorageFactory.ManagerStorage().UpdateExecutor(executorStorage);
+
+				logger.Debug("Updated executor details = " + executorId);
+
+				return executorId;
+			}
+			else
+			{
+				String newExecutorId = ManagerStorageFactory.ManagerStorage().AddExecutor(executorStorage);
+
+				logger.Debug("Registered new executor id=" + newExecutorId);
+
+				return newExecutorId;
+			}
+		}
+
+		/// <summary>
+		/// Registers a new executor with the manager
+		/// </summary>
+		/// <param name="sc">security credentials used to perform this operation.</param>
 		/// <param name="info">information about the executor (see ExecutorInfo)</param>
 		/// <returns></returns>
         public string RegisterNew(SecurityCredentials sc, ExecutorInfo info)
         {
-			//NOTE: when registering, all executors are initially set to non-dedicated.non-connected.
-			//once they connect and can be pinged back, then these values are set accordingly.
-			/** Stored procedure params.
-																											0 @is_dedicated bit,
-																											1 @usr_name varchar(50),
-																											2 @hostname varchar(30),
-																											3 @cpu_max int,
-																											4 @mem_max float,
-																											5 @disk_max float,
-																											6 @num_cpus int,
-																											7 @os varchar(15),
-																											8 @arch varchar(15)
-			 **/
-			ExecutorStorageView executorStorage = new ExecutorStorageView(
-					false,
-					false,
-					info.Hostname,
-					sc.Username,
-					info.MaxCpuPower,
-					info.MaxMemory,
-					info.MaxDiskSpace,
-					info.Number_of_CPUs,
-					info.OS,
-					info.Architecture
-				);
-
-			String executorId = ManagerStorageFactory.ManagerStorage().AddExecutor(executorStorage);
-
-			logger.Debug("Registered new executor id="+executorId);
-
-			return executorId;
+			return RegisterNew(sc, null, info);
         }
 
 		/// <summary>

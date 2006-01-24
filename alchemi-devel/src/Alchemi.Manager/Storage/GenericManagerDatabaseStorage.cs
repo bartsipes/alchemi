@@ -542,7 +542,15 @@ namespace Alchemi.Manager.Storage
 				return null;
 			}
 
-			String executorId = Guid.NewGuid().ToString();
+			String executorId;
+			if (executor.ExecutorId == null)
+			{
+				executorId = Guid.NewGuid().ToString();
+			}
+			else
+			{
+				executorId = executor.ExecutorId;
+			}
 
 			RunSql(String.Format("insert into executor(executor_id, is_dedicated, is_connected, usr_name) values ('{0}', {1}, {2}, '{3}')",
 				executorId,

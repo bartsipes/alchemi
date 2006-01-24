@@ -381,13 +381,13 @@ namespace Alchemi.Manager
 		/// (i.e register executor, which is associated with the ExecuteThread permission)</param>
 		/// <param name="info">executor information</param>
 		/// <returns>the id of the executor registered</returns>
-        public string Executor_RegisterNewExecutor(SecurityCredentials sc, ExecutorInfo info)
+        public string Executor_RegisterNewExecutor(SecurityCredentials sc, string existingExecutorId, ExecutorInfo info)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ExecuteThread);
 
 			//logger.Debug("Registering new executor");
-            return _Executors.RegisterNew(sc, info);
+            return _Executors.RegisterNew(sc, existingExecutorId, info);
         }
 
         //-----------------------------------------------------------------------------------------------          

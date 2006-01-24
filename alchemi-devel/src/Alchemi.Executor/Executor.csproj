@@ -105,7 +105,7 @@
                 />
                 <File
                     RelPath = "GExecutor.cs"
-                    SubType = "Code"
+                    SubType = "Component"
                     BuildAction = "Compile"
                 />
                 <File

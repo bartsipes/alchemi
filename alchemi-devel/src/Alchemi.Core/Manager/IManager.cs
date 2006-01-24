@@ -162,9 +162,10 @@ namespace Alchemi.Core
 		/// <br/>(Generally meant to be called by a Executor)
 		/// </summary>
 		/// <param name="sc"></param>
+		/// <param name="existingExecutorId"></param>
 		/// <param name="info"></param>
 		/// <returns>Executor id</returns>
-        string Executor_RegisterNewExecutor(SecurityCredentials sc, ExecutorInfo info);
+        string Executor_RegisterNewExecutor(SecurityCredentials sc, string existingExecutorId, ExecutorInfo info);
         
 		/// <summary>
 		/// Connects an Executor to the Manager in dedicated mode.

@@ -206,12 +206,14 @@ namespace Alchemi.Executor
             if (_Id == "")
             {
 				logger.Info("Registering new executor");
-                _Id = Manager.Executor_RegisterNewExecutor(Credentials, Info);
+                _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
 				logger.Info("Successfully Registered new executor:"+_Id);
             }
 			else
             {
-            	logger.Debug("Id is "+_Id);
+				// update the executor data if it exists in the database or create a new one if it is not found
+				_Id = Manager.Executor_RegisterNewExecutor(Credentials, _Id, Info);
+				logger.Debug("Id is "+_Id);
             }
 
 			//handle exception since we want to connect to the manager 
@@ -227,7 +229,7 @@ namespace Alchemi.Executor
                 {
 					logger.Info("Invalid executor! Registering new executor again...");
 
-                    _Id = Manager.Executor_RegisterNewExecutor(Credentials, Info);
+                    _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
                     
 					logger.Info("New ExecutorID = " + _Id);
                     ConnectToManager();

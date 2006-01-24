@@ -373,6 +373,39 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		public ExecutorStorageView(
+			string executorId,
+			bool dedicated,
+			bool connected,
+			String hostname,
+			String username,
+			Int32 maxCpu,
+			float maxMemory,
+			float maxDisk,
+			Int32 numberOfCpu,
+			String os,
+			String architecture
+			) : this(
+			executorId,
+			dedicated,
+			connected,
+			ExecutorStorageView.c_noTimeSet,
+			hostname,
+			0,
+			username,
+			maxCpu,
+			0,
+			0,
+			0,
+			maxMemory,
+			maxDisk,
+			numberOfCpu,
+			os,
+			architecture
+			)
+		{
+		}
+
+		public ExecutorStorageView(
 			String executorId,
 			bool dedicated,
 			bool connected,

@@ -66,7 +66,11 @@ namespace Alchemi.Manager
         public void ConnectNonDedicated(RemoteEndPoint ep)
         {
 			logger.Debug("Trying to connect NON-Dedicated to executor: "+_Id);
-            VerifyExists(ep);
+            if (!VerifyExists(ep))
+            {
+				logger.Debug("The supplied Executor ID does not exist.");
+				throw new InvalidExecutorException("The supplied Executor ID does not exist.", null);
+            }
 
 			//here we don't ping back, since we know non-dedicated nodes can't be pinged back.
             
@@ -88,7 +92,11 @@ namespace Alchemi.Manager
         public void ConnectDedicated(RemoteEndPoint ep)
         {
 			logger.Debug("Trying to connect Dedicated to executor: "+_Id);
-			VerifyExists(ep);
+			if (!VerifyExists(ep))
+			{
+				logger.Debug("The supplied Executor ID does not exist.");
+				throw new InvalidExecutorException("The supplied Executor ID does not exist.", null);
+			}
 
             bool success = false;
             IExecutor executor;
@@ -123,7 +131,21 @@ namespace Alchemi.Manager
             }
         }
 
-        private void VerifyExists(RemoteEndPoint ep)
+		/// <summary>
+		/// Verify if the executor exists in the database.
+		/// </summary>
+		/// <returns></returns>
+		public bool VerifyExists()
+		{
+			return VerifyExists(null);
+		}
+
+		/// <summary>
+		/// Verify if the executor exists in the database and the remote endpoint host matches the database setting
+		/// </summary>
+		/// <param name="ep"></param>
+		/// <returns></returns>
+        private bool VerifyExists(RemoteEndPoint ep)
         {
             bool exists = false;
 
@@ -133,7 +155,11 @@ namespace Alchemi.Manager
 
 				ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
 
-				if (executorStorage != null && executorStorage.HostName == ep.Host)
+				bool remoteEndPointNullOrHostIsSameAsExecutor;
+				remoteEndPointNullOrHostIsSameAsExecutor = 
+					ep == null || (ep != null && executorStorage.HostName == ep.Host);
+
+				if (executorStorage != null && remoteEndPointNullOrHostIsSameAsExecutor)
 				{
 					exists = true;
 				}
@@ -146,11 +172,7 @@ namespace Alchemi.Manager
                 throw new InvalidExecutorException("The supplied Executor ID is invalid.", ex);
             }
 
-            if (!exists)
-            {
-				logger.Debug("The supplied Executor ID does not exist.");
-                throw new InvalidExecutorException("The supplied Executor ID does not exist.", null);
-            }
+			return exists;
         }
 
 		/// <summary>
