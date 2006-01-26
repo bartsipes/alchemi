@@ -1,0 +1,18 @@
+$Author$
+$Date$
+$Revision$
+Name: How to run NUnits to test the manager storage implementation.
+
+In order to confirm that all storage types behave the same way we implemented a series of NUnits that run the exact same tests against all storage types. Since some of the storages are in a relational database a real database is expected to be setup for them to run. The tests that go against real databases will create their structure automatically and confirm that the database side of the functionality works correctly. The only thing that has to be setup is the database itself.
+
+The connection parameters to the test database are hard coded in the nunits to point to the following location:
+
+Database server: localhost
+Database name: AlchemiTester
+Database username: alchemi
+Database password: alchemi
+
+This applies to both SQL Server and mySQL.
+
+Please note that the live database tests will rebuild the database structure for each test, if there is any data in the test database it will be destroyed without any warning.
+
