@@ -458,6 +458,12 @@ namespace Alchemi.Core.Owner
 							}
 							if (ApplicationFinish != null && !this._MultiUse)
 							{
+								/// January 25, 2006 tb@tbiro.com: Fix for bug 1410797 
+								/// Mark the application as stopped in the database
+								/// This relies on the client to mark the application as stopped on the server, 
+								/// maybe not the best approach
+								Manager.Owner_StopApplication(Credentials, _Id);
+
 								logger.Debug("Raising AppFinish event (for single-use app)..."+_Id);
 								_Running = false;
 								try
