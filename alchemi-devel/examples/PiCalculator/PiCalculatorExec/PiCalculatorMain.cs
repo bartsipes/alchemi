@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using System.Text;
-using System.Configuration;
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
@@ -17,9 +16,10 @@ namespace Alchemi.Examples.PiCalculator
 		// Create a logger for use in this class
 		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        // the product of these two numbers determines the number of digits of pi calculated
         static int NumThreads = 10;
         static int DigitsPerThread = 10;
+
+		static int NumberOfDigits = NumThreads * DigitsPerThread;
         
         static DateTime StartTime;
         static GApplication App;
@@ -27,7 +27,7 @@ namespace Alchemi.Examples.PiCalculator
 		static int th = 0;
 
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
             Console.WriteLine("[Pi Calculator Grid Application]\n--------------------------------\n");
 
@@ -38,7 +38,28 @@ namespace Alchemi.Examples.PiCalculator
 
             try
             {
-                // get settings from user
+				// get the number of digits from the user
+				bool numberOfDigitsEntered = false;
+
+            	while (!numberOfDigitsEntered)
+            	{
+            		try
+            		{
+            			NumberOfDigits = Int32.Parse(Utils.ValueFromConsole("Digits to calculate", "100"));
+
+						if (NumberOfDigits > 0)
+						{
+							numberOfDigitsEntered = true;
+						}
+            		}
+            		catch (Exception)
+            		{
+						Console.WriteLine("Invalid numeric value.");
+            			numberOfDigitsEntered = false;
+            		}
+            	}
+
+            	// get settings from user
                 GConnection gc = GConnection.FromConsole("localhost", "9000", "user", "user");
 
                 StartTiming();
@@ -49,19 +70,30 @@ namespace Alchemi.Examples.PiCalculator
                 // add the module containing PiCalcGridThread to the application manifest        
                 App.Manifest.Add(new ModuleDependency(typeof(PiCalculator.PiCalcGridThread).Module));
 
+				NumThreads = (Int32)Math.Floor(NumberOfDigits / DigitsPerThread);
+				if (DigitsPerThread * NumThreads < NumberOfDigits)
+				{
+					NumThreads++;
+				}
+
 				// create and add the required number of grid threads
 				for (int i = 0; i < NumThreads; i++)
 				{
 					int StartDigitNum = 1 + (i*DigitsPerThread);
+
+					/// the number of digits for each thread
+					/// Each thread will get DigitsPerThread digits except the last one
+					/// which might get less
+					int DigitsForThisThread = Math.Min(DigitsPerThread, NumberOfDigits - i * DigitsPerThread);
           
 					Console.WriteLine(
 						"starting a thread to calculate the digits of pi from {0} to {1}",
 						StartDigitNum,
-						StartDigitNum + DigitsPerThread - 1);
+						StartDigitNum + DigitsForThisThread - 1);
           
 					PiCalcGridThread thread = new PiCalcGridThread(
 						StartDigitNum,
-						DigitsPerThread
+						DigitsForThisThread
 						);
 
 					App.Threads.Add(thread);
@@ -141,7 +173,7 @@ namespace Alchemi.Examples.PiCalculator
             
             Console.WriteLine(
                 "===\nThe value of Pi to {0} digits is:\n3.{1}\n===\nTotal time taken = {2}\n===",
-                NumThreads * DigitsPerThread,
+                NumberOfDigits,
                 result,
                 DateTime.Now - StartTime);
 
