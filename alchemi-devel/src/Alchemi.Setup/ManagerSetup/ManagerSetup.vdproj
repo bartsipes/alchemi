@@ -75,48 +75,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_5BD469DDD2824D94A579FBE815E330FB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_510162EEC7EE18FB8D9E986E44DA3760"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_56F386E19C3A34D048F38F6519FABBCB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_6BB772CB1D984C299F6281060779769A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_A50714663A2B0E25C9277D4B5B9DD8E6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_AFC57B4401C366E22EC560FD2D78291A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_81F3C5CF7A8A4E65A08AF8E126DCB301"
-        "OwnerKey" = "8:_B313962A0A23B6FA8371EEE240677048"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A50714663A2B0E25C9277D4B5B9DD8E6"
         "OwnerKey" = "8:_5BD469DDD2824D94A579FBE815E330FB"
         "MsmSig" = "8:_UNDEFINED"
@@ -124,13 +82,13 @@
         "Entry"
         {
         "MsmKey" = "8:_A50714663A2B0E25C9277D4B5B9DD8E6"
-        "OwnerKey" = "8:_510162EEC7EE18FB8D9E986E44DA3760"
+        "OwnerKey" = "8:_6BB772CB1D984C299F6281060779769A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A50714663A2B0E25C9277D4B5B9DD8E6"
-        "OwnerKey" = "8:_6BB772CB1D984C299F6281060779769A"
+        "OwnerKey" = "8:_510162EEC7EE18FB8D9E986E44DA3760"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -161,6 +119,48 @@
         {
         "MsmKey" = "8:_E193BF6C69D34C11B6C1E0319A9BD231"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_5BD469DDD2824D94A579FBE815E330FB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_6BB772CB1D984C299F6281060779769A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_510162EEC7EE18FB8D9E986E44DA3760"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_56F386E19C3A34D048F38F6519FABBCB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_A50714663A2B0E25C9277D4B5B9DD8E6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_AFC57B4401C366E22EC560FD2D78291A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F14CD181A9114F79B07CFA9155405866"
+        "OwnerKey" = "8:_B313962A0A23B6FA8371EEE240677048"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -210,7 +210,7 @@
             "Object" = "8:_6BB772CB1D984C299F6281060779769A"
             "FileType" = "3:2"
             "InstallAction" = "3:2"
-            "Arguments" = "8:\"[TARGETDIR]\""
+            "Arguments" = "8:\"[TARGETDIR]Manager\""
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
             "Identifier" = "8:_7CE6C318_E5BB_417C_8B19_5B537E87B497"
@@ -306,7 +306,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Manager, Version=1.0.0.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Manager, Version=1.0.1.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_510162EEC7EE18FB8D9E986E44DA3760"
@@ -337,7 +337,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.0.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.1.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
                     "_56F386E19C3A34D048F38F6519FABBCB"
@@ -1138,7 +1138,7 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_81F3C5CF7A8A4E65A08AF8E126DCB301"
+            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_F14CD181A9114F79B07CFA9155405866"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
