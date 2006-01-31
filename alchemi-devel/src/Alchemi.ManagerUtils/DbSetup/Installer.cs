@@ -38,64 +38,96 @@ namespace Alchemi.ManagerUtils.DbSetup
 	/// </summary>
 	public class Installer : System.Windows.Forms.Form
 	{
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TabControl tabs;
-		private System.Windows.Forms.TabPage configurationFileTab;
-		private System.Windows.Forms.Button configurationFileNext;
-		private System.Windows.Forms.TabPage storageTypeTab;
-		private System.Windows.Forms.TabPage databaseLocationTab;
-		private System.Windows.Forms.Button storageTypePrevious;
-		private System.Windows.Forms.Button storageTypeNext;
-		private System.Windows.Forms.Button databaseLocationPrevious;
-		private System.Windows.Forms.Button databaseLocationNext;
-		private System.Windows.Forms.Button databaseUserPrevious;
+		#region Controls
 
-		private bool firstInstall;
+		private Label label1;
+		private Label label2;
+		private Label label3;
+		private Label label4;
+		private Label label5;
+		private Label label6;
+		private Label label7;
+		
+		private TabControl tabs;
+		private TabPage configurationFileTab;
+		private TabPage storageTypeTab;
+		private TabPage databaseLocationTab;
+		private TabPage databaseUserTab;
+
+		private Button storageTypePrevious;
+		private Button storageTypeNext;
+		private Button databaseLocationPrevious;
+		private Button databaseLocationNext;
+		private Button databaseUserPrevious;
+		private Button configurationFileNext;
+		private Button browseForManagerLocation;
+		private Button installButton;
+		private Button saveButton;
+
+		private TextBox managerLocation;
+		private TextBox databaseServer;
+		private TextBox databaseName;
+		private TextBox databasePassword;
+		private TextBox databaseUsername;
+
+		private ComboBox managerStorageTypes;
+
+		private PictureBox pictureBox1;
+
+		private FolderBrowserDialog folderBrowser;
+
+		#endregion
+
 		private String initialManagerLocation;
-		private System.Windows.Forms.Button browseForManagerLocation;
-		private System.Windows.Forms.TextBox managerLocation;
-		private System.Windows.Forms.TabPage databaseUserTab;
-		private System.Windows.Forms.Button installButton;
-		private System.Windows.Forms.ComboBox managerStorageTypes;
-
 		private TabPage[] allTabs;
 		public Configuration managerConfiguration;
-		private System.Windows.Forms.TextBox databaseServer;
-		private System.Windows.Forms.TextBox databaseName;
-		private System.Windows.Forms.TextBox databasePassword;
-		private System.Windows.Forms.TextBox databaseUsername;
-		private System.Windows.Forms.FolderBrowserDialog folderBrowser;
-
 		private TabPage visibleTab;
-		private System.Windows.Forms.Button saveButton;
+
+		private bool firstInstall;
+		private bool configurationFileChanged;
+		private bool databaseInstalled;
+		private System.Windows.Forms.Button closeButton;
+
 
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public Installer(String managerLocation)
+		public Installer(String startingManagerLocation)
 		{
 			//
 			// Required for Windows Form Designer support
 			//
 			InitializeComponent();
 
-			if (managerLocation != null && managerLocation.Length != 0)
+			configurationFileChanged = false;
+			databaseInstalled = false;
+
+			if (startingManagerLocation != null && startingManagerLocation.Length != 0)
 			{
-				initialManagerLocation = managerLocation;
+				initialManagerLocation = startingManagerLocation;
 			}
 			else
 			{
 				initialManagerLocation = AppDomain.CurrentDomain.BaseDirectory;
 			}
+
+			this.Closing += new System.ComponentModel.CancelEventHandler(Installer_Closing);
+
+			closeButton.Visible = false;
+
+			managerLocation.ReadOnly = true;
+
+			managerLocation.DoubleClick += new EventHandler(managerLocation_DoubleClick);
+
+			// put handlers on the data changed events
+			databaseName.TextChanged += new EventHandler(DataChanged);
+			databaseServer.TextChanged += new EventHandler(DataChanged);
+			databaseName.TextChanged += new EventHandler(DataChanged);
+			databasePassword.TextChanged += new EventHandler(DataChanged);
+			databaseUsername.TextChanged += new EventHandler(DataChanged);
+			managerStorageTypes.SelectedIndexChanged += new EventHandler(DataChanged);
 		}
 
 		/// <summary>
@@ -150,6 +182,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+			this.closeButton = new System.Windows.Forms.Button();
 			this.tabs.SuspendLayout();
 			this.configurationFileTab.SuspendLayout();
 			this.storageTypeTab.SuspendLayout();
@@ -381,17 +414,19 @@ namespace Alchemi.ManagerUtils.DbSetup
 			this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.saveButton.Location = new System.Drawing.Point(32, 344);
 			this.saveButton.Name = "saveButton";
+			this.saveButton.Size = new System.Drawing.Size(144, 23);
 			this.saveButton.TabIndex = 1;
-			this.saveButton.Text = "Save";
+			this.saveButton.Text = "Save Configuration File";
 			this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
 			// 
 			// installButton
 			// 
 			this.installButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.installButton.Location = new System.Drawing.Point(376, 344);
+			this.installButton.Location = new System.Drawing.Point(344, 344);
 			this.installButton.Name = "installButton";
+			this.installButton.Size = new System.Drawing.Size(104, 23);
 			this.installButton.TabIndex = 2;
-			this.installButton.Text = "Install";
+			this.installButton.Text = "Install Database";
 			this.installButton.Click += new System.EventHandler(this.installButton_Click);
 			// 
 			// pictureBox1
@@ -413,18 +448,27 @@ namespace Alchemi.ManagerUtils.DbSetup
 			this.label7.TabIndex = 10;
 			this.label7.Text = "Install Database";
 			// 
+			// closeButton
+			// 
+			this.closeButton.Location = new System.Drawing.Point(360, 344);
+			this.closeButton.Name = "closeButton";
+			this.closeButton.TabIndex = 11;
+			this.closeButton.Text = "Close";
+			this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+			// 
 			// Installer
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			this.ClientSize = new System.Drawing.Size(496, 397);
+			this.Controls.Add(this.closeButton);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.installButton);
 			this.Controls.Add(this.saveButton);
 			this.Controls.Add(this.tabs);
 			this.Name = "Installer";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "Installer";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.Text = "Alchemi Database Setup";
 			this.Load += new System.EventHandler(this.Installer_Load);
 			this.tabs.ResumeLayout(false);
 			this.configurationFileTab.ResumeLayout(false);
@@ -436,6 +480,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 		}
 		#endregion
 
+		#region "Event Handlers"
 		private void Installer_Load(object sender, System.EventArgs e)
 		{
 			firstInstall = false;
@@ -447,6 +492,9 @@ namespace Alchemi.ManagerUtils.DbSetup
 			catch (FileNotFoundException)
 			{
 				firstInstall = true;
+				
+				// force the changed to be marked as true
+				configurationFileChanged = true;
 			}			
 
 			InitializeFormDataAndControls();
@@ -461,19 +509,232 @@ namespace Alchemi.ManagerUtils.DbSetup
 			SetControlStatus();
 		}
 
+		#region Navigation - Hiding and showing the tabs
+
+		private void configurationFileNext_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(storageTypeTab);
+
+			SetControlStatus();
+		}
+
+		private void storageTypeNext_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(databaseLocationTab);
+
+			SetControlStatus();
+		}
+
+		private void databaseLocationNext_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(databaseUserTab);
+
+			SetControlStatus();
+		}
+
+		private void storageTypePrevious_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(configurationFileTab);
+
+			SetControlStatus();
+		}
+
+		private void databaseLocationPrevious_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(storageTypeTab);
+
+			SetControlStatus();
+		}
+
+		private void databaseUserPrevious_Click(object sender, EventArgs e)
+		{
+			MakeTabVisible(databaseLocationTab);
+
+			SetControlStatus();
+		}
+
+		#endregion
+
+		private void installButton_Click(object sender, System.EventArgs e)
+		{
+			UpdateConfigurationFromForm(managerConfiguration);
+
+			InstallProgress progress = new InstallProgress(this);
+
+			DialogResult dialogResult = progress.ShowDialog();
+
+			if (dialogResult == DialogResult.OK)
+			{
+				databaseInstalled = true;
+
+				if (firstInstall)
+				{
+					installButton.Visible = false;
+					closeButton.Visible = true;
+				}
+			}
+		}
+
+		private void browseForManagerLocation_Click(object sender, System.EventArgs e)
+		{
+			BrowseForManagerLocation();
+		}
+
+		private void managerStorageTypes_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			ManagerStorageTypeDropdownItem item = (ManagerStorageTypeDropdownItem)managerStorageTypes.SelectedItem;
+
+			if(item.StorageType == ManagerStorageEnum.InMemory)
+			{
+				// remove the last two tabs if there
+				databaseLocationTab.Visible = false;
+				if (tabs.TabPages.IndexOf(databaseLocationTab) != -1)
+				{
+					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseLocationTab));
+				}
+
+				databaseUserTab.Visible = false;
+				if (tabs.TabPages.IndexOf(databaseUserTab) != -1)
+				{
+					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseUserTab));
+				}
+
+				storageTypeNext.Visible = false;
+			}
+			else
+			{
+				databaseLocationTab.Visible = true;
+				databaseUserTab.Visible = true;
+
+				storageTypeNext.Visible = true;
+			}
+
+			SetControlStatus();
+		}
+
+		private void tabs_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			visibleTab = tabs.SelectedTab;
+		}
+
+		private void saveButton_Click(object sender, System.EventArgs e)
+		{
+			SaveConfigurationData(managerConfiguration);
+		}
+
+		private void DataChanged(object sender, EventArgs e)
+		{
+			DataChanged();
+		}
+
+		private void managerLocation_DoubleClick(object sender, EventArgs e)
+		{
+			BrowseForManagerLocation();
+		}
+
+		private void Installer_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (configurationFileChanged)
+			{
+				// configuration data changed but not saved
+				DialogResult dialogResult = MessageBox.Show(
+					String.Format("The configuration in {0} has changed.{1}{1}Do you want to save the changes?", 
+					managerLocation.Text,
+					Environment.NewLine
+					),
+					"DbSetup",
+					MessageBoxButtons.YesNoCancel,
+					MessageBoxIcon.Exclamation,
+					MessageBoxDefaultButton.Button1);
+
+				switch (dialogResult)
+				{
+					case DialogResult.Cancel:
+						// Cancel the exit
+						e.Cancel = true;
+						break;
+					case DialogResult.Yes:
+						// Save the changes and exit
+						e.Cancel = false;
+						SaveConfigurationData(managerConfiguration);
+						break;
+					case DialogResult.No:
+						// Do not save the changes and exit
+						e.Cancel = false;
+						break;
+					default:
+#if DEBUG
+						throw new Exception(String.Format("Unknown dialog result selected: {0}", dialogResult));
+#endif
+						break;
+				}
+			}
+
+			if (e.Cancel)
+			{
+				return;
+			}
+
+			if (firstInstall && !databaseInstalled)
+			{
+				// database ntot installed
+				DialogResult dialogResult = MessageBox.Show(
+					String.Format("You did not install the database. Are you sure you want to exit?", 
+					managerLocation.Text,
+					Environment.NewLine
+					),
+					"DbSetup",
+					MessageBoxButtons.YesNo,
+					MessageBoxIcon.Exclamation,
+					MessageBoxDefaultButton.Button1);
+
+				switch (dialogResult)
+				{
+					case DialogResult.Yes:
+						e.Cancel = false;
+						SaveConfigurationData(managerConfiguration);
+						break;
+					case DialogResult.No:
+						e.Cancel = true;
+						break;
+					default:
+#if DEBUG
+						throw new Exception(String.Format("Unknown dialog result selected: {0}", dialogResult));
+#endif
+						break;
+				}
+			}
+		}
+
+		private void closeButton_Click(object sender, System.EventArgs e)
+		{
+			Close();
+		}
+
+		#endregion
+
+
 		private void LoadConfigurationFileFromManagerLocation()
 		{
+			bool dataChanged;
+
 			try
 			{
 				managerConfiguration = Configuration.GetConfiguration(managerLocation.Text);
+
+				dataChanged = false;
 			}
 			catch (FileNotFoundException)
 			{
 				// manager file not found, load the defaults
 				managerConfiguration = new Configuration(managerLocation.Text);
+			
+				dataChanged = true;			
 			}			
 
 			ReadConfigurationData(managerConfiguration);
+
+			configurationFileChanged = dataChanged;
 		}
 
 		/// <summary>
@@ -524,6 +785,10 @@ namespace Alchemi.ManagerUtils.DbSetup
 			UpdateConfigurationFromForm(configuration);
 
 			configuration.Slz();
+
+			configurationFileChanged = false;
+
+			saveButton.Enabled = configurationFileChanged;
 		}
 
 		/// <summary>
@@ -552,9 +817,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 				switch(storageType)
 				{
 					case ManagerStorageEnum.InMemory:
-#if DEBUG
-						managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("In Memory (experimental)", storageType));
-#endif
+						managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("In Memory", storageType));
 						break;
 					case ManagerStorageEnum.SqlServer:
 						managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("Microsoft SQL Server", storageType));
@@ -620,6 +883,8 @@ namespace Alchemi.ManagerUtils.DbSetup
 				// enable it once all tabs are displayed
 				installButton.Enabled = (tabs.TabPages.Count == allTabs.Length);
 			}
+
+			saveButton.Enabled = configurationFileChanged;
 		}
 
 		private void ShowOrHideTabs(TabPage tab)
@@ -647,62 +912,14 @@ namespace Alchemi.ManagerUtils.DbSetup
 			visibleTab = tabToMakeVisible;
 		}
 
-		#region Navigation - Hiding and showing the tabs
 
-		private void configurationFileNext_Click(object sender, EventArgs e)
+		private void DataChanged()
 		{
-			MakeTabVisible(storageTypeTab);
-
-			SetControlStatus();
+			configurationFileChanged = true;
+			saveButton.Enabled = true;
 		}
 
-		private void storageTypeNext_Click(object sender, EventArgs e)
-		{
-			MakeTabVisible(databaseLocationTab);
-
-			SetControlStatus();
-		}
-
-		private void databaseLocationNext_Click(object sender, EventArgs e)
-		{
-			MakeTabVisible(databaseUserTab);
-
-			SetControlStatus();
-		}
-
-		private void storageTypePrevious_Click(object sender, EventArgs e)
-		{
-			MakeTabVisible(configurationFileTab);
-
-			SetControlStatus();
-		}
-
-		private void databaseLocationPrevious_Click(object sender, EventArgs e)
-		{
-			MakeTabVisible(storageTypeTab);
-
-			SetControlStatus();
-		}
-
-		private void databaseUserPrevious_Click(object sender, EventArgs e)
-		{
-			MakeTabVisible(databaseLocationTab);
-
-			SetControlStatus();
-		}
-
-		#endregion
-
-		private void installButton_Click(object sender, System.EventArgs e)
-		{
-			UpdateConfigurationFromForm(managerConfiguration);
-
-			InstallProgress progress = new InstallProgress(this);
-
-			progress.ShowDialog();
-		}
-
-		private void browseForManagerLocation_Click(object sender, System.EventArgs e)
+		private void BrowseForManagerLocation()
 		{
 			folderBrowser.SelectedPath = managerLocation.Text;
 			DialogResult diagResult = folderBrowser.ShowDialog();
@@ -715,49 +932,6 @@ namespace Alchemi.ManagerUtils.DbSetup
 				LoadConfigurationFileFromManagerLocation();
 			}
 		}
-
-		private void managerStorageTypes_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			ManagerStorageTypeDropdownItem item = (ManagerStorageTypeDropdownItem)managerStorageTypes.SelectedItem;
-
-			if(item.StorageType == ManagerStorageEnum.InMemory)
-			{
-				// remove the last two tabs if there
-				databaseLocationTab.Visible = false;
-				if (tabs.TabPages.IndexOf(databaseLocationTab) != -1)
-				{
-					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseLocationTab));
-				}
-
-				databaseUserTab.Visible = false;
-				if (tabs.TabPages.IndexOf(databaseUserTab) != -1)
-				{
-					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseUserTab));
-				}
-
-				storageTypeNext.Visible = false;
-			}
-			else
-			{
-				databaseLocationTab.Visible = true;
-				databaseUserTab.Visible = true;
-
-				storageTypeNext.Visible = true;
-			}
-
-			SetControlStatus();
-		}
-
-		private void tabs_SelectedIndexChanged(object sender, System.EventArgs e)
-		{
-			visibleTab = tabs.SelectedTab;
-		}
-
-		private void saveButton_Click(object sender, System.EventArgs e)
-		{
-			SaveConfigurationData(managerConfiguration);
-		}
-
 
 	}
 }
