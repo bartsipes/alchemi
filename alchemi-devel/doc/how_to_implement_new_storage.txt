@@ -1,0 +1,28 @@
+$Author$
+$Date$
+$Revision$
+Name: How to implement a new storage type.
+ 
+Right now there are 3 storage types implemented: 
+In Memory, SQL Server and mySQL. 
+ 
+Architectural notes: 
+The IManagerStorage interface defines what a Manager Storage is supposed to do. All new storages are supposed to implement it. 
+ 
+IManagerStorageSetup is responsible with setting up the storage's structure and default data. All new storages should implement it. 
+ 
+If you have database scripts:  
+Put them under Storage\SetupFiles. These are used from the GenericManagerDatabaseStorage to create the database structures. 
+ 
+Unit testing: 
+To test a new manager storage function add the unit tests to ManagerStorageTester.cs so the new test is inherited to InMemoryManagerStorageTester.cs, SqlServerManagerDatabaseStorageTester.cs and InMemoryManagerStorageTester.cs. This way we prove that all storages work the exact same way. 
+The unit tests will create/drop the database using the IManagerStorageSetup implementation, this way the setup is also tested. 
+ 
+To implement a new storage: 
+ 
+1. Implement IManagerStorage and IManagerStorageSetup. If you are implemeting a new relational database storage then inherit from GenericManagerDatabaseStorage.cs, this already does most of the work.  
+2. Create a new unit test class that inherits from ManagerStorageTester.cs to confirm that the new storage works the exact same way as the existing ones. 
+3. Confirm that all unit tests pass for old and new unit tests. 
+ 
+There is also a new utility used to setup the storages: DBSetup. Use it to change the storage type and to create the structures. 
+ 
