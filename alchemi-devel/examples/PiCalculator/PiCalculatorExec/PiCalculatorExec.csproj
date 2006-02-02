@@ -90,9 +90,9 @@
                     HintPath = "..\..\..\lib\log4net.dll"
                 />
                 <Reference
-                    Name = "Core"
-                    Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "Alchemi.Core"
+                    AssemblyName = "Alchemi.Core"
+                    HintPath = "..\..\..\bin\Alchemi.Core.dll"
                 />
             </References>
         </Build>
