@@ -193,7 +193,7 @@ namespace Alchemi.Manager.Storage
 			return summary;
 		}
 
-		public DataSet RunSqlReturnDataSet(string query)
+		protected DataSet RunSqlReturnDataSet(string query)
 		{
 			DataSet result = null;
 			using (IDbConnection connection = GetConnection(m_connectionString))
@@ -598,13 +598,17 @@ namespace Alchemi.Manager.Storage
 
 		protected void UpdateExecutorCpuUsage(String executorId, Int32 maxCpu, Int32 cpuUsage, Int32 availableCpu, float totalCpuUsage)
 		{
-			RunSql(String.Format("update executor set cpu_max={1}, cpu_usage={2}, cpu_avail={3}, cpu_totalusage={4} where executor_id='{0}'",
+			IDataParameter totalCpuUsageParameter = GetParameter(DatabaseParameterDecoration() + "cpu_totaluse", totalCpuUsage, DbType.Double);
+
+			RunSql(String.Format("update executor set cpu_max={2}, cpu_usage={3}, cpu_avail={4}, cpu_totalusage={0}cpu_totaluse where executor_id='{1}'",
+				DatabaseParameterDecoration(),
 				executorId,
 				maxCpu,
 				cpuUsage,
 				availableCpu,
 				totalCpuUsage
-				));
+				),
+				totalCpuUsageParameter);
 		}
 
 		protected void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
@@ -619,14 +623,19 @@ namespace Alchemi.Manager.Storage
 		
 		protected void UpdateExecutorAdditionalInformation(String executorId, float maxMemory, float maxDisk, Int32 numberOfCpu, String os, String architecture)
 		{
-			RunSql(String.Format("update executor set mem_max = {1}, disk_max = {2}, num_cpus = {3}, os = '{4}', arch = '{5}' where executor_id='{0}'",
+			IDataParameter maxMemoryParameter = GetParameter(DatabaseParameterDecoration() + "max_memory", maxMemory, DbType.Double);
+			IDataParameter maxDiskParameter = GetParameter(DatabaseParameterDecoration() + "max_disk", maxDisk, DbType.Double);
+
+			RunSql(String.Format("update executor set mem_max = {0}max_memory, disk_max = {0}max_disk, num_cpus = {4}, os = '{5}', arch = '{6}' where executor_id='{1}'",
+				DatabaseParameterDecoration(),
 				executorId,
 				maxMemory, 
 				maxDisk, 
 				numberOfCpu, 
 				Utils.MakeSqlSafe(os), 
 				Utils.MakeSqlSafe(architecture)
-				));
+				),
+				maxMemoryParameter, maxDiskParameter);
 		}
 
 		public void UpdateExecutor(ExecutorStorageView executor)
@@ -1485,7 +1494,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public void RunSql(String sqlQuery)
+		protected void RunSql(String sqlQuery)
 		{
 			RunSql(sqlQuery, null);
 		}
