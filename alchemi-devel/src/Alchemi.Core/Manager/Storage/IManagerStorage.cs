@@ -178,6 +178,6 @@ namespace Alchemi.Core.Manager.Storage
 
 		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Do not use through this interface!
 		///	This will be removed as soon as the DBInstall utility is retired.
-		void RunSql(string sqlQuery);
+		//void RunSql(string sqlQuery);
 	}
 }
