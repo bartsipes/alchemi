@@ -31,15 +31,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimeNumberGenerator", "Pri
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\src\Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlchemiRenderer", "AlchemiRenderer\AlchemiRendererExec\AlchemiRenderer.csproj", "{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderLibrary", "AlchemiRenderer\RendererLibrary\RenderLibrary.csproj", "{9C912A86-D566-49D9-A940-14672768B4A8}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPManagerClient", "XPManagerClient\XPManagerClient.csproj", "{B293C212-4998-409E-B247-C9DFA28D7304}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -98,12 +98,6 @@ Global
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.Release.Build.0 = Release|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.ServiceRelease.ActiveCfg = Release|.NET
 		{1A92EB8A-4C50-4389-93F1-772EE4A077AF}.ServiceRelease.Build.0 = Release|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.ActiveCfg = Debug|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug.Build.0 = Debug|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.ActiveCfg = Release|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release.Build.0 = Release|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease.ActiveCfg = ServiceRelease|.NET
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease.Build.0 = ServiceRelease|.NET
 		{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}.Debug.ActiveCfg = Debug|.NET
 		{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}.Debug.Build.0 = Debug|.NET
 		{2C4A35EB-8D76-4E75-AA65-822C54FFDB0B}.Release.ActiveCfg = Release|.NET
@@ -116,6 +110,12 @@ Global
 		{9C912A86-D566-49D9-A940-14672768B4A8}.Release.Build.0 = Release|.NET
 		{9C912A86-D566-49D9-A940-14672768B4A8}.ServiceRelease.ActiveCfg = Release|.NET
 		{9C912A86-D566-49D9-A940-14672768B4A8}.ServiceRelease.Build.0 = Release|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.Debug.ActiveCfg = Debug|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.Debug.Build.0 = Debug|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.Release.ActiveCfg = Release|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.Release.Build.0 = Release|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.ServiceRelease.ActiveCfg = Release|.NET
+		{B293C212-4998-409E-B247-C9DFA28D7304}.ServiceRelease.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
