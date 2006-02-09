@@ -25,7 +25,7 @@
 
 using System;
 using System.Collections;
-using System.Collections.Specialized;
+
 using Alchemi.Core.Owner;
 
 namespace Alchemi.Core.Owner
@@ -34,7 +34,7 @@ namespace Alchemi.Core.Owner
 	/// Represents a collection of FileDependencies
 	/// </summary>
     [Serializable]
-    public class FileDependencyCollection : System.Collections.ReadOnlyCollectionBase
+    public class FileDependencyCollection : ReadOnlyCollectionBase
     {
 		/// <summary>
 		/// Gets the FileDependency with the given index
@@ -55,14 +55,34 @@ namespace Alchemi.Core.Owner
 		/// <param name="dependency">file dependency to add</param>
         public void Add(FileDependency dependency)
         {
-            foreach (FileDependency fd in InnerList)
-            {
-                if (fd.FileName == dependency.FileName)
-                {
-                    throw new InvalidOperationException("A file dependency with the same name already exists.", null);
-                }
-            }
+			if (dependency == null)
+			{
+				throw new InvalidOperationException("The FileDependency Collection does not accept null values.", null);
+			}
+			if (Contains(dependency))
+			{
+				throw new InvalidOperationException("A file dependency with the same name already exists.", null);
+			}
+
             InnerList.Add(dependency);
         }
+
+		/// <summary>
+		/// Checks if the collection already contains the given dependency.
+		/// </summary>
+		/// <param name="dependency">Dependency to check.</param>
+		/// <returns></returns>
+		public bool Contains(FileDependency dependency)
+		{
+			foreach (FileDependency fd in InnerList)
+			{
+				if (String.Compare(fd.FileName, dependency.FileName, true) == 0)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
     }
 }
