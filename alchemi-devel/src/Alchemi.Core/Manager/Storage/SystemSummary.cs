@@ -29,7 +29,7 @@ namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Returned by GetSystemSummary.
-	/// Contains various information about the application status
+	/// Contains various information about the application status.
 	/// </summary>
 	[Serializable]
 	public class SystemSummary
@@ -47,6 +47,10 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		#region "Properties"
+
+		/// <summary>
+		/// Maximum power.
+		/// </summary>
 		public String MaxPower
 		{
 			get
@@ -55,6 +59,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The total number of Executors.
+		/// </summary>
 		public Int32 TotalExecutors
 		{
 			get
@@ -63,6 +70,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The power usage.
+		/// </summary>
 		public Int32 PowerUsage
 		{
 			get
@@ -71,6 +81,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The available power.
+		/// </summary>
 		public Int32 PowerAvailable
 		{
 			get
@@ -79,6 +92,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The total power usage.
+		/// </summary>
 		public String PowerTotalUsage
 		{
 			get
@@ -87,6 +103,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The number of unfinished threads.
+		/// </summary>
 		public Int32 UnfinishedThreads
 		{
 			get
@@ -95,6 +114,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The number of unfinished applications.
+		/// </summary>
 		public Int32 UnfinishedApps
 		{
 			get

@@ -30,7 +30,8 @@ using Alchemi.Core.Owner;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Summary description for ThreadStorageView.
+	/// Storage view of an thread object. 
+	/// Used to pass thread related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class ThreadStorageView
@@ -52,6 +53,10 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		#region "Properties"
+
+		/// <summary>
+		/// Internal thread Id.
+		/// </summary>
 		public Int32 InternalThreadId
 		{
 			get
@@ -64,6 +69,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The application Id to which this thread belongs to.
+		/// </summary>
 		public String ApplicationId
 		{
 			get
@@ -76,6 +84,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The executor Id of the Executor on which this thread was executed.
+		/// </summary>
 		public String ExecutorId
 		{
 			get
@@ -88,6 +99,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The thread Id.
+		/// </summary>
 		public Int32 ThreadId
 		{
 			get
@@ -100,6 +114,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The thread state.
+		/// <seealso cref="ThreadState"/>
+		/// </summary>
 		public ThreadState State
 		{
 			get
@@ -112,6 +130,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The time this thread was started.
+		/// <seealso cref="TimeStartedSet"/>
+		/// </summary>
 		public DateTime TimeStarted
 		{
 			get
@@ -124,6 +146,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The time this thread was finished.
+		/// <seealso cref="TimeFinishedSet"/>
+		/// </summary>
 		public DateTime TimeFinished
 		{
 			get
@@ -136,6 +162,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the TimeStarted property is set.
+		/// <seealso cref="TimeStarted"/>
+		/// </summary>
 		public bool TimeStartedSet
 		{
 			get
@@ -144,6 +174,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the TimeFinished property is set.
+		/// </summary>
 		public bool TimeFinishedSet
 		{
 			get
@@ -152,6 +185,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The thread priority.
+		/// </summary>
 		public Int32 Priority
 		{
 			get
@@ -164,6 +200,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this thread failed running.
+		/// </summary>
 		public bool Failed
 		{
 			get
@@ -174,16 +213,27 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		/// <summary>
+		/// Reset the TimeStarted property to the default value.
+		/// </summary>
 		public void ResetTimeStarted()
 		{
 			m_timeStarted = c_noTimeSet;
 		}
 
+		/// <summary>
+		/// Reset the TimeFinished property to the default value.
+		/// </summary>
 		public void ResetTimeFinished()
 		{
 			m_timeFinished = c_noTimeSet;
 		}
 
+		/// <summary>
+		/// ThreadStorageView constructor.
+		/// </summary>
+		/// <param name="applicationId"></param>
+		/// <param name="threadId"></param>
 		public ThreadStorageView(
 			String applicationId,
 			Int32 threadId
@@ -195,6 +245,12 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ThreadStorageView constructor.
+		/// </summary>
+		/// <param name="applicationId"></param>
+		/// <param name="threadId"></param>
+		/// <param name="state"></param>
 		public ThreadStorageView(
 			String applicationId,
 			Int32 threadId,
@@ -213,6 +269,17 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ThreadStorageView constructor.
+		/// </summary>
+		/// <param name="applicationId"></param>
+		/// <param name="executorId"></param>
+		/// <param name="threadId"></param>
+		/// <param name="state"></param>
+		/// <param name="timeStarted"></param>
+		/// <param name="timeFinished"></param>
+		/// <param name="priority"></param>
+		/// <param name="failed"></param>
 		public ThreadStorageView(
 				String applicationId,
 				String executorId,
@@ -236,6 +303,18 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ThreadStorageView constructor.
+		/// </summary>
+		/// <param name="internalThreadId"></param>
+		/// <param name="applicationId"></param>
+		/// <param name="executorId"></param>
+		/// <param name="threadId"></param>
+		/// <param name="state"></param>
+		/// <param name="timeStarted"></param>
+		/// <param name="timeFinished"></param>
+		/// <param name="priority"></param>
+		/// <param name="failed"></param>
 		public ThreadStorageView(
 				Int32 internalThreadId,
 				String applicationId,
@@ -259,6 +338,10 @@ namespace Alchemi.Core.Manager.Storage
 			m_failed = failed;
 		}
 
+		/// <summary>
+		/// Gets a hunam readable description of the State property.
+		/// <seealso cref="State"/>
+		/// </summary>
 		public string StateString
 		{
 			get

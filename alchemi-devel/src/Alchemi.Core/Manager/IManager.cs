@@ -175,13 +175,14 @@ namespace Alchemi.Core
 		/// <param name="executorId"></param>
 		/// <param name="executorEP"></param>
 		void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP);
-		
+
 		/// <summary>
 		/// Connects an Executor to the Manager in non-dedicated mode.
 		/// <br/>(Generally meant to be called by a Executor)
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="executorId"></param>
+		/// <param name="executorEP"></param>
 		void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP);
         
 		/// <summary>
@@ -307,9 +308,10 @@ namespace Alchemi.Core
 		GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
 
 		/// <summary>
-		/// Gets group details
+		/// Gets group details.
 		/// </summary>
 		/// <param name="sc"></param>
+		/// <param name="groupId"></param>
 		/// <returns>Group details</returns>
 		GroupStorageView Admon_GetGroup(SecurityCredentials sc, Int32 groupId);
 
@@ -320,6 +322,12 @@ namespace Alchemi.Core
 		/// <param name="groupToDelete"></param>
 		void Admon_DeleteGroup(SecurityCredentials sc, GroupStorageView groupToDelete);
 
+		/// <summary>
+		/// Get the users associated with a group.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="groupId"></param>
+		/// <returns></returns>
 		UserStorageView[] GetGroupUsers(SecurityCredentials sc, Int32 groupId);
 
 		/// <summary>
@@ -357,21 +365,27 @@ namespace Alchemi.Core
 		/// <returns></returns>
 		ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
-		ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId);
-
 		/// <summary>
-		/// Executes a select query against the Manager database.
-		/// 
-		/// Updates: 
-		/// 
-		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
-		///	 Datasets should never be returned to the UI. 
-		///	 
+		/// Get executor details
 		/// </summary>
 		/// <param name="sc"></param>
-		/// <param name="perm"></param>
-		/// <param name="query"></param>
-		/// <returns>results of the query as a Dataset</returns>
+		/// <param name="executorId"></param>
+		/// <returns></returns>
+		ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId);
+
+		// <summary>
+		// Executes a select query against the Manager database.
+		// 
+		// Updates: 
+		// 
+		//	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
+		//	 Datasets should never be returned to the UI. 
+		//	 
+		// </summary>
+		// <param name="sc"></param>
+		// <param name="perm"></param>
+		// <param name="query"></param>
+		// <returns>results of the query as a Dataset</returns>
 //		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
 
 		/// <summary>
@@ -388,6 +402,12 @@ namespace Alchemi.Core
 		/// <param name="applicationToDelete"></param>
 		void Admon_DeleteApplication(SecurityCredentials sc, ApplicationStorageView applicationToDelete);
 
+		/// <summary>
+		/// Get a list of permissions for a group.
+		/// </summary>
+		/// <param name="sc"></param>
+		/// <param name="group"></param>
+		/// <returns></returns>
 		PermissionStorageView[] Admon_GetGroupPermissions(SecurityCredentials sc, GroupStorageView group);
 
 		/// <summary>

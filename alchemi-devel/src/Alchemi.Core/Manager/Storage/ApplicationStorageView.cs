@@ -30,7 +30,8 @@ using Alchemi.Core.Owner;
 namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
-	/// Summary description for ApplicationStorageView.
+	/// Storage view of an application object. 
+	/// Used to pass application related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class ApplicationStorageView
@@ -56,6 +57,9 @@ namespace Alchemi.Core.Manager.Storage
 
 		#region "Properties"
 
+		/// <summary>
+		/// The application name.
+		/// </summary>
 		public String ApplicationName
 		{
 			get
@@ -68,6 +72,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The Application Id.
+		/// </summary>
 		public String ApplicationId
 		{
 			get
@@ -80,6 +87,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The Application state.
+		/// <seealso cref="ApplicationState"/>
+		/// </summary>
 		public ApplicationState State
 		{
 			get
@@ -92,6 +103,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The time the application was created.
+		/// </summary>
 		public DateTime TimeCreated
 		{
 			get
@@ -100,6 +114,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The time the application was completed.
+		/// </summary>
 		public DateTime TimeCompleted
 		{
 			get
@@ -112,6 +129,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the TimeCreated property is set or not.
+		/// <seealso cref="TimeCreated"/>
+		/// </summary>
 		public bool TimeCreatedSet
 		{
 			get
@@ -120,6 +141,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this is the primary application.
+		/// </summary>
 		public bool Primary
 		{
 			get
@@ -128,6 +152,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The user that created this application.
+		/// </summary>
 		public String Username
 		{
 			get
@@ -136,6 +163,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The total thread count for this application.
+		/// </summary>
 		public Int32 TotalThreads
 		{
 			get
@@ -153,6 +183,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The unfinished thread count for this application.
+		/// </summary>
 		public Int32 UnfinishedThreads
 		{
 			get
@@ -172,6 +205,13 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		/// <summary>
+		/// ApplicationStorageView constructor.
+		/// </summary>
+		/// <param name="state"></param>
+		/// <param name="timeCreated"></param>
+		/// <param name="primary"></param>
+		/// <param name="username"></param>
 		public ApplicationStorageView(
 				ApplicationState state,
 				DateTime timeCreated,
@@ -188,6 +228,14 @@ namespace Alchemi.Core.Manager.Storage
 		
 		}
 
+		/// <summary>
+		/// ApplicationStorageView constructor.
+		/// </summary>
+		/// <param name="applicationId"></param>
+		/// <param name="state"></param>
+		/// <param name="timeCreated"></param>
+		/// <param name="primary"></param>
+		/// <param name="username"></param>
 		public ApplicationStorageView(
 				String applicationId,
 				ApplicationState state,
@@ -203,7 +251,11 @@ namespace Alchemi.Core.Manager.Storage
 			m_username = username;
 		}
 
-		// initialize an application with only a username supplied
+		/// <summary>
+		/// ApplicationStorageView constructor.
+		/// Initialize an application with only a username supplied.
+		/// </summary>
+		/// <param name="username"></param>
 		public ApplicationStorageView(
 				String username
 			) : this (
@@ -217,6 +269,10 @@ namespace Alchemi.Core.Manager.Storage
 		
 		}
 
+		/// <summary>
+		/// Gets a human readable description of the ApplicationState property.
+		/// <seealso cref="ApplicationState"/>
+		/// </summary>
 		public string StateString
 		{
 			get

@@ -43,17 +43,17 @@ namespace Alchemi.Core.Manager.Storage
 		void CreateStorage(String databaseName);
 
 		/// <summary>
-		/// Create the basic storage structures such as tables
+		/// Create the basic storage structures such as tables.
 		/// </summary>
 		void SetUpStorage();
 
 		/// <summary>
-		/// Add default storage data
+		/// Add default storage data.
 		/// </summary>
 		void InitializeStorageData();
 
 		/// <summary>
-		/// Remove the structures initialized by this storage
+		/// Remove the structures initialized by this storage.
 		/// </summary>
 		void TearDownStorage();
 	}

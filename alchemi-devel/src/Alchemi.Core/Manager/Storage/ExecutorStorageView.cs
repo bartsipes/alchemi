@@ -29,7 +29,7 @@ namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Storage view of an executor object. 
-	/// Used to pass group related data to and from the storage layer 
+	/// Used to pass executor related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class ExecutorStorageView
@@ -59,6 +59,10 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		#region "Properties"
+
+		/// <summary>
+		/// Executor architecture.
+		/// </summary>
 		public String Architecture
 		{
 			get
@@ -71,6 +75,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Executor Operating System.
+		/// </summary>
 		public String Os
 		{
 			get
@@ -83,6 +90,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The number of CPUs on this Executor.
+		/// </summary>
 		public Int32 NumberOfCpu
 		{
 			get
@@ -95,6 +105,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The maximum disk space available on this Executor.
+		/// </summary>
 		public float MaxDisk
 		{
 			get
@@ -107,6 +120,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The maximum memory available on this Executor.
+		/// </summary>
 		public float MaxMemory
 		{
 			get
@@ -119,6 +135,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Executor Id.
+		/// </summary>
 		public String ExecutorId
 		{
 			get
@@ -131,6 +150,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the Executor is dedicated or not.
+		/// </summary>
 		public bool Dedicated
 		{
 			get
@@ -143,6 +165,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the Executor is connected or not.
+		/// </summary>
 		public bool Connected
 		{
 			get
@@ -155,6 +180,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The last time this Executor was pinged
+		/// </summary>
 		public DateTime PingTime
 		{
 			get
@@ -167,6 +195,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the PingTime property is set or not.
+		/// </summary>
 		public bool PingTimeSet
 		{
 			get
@@ -175,6 +206,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The Executor's host name.
+		/// </summary>
 		public String HostName
 		{
 			get
@@ -187,6 +221,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The Executor's port.
+		/// </summary>
 		public Int32 Port
 		{
 			get
@@ -199,6 +236,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The Executor's username.
+		/// </summary>
 		public String Username
 		{
 			get
@@ -207,6 +247,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The maximum CPU of the Executor.
+		/// </summary>
 		public Int32 MaxCpu
 		{
 			get
@@ -215,6 +258,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The CPU usage for this Executor.
+		/// </summary>
 		public Int32 CpuUsage
 		{
 			get
@@ -227,6 +273,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The available CPU power for this Executor.
+		/// </summary>
 		public Int32 AvailableCpu
 		{
 			get
@@ -239,6 +288,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The total CPU usage for this Executor.
+		/// </summary>
 		public float TotalCpuUsage
 		{
 			get
@@ -253,6 +305,19 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="pingTime"></param>
+		/// <param name="hostname"></param>
+		/// <param name="port"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="cpuUsage"></param>
+		/// <param name="availableCpu"></param>
+		/// <param name="totalCpuUsage"></param>
 		public ExecutorStorageView(
 				bool dedicated,
 				bool connected,
@@ -280,6 +345,19 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="executorId"></param>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="hostname"></param>
+		/// <param name="port"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="cpuUsage"></param>
+		/// <param name="availableCpu"></param>
+		/// <param name="totalCpuUsage"></param>
 		public ExecutorStorageView(
 			String executorId,
 			bool dedicated,
@@ -307,6 +385,20 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="executorId"></param>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="pingTime"></param>
+		/// <param name="hostname"></param>
+		/// <param name="port"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="cpuUsage"></param>
+		/// <param name="availableCpu"></param>
+		/// <param name="totalCpuUsage"></param>
 		public ExecutorStorageView(
 			String executorId,
 			bool dedicated,
@@ -340,6 +432,19 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="hostname"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="maxMemory"></param>
+		/// <param name="maxDisk"></param>
+		/// <param name="numberOfCpu"></param>
+		/// <param name="os"></param>
+		/// <param name="architecture"></param>
 		public ExecutorStorageView(
 			bool dedicated,
 			bool connected,
@@ -372,6 +477,20 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="executorId"></param>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="hostname"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="maxMemory"></param>
+		/// <param name="maxDisk"></param>
+		/// <param name="numberOfCpu"></param>
+		/// <param name="os"></param>
+		/// <param name="architecture"></param>
 		public ExecutorStorageView(
 			string executorId,
 			bool dedicated,
@@ -405,6 +524,25 @@ namespace Alchemi.Core.Manager.Storage
 		{
 		}
 
+		/// <summary>
+		/// ExecutorStorageView constructor.
+		/// </summary>
+		/// <param name="executorId"></param>
+		/// <param name="dedicated"></param>
+		/// <param name="connected"></param>
+		/// <param name="pingTime"></param>
+		/// <param name="hostname"></param>
+		/// <param name="port"></param>
+		/// <param name="username"></param>
+		/// <param name="maxCpu"></param>
+		/// <param name="cpuUsage"></param>
+		/// <param name="availableCpu"></param>
+		/// <param name="totalCpuUsage"></param>
+		/// <param name="maxMemory"></param>
+		/// <param name="maxDisk"></param>
+		/// <param name="numberOfCpu"></param>
+		/// <param name="os"></param>
+		/// <param name="architecture"></param>
 		public ExecutorStorageView(
 			String executorId,
 			bool dedicated,

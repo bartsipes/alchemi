@@ -31,7 +31,7 @@ namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Storage view of a user object. 
-	/// Used to pass user related data to and from the storage layer 
+	/// Used to pass user related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class UserStorageView
@@ -56,18 +56,9 @@ namespace Alchemi.Core.Manager.Storage
 
 		#region "Properties"
 
-//		public Int32 UserId
-//		{
-//			get
-//			{
-//				return m_userId;	
-//			}
-//			set
-//			{
-//				m_userId = value;
-//			}
-//		}
-
+		/// <summary>
+		/// Gets or sets a value indicating whether this user is a system user.
+		/// </summary>
 		public bool IsSystem
 		{
 			get
@@ -80,6 +71,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The username.
+		/// </summary>
 		public String Username
 		{
 			get
@@ -92,6 +86,11 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 		
+		/// <summary>
+		/// The password. This value is never stored in the database.
+		/// This is used to calculate the MD5 hash stored in the database. 
+		/// <seealso cref="PasswordMd5Hash"/>
+		/// </summary>
 		public String Password
 		{
 			get
@@ -104,6 +103,10 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The password's MD5 hash. When validating the user's password only this hash is required.
+		/// <seealso cref="Password"/>
+		/// </summary>
 		public String PasswordMd5Hash
 		{
 			get
@@ -123,6 +126,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The group id this user belongs to.
+		/// </summary>
 		public Int32 GroupId
 		{
 			get
@@ -137,6 +143,12 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		/// <summary>
+		/// UserStorageView constructor.
+		/// </summary>
+		/// <param name="username"></param>
+		/// <param name="password"></param>
+		/// <param name="groupId"></param>
 		public UserStorageView(String username, String password, Int32 groupId)
 		{
 			m_username = username;
@@ -144,6 +156,10 @@ namespace Alchemi.Core.Manager.Storage
 			m_groupId = groupId; 
 		}
 
+		/// <summary>
+		/// UserStorageView constructor.
+		/// </summary>
+		/// <param name="username"></param>
 		public UserStorageView(String username) : this(username, "", -1)
 		{
 		}

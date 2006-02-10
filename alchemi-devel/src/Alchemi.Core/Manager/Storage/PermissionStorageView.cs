@@ -30,7 +30,7 @@ namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Storage view of a Permission object. 
-	/// Used to pass permission related data to and from the storage layer 
+	/// Used to pass permission related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class PermissionStorageView
@@ -44,6 +44,9 @@ namespace Alchemi.Core.Manager.Storage
 
 		#region "Properties"
 
+		/// <summary>
+		/// A human readable permission name.
+		/// </summary>
 		public String PermissionName
 		{
 			get
@@ -56,6 +59,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 		
+		/// <summary>
+		/// Permission Id.
+		/// </summary>
 		public Int32 PermissionId
 		{
 			get
@@ -68,21 +74,35 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
-
 		#endregion
 
+		/// <summary>
+		/// PermissionStorageView constructor.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="name"></param>
 		public PermissionStorageView(Int32 id, String name)
 		{
 			m_prmId = id;
 			m_prmname = name;
 		}
 
+		/// <summary>
+		/// PermissionStorageView constructor.
+		/// </summary>
+		/// <param name="perm"></param>
 		public PermissionStorageView(Permission perm)
 		{
 			m_prmId = (Int32)perm;
 			m_prmname = perm.ToString();
 		}
 
+		/// <summary>
+		/// Convert a Permission array into a PermissionStorageView array.
+		/// <seealso cref="Permission"/>
+		/// </summary>
+		/// <param name="permissions">The Permission array to be converted</param>
+		/// <returns>A new array of PermissionStorageView values.</returns>
 		public static PermissionStorageView[] GetPermissionStorageView(Permission[] permissions)
 		{
 			ArrayList result = new ArrayList();

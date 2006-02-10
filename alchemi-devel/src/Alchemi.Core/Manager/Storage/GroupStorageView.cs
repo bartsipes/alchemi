@@ -29,7 +29,7 @@ namespace Alchemi.Core.Manager.Storage
 {
 	/// <summary>
 	/// Storage view of a group object. 
-	/// Used to pass group related data to and from the storage layer 
+	/// Used to pass group related data to and from the storage layer.
 	/// </summary>
 	[Serializable]
 	public class GroupStorageView
@@ -46,6 +46,9 @@ namespace Alchemi.Core.Manager.Storage
 
 		#region "Properties"
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this Group is a system group.
+		/// </summary>
 		public bool IsSystem
 		{
 			get
@@ -58,6 +61,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The group name.
+		/// </summary>
 		public String GroupName
 		{
 			get
@@ -66,6 +72,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// The group Id.
+		/// </summary>
 		public Int32 GroupId
 		{
 			get
@@ -74,6 +83,9 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// A human readable description for this group.
+		/// </summary>
 		public String Description
 		{
 			get
@@ -88,12 +100,22 @@ namespace Alchemi.Core.Manager.Storage
 
 		#endregion
 
+		/// <summary>
+		/// GroupStorageView constructor.
+		/// </summary>
+		/// <param name="groupId"></param>
+		/// <param name="groupName"></param>
 		public GroupStorageView(Int32 groupId, String groupName)
 		{
 			m_groupId = groupId;
 			m_groupName = groupName;
 		}
 
+		/// <summary>
+		/// GroupStorageView constructor.
+		/// Initializes an empty object.
+		/// </summary>
+		/// <param name="groupId"></param>
 		public GroupStorageView(Int32 groupId) : this(groupId, null)
 		{
 		}

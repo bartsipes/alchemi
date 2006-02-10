@@ -38,11 +38,34 @@ namespace Alchemi.Core.Owner
 	[Serializable]
     public enum ThreadState
     {
-		Unknown = -1, // unknown or unitialized - added by Tibor Biro (tb@tbiro.com)
-        Ready = 0, // ready to execute
-        Scheduled = 1, // executor has id
-        Started = 2, // executor has thread and is executing
-        Finished = 3, // executor has returned the finished thread
-        Dead = 4, // returned to owner OR aborted
+		/// <summary>
+		/// Unknown or unitialized
+		/// </summary>
+		Unknown = -1, // added by Tibor Biro (tb@tbiro.com)
+
+		/// <summary>
+		/// Ready to execute
+		/// </summary>
+        Ready = 0,
+
+		/// <summary>
+		/// Executor received the Id for the thread.
+		/// </summary>
+        Scheduled = 1, 
+
+		/// <summary>
+		/// Executor has thread and is executing.
+		/// </summary>
+        Started = 2, 
+
+		/// <summary>
+		/// Executor has returned the finished thread.
+		/// </summary>
+        Finished = 3, 
+
+		/// <summary>
+		/// Returned to owner OR aborted
+		/// </summary>
+        Dead = 4, 
     }
 }

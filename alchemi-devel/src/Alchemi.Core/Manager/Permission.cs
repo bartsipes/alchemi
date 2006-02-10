@@ -36,9 +36,24 @@ namespace Alchemi.Core.Manager
 	/// </summary>
     public enum Permission
     {
+		/// <summary>
+		/// Allowed to execute threads.
+		/// </summary>
         ExecuteThread = 1,
+
+		/// <summary>
+		/// Allowed to manage own applications.
+		/// </summary>
         ManageOwnApp = 2,
+
+		/// <summary>
+		/// Allowed to manage all applications.
+		/// </summary>
         ManageAllApps = 3,
+
+		/// <summary>
+		/// Allowed to manage users.
+		/// </summary>
         ManageUsers = 4
     }
 }

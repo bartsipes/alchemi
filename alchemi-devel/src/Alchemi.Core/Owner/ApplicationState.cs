@@ -36,8 +36,19 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public enum ApplicationState
     {
+		/// <summary>
+		/// Application awaiting manifest.
+		/// </summary>
         AwaitingManifest = 0,
+
+		/// <summary>
+		/// Application ready to be executed.
+		/// </summary>
         Ready = 1,
+
+		/// <summary>
+		/// Application stopped.
+		/// </summary>
         Stopped = 2
     }
 }
