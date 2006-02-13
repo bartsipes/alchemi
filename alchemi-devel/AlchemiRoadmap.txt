@@ -7,12 +7,12 @@ This includes mainly the major features / issues. Time/priorities/milestones are
 Put your initials next to the task you would like to work on.
 (TB) = Tibor Biro (tb@tbiro.com)
 
-Last updated: 2 Jan 2006
+Last updated: 13 Feb 2006
 ------------------------------------
 - Configuration and set-up improvements 
 	- Fix configuration and set up problems, particularly service-mode setup.
-(TB)	- Options in DBInstaller to check for existence of database and remove it. Re-install is default.
-	  also "verify option in database, so that the consistency is checked.". Testing database setup.
+	- Options in DBSetup to check for existence of database and remove it. Re-install is default.
+	  also "verify option in database, so that the consistency is checked.". 
 
 - Scheduling and policy enforcement at Manager
 	- Advanced scheduling (economy based, and other algorithms)
@@ -36,7 +36,8 @@ Last updated: 2 Jan 2006
 	- Prevent spread of viruses using code-access-security, sandbox-execution of user-code
 		
 - Migration to .net 2.0 version
-	- do we still keep v.1.x compatibility?
+	- do we still keep v.1.x compatibility? 
+	- We should probably start by releasing compiled versions of .NET 2.0 and .NET 1.1 in paralel to give everytone a chance to upgrade to 2.0
 
 - Console improvements
 	- Accurate reporting of application status : (it is now based on thread's status. need to fix this).
@@ -82,6 +83,7 @@ Last updated: 2 Jan 2006
 	- detailed reports like Console, but only for current Executor.
 	  (eg. Applications run. date, time, user. Threads which are run by the executor. 
 	  total time taken for app, threads etc...)
+	- view the log file or at least the last few entries. Maybe put a listener on the logging event (if such an event is available)
 	  
 - Performance monitoring and improvement
 	- Detailed profiling and benchmarks, alchemi start up overheads
