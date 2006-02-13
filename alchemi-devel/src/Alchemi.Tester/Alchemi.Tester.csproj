@@ -94,12 +94,22 @@
                     Project = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Executor"
+                    Project = "{A71A830F-F3FA-47BD-956E-67CFB22F75E8}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Executor\ConfigurationTester.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

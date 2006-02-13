@@ -179,7 +179,7 @@ namespace Alchemi.ExecutorService
 
             txMgrHost.Text = Config.ManagerHost;
             txMgrPort.Text = Config.ManagerPort.ToString();
-            txId.Text = Config.Id;
+            txId.Text = Config.GetIdAtLocation(0);
             txOwnPort.Text = Config.OwnPort.ToString();
             txUsername.Text = Config.Username;
             txPassword.Text = Config.Password;

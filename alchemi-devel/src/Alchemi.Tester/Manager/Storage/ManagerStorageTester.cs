@@ -1653,6 +1653,13 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual("x86 Family 6 Model 13 Stepping 6", executor.Architecture);
 		}
 
+		[Test]
+		public void GetExecutorTestNullId()
+		{
+			ExecutorStorageView executor = ManagerStorage.GetExecutor(null);
+
+			Assert.IsNull(executor);
+		}
 
 		#endregion
 

@@ -24,9 +24,6 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
 using Alchemi.Core;

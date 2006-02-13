@@ -89,10 +89,6 @@ namespace Alchemi.ExecutorExec
         {
 			Logger.LogHandler += new LogEventHandler(this.LogHandler);
 
-			ExecutorContainer.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(this.RefreshUIControls);
-            ExecutorContainer.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
-			ExecutorContainer.ExecConnectEvent += new ExecutorConnectStatusEventHandler(this.ExecutorConnect_Status);
-
 			//not a service. normal exec startup mode.
 			_container = new ExecutorContainer();
 			_container.ReadConfig(false);
@@ -100,6 +96,10 @@ namespace Alchemi.ExecutorExec
 
 			this.btConnect.Text = "Connect";
 			this.btDisconnect.Text = "Disconnect";
+
+			_container.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(this.RefreshUIControls);
+			_container.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
+			_container.ExecConnectEvent += new ExecutorConnectStatusEventHandler(this.ExecutorConnect_Status);
 
 			ConnectOnStartup();
 
@@ -117,8 +117,8 @@ namespace Alchemi.ExecutorExec
 
 		private void udHBInterval_ValueChanged(object sender, EventArgs e)
 		{
-			if (_container.Executor != null)
-				_container.Executor.HeartBeatInterval = (int)udHBInterval.Value;
+			_container.UpdateHeartBeatBInterval((int)udHBInterval.Value);
+
 			Config.HeartBeatInterval = (int) udHBInterval.Value;
 		}
 
@@ -192,7 +192,7 @@ namespace Alchemi.ExecutorExec
         {
 			try
 			{
-				_container.Executor = null;
+				_container.Executors = null;
 				RefreshUIControls();
 
 				//just double check.
@@ -328,7 +328,10 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
-				_container.Executor.StartNonDedicatedExecuting(1000);
+				foreach (GExecutor executor in _container.Executors)
+				{
+					executor.StartNonDedicatedExecuting(1000);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -342,7 +345,10 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
-				_container.Executor.StopNonDedicatedExecuting();
+				foreach (GExecutor executor in _container.Executors)
+				{
+					executor.StopNonDedicatedExecuting();
+				}
 			}
 			catch (Exception ex)
 			{
@@ -359,7 +365,7 @@ namespace Alchemi.ExecutorExec
 
 			txMgrHost.Text = Config.ManagerHost;
 			txMgrPort.Text = Config.ManagerPort.ToString();
-			txId.Text = Config.Id;
+			txId.Text = Config.GetIdAtLocation(0);//TODO: replace this with a dropdown
 			txOwnPort.Text = Config.OwnPort.ToString();
 			txUsername.Text = Config.Username;
 			txPassword.Text = Config.Password;
@@ -386,9 +392,17 @@ namespace Alchemi.ExecutorExec
 			pbar.Value = 0;
            
 			bool executing = false;
-			if (_container!=null && _container.Executor!=null && _container.Executor.ExecutingNonDedicated)
+			if (_container!=null && _container.Executors!=null)
 			{
-				executing = true;
+				foreach (GExecutor executor in _container.Executors)
+				{
+					if (executor != null && executor.ExecutingNonDedicated)
+					{
+						executing = true;
+						break;
+					}
+				}
+				
 			}
 			btStartExec.Enabled = ((!Config.Dedicated) && (connected) && (!executing));
 			btStopExec.Enabled = ((!Config.Dedicated) && (connected) && (executing));

@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.Runtime.Remoting;
@@ -46,8 +47,9 @@ namespace Alchemi.Core
         // member variables
         //----------------------------------------------------------------------------------------------- 
         
-        private const string RemoteObjPrefix = "Alchemi_Node";
-        private bool _ChannelRegistered = false;
+		private const string DefaultRemoteObjectPrefix = "Alchemi_Node";
+		private string _RemoteObjPrefix = DefaultRemoteObjectPrefix;
+		private bool _ChannelRegistered = false;
         private IManager _Manager = null;
         private RemoteEndPoint _ManagerEP = null;
         private OwnEndPoint _OwnEP = null;
@@ -128,13 +130,18 @@ namespace Alchemi.Core
 		/// <param name="managerEP">manager end point</param>
 		/// <param name="ownEP">own end point</param>
 		/// <param name="credentials"></param>
-        public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials)
+        public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials) : this(managerEP, ownEP, credentials, DefaultRemoteObjectPrefix)
         {
-            _OwnEP = ownEP;
-            _Credentials = credentials;
-            _ManagerEP = managerEP;
-            Init();
         }
+
+		public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials, string remoteObjectPrefix)
+		{
+			_OwnEP = ownEP;
+			_Credentials = credentials;
+			_ManagerEP = managerEP;
+			_RemoteObjPrefix = remoteObjectPrefix;
+			Init();
+		}
 
 		/// <summary>
 		/// Creates a new instance of the GConnection class
@@ -179,15 +186,20 @@ namespace Alchemi.Core
 		/// <returns>Node reference</returns>
         public static GNode GetRemoteRef(RemoteEndPoint remoteEP)
         {
-            switch (remoteEP.RemotingMechanism)
-            {
-                case RemotingMechanism.TcpBinary:
-                    string uri = "tcp://" + remoteEP.Host + ":" + remoteEP.Port + "/" + RemoteObjPrefix;
-                    return (GNode) Activator.GetObject(typeof(GNode), uri);
-                default:
-                    return null;
-            }
+			return GetRemoteRef(remoteEP, DefaultRemoteObjectPrefix);
         }
+
+		public static GNode GetRemoteRef(RemoteEndPoint remoteEP, string remoteObjectPrefix)
+		{
+			switch (remoteEP.RemotingMechanism)
+			{
+				case RemotingMechanism.TcpBinary:
+					string uri = "tcp://" + remoteEP.Host + ":" + remoteEP.Port + "/" + remoteObjectPrefix;
+					return (GNode) Activator.GetObject(typeof(GNode), uri);
+				default:
+					return null;
+			}			
+		}
         
         //-----------------------------------------------------------------------------------------------          
         
@@ -245,8 +257,18 @@ namespace Alchemi.Core
                         {
                             try
                             {
-                                _Channel = new TcpChannel(_OwnEP.Port);
-                            	ChannelServices.RegisterChannel(_Channel);
+                            	Hashtable properties = new Hashtable();
+
+								// the name must be Empty in order to allow multiple TCP channels
+								properties.Add("name", String.Empty);
+								properties.Add("port", _OwnEP.Port);
+
+                                _Channel = new TcpChannel(
+									properties, 
+									new BinaryClientFormatterSinkProvider(), 
+									new BinaryServerFormatterSinkProvider());
+
+								ChannelServices.RegisterChannel(_Channel);
                                 _ChannelRegistered = true;
                             }
                             catch (Exception e)
@@ -271,7 +293,7 @@ namespace Alchemi.Core
                         {
                             try
                             {
-                            	RemotingServices.Marshal(this, RemoteObjPrefix);
+                            	RemotingServices.Marshal(this, _RemoteObjPrefix);
                             }
                             catch (Exception e)
                             {

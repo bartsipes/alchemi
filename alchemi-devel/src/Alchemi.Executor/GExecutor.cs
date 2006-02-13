@@ -73,13 +73,13 @@ namespace Alchemi.Executor
 		/// <summary>
 		/// Raised when the connection status of a non-dedicated Executor is changed.
 		/// </summary>
-        public static event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
+        public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
 		
 		/// <summary>
 		/// This event is raised only when a Executor loses connection to the Manager.
 		/// (This can happen in both non-dedicated and dedicated modes.
 		/// </summary>
-        public static event GotDisconnectedEventHandler GotDisconnected;
+        public event GotDisconnectedEventHandler GotDisconnected;
 
         //----------------------------------------------------------------------------------------------- 
         // properties
@@ -181,7 +181,7 @@ namespace Alchemi.Executor
 		/// <param name="dedicated">Specifies whether the executor is dedicated</param>
 		/// <param name="sc">Security credentials</param>
 		/// <param name="baseDir">Working directory for the executor</param>
-        public GExecutor(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, SecurityCredentials sc, string baseDir) : base(managerEP, ownEP, sc)
+        public GExecutor(RemoteEndPoint managerEP, OwnEndPoint ownEP, string id, bool dedicated, SecurityCredentials sc, string baseDir) : base(managerEP, ownEP, sc, id)
         {
             _BaseDir = baseDir;
             if (_BaseDir == "" || _BaseDir==null)

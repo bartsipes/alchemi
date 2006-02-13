@@ -709,6 +709,11 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView GetExecutor(String executorId)
 		{
+			if (executorId == null)
+			{
+				return null;
+			}
+
 			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select executor_id, is_dedicated, is_connected, ping_time, host, port, usr_name, cpu_max, cpu_usage, cpu_avail, cpu_totalusage, mem_max, disk_max, num_cpus, os, arch from executor where executor_id='{0}'",
 					  executorId)))
 			{

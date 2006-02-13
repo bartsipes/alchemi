@@ -43,7 +43,7 @@ namespace Alchemi.Executor
 		/// <summary>
 		/// Executor Id
 		/// </summary>
-        public string Id = "";
+        public string[] Id;
 		/// <summary>
 		/// Host of the Manager
 		/// </summary>
@@ -172,5 +172,48 @@ namespace Alchemi.Executor
             return temp;
         }
 
+		/// <summary>
+		/// Get the executor Id at a given location in the Id array.
+		/// </summary>
+		/// <param name="location"></param>
+		/// <returns></returns>
+		public string GetIdAtLocation(int location)
+		{
+			if (Id == null || Id.Length < location + 1 || Id[location] == null)
+			{
+				return String.Empty;
+			}
+
+			return Id[location];
+		}
+
+		/// <summary>
+		/// Set an executor Id at the given location.
+		/// </summary>
+		/// <param name="location"></param>
+		/// <param name="newId"></param>
+		public void SetIdAtLocation(int location, string newId)
+		{
+			// initialize if not already set
+			if (Id == null)
+			{
+				Id = new string[location + 1];
+			}
+
+			// resize if needed
+			if (Id.Length < location + 1)
+			{
+				string[] tempIds = new string[location + 1];
+
+				for(int index = 0; index < Id.Length; index++)
+				{
+					tempIds[index] = Id[index];
+				}
+
+				Id = tempIds;
+			}
+
+			Id[location] = newId;
+		}
     }
 }

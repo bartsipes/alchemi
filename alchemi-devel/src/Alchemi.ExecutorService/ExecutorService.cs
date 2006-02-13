@@ -26,7 +26,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.ServiceProcess;
@@ -66,7 +65,7 @@ namespace Alchemi.ExecutorService
 			InitializeComponent();
 			execContainer = new ExecutorContainer();
 			// subscribe to events
-			ExecutorContainer.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
+			execContainer.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
 		
 			Logger.LogHandler += new LogEventHandler(this.Log);
 		}

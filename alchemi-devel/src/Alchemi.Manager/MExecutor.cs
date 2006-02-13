@@ -102,7 +102,7 @@ namespace Alchemi.Manager
             IExecutor executor;
             try
             {
-                executor = (IExecutor) GNode.GetRemoteRef(ep);
+                executor = (IExecutor) GNode.GetRemoteRef(ep, _Id);
                 executor.PingExecutor(); //connect back to executor.
                 success = true;
 				logger.Debug("Connected dedicated. Executor_id="+_Id);
