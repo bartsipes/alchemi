@@ -53,6 +53,8 @@ namespace Alchemi.Executor
 		// Create a logger for use in this class
 		private static readonly Logger logger = new	Logger();
 
+		private static object applicationDirectoryLock = new object();
+
         private string _Id;
         private bool _Dedicated;
         private Thread _NonDedicatedMonitorThread;
@@ -487,7 +489,7 @@ namespace Alchemi.Executor
 					logger.Debug("Error unloading appdomain:",e);
 				}
 
-				string appDir = string.Format("{0}\\dat\\application_{1}", _BaseDir, appid);
+				string appDir = GetApplicationDirectory(appid);
 				logger.Debug("Cleaning up files on executor:"+_Id+" for application:" + appid);
 				
 				logger.Debug("Deleting: " + appDir);
@@ -611,16 +613,17 @@ namespace Alchemi.Executor
 				logger.Info("Started ExecuteThreadInAppDomain...");
 
 				logger.Info(string.Format("executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
-
-				string appDir = Path.Combine(_BaseDir,string.Format("dat\\application_{0}",_CurTi.ApplicationId));
+				
+				string appDir = GetApplicationDirectory(_CurTi.ApplicationId);
 				logger.Debug("AppDir on executor=" + appDir);
+
 				if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
 				{
 					// create application domain for newly encountered grid application
 					logger.Debug("app dir on executor: " + appDir);
 
 					Directory.CreateDirectory(appDir);
-    
+
 					FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);
 					if (manifest != null)
 					{
@@ -653,10 +656,10 @@ namespace Alchemi.Executor
 					// ***
 
 					/* Log 12/01, 2004
-					 * Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
-					 * Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
-					 * in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
-					 */
+						* Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
+						* Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
+						* in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
+						*/
 					//Code edited by Rodrigo Assirati Dias
 					//Original code was:
 					//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
@@ -875,6 +878,20 @@ namespace Alchemi.Executor
 			{
 				logger.Warn(string.Format("Error aborting thread: {0}:{1}. Continuing...", ti.ApplicationId, ti.ThreadId),e);
 			}
+		}
+
+		/// <summary>
+		/// Create the application path for the given application Id.
+		/// I had to move the application paths to be unique per running executor thread
+		/// in order to avoid I/O errors when multiple threads tried to create the same file
+		/// </summary>
+		/// <param name="applicationId"></param>
+		/// <returns></returns>
+		private string GetApplicationDirectory(string applicationId)
+		{
+			return Path.Combine(
+				_BaseDir,
+				string.Format(@"dat\application_{0}\executor_{1}",applicationId, _Id));
 		}
 
 		/*
