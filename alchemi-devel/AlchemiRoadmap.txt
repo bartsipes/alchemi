@@ -59,7 +59,7 @@ Last updated: 13 Feb 2006
 
 - Thread execution improvements
 	- Find a way to return the actual standard error,output from the process to the client
-	- Executor to accept more than one thread at the same time in case of SMP machines
+(TB)	- Executor to accept more than one thread at the same time in case of SMP machines
 
 - Robust multiclustering and scalability
 	- P2P? Hierarchical managers? 
