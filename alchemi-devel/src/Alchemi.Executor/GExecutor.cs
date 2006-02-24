@@ -63,8 +63,12 @@ namespace Alchemi.Executor
         private int _EmptyThreadInterval;
         private bool _ExecutingNonDedicated = false;
         private ThreadIdentifier _CurTi;
-        private Hashtable _GridAppDomains;
-        private ManualResetEvent _ReadyToExecute = new ManualResetEvent(true);
+
+		// tb@tbiro.com - having the App domains hashtable as a Singleton means that only one app domain will be created for an application
+		// tb@tbiro.com - so a bunch of synchronization code needs to be added
+        private static readonly Hashtable _GridAppDomains = new Hashtable();
+        
+		private ManualResetEvent _ReadyToExecute = new ManualResetEvent(true);
         private string _BaseDir;
         
         private int _HeartbeatInterval = 2;
@@ -199,8 +203,6 @@ namespace Alchemi.Executor
 				logger.Debug("Couldnot find datadir. Creating it..."+datDir);
                 Directory.CreateDirectory(datDir);
             }
-
-            _GridAppDomains = new Hashtable();
       
             _Dedicated = dedicated;
             _Id = id;
@@ -326,22 +328,24 @@ namespace Alchemi.Executor
 
             RelinquishIncompleteThreads();
             UnRemoteSelf();
-            
-			logger.Debug("Unloading AppDomains on this executor...");
-            foreach (object gad in _GridAppDomains.Values)
-            {
-				//handle error while unloading appDomain and continue...
-				try
-				{
-					AppDomain.Unload(((GridAppDomain) gad).Domain);
-				}
-				catch (Exception e)
-				{
-					logger.Error("Error unloading appDomain. Continuing disconnection process...",e);
-				}
-            }
-            _GridAppDomains.Clear();
 
+			lock (_GridAppDomains)
+			{
+				logger.Debug("Unloading AppDomains on this executor...");
+				foreach (object gad in _GridAppDomains.Values)
+				{
+					//handle error while unloading appDomain and continue...
+					try
+					{
+						AppDomain.Unload(((GridAppDomain) gad).Domain);
+					}
+					catch (Exception e)
+					{
+						logger.Error("Error unloading appDomain. Continuing disconnection process...",e);
+					}
+				}
+				_GridAppDomains.Clear();
+			}
 			//clean up all apps
 			CleanUpApps();
         }
@@ -471,17 +475,20 @@ namespace Alchemi.Executor
 			{
 				//unload the app domain and clean up all the files here, for this application.
 				try
-				{	
-					GridAppDomain gad = (GridAppDomain)_GridAppDomains[appid];
-					if (gad!=null && _GridAppDomains.ContainsKey(appid))
-					{	
-						logger.Debug("Unloading AppDomain for application:" + appid);
-						AppDomain.Unload(gad.Domain);
-						_GridAppDomains.Remove(appid);
-					}
-					else
+				{
+					lock (_GridAppDomains)
 					{
-						logger.Debug("Appdomain not found in collection.");
+						GridAppDomain gad = (GridAppDomain)_GridAppDomains[appid];
+						if (gad!=null && _GridAppDomains.ContainsKey(appid))
+						{	
+							logger.Debug("Unloading AppDomain for application:" + appid);
+							AppDomain.Unload(gad.Domain);
+							_GridAppDomains.Remove(appid);
+						}
+						else
+						{
+							logger.Debug("Appdomain not found in collection.");
+						}
 					}
 				}
 				catch (Exception e)
@@ -619,60 +626,71 @@ namespace Alchemi.Executor
 
 				if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
 				{
-					// create application domain for newly encountered grid application
-					logger.Debug("app dir on executor: " + appDir);
-
-					Directory.CreateDirectory(appDir);
-
-					FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);
-					if (manifest != null)
-					{
-						foreach (FileDependency dep in manifest)
+					lock(_GridAppDomains)
+					{ 
+						// make sure that by the time the lock was acquired the app domain is still not created
+						if (!_GridAppDomains.Contains(_CurTi.ApplicationId))
 						{
-							logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
-							dep.UnPack(Path.Combine(appDir,dep.FileName));
+							// create application domain for newly encountered grid application
+							logger.Debug("app dir on executor: " + appDir);
+
+							Directory.CreateDirectory(appDir);
+
+							FileDependencyCollection manifest = Manager.Executor_GetApplicationManifest(Credentials, _CurTi.ApplicationId);
+							if (manifest != null)
+							{
+								foreach (FileDependency dep in manifest)
+								{
+									logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
+									dep.UnPack(Path.Combine(appDir,dep.FileName));
+								}
+							}
+							else
+							{
+								logger.Warn("Executor_GetApplicationManifest from the Manager returned null");	
+							}
+
+							AppDomainSetup info = new AppDomainSetup();
+							info.PrivateBinPath = appDir;
+							AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info);
+
+							// ***
+							// http://www.dotnetthis.com/Articles/DynamicSandboxing.htm
+							PolicyLevel domainPolicy = PolicyLevel.CreateAppDomainLevel(); 
+							AllMembershipCondition allCodeMC = new AllMembershipCondition(); 
+							// TODO: 'FullTrust' in the following line needs to be replaced with something like 'AlchemiGridThread'
+							//        This permission set needs to be defined and set automatically as part of the installation.
+							PermissionSet internetPermissionSet = domainPolicy.GetNamedPermissionSet("FullTrust"); 
+							PolicyStatement internetPolicyStatement = new PolicyStatement(internetPermissionSet); 
+							CodeGroup allCodeInternetCG = new UnionCodeGroup(allCodeMC, internetPolicyStatement); 
+							domainPolicy.RootCodeGroup = allCodeInternetCG; 
+							domain.SetAppDomainPolicy(domainPolicy);
+							// ***
+
+							/* Log 12/01, 2004
+							* Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
+							* Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
+							* in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
+							*/
+							//Code edited by Rodrigo Assirati Dias
+							//Original code was:
+							//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
+
+							//kna changed this to get the AppDomainExecutor type from the Alchemi.Executor.dll assembly.
+							AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Executor.AppDomainExecutor");
+
+							_GridAppDomains.Add(
+								_CurTi.ApplicationId,
+								new GridAppDomain(domain, executor)
+								);
+
+							logger.Info("Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
+						}
+						else
+						{
+							logger.Info("I got the lock but this app domain is already created.");
 						}
 					}
-					else
-					{
-						logger.Warn("Executor_GetApplicationManifest from the Manager returned null");	
-					}
-
-					AppDomainSetup info = new AppDomainSetup();
-					info.PrivateBinPath = appDir;
-					AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info);
-
-					// ***
-					// http://www.dotnetthis.com/Articles/DynamicSandboxing.htm
-					PolicyLevel domainPolicy = PolicyLevel.CreateAppDomainLevel(); 
-					AllMembershipCondition allCodeMC = new AllMembershipCondition(); 
-					// TODO: 'FullTrust' in the following line needs to be replaced with something like 'AlchemiGridThread'
-					//        This permission set needs to be defined and set automatically as part of the installation.
-					PermissionSet internetPermissionSet = domainPolicy.GetNamedPermissionSet("FullTrust"); 
-					PolicyStatement internetPolicyStatement = new PolicyStatement(internetPermissionSet); 
-					CodeGroup allCodeInternetCG = new UnionCodeGroup(allCodeMC, internetPolicyStatement); 
-					domainPolicy.RootCodeGroup = allCodeInternetCG; 
-					domain.SetAppDomainPolicy(domainPolicy);
-					// ***
-
-					/* Log 12/01, 2004
-						* Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
-						* Modified ExecuteThreadInAppDomain function to enable it to create a instance of Alchemi.Core.dll
-						* in the application base directory rather than the running application directory (%WINDOWSDIR%/System32 to services)
-						*/
-					//Code edited by Rodrigo Assirati Dias
-					//Original code was:
-					//AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap("Alchemi.Core.dll", "Alchemi.Core.Executor.AppDomainExecutor");
-
-					//kna changed this to get the AppDomainExecutor type from the Alchemi.Executor.dll assembly.
-					AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Executor.AppDomainExecutor");
-
-					_GridAppDomains.Add(
-						_CurTi.ApplicationId,
-						new GridAppDomain(domain, executor)
-						);
-
-					logger.Info("Created app domain, policy, got instance of GridAppDomain and added to hashtable...all done once for this application");
 				}
 
 				//get thread from manager

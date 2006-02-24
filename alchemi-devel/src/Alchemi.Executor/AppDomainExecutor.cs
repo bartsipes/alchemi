@@ -53,7 +53,7 @@ namespace Alchemi.Executor
 		/// <returns>A byte array representing a serialized gridThread, after the execution is complete.</returns>
         public byte[] ExecuteThread(byte[] thread)
         {
-			
+			// (tb@tbiro.com): this should be revised - there is no log listener in this app domain so these logs do not go anywhere
 			GThread gridThread = (GThread) Utils.DeserializeFromByteArray(thread);
 			logger.Debug("Executor running GThread: "+gridThread.Id);
 			logger.Debug("Working dir="+AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
