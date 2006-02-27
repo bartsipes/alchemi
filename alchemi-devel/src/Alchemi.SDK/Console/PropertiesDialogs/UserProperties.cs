@@ -287,6 +287,8 @@ namespace Alchemi.Console.PropertiesDialogs
 					_User.Password = pwdform.Password;
 					console.Manager.Admon_UpdateUsers(console.Credentials, users);
 
+					changed = true;
+
 					//update the console credentials if needed
 					if (console.Credentials.Username == _User.Username)
 					{

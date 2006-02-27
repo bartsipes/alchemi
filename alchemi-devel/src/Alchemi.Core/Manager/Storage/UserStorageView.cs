@@ -100,6 +100,9 @@ namespace Alchemi.Core.Manager.Storage
 			set
 			{
 				m_password = value;
+
+				// clean the password hash once the clear-text password was set
+				m_passwordMd5Hash = null;
 			}
 		}
 
@@ -123,6 +126,9 @@ namespace Alchemi.Core.Manager.Storage
 			set
 			{
 				m_passwordMd5Hash = value;
+
+				// remove the clear-text password
+				m_password = null;
 			}
 		}
 
