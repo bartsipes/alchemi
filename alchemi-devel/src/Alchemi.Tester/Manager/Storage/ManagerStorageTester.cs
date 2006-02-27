@@ -2520,6 +2520,106 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
+		#region "GetSystemSummary Tests"
 
+		[Test]
+		public void GetSystemSummaryTestExecutorCount()
+		{
+			String executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.TotalExecutors);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestUnfinishedAppCount()
+		{
+			// add one that is not finished
+			AddApplication(ApplicationState.Ready, DateTime.Now, true, "user");
+
+			// add another one that is finished
+			AddApplication(ApplicationState.Stopped, DateTime.Now, true, "user");
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+			Assert.AreEqual(1, result.UnfinishedApps);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestUnfinishedThreadCount()
+		{
+			String executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+
+			string applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, true, "user");
+			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 1, false);
+			AddThread(applicationId, executorId, 2, ThreadState.Finished, DateTime.Now, DateTime.Now, 1, false);
+			AddThread(applicationId, executorId, 3, ThreadState.Scheduled, DateTime.Now, DateTime.Now, 1, false);
+			AddThread(applicationId, executorId, 4, ThreadState.Started, DateTime.Now, DateTime.Now, 1, false);
+			AddThread(applicationId, executorId, 5, ThreadState.Dead, DateTime.Now, DateTime.Now, 1, false);
+			AddThread(applicationId, executorId, 6, ThreadState.Unknown, DateTime.Now, DateTime.Now, 1, false);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+			// everything that is not Dead or Finished is counted
+			Assert.AreEqual(4, result.UnfinishedThreads);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestMaxPower()
+		{
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1111, 123, 34, (float)3.4);
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 2222, 123, 34, (float)3.4);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+
+			Assert.AreEqual("3.333 GHz", result.MaxPower);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestPowerUsage()
+		{
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1111, 23, 34, (float)3.4);
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1111, 11, 34, (float)3.4);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+
+			Assert.AreEqual(17, result.PowerUsage);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestPowerAvailable()
+		{
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1111, 23, 94, (float)3.4);
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1111, 12, 92, (float)3.4);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+
+			Assert.AreEqual(93, result.PowerAvailable);
+		}
+
+		[Test]
+		public void GetSystemSummaryTestPowerTotalUsage()
+		{
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1594, 23, 94, (float)1.41999);
+			AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 1594, 12, 93, (float)23.7800);
+
+			SystemSummary result = ManagerStorage.GetSystemSummary();
+
+			Assert.IsNotNull(result);
+
+			Assert.AreEqual("0.011158 GHz*Hr", result.PowerTotalUsage);
+		}
+
+		#endregion
 	}
 }

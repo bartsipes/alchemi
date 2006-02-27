@@ -64,8 +64,71 @@ namespace Alchemi.Manager.Storage
 
 		public SystemSummary GetSystemSummary()
 		{
-			//throw new Exception("Not implemented");
-			return null;
+			// calculate total number of executors
+			Int32 totalExecutors = m_executors != null ? m_executors.Count : 0;
+
+			// calculate number of unfinished applications
+			Int32 unfinishedApps = 0;
+			if (m_applications != null)
+			{
+				foreach(ApplicationStorageView application in m_applications)
+				{
+					if (application.State == ApplicationState.AwaitingManifest || application.State == ApplicationState.Ready)
+					{
+						unfinishedApps++;
+					}
+				}
+			}
+			
+			Int32 unfinishedThreads = 0;
+			if (m_threads != null)
+			{
+				foreach(ThreadStorageView thread in m_threads)
+				{
+					if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
+					{
+						unfinishedThreads++;
+					}
+				}
+			}			
+
+			float maxPowerValue = 0;
+			Int32 powerUsage = 0;
+			Int32 powerAvailable = 0;
+			float totalUsageValue = 0;
+			if (m_executors != null)
+			{
+				int connectedExecutorCount = 0;
+
+				foreach(ExecutorStorageView executor in m_executors)
+				{
+					if (executor.Connected)
+					{
+						connectedExecutorCount++;
+						maxPowerValue += executor.MaxCpu;
+						powerAvailable += executor.AvailableCpu;
+						powerUsage += executor.CpuUsage;
+						totalUsageValue += executor.TotalCpuUsage * executor.MaxCpu / (3600 * 1000);
+					}
+				}
+
+				powerAvailable /= connectedExecutorCount;
+				powerUsage /= connectedExecutorCount;
+			}
+
+			String powerTotalUsage = String.Format("{0} GHz*Hr", Math.Round(totalUsageValue, 6));
+			String maxPower = String.Format("{0} GHz", Math.Round(maxPowerValue / 1000, 6));
+
+			SystemSummary summary = new SystemSummary(
+				maxPower, 
+				totalExecutors,
+				powerUsage,
+				powerAvailable,
+				powerTotalUsage,
+				unfinishedApps,
+				unfinishedThreads);
+
+			return summary;
 		}
 
 		public DataSet RunSqlReturnDataSet(string query)

@@ -23,8 +23,6 @@ details.
 */
 #endregion
 
-using System;
-
 using Alchemi.Core.Manager.Storage;
 
 using NUnit.Framework;
@@ -38,10 +36,10 @@ namespace Alchemi.Tester.Manager.Storage
 	public class UserStorageViewTester
 	{
 		// The MD5 hash of the word "user"
-		const string UserMD5Hash = "9ce4b5879f3fcb5a9842547bebe191e1";
+		private const string UserMD5Hash = "9ce4b5879f3fcb5a9842547bebe191e1";
 
 		// The MD5 hash of the word "admin"
-		const string AdminMD5Hash = "19a2854144b63a8f7617a6f225019b12";
+		private const string AdminMD5Hash = "19a2854144b63a8f7617a6f225019b12";
 
 		#region "PasswordMd5Hash Tests"
 

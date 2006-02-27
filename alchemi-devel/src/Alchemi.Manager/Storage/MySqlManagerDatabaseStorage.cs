@@ -82,5 +82,14 @@ namespace Alchemi.Manager.Storage
 			return "?";
 		}
 
+		protected override String IsNullOperator
+		{
+			get
+			{
+				return "IfNull";
+			}
+		}
+
+
 	}
 }

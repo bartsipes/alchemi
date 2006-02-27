@@ -51,6 +51,15 @@ namespace Alchemi.Manager.Storage
 
 		protected String m_connectionString;
 
+		protected virtual String IsNullOperator
+		{
+			get
+			{
+				return "IsNull";
+			}
+		}
+		
+
 		public GenericManagerDatabaseStorage(String connectionString)
 		{
 			m_connectionString = connectionString;
@@ -128,12 +137,12 @@ namespace Alchemi.Manager.Storage
 		{
 			//build the System_Summary SQLs
 						
-			string sqlQuery1 = 
+			string sqlQuery1 = String.Format(
 				"select count(*) as total_executors, "+
-				"convert(varchar, cast(isnull(sum(cpu_max), 0) as float)/1000 ) + ' GHz' as max_power,"+
-				"isnull(avg(cpu_usage), 0) as power_usage, isnull(avg(cpu_avail), 0) as power_avail,"+
-				"convert(varchar, isnull(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0)) + ' GHz*Hr' as power_totalusage "+ 
-				"from executor where is_connected = 1 ";
+				"{0}(sum(cpu_max), 0) as max_power,"+
+				"{0}(avg(cpu_usage), 0) as power_usage, {0}(avg(cpu_avail), 0) as power_avail,"+
+				"{0}(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0) as power_totalusage "+ 
+				"from executor where is_connected = 1 ", IsNullOperator);
 
 			string sqlQuery2 = 
 				"select count(*) as unfinished_threads from thread where state not in (3, 4)";
@@ -159,21 +168,23 @@ namespace Alchemi.Manager.Storage
 				{
 					if (dataReader.Read())
 					{
-						maxPower = dataReader.GetString(dataReader.GetOrdinal("max_power"));
+						maxPower = String.Format("{0} GHz", 
+							(double)dataReader.GetInt32(dataReader.GetOrdinal("max_power")) / 1000);
 						totalExecutors = dataReader.GetInt32(dataReader.GetOrdinal("total_executors"));
 						powerUsage = dataReader.GetInt32(dataReader.GetOrdinal("power_usage"));
 						powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
-						powerTotalUsage = dataReader.GetString(dataReader.GetOrdinal("power_totalusage"));
+						powerTotalUsage = String.Format("{0} GHz*Hr", 
+							Math.Round(dataReader.GetDouble(dataReader.GetOrdinal("power_totalusage")), 6));
 					}
 
 					dataReader.Close();
 				}
 			
 				//query2 to get thread count
-				unfinishedThreads = (Int32)RunSqlReturnScalar(sqlQuery2);
+				unfinishedThreads = Convert.ToInt32(RunSqlReturnScalar(sqlQuery2));
 
 				//query3 to get app count
-				unfinishedApps = (Int32)RunSqlReturnScalar(sqlQuery3);
+				unfinishedApps = Convert.ToInt32(RunSqlReturnScalar(sqlQuery3));
 				
 			}
 			catch (Exception ex)
