@@ -487,11 +487,21 @@ namespace Alchemi.Manager
 						{
 							logger.Debug("Trying to schedule thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
 							// dispatch thread
-							me.ExecuteThread(ds.TI);
-							// update thread state 'after' it is dispatched. (kna changed this: aug19,05). to prevent the scheduler from hanging here.
-							mt.CurrentExecutorId = ds.ExecutorId;
-							mt.State = ThreadState.Scheduled;
-							logger.Debug("Scheduled thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
+							bool success = me.ExecuteThread(ds.TI);
+
+							// tb@tbiro.com:
+							// only update the status if the thread was actually accepted
+							if (success)
+							{
+								// update thread state 'after' it is dispatched. (kna changed this: aug19,05). to prevent the scheduler from hanging here.
+								mt.CurrentExecutorId = ds.ExecutorId;
+								mt.State = ThreadState.Scheduled;
+								logger.Debug("Scheduled thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
+							}
+							else
+							{
+								logger.Debug("Tried to scheduled thread " + ds.TI.ThreadId + " to executor:" + ds.ExecutorId + " but failed. We'll try again at the next cycle.");
+							}
 						}
 						catch (Exception e)
 						{

@@ -701,11 +701,14 @@ namespace Alchemi.Executor
 
 				rawThread = Manager.Executor_GetThread(Credentials, _CurTi);
 				logger.Debug("Got thread from manager. executing it: "+_CurTi.ThreadId);
+				
 				//execute it
 				byte[] finishedThread = gad.Executor.ExecuteThread(rawThread);
+				logger.Info(string.Format("ExecuteThread returned for thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
+
 				//set its status to finished
 				Manager.Executor_SetFinishedThread(Credentials, _CurTi, finishedThread, null);
-				logger.Info(string.Format("finished executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
+				logger.Info(string.Format("Finished executing grid thread # {0}.{1}", _CurTi.ApplicationId, _CurTi.ThreadId));
 
 			}
 			catch (ThreadAbortException)
