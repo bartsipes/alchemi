@@ -7,7 +7,7 @@ This includes mainly the major features / issues. Time/priorities/milestones are
 Put your initials next to the task you would like to work on.
 (TB) = Tibor Biro (tb@tbiro.com)
 
-Last updated: 13 Feb 2006
+Last updated: 28 Feb 2006
 ------------------------------------
 - Configuration and set-up improvements 
 	- Fix configuration and set up problems, particularly service-mode setup.
@@ -96,3 +96,6 @@ Last updated: 13 Feb 2006
 
 - Platform independence
 	- Linux versions (manager / executor as daemons?) mono? java? both?
+
+- Other improvements
+	- Cache DLLs on the Executor. The Executor could advertise the available DLLs to the Manager so the Manager's scheduler could take this information into account.
