@@ -481,33 +481,30 @@ namespace Alchemi.Manager
 						}
 
 						MExecutor me = _Executors[ds.ExecutorId];
-						MThread mt = new MThread(ds.TI);
                     
 						try          
 						{
 							logger.Debug("Trying to schedule thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
 							// dispatch thread
-							bool success = me.ExecuteThread(ds.TI);
+							
+							me.ExecuteThread(ds);
 
-							// tb@tbiro.com:
-							// only update the status if the thread was actually accepted
-							if (success)
-							{
-								// update thread state 'after' it is dispatched. (kna changed this: aug19,05). to prevent the scheduler from hanging here.
-								mt.CurrentExecutorId = ds.ExecutorId;
-								mt.State = ThreadState.Scheduled;
-								logger.Debug("Scheduled thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
-							}
-							else
-							{
-								logger.Debug("Tried to scheduled thread " + ds.TI.ThreadId + " to executor:" + ds.ExecutorId + " but failed. We'll try again at the next cycle.");
-							}
+							/// tb@tbiro.com - Feb 28, 2006:
+							/// updating the thread's status is done inside ExecuteThread after it was decided 
+							/// whether this executor can take it or not
+							/// this prevents race conditions if the Executor finishes very quickly
+							/// and we overwrite here the Executor's status back to Scheduled after it was finished
+//								// update thread state 'after' it is dispatched. (kna changed this: aug19,05). to prevent the scheduler from hanging here.
+//								mt.CurrentExecutorId = ds.ExecutorId;
+//								mt.State = ThreadState.Scheduled;
+//								logger.Debug("Scheduled thread " + ds.TI.ThreadId + " to executor:"+ds.ExecutorId);
 						}
 						catch (Exception e)
 						{
 							logger.Error("Some error occured trying to schedule. Reset-ing the thread to be scheduled. Continuing...",e);
 							// remove executor and reset thread so it can be rescheduled
 							//me.Disconnect(); //Krishna Aug10, 05. let us not disconnect the Executor. perhaps it can do other threads.
+							MThread mt = new MThread(ds.TI);
 							mt.Reset(); // this should happen as part of the disconnection
 						}	
 					}

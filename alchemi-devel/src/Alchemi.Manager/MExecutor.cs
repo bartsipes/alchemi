@@ -30,9 +30,9 @@ using System.Threading;
 using Alchemi.Core;
 using Alchemi.Core.Executor;
 using Alchemi.Core.Owner;
-using Alchemi.Core.Utility;
 using Alchemi.Manager.Storage;
 using Alchemi.Core.Manager.Storage;
+using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 namespace Alchemi.Manager
 {
@@ -219,11 +219,16 @@ namespace Alchemi.Manager
         }
 
 		/// <summary>
+		/// Execute a thread on a dedicated Executor.
+		/// 
+		/// Right before the execution the thread's status is set the Scheduled 
+		/// and the thread's executor is set to the executor's ID.
+		/// Spawn a new thread that remotes the execution to the Executor.
 		/// 
 		/// </summary>
-		/// <param name="ti"></param>
-		/// <returns></returns>
-		public bool ExecuteThread(ThreadIdentifier ti)
+		/// <param name="ds">Containes the Thread ID and the Executor ID.</param>
+		/// <returns>True if the thread was successfully started on the Executor.</returns>
+		public bool ExecuteThread(DedicatedSchedule ds)
 		{
 			bool success = false;
 			//kna added this to allow controlling MAX_CONCURRENT_THREADS per executor. Aug19. 05
@@ -233,9 +238,9 @@ namespace Alchemi.Manager
 			{
 				numConcurrentThreads = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(
 					_Id, 
-					Alchemi.Core.Owner.ThreadState.Ready, 
-					Alchemi.Core.Owner.ThreadState.Scheduled,
-					Alchemi.Core.Owner.ThreadState.Started);
+					ThreadState.Ready, 
+					ThreadState.Scheduled,
+					ThreadState.Started);
 			}
 			catch (Exception ex)
 			{
@@ -249,7 +254,17 @@ namespace Alchemi.Manager
 				}
 				else
 				{
-					this.currentTI = ti;
+					MThread mt = new MThread(ds.TI);
+
+					/// tb@tbiro.com - Feb 28, 2006:
+					/// moved the thread status updating here from ManagerContainer.ScheduleDedicated 
+					/// to make sure that the thread state is written in the right order
+					mt.CurrentExecutorId = ds.ExecutorId;
+					mt.State = ThreadState.Scheduled;
+
+					logger.Debug(String.Format("Scheduling thread {0} to executor: {1}", ds.TI.ThreadId, ds.ExecutorId));
+
+					this.currentTI = ds.TI;
 					Thread dispatchThread = new Thread(new ThreadStart(this.ExecuteCurrentThread));
 					dispatchThread.Name = "ScheduleDispatchThread";
 					dispatchThread.Start();
