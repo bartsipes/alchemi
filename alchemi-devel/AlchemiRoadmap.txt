@@ -7,7 +7,7 @@ This includes mainly the major features / issues. Time/priorities/milestones are
 Put your initials next to the task you would like to work on.
 (TB) = Tibor Biro (tb@tbiro.com)
 
-Last updated: 28 Feb 2006
+Last updated: 02 March 2006
 ------------------------------------
 - Configuration and set-up improvements 
 	- Fix configuration and set up problems, particularly service-mode setup.
@@ -36,8 +36,8 @@ Last updated: 28 Feb 2006
 	- Prevent spread of viruses using code-access-security, sandbox-execution of user-code
 		
 - Migration to .net 2.0 version
-	- do we still keep v.1.x compatibility? 
-	- We should probably start by releasing compiled versions of .NET 2.0 and .NET 1.1 in paralel to give everytone a chance to upgrade to 2.0
+(TB)	- do we still keep v.1.x compatibility? 
+(TB)	- We should probably start by releasing compiled versions of .NET 2.0 and .NET 1.1 in paralel to give everytone a chance to upgrade to 2.0
 
 - Console improvements
 	- Accurate reporting of application status : (it is now based on thread's status. need to fix this).
@@ -59,7 +59,7 @@ Last updated: 28 Feb 2006
 
 - Thread execution improvements
 	- Find a way to return the actual standard error,output from the process to the client
-(TB)	- Executor to accept more than one thread at the same time in case of SMP machines
+(DONE)	- Executor to accept more than one thread at the same time in case of SMP machines
 
 - Robust multiclustering and scalability
 	- P2P? Hierarchical managers? 
