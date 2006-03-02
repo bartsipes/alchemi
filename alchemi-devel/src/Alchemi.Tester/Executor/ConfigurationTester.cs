@@ -106,5 +106,25 @@ namespace Alchemi.Tester.Executor
 			Assert.AreEqual("test", config.Id[2]);
 		}
 
+		[Test]
+		public void GetIdCountTestNoIds()
+		{
+			Configuration config = new Configuration();
+
+			Assert.AreEqual(0, config.GetIdCount());
+		}
+
+		[Test]
+		public void GetIdCountTestNoSeveralIds()
+		{
+			Configuration config = new Configuration();
+
+			config.Id = new string[2];
+			config.Id[0] = "zero";
+			config.Id[1] = "one";
+
+			Assert.AreEqual(2, config.GetIdCount());
+		}
+
 	}
 }

@@ -173,6 +173,20 @@ namespace Alchemi.Executor
         }
 
 		/// <summary>
+		/// Get the number of Executor IDs.
+		/// </summary>
+		/// <returns></returns>
+		public int GetIdCount()
+		{
+			if (Id == null)
+			{
+				return 0;
+			}
+
+			return Id.Length;
+		}
+
+		/// <summary>
 		/// Get the executor Id at a given location in the Id array.
 		/// </summary>
 		/// <param name="location"></param>

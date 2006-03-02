@@ -365,7 +365,18 @@ namespace Alchemi.ExecutorExec
 
 			txMgrHost.Text = Config.ManagerHost;
 			txMgrPort.Text = Config.ManagerPort.ToString();
-			txId.Text = Config.GetIdAtLocation(0);//TODO: replace this with a dropdown
+
+			cmbId.Items.Clear();
+			for(int index=0; index < Config.GetIdCount(); index++)
+			{
+				cmbId.Items.Add(Config.GetIdAtLocation(index));
+
+				if (index == 0)
+				{
+					cmbId.SelectedIndex = index;
+				}
+			}
+
 			txOwnPort.Text = Config.OwnPort.ToString();
 			txUsername.Text = Config.Username;
 			txPassword.Text = Config.Password;

@@ -62,7 +62,6 @@ using Timer = System.Windows.Forms.Timer;
         protected Label label3;
         protected TextBox txOwnPort;
         protected CheckBox cbDedicated;
-        protected TextBox txId;
         protected Label label4;
         protected Button btConnect;
         protected Button btStopExec;
@@ -88,6 +87,7 @@ using Timer = System.Windows.Forms.Timer;
 		protected System.Windows.Forms.TabPage tabConnection;
 		protected System.Windows.Forms.TabPage tabExecution;
 		protected System.Windows.Forms.TabPage tabOptions;
+		protected System.Windows.Forms.ComboBox cmbId;
 
 		protected static bool silentMode = true;
 
@@ -147,7 +147,6 @@ using Timer = System.Windows.Forms.Timer;
 			this.label3 = new System.Windows.Forms.Label();
 			this.txOwnPort = new System.Windows.Forms.TextBox();
 			this.cbDedicated = new System.Windows.Forms.CheckBox();
-			this.txId = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.btConnect = new System.Windows.Forms.Button();
 			this.tabExecution = new System.Windows.Forms.TabPage();
@@ -165,6 +164,7 @@ using Timer = System.Windows.Forms.Timer;
 			this.lblHBInt = new System.Windows.Forms.Label();
 			this.udHBInterval = new System.Windows.Forms.NumericUpDown();
 			this.pbar = new System.Windows.Forms.ProgressBar();
+			this.cmbId = new System.Windows.Forms.ComboBox();
 			this.groupBox4.SuspendLayout();
 			this.tabControl.SuspendLayout();
 			this.tabConnection.SuspendLayout();
@@ -411,8 +411,8 @@ using Timer = System.Windows.Forms.Timer;
 			this.groupBox2.Controls.Add(this.label3);
 			this.groupBox2.Controls.Add(this.txOwnPort);
 			this.groupBox2.Controls.Add(this.cbDedicated);
-			this.groupBox2.Controls.Add(this.txId);
 			this.groupBox2.Controls.Add(this.label4);
+			this.groupBox2.Controls.Add(this.cmbId);
 			this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
 			this.groupBox2.Location = new System.Drawing.Point(96, 176);
 			this.groupBox2.Name = "groupBox2";
@@ -445,17 +445,6 @@ using Timer = System.Windows.Forms.Timer;
 			this.cbDedicated.Size = new System.Drawing.Size(88, 32);
 			this.cbDedicated.TabIndex = 6;
 			this.cbDedicated.Text = "Dedicated?";
-			// 
-			// txId
-			// 
-			this.txId.Enabled = false;
-			this.txId.Location = new System.Drawing.Point(16, 40);
-			this.txId.Name = "txId";
-			this.txId.ReadOnly = true;
-			this.txId.Size = new System.Drawing.Size(192, 20);
-			this.txId.TabIndex = 5;
-			this.txId.TabStop = false;
-			this.txId.Text = "";
 			// 
 			// label4
 			// 
@@ -656,6 +645,13 @@ using Timer = System.Windows.Forms.Timer;
 			this.pbar.TabIndex = 12;
 			this.pbar.Visible = false;
 			// 
+			// cmbId
+			// 
+			this.cmbId.Location = new System.Drawing.Point(16, 40);
+			this.cmbId.Name = "cmbId";
+			this.cmbId.Size = new System.Drawing.Size(192, 21);
+			this.cmbId.TabIndex = 11;
+			// 
 			// ExecutorTemplateForm
 			// 
 			this.AcceptButton = this.btConnect;
@@ -698,6 +694,8 @@ using Timer = System.Windows.Forms.Timer;
     
         protected virtual void ExecutorTemplateForm_Load(object sender, EventArgs e)
         {
+			cmbId.DropDownStyle = ComboBoxStyle.DropDownList;
+
 			//normally this should not cause any problems,
 			//but during design-time, it is needed to avoid exceptions due to things that dont mean anything during design time.
 			try
