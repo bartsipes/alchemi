@@ -103,7 +103,10 @@ namespace Alchemi.Manager
 
 			foreach (ExecutorStorageView executor in executors)
 			{
-				if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, ThreadState.Scheduled, ThreadState.Started) == 0)
+				if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, 
+					ThreadState.Ready, /*Added this to match the condition checked in MExecutor.ExecuteThread*/
+					ThreadState.Scheduled, 
+					ThreadState.Started) == 0)
 				{
 					return executor;
 				}

@@ -231,9 +231,13 @@ namespace Alchemi.Manager
 		public bool ExecuteThread(DedicatedSchedule ds)
 		{
 			bool success = false;
+
 			//kna added this to allow controlling MAX_CONCURRENT_THREADS per executor. Aug19. 05
 			//find # of executing threads from the db.
 			int numConcurrentThreads = 0;
+
+			MThread mt = new MThread(ds.TI);
+
 			try
 			{
 				numConcurrentThreads = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(
@@ -241,21 +245,13 @@ namespace Alchemi.Manager
 					ThreadState.Ready, 
 					ThreadState.Scheduled,
 					ThreadState.Started);
-			}
-			catch (Exception ex)
-			{
-				logger.Debug("Error finding executing threads on executor."+ _Id, ex);
-			}
-			finally
-			{
+
 				if (numConcurrentThreads >= MAX_CONCURRENT_THREADS)
 				{
 					success = false;
 				}
 				else
 				{
-					MThread mt = new MThread(ds.TI);
-
 					/// tb@tbiro.com - Feb 28, 2006:
 					/// moved the thread status updating here from ManagerContainer.ScheduleDedicated 
 					/// to make sure that the thread state is written in the right order
@@ -268,9 +264,20 @@ namespace Alchemi.Manager
 					Thread dispatchThread = new Thread(new ThreadStart(this.ExecuteCurrentThread));
 					dispatchThread.Name = "ScheduleDispatchThread";
 					dispatchThread.Start();
+
 					success = true;
 				}
+
 			}
+			catch (Exception ex)
+			{
+				// restore the thread status so another executor can pick it up
+				mt.CurrentExecutorId = null;
+				mt.State = ThreadState.Ready;
+
+				logger.Debug("Error scheduling thread on executor "+ _Id, ex);
+			}
+
 			return success;
 		}
 
