@@ -186,7 +186,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 		{
 			m_parent.Visible = false;
 
-			// start the installer on its own thread so we get propher feedback
+			// start the installer on its own thread so we get proper feedback
 			MethodInvoker mi = new MethodInvoker(
 				WorkerThread);
 			mi.BeginInvoke(null, null); 
