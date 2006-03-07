@@ -83,10 +83,6 @@ namespace Alchemi.Manager
 
 		/// <summary>
 		/// Authenticates a user with the given security credentials
-		/// 
-		/// Updates: 
-		/// 
-		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
 		///	
 		/// </summary>
 		/// <param name="sc">security credentials of the user</param>
@@ -305,6 +301,11 @@ namespace Alchemi.Manager
 		/// <param name="appId">id of the application to be stopped</param>
         public void Owner_StopApplication(SecurityCredentials sc, string appId)
         {
+			if (ManagerStorageFactory.ManagerStorage().GetApplication(appId) == null)
+			{
+				return;
+			}
+
             AuthenticateUser(sc);
             ApplicationAuthorizationCheck(sc, appId);
 
@@ -740,11 +741,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the list of live applications (i.e those that are currently running).
 		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
-		///		
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of applications, which is associated with the permission: ManageAllApps).</param>
@@ -780,11 +776,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the application list for the current user.
 		/// 
-		/// Updates: 
-		/// 
-		///	23 October 2005 - Tibor Biro (tb@tbiro.com) - Changed the Application data from a DataSet 
-		///		to ApplicationStorageView
-		///		
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <returns>ApplicationStorageView array with application info</returns>
@@ -834,10 +825,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the list of users from the database
 		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///												
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of users, which is associated with the permission: ManageUsers)</param>
@@ -858,10 +845,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the list of groups in the database
 		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e get list of groups, which is associated with the permission: ManageUsers).
@@ -942,10 +925,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Updates the list of users with the data table given.
 		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///												
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e update users, which is associated with the permission: ManageUsers).</param>
@@ -963,10 +942,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Adds the list of users to the Alchemi database
 		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permissions to perform this operation.
 		/// (i.e add list of users, which is associated with the permission: ManageUsers).</param>
@@ -992,10 +967,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Gets the list of executors from the database
 		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///	
 		/// </summary>
 		/// <param name="sc">security credentials to verify if the user has permission to perform this operation 
 		/// (i.e get list of executors, which is associated with the ManageOwnApp permission)</param>
@@ -1025,11 +996,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Executes a select query against the Manager database.
 		/// 
-		/// Updates: 
-		/// 
-		///	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
-		///	 Datasets should never be returned to the UI. 
-		///	 
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="perm"></param>
@@ -1115,11 +1081,6 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Check if the given user is the application creator.
 		/// 
-		/// Updates: 
-		/// 
-		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///												- Changed the function protection level to protected to facilitate unit testing
-		///	
 		/// </summary>
 		/// <param name="sc"></param>
 		/// <param name="appId"></param>
@@ -1162,11 +1123,6 @@ namespace Alchemi.Manager
 
 		/// <summary>
 		/// Check if the permission was set
-		/// 
-		/// Updates: 
-		/// 
-		///	24 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///												- Changed the function protection level to protected to facilitate unit testing
 		/// 
 		/// </summary>
 		/// <param name="sc"></param>
