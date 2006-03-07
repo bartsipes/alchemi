@@ -2084,6 +2084,42 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(true, threads[0].Failed);
 		}
 
+		[Test]
+		public void GetThreadsAppStatusThreadStatusTestSimpleScenario()
+		{
+			String applicationId1 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
+			String applicationId2 = AddApplication(ApplicationState.Stopped, DateTime.Now, true, "username");
+			String applicationId3 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
+			String executorId = Guid.NewGuid().ToString();
+			Int32 threadId = 125;
+			
+			DateTime now = DateTime.Now;
+			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+			now.AddDays(1);
+			DateTime timeFinished = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+			AddThread(applicationId1, executorId, threadId, ThreadState.Dead, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId1, executorId, threadId, ThreadState.Started, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId1, executorId, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId2, executorId, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			AddThread(applicationId3, executorId, threadId, ThreadState.Ready, timeStarted, timeFinished, 1, true);
+			
+			ThreadStorageView[] allReadyAppThreads = ManagerStorage.GetThreads(ApplicationState.Ready);
+			ThreadStorageView[] readyAppReadyThreads = ManagerStorage.GetThreads(ApplicationState.Ready, ThreadState.Ready);
+			ThreadStorageView[] readyAppThreadsReadyOrStarted = ManagerStorage.GetThreads(ApplicationState.Ready, ThreadState.Ready, ThreadState.Started);
+
+			Assert.AreEqual(4, allReadyAppThreads.Length);
+			Assert.AreEqual(2, readyAppReadyThreads.Length);
+			Assert.AreEqual(3, readyAppThreadsReadyOrStarted.Length);
+		}
+
+		[Test]
+		public void GetThreadsAppStatusThreadStatusTestNoThreads()
+		{			
+			ThreadStorageView[] threads = ManagerStorage.GetThreads(ApplicationState.Ready, ThreadState.Started);
+
+			Assert.AreEqual(0, threads.Length);
+		}
 
 
 		#endregion

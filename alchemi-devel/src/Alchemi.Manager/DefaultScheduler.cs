@@ -128,7 +128,9 @@ namespace Alchemi.Manager
 			// this lock is not enough, we should lock until the thread status changes
 			lock(threadChooserLock)
 			{
-				ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(ThreadState.Ready);
+				ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(
+					ApplicationState.Ready,  
+					ThreadState.Ready);
 
 				if (threads == null || threads.Length == 0)
 				{

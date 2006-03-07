@@ -1112,6 +1112,41 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+		public ThreadStorageView[] GetThreads(ApplicationState appState, params ThreadState[] findStates)
+		{
+			StringBuilder query = new StringBuilder();
+
+			query.AppendFormat("select internal_thread_id, thread.application_id, executor_id, thread_id, thread.state, time_started, time_finished, priority, failed from thread inner join application on (thread.application_id = application.application_id) where application.state={0}", 
+				(int)appState);
+
+			if (findStates != null && findStates.Length > 0)
+			{
+				query.Append(" and ");
+
+				query.Append(" thread.state in ");
+				query.Append("(");
+
+				for(int index = 0; index < findStates.Length; index++)
+				{
+					ThreadState state = findStates[index];
+
+					if (index > 0)
+					{
+						query.Append(",");
+					}
+					query.Append((int)state);
+				}
+
+				query.Append(")");
+			}
+			
+
+			using(IDataReader dataReader = RunSqlReturnDataReader(query.ToString()))
+			{
+				return DecodeThreadFromDataReader(dataReader);
+			}
+		}
+
 		public ThreadStorageView[] GetThreads(params ThreadState[] findStates)
 		{
 			return GetThreads(null, findStates);

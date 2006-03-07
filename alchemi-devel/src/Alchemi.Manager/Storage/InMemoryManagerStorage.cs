@@ -757,6 +757,29 @@ namespace Alchemi.Manager.Storage
 			return null;
 		}
 
+		public ThreadStorageView[] GetThreads(ApplicationState appState, params ThreadState[] threadStates)
+		{
+			if (m_threads == null || m_applications == null || m_threads.Count == 0 || m_applications.Count == 0)
+			{
+				return new ThreadStorageView[0];
+			}
+
+			ArrayList threadList = new ArrayList();
+
+			foreach(ApplicationStorageView application in m_applications)
+			{
+				if (application.State == appState)
+				{
+					foreach (ThreadStorageView thread in GetThreads(application.ApplicationId, threadStates))
+					{
+						threadList.Add(thread);
+					}
+				}
+			}
+
+			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
+		}
+
 		public ThreadStorageView[] GetThreads(params ThreadState[] state)
 		{
 			return GetThreads(null, state);

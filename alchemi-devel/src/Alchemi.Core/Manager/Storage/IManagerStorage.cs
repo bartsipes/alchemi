@@ -259,6 +259,14 @@ namespace Alchemi.Core.Manager.Storage
 		ThreadStorageView[] GetThreads(params ThreadState[] state);
 
 		/// <summary>
+		/// Get all threads whose application has the requested thread state.
+		/// </summary>
+		/// <param name="appState">Application state.</param>
+		/// <param name="threadState">Thread states.</param>
+		/// <returns></returns>
+		ThreadStorageView[] GetThreads(ApplicationState appState, params ThreadState[] threadState);
+
+		/// <summary>
 		/// Get all threads with the given states whithin an application.
 		/// </summary>
 		/// <param name="applicationId"></param>
