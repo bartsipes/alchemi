@@ -49,17 +49,26 @@ namespace Alchemi.Tester.Manager.Storage
 			}
 		}
 
+		/// <summary>
+		/// Create the MySQL connection string.
+		/// Look in the configuration file for the data and if not found then default to the hardcoded values.
+		/// </summary>
 		[SetUp]
 		public void TestStartUp()
 		{
-			String connectionString = ConfigurationSettings.AppSettings["SqlTesterConnectionString"];
-			connectionString = string.Format(
-				"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5;",
-				"localhost",
-				"alchemi",
-				"alchemi",
-				"AlchemiTester"
-				);
+			String connectionString = ConfigurationSettings.AppSettings["MySqlTesterConnectionString"];
+
+			if (connectionString == null)
+			{
+				connectionString = string.Format(
+					"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5;",
+					"localhost",
+					"alchemi",
+					"alchemi",
+					"AlchemiTester"
+					);
+			}
+
 			m_managerStorage = new MySqlManagerDatabaseStorage(connectionString);
 
 			m_managerStorage.SetUpStorage();
