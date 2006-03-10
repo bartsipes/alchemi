@@ -624,7 +624,7 @@ namespace Alchemi.Manager.Storage
 
 		protected void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
 		{
-			RunSql(String.Format("update executor set is_dedicated='{1}', is_connected='{2}', usr_name='{3}' where executor_id='{0}'",
+			RunSql(String.Format("update executor set is_dedicated={1}, is_connected={2}, usr_name='{3}' where executor_id='{0}'",
 				executorId,
 				Convert.ToInt16(dedicated),
 				Convert.ToInt16(connected),
@@ -811,7 +811,7 @@ namespace Alchemi.Manager.Storage
 
 			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{1}', {2}, {0}time_created, '{3}', '{4}')",
+			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{1}', {2}, {0}time_created, {3}, '{4}')",
 				DatabaseParameterDecoration(),
 				applicationId,
 				(int)application.State,
@@ -832,7 +832,7 @@ namespace Alchemi.Manager.Storage
 
 			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", updatedApplication.TimeCreated, DbType.DateTime);
 
-			RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, is_primary = '{3}', usr_name = '{4}' where application_id = '{1}'",
+			RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, is_primary = {3}, usr_name = '{4}' where application_id = '{1}'",
 				DatabaseParameterDecoration(),
 				updatedApplication.ApplicationId,
 				(int)updatedApplication.State,
@@ -1030,7 +1030,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{1}', {0}executor_id, {3}, {4}, {0}time_started, {0}time_finished, {5}, '{6}')",
+			object threadIdObject = RunSqlReturnScalar(String.Format("insert into thread(application_id, executor_id, thread_id, state, time_started, time_finished, priority, failed) values ('{1}', {0}executor_id, {3}, {4}, {0}time_started, {0}time_finished, {5}, {6})",
 				DatabaseParameterDecoration(),
 				thread.ApplicationId,
 				thread.ExecutorId,
@@ -1074,7 +1074,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter = GetParameter(DatabaseParameterDecoration() + "executor_id", DBNull.Value, DbType.Guid);
 			}
 
-			RunSql(String.Format("update thread set application_id = '{2}', executor_id = {0}executor_id, thread_id = {4}, state = {5}, time_started = {0}time_started, time_finished = {0}time_finished, priority = {6}, failed = '{7}' where internal_thread_id = {1}",
+			RunSql(String.Format("update thread set application_id = '{2}', executor_id = {0}executor_id, thread_id = {4}, state = {5}, time_started = {0}time_started, time_finished = {0}time_finished, priority = {6}, failed = {7} where internal_thread_id = {1}",
 				DatabaseParameterDecoration(),
 				updatedThread.InternalThreadId,
 				updatedThread.ApplicationId,
