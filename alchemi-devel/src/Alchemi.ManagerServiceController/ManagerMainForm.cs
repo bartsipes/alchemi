@@ -192,7 +192,7 @@ namespace Alchemi.ManagerService
 					logger.Debug("Couldnot stop service: CanStop = false");	
 				}
 			}
-			catch (TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
 			{
 				Log("Timeout expired trying to stop Manager Service.");
 			}
@@ -239,7 +239,7 @@ namespace Alchemi.ManagerService
 					Log("Manager Service started.");
 				}
 			}
-			catch (TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
 			{
 				Log("Timeout expired trying to start Manager Service.");
 			}

@@ -159,7 +159,7 @@ namespace Alchemi.ExecutorService
 					Log("Executor Service started.");
 				}
 			}
-			catch (TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
 			{
 				Log("Timeout expired trying to start Executor Service.");
 			}
@@ -305,7 +305,7 @@ namespace Alchemi.ExecutorService
 					logger.Debug("Couldnot stop service: CanStop = false");	
 				}
 			}
-			catch (TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
 			{
 				Log("Timeout expired trying to stop Executor Service.");
 			}

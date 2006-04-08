@@ -1,1 +1,1 @@
-<%@ WebService Language="c#" Codebehind="CrossPlatformManager.asmx.cs" Class="Alchemi.CrossPlatformManager.CrossPlatformManager" %>
+<%@ WebService Language="c#" Codebehind="~/App_Code/CrossPlatformManager.asmx.cs" Class="Alchemi.CrossPlatformManager.CrossPlatformManager" %>
