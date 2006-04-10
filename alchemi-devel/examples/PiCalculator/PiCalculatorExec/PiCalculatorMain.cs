@@ -70,7 +70,7 @@ namespace Alchemi.Examples.PiCalculator
                 // add the module containing PiCalcGridThread to the application manifest        
                 App.Manifest.Add(new ModuleDependency(typeof(PiCalculator.PiCalcGridThread).Module));
 
-				NumThreads = (Int32)Math.Floor(NumberOfDigits / DigitsPerThread);
+				NumThreads = (Int32)Math.Floor((double)NumberOfDigits / DigitsPerThread);
 				if (DigitsPerThread * NumThreads < NumberOfDigits)
 				{
 					NumThreads++;

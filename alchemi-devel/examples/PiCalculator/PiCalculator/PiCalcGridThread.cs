@@ -40,7 +40,7 @@ namespace Alchemi.Examples.PiCalculator
             StringBuilder temp = new StringBuilder();
 
             Plouffe_Bellard pb = new Plouffe_Bellard();
-            for (int i = 0; i <= Math.Ceiling(_NumDigits / 9); i++)
+            for (int i = 0; i <= Math.Ceiling((double)_NumDigits / 9); i++)
             {
                 temp.Append(pb.CalculatePiDigits(_StartDigitNum + (i * 9)));
             }
