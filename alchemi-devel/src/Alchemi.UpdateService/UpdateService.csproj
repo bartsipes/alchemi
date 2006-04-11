@@ -119,9 +119,9 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <Reference Include="Win32Security">
-      <Name>Win32Security</Name>
-      <HintPath>..\..\..\..\..\installs\Win32SecurityV05\v0.5_GotDotNet\Win32Security\bin\Release\Win32Security.dll</HintPath>
+    <Reference Include="Win32Security, Version=0.3.2020.34576, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Win32Security.dll</HintPath>
     </Reference>
     <ProjectReference Include="..\Alchemi.AppUpdater\Updater.csproj">
       <Name>Updater</Name>

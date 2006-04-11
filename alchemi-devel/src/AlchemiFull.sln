@@ -39,6 +39,7 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ExecutorServiceSetup", "Alc
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://localhost/Alchemi.CrossPlatformManager/", "http://localhost/Alchemi.CrossPlatformManager", "{B3EDA024-7864-4335-9817-67A78064C360}"
 	ProjectSection(WebsiteProperties) = preProject
+		ProjectReferences = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}|Alchemi.Core.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Alchemi.CrossPlatformManager"
 		Debug.AspNetCompiler.PhysicalPath = "Alchemi.CrossPlatformManager\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Alchemi.CrossPlatformManager\"
