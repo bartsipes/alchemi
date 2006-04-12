@@ -67,8 +67,6 @@ namespace Alchemi.Examples.PiCalculator
                 // create a new grid application
                 App = new GApplication(gc);
 
-                App.Manifest.Add(EmbeddedFileDependency.GetEmbeddedFileDependencyFromFolder(@"C:\Temp\contests"));
-
                 // add the module containing PiCalcGridThread to the application manifest        
                 App.Manifest.Add(new ModuleDependency(typeof(PiCalculator.PiCalcGridThread).Module));
 
