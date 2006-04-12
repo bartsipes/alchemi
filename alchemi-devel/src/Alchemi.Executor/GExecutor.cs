@@ -642,7 +642,7 @@ namespace Alchemi.Executor
 								foreach (FileDependency dep in manifest)
 								{
 									logger.Debug("Unpacking file: " + dep.FileName + " to " + appDir);
-									dep.UnPack(Path.Combine(appDir,dep.FileName));
+									dep.UnPackToFolder(appDir);
 								}
 							}
 							else

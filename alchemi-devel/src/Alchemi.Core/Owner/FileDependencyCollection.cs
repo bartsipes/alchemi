@@ -67,6 +67,33 @@ namespace Alchemi.Core.Owner
             InnerList.Add(dependency);
         }
 
+        /// <summary>
+        /// Adds the given FileDependency list to this collection
+        /// </summary>
+        /// <param name="dependencyList">file dependencies to add</param>
+        public void Add(FileDependency[] dependencyList)
+        {
+            if (dependencyList == null)
+            {
+                throw new InvalidOperationException("The FileDependency Collection does not accept null values.", null);
+            }
+
+            foreach (FileDependency fileDep in dependencyList)
+            {
+                if (fileDep == null)
+                {
+                    throw new InvalidOperationException("The FileDependency Collection does not accept null values.", null);
+                }
+
+                if (Contains(fileDep))
+                {
+                    throw new InvalidOperationException("A file dependency with the same name already exists.", null);
+                }
+
+                InnerList.Add(fileDep);
+            }
+        }
+
 		/// <summary>
 		/// Checks if the collection already contains the given dependency.
 		/// </summary>

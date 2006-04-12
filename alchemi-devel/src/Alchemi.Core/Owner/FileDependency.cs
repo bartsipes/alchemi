@@ -24,6 +24,8 @@
 #endregion
 
 using System;
+using System.IO;
+
 using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Owner
@@ -68,5 +70,22 @@ namespace Alchemi.Core.Owner
 		/// </summary>
 		/// <param name="fileLocation">location and file name to unpack the file</param>
         public abstract void UnPack(string fileLocation);
+
+        /// <summary>
+        /// Unpacks the file to the specified folder.
+        /// The current file name is appended to the given folder name.
+        /// </summary>
+        /// <remarks>
+        /// The FileName property might contain some folder structures as well. 
+        /// This can be used to reproduce a folder structure.
+        /// </remarks>
+        /// <param name="targetFolder">Folder where the current file will be unpacked</param>
+        public void UnPackToFolder(string targetFolder)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(targetFolder, FileName)));
+
+            UnPack(Path.Combine(targetFolder, FileName));
+        }
+
     }
 }

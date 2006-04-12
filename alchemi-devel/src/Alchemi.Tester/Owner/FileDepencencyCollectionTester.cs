@@ -47,7 +47,7 @@ namespace Alchemi.Tester.Owner
 		#region "Contains Tests"
 
 		[Test]
-		public void ContatinsTestNullValue()
+		public void ContainsTestNullValue()
 		{
 			FileDependencyCollection collection = new FileDependencyCollection();
 
@@ -57,7 +57,7 @@ namespace Alchemi.Tester.Owner
 		}
 
 		[Test]
-		public void ContatinsTestEmptyCollection()
+		public void ContainsTestEmptyCollection()
 		{
 			FileDependencyCollection collection = new FileDependencyCollection();
 			FileDependency fd = new FileDependencyTestFiller(@"c:\tst.txt");
@@ -68,7 +68,7 @@ namespace Alchemi.Tester.Owner
 		}
 
 		[Test]
-		public void ContatinsTestDependencyFound()
+		public void ContainsTestDependencyFound()
 		{
 			FileDependencyCollection collection = new FileDependencyCollection();
 			FileDependency fd1 = new FileDependencyTestFiller(@"c:\test1.txt");
@@ -83,7 +83,7 @@ namespace Alchemi.Tester.Owner
 		}
 
 		[Test]
-		public void ContatinsTestDependencyNotFound()
+		public void ContainsTestDependencyNotFound()
 		{
 			FileDependencyCollection collection = new FileDependencyCollection();
 			FileDependency fd1 = new FileDependencyTestFiller(@"c:\test1.txt");
@@ -99,7 +99,7 @@ namespace Alchemi.Tester.Owner
 		}
 
 		[Test]
-		public void ContatinsTestDependencyFoundCaseOnlyDifferent()
+		public void ContainsTestDependencyFoundCaseOnlyDifferent()
 		{
 			FileDependencyCollection collection = new FileDependencyCollection();
 			FileDependency fd1 = new FileDependencyTestFiller(@"c:\test1.txt");
@@ -125,7 +125,7 @@ namespace Alchemi.Tester.Owner
 
 			try
 			{
-				collection.Add(null);
+				collection.Add((FileDependency)null);
 
 				Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
 			}
@@ -175,5 +175,90 @@ namespace Alchemi.Tester.Owner
 		}
 
 		#endregion
+
+        #region "Add list Tests"
+
+        [Test]
+        public void AddListTestNullValue()
+        {
+            FileDependencyCollection collection = new FileDependencyCollection();
+
+            try
+            {
+                collection.Add((FileDependency[])null);
+
+                Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.Write(e);
+                // pass if we get here
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void AddListTestNullValueInList()
+        {
+            FileDependencyCollection collection = new FileDependencyCollection();
+            FileDependency[] fdList = new FileDependency[1];
+            fdList[0] = null;
+
+            try
+            {
+                collection.Add(fdList);
+
+                Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.Write(e);
+                // pass if we get here
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void AddListTestDuplicatedValue()
+        {
+            FileDependencyCollection collection = new FileDependencyCollection();
+            FileDependency[] fdList = new FileDependency[1];
+            FileDependency fd1 = new FileDependencyTestFiller(@"c:\test1.txt");
+            fdList[0] = new FileDependencyTestFiller(@"c:\test1.txt");
+
+            collection.Add(fd1);
+
+            try
+            {
+                collection.Add(fdList);
+
+                Assert.IsTrue(false, "Adding a duplicate value to the collection should throw an InvalidOretationException.");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.Write(e);
+                // pass if we get here
+                Assert.IsTrue(true);
+            }
+        }
+
+        [Test]
+        public void AddListTestSimpleScenario()
+        {
+            FileDependencyCollection collection = new FileDependencyCollection();
+            FileDependency[] fdList = new FileDependency[2];
+            FileDependency fd1 = new FileDependencyTestFiller(@"c:\test1.txt");
+            FileDependency fd2 = new FileDependencyTestFiller(@"c:\test2.txt");
+            fdList[0] = fd1;
+            fdList[1] = fd2;
+
+            collection.Add(fdList);
+
+            Assert.IsTrue(collection.Contains(fd1));
+            Assert.IsTrue(collection.Contains(fd2));
+        }
+
+        #endregion
+
 	}
 }

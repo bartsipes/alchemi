@@ -82,8 +82,8 @@ namespace Alchemi.Core.Owner
         {
             foreach (FileDependency dep in _InputFiles)
             {
-                dep.UnPack(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
-				logger.Debug("Unpacking input file: "+dep.FileName);
+                dep.UnPackToFolder(WorkingDirectory);
+				logger.Debug("Unpacking input file: " + dep.FileName);
             }
       
 			Process process = new Process();

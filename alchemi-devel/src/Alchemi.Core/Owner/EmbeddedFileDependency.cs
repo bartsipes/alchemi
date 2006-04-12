@@ -26,6 +26,8 @@
 using System;
 using System.Reflection;
 using System.IO;
+using System.Collections;
+
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
 
@@ -91,5 +93,53 @@ namespace Alchemi.Core.Owner
         {
             Utils.WriteBase64EncodedToFile(fileLocation, _Base64EncodedContents);
         }
+
+        /// <summary>
+        /// Create an array of dependencies from the given folder. 
+        /// All files under the folder structure will be recursively added to the array.
+        /// </summary>
+        /// <remarks>
+        /// This will preserve the folder structure for any sub-folders. The root folder will not be preserved though
+        /// </remarks>
+        /// <param name="folderName">The root folder to start from</param>
+        /// <returns></returns>
+        public static EmbeddedFileDependency[] GetEmbeddedFileDependencyFromFolder(string rootFolderName)
+        {
+            if (rootFolderName == null || !Directory.Exists(rootFolderName))
+            {
+                return null;
+            }
+
+            ArrayList list = new ArrayList();
+
+            AddFilesToList(list, rootFolderName, "");
+
+            return (EmbeddedFileDependency[])list.ToArray(typeof(EmbeddedFileDependency));
+        }
+
+        #region "GetEmbeddedFileDependencyFromFolder helpers"
+
+        private static void AddFilesToList(ArrayList list, string folderName, string subFolderToAddToFileName)
+        {
+            foreach (string filePath in Directory.GetFiles(folderName))
+            {
+                EmbeddedFileDependency fileDep = 
+                    new EmbeddedFileDependency(
+                        Path.Combine(subFolderToAddToFileName, Path.GetFileName(filePath)), 
+                        filePath);
+
+                list.Add(fileDep);
+            }
+
+            foreach (string folderPath in Directory.GetDirectories(folderName))
+            {
+                AddFilesToList(
+                    list, 
+                    folderPath, 
+                    Path.Combine(subFolderToAddToFileName, Path.GetFileName(folderPath)));
+            }
+
+        }
+        #endregion
     }
 }

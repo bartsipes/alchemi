@@ -138,9 +138,11 @@
     <Compile Include="Manager\Storage\UserStorageViewTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Owner\EmbeddedFileDependencyTester.cs" />
     <Compile Include="Owner\FileDepencencyCollectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Owner\FileDependencyTester.cs" />
     <Compile Include="Owner\FileDependencyTestFiller.cs">
       <SubType>Code</SubType>
     </Compile>
