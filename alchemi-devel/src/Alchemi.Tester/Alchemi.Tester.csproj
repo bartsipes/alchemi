@@ -108,6 +108,13 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\Owner\GApplicationMock.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\Owner\GThreadMock.cs" />
+    <Compile Include="Core\Owner\GThreadTester.cs" />
+    <Compile Include="Core\Owner\ThreadCollectionTester.cs" />
+    <Compile Include="Core\Owner\ThreadIdentifierTester.cs" />
     <Compile Include="Executor\ConfigurationTester.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,7 +127,7 @@
     <Compile Include="Manager\MExecutorCollectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Manager\Storage\ApplicationStorageViewTester.cs">
+    <Compile Include="Core\Manager\Storage\ApplicationStorageViewTester.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Manager\Storage\InMemoryManagerStorageTester.cs">
@@ -135,15 +142,15 @@
     <Compile Include="Manager\Storage\SqlServerManagerDatabaseStorageTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Manager\Storage\UserStorageViewTester.cs">
+    <Compile Include="Core\Manager\Storage\UserStorageViewTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Owner\EmbeddedFileDependencyTester.cs" />
-    <Compile Include="Owner\FileDepencencyCollectionTester.cs">
+    <Compile Include="Core\Owner\EmbeddedFileDependencyTester.cs" />
+    <Compile Include="Core\Owner\FileDepencencyCollectionTester.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Owner\FileDependencyTester.cs" />
-    <Compile Include="Owner\FileDependencyTestFiller.cs">
+    <Compile Include="Core\Owner\FileDependencyTester.cs" />
+    <Compile Include="Core\Owner\FileDependencyMock.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

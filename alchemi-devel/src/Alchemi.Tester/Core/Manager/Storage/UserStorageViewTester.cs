@@ -4,7 +4,7 @@
 * Alchemi [.NET Grid Computing Framework]
 * http://www.alchemi.net
 * Title         :  UserStorageViewTester.cs
-* Project       :  Alchemi.Tester.Manager.Storage
+* Project       :  Alchemi.Tester.Core.Manager.Storage
 * Created on    :  26 February 2006
 * Copyright     :  Copyright © 2006 The University of Melbourne
 *                    This technology has been developed with the support of
@@ -27,7 +27,7 @@ using Alchemi.Core.Manager.Storage;
 
 using NUnit.Framework;
 
-namespace Alchemi.Tester.Manager.Storage
+namespace Alchemi.Tester.Core.Manager.Storage
 {
 	/// <summary>
 	/// Test functionality in UserStorageView

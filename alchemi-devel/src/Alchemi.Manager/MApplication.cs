@@ -145,11 +145,6 @@ namespace Alchemi.Manager
 
 		/// <summary>
 		/// Gets the count threads with the given thread-state.
-		/// 
-		/// Updates: 
-		/// 
-		///	27 October 2005 - Tibor Biro (tb@tbiro.com) - Replaced the direct database call with Manager Storage object calls
-		///	
 		/// </summary>
 		/// <param name="ts"></param>
 		/// <returns>Thread count</returns>

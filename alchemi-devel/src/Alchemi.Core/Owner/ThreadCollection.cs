@@ -69,6 +69,11 @@ namespace Alchemi.Core.Owner
 		/// <param name="thread"></param>
 		public void Remove(GThread thread)
 		{
+            if (thread == null)
+            {
+                return;
+            }
+
 			lock (InnerList)
 			{
 				if (thread.State == ThreadState.Dead || thread.State == ThreadState.Finished)

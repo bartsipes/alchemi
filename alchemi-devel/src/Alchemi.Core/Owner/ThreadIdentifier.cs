@@ -36,7 +36,9 @@ namespace Alchemi.Core.Owner
         private string _ApplicationId;
         private int _ThreadId;
         private int _Priority;
-    
+
+        public const Int32 DefaultPriority = -1;
+
         //-----------------------------------------------------------------------------------------------        
     
 		/// <summary>
@@ -74,7 +76,7 @@ namespace Alchemi.Core.Owner
         {
             _ApplicationId = applicationId;
             _ThreadId = threadId;
-            _Priority = -1;
+            _Priority = DefaultPriority;
         }
 
 		/// <summary>

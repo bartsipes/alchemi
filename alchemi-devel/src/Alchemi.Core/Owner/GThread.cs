@@ -120,7 +120,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Gets the state of the grid thread
 		/// </summary>
-        public ThreadState State
+        public virtual ThreadState State
         {
             get { return _Application.GetThreadState(this); }
         }
