@@ -49,6 +49,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
         "Release"
         {
@@ -170,7 +181,7 @@
         {
             "{80453C8E-1031-40EC-8E7A-9762B297303A}:_F63E84AA913649629A7178BE475B54C2"
             {
-            "VirtualDirectory" = "8:XPManagerSetup"
+            "VirtualDirectory" = "8:Alchemi/CrossPlatformManager"
             "Port" = "3:80"
             "IsApplication" = "11:TRUE"
             "AllowScriptSourceAccess" = "11:FALSE"
