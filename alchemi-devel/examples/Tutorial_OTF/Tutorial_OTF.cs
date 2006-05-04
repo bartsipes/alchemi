@@ -27,37 +27,40 @@ namespace Alchemi.Examples.Tutorial
             _Result = _A * _B;
         }
     }
-    
+
     class MultiplierApplication
     {
         static GApplication ga;
-        
+
         [STAThread]
         static void Main(string[] args)
         {
             Console.WriteLine("[enter] to start grid application ...");
             Console.ReadLine();
-      
-            // create grid application
-            ga = new GApplication(new GConnection("localhost", 9000, "user", "user"));
+
+            // create grid application with a standard connection and a last thread timeout of one minute
+            ga = new GApplication(new GConnection("localhost", 9000, "user", "user"), new TimeSpan(0, 1, 0));
 
             // add GridThread module (this executable) as a dependency
             ga.Manifest.Add(new ModuleDependency(typeof(MultiplierThread).Module));
+
+            // set the application finish callback method
+            ga.ApplicationFinish += new GApplicationFinish(ApplicationFinished);
 
             // set the thread finish callback method
             ga.ThreadFinish += new GThreadFinish(ThreadFinished);
 
             // start application
             ga.Start();
-            
-            int i=-1;
+
+            int i = -1;
             string input = "";
 
             while (input != "x")
             {
                 i++;
                 // create thread
-                MultiplierThread thread = new MultiplierThread(i, i+1);
+                MultiplierThread thread = new MultiplierThread(i, i + 1);
 
                 // add thread to application
                 ga.StartThread(thread);
@@ -68,14 +71,14 @@ namespace Alchemi.Examples.Tutorial
 
             ga.Stop();
 
-            ApplicationFinished();
+            ApplicationStopped();
             Console.ReadLine();
         }
 
         static void ThreadFinished(GThread th)
         {
             // cast GThread back to MultiplierThread
-            MultiplierThread thread = (MultiplierThread) th;
+            MultiplierThread thread = (MultiplierThread)th;
 
             Console.WriteLine(
                 "thread # {0} finished with result '{1}'",
@@ -86,6 +89,11 @@ namespace Alchemi.Examples.Tutorial
         static void ApplicationFinished()
         {
             Console.WriteLine("\napplication finished");
+        }
+
+        static void ApplicationStopped()
+        {
+            Console.WriteLine("\napplication stopped");
             Console.WriteLine("\n[enter] to continue ...");
         }
     }
