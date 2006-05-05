@@ -154,6 +154,12 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="executor"></param>
 		void UpdateExecutor(ExecutorStorageView executor);
 
+        /// <summary>
+        /// Delete the given executor from storage.
+        /// </summary>
+        /// <param name="executor"></param>
+        void DeleteExecutor(ExecutorStorageView executor);
+
 		/// <summary>
 		/// Get a list with all the executors in the storage.
 		/// </summary>

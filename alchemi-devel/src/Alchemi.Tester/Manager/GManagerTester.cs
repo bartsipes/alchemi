@@ -297,6 +297,99 @@ namespace Alchemi.Tester.Manager
 			Assert.AreEqual(1, result.Length);
 		}
 
+        [Test]
+        public void Admon_PerformStorageMaintenanceTestNoAuthentication()
+        {
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
 
+            StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
+
+            try
+            {
+                Admon_PerformStorageMaintenance(sc, maintenanceParameters);
+            }
+            catch (AuthenticationException)
+            {
+                Assert.IsTrue(true);
+                return;
+            }
+
+            Assert.IsFalse(true, "The authentication should fail");
+
+        }
+
+        [Test]
+        public void Admon_PerformStorageMaintenanceTestNotEnoughPermissions()
+        {
+            SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
+
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+
+            StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
+
+            try
+            {
+                Admon_PerformStorageMaintenance(sc, maintenanceParameters);
+            }
+            catch (AuthorizationException)
+            {
+                Assert.IsTrue(true);
+                return;
+            }
+
+            Assert.IsFalse(true, "The authorization should fail");			
+
+        }
+
+        [Test]
+        public void Admon_PerformStorageMaintenanceTestNullMaintenanceParameters()
+        {
+            SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
+            
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+
+            StorageMaintenanceParameters maintenanceParameters = null;
+
+            try
+            {
+                Admon_PerformStorageMaintenance(sc, maintenanceParameters);
+            }
+            catch (NullReferenceException)
+            {
+                Assert.IsTrue(true);
+                return;
+            }
+
+            Assert.IsFalse(true, "The null parameters should throw an error.");
+        }
+
+        /// <summary>
+        /// This just tests calling into the Maintenance.PerformMaintenance.
+        /// Other tests in the MaintenanceTester test the actual parameter combinations.
+        /// </summary>
+        [Test]
+        public void Admon_PerformStorageMaintenanceTestWithParameters()
+        {
+            SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
+
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+
+            m_managerStorage.AddApplication(new ApplicationStorageView("username1"));
+            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "test", 1, "test", 1, 1, 1, 1));
+
+            StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
+
+            maintenanceParameters.RemoveAllExecutors = true;
+            maintenanceParameters.RemoveAllApplications = true;
+
+            // just to keep things honest make sure there is something there
+            Assert.AreNotEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreNotEqual(0, m_managerStorage.GetApplications().Length);
+
+            Admon_PerformStorageMaintenance(sc, maintenanceParameters);
+
+            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+        }
 	}
 }

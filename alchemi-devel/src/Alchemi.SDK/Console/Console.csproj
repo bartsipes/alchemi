@@ -164,6 +164,12 @@
     <Compile Include="DataForms\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DataForms\StorageMaintenanceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataForms\StorageMaintenanceForm.Designer.cs">
+      <DependentUpon>StorageMaintenanceForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PropertiesDialogs\ApplicationProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +211,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataForms\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataForms\StorageMaintenanceForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StorageMaintenanceForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PropertiesDialogs\ApplicationProperties.resx">
       <DependentUpon>ApplicationProperties.cs</DependentUpon>

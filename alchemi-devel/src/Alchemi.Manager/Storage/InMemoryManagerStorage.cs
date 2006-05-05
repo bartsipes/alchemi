@@ -467,6 +467,26 @@ namespace Alchemi.Manager.Storage
 			m_executors = newExecutorList;
 		}
 
+        public void DeleteExecutor(ExecutorStorageView executorToDelete)
+        {
+            if (m_executors == null || executorToDelete == null)
+            {
+                return;
+            }
+
+            ArrayList newExecutorList = new ArrayList();
+
+            foreach (ExecutorStorageView executor in m_executors)
+            {
+                if (executor.ExecutorId != executorToDelete.ExecutorId)
+                {
+                    newExecutorList.Add(executor);
+                }
+            }
+
+            m_executors = newExecutorList;
+        }
+
 		public ExecutorStorageView[] GetExecutors()
 		{
 			if (m_executors == null)

@@ -108,6 +108,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\Manager\Storage\StorageMaintenanceParametersTester.cs" />
     <Compile Include="Core\Owner\GApplicationMock.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -133,6 +134,7 @@
     <Compile Include="Manager\Storage\InMemoryManagerStorageTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Manager\Storage\MaintenanceTester.cs" />
     <Compile Include="Manager\Storage\ManagerStorageTester.cs">
       <SubType>Code</SubType>
     </Compile>

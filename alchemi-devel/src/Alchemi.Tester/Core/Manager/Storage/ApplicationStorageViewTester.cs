@@ -26,6 +26,7 @@ details.
 using System;
 
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Owner;
 
 using NUnit.Framework;
 
@@ -80,6 +81,31 @@ namespace Alchemi.Tester.Core.Manager.Storage
 
 			Assert.Fail("An exception was expected");
 		}
+
+        [Test]
+        public void TimeCreatedSetTestSettingIt()
+        {
+            ApplicationStorageView application = new ApplicationStorageView("username1");
+
+            Assert.IsFalse(application.TimeCreatedSet);
+
+            application = new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1");
+
+            Assert.IsTrue(application.TimeCreatedSet);
+        }
+
+        [Test]
+        public void TimeCompletedSetTestSettingIt()
+        {
+            ApplicationStorageView application = new ApplicationStorageView("username1");
+
+            Assert.IsFalse(application.TimeCompletedSet);
+
+            application.TimeCompleted = DateTime.Now;
+
+            Assert.IsTrue(application.TimeCompletedSet);
+
+        }
 	
 	}
 }

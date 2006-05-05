@@ -417,5 +417,12 @@ namespace Alchemi.Core
 		/// <returns></returns>
 		PermissionStorageView[] Admon_GetPermissions(SecurityCredentials sc);
 
+        /// <summary>
+        /// Performs maintenance on the manager storage using the given parameters.
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="maintenanceParameters"></param>
+        void Admon_PerformStorageMaintenance(SecurityCredentials sc, StorageMaintenanceParameters maintenanceParameters);
+
     }
 }

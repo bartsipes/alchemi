@@ -916,7 +916,7 @@ namespace Alchemi.Tester.Manager.Storage
 		/// Check the inserted data to see if the right defaults were applied:
 		/// state = 0
 		/// primary = true
-		/// timeCreated is the current time
+		/// timeCreated is not set
 		/// new application id is generated
 		/// </summary>
 		[Test]
@@ -928,7 +928,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.AreEqual(ApplicationState.Stopped, application.State);
 			Assert.AreEqual(true, application.Primary);			
-			Assert.IsTrue(DateTime.Now.AddHours(-1) < application.TimeCreated && application.TimeCreated < DateTime.Now.AddHours(1), "Time created is not in this hour!");
+			Assert.IsFalse(application.TimeCreatedSet);
 			Assert.IsTrue(applicationId != null && applicationId.Length > 0, "Invalid ApplicationID!");
 		}
 		
@@ -1404,6 +1404,60 @@ namespace Alchemi.Tester.Manager.Storage
 		}
 
 		#endregion
+
+        #region "DeleteExecutor Tests"
+
+        /// <summary>
+        /// Add a new executor.
+        /// Delete the executor.
+        /// </summary>
+        [Test]
+        public void DeleteExecutorTestSimpleScenario()
+        {
+            DateTime now = DateTime.Now;
+            DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+            String executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
+
+            ExecutorStorageView[] executorsBefore = ManagerStorage.GetExecutors();
+
+            ManagerStorage.DeleteExecutor(new ExecutorStorageView(executorId, true, false, "hostname", 1, "username1", 1, 2, 3, 4));
+
+            ExecutorStorageView[] executorsAfter = ManagerStorage.GetExecutors();
+
+            Assert.AreEqual(1, executorsBefore.Length);
+            Assert.AreEqual(0, executorsAfter.Length);
+        }
+
+        [Test]
+        public void DeleteExecutorTestNullExecutorToDelete()
+        {
+            DateTime now = DateTime.Now;
+            DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+            String executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
+
+            ExecutorStorageView[] executorsBefore = ManagerStorage.GetExecutors();
+
+            ManagerStorage.DeleteExecutor(null);
+
+            ExecutorStorageView[] executorsAfter = ManagerStorage.GetExecutors();
+
+            Assert.AreEqual(1, executorsBefore.Length);
+            Assert.AreEqual(1, executorsAfter.Length);
+        }
+
+        [Test]
+        public void DeleteExecutorTestNoExecutorAdded()
+        {
+            ManagerStorage.DeleteExecutor(new ExecutorStorageView(Guid.NewGuid().ToString(), true, false, "hostname", 1, "username1", 1, 2, 3, 4));
+
+            ExecutorStorageView[] executorsAfter = ManagerStorage.GetExecutors();
+
+            Assert.AreEqual(0, executorsAfter.Length);
+        }
+
+        #endregion
 
 		#region "GetExecutors Tests"
 

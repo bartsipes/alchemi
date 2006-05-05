@@ -1187,7 +1187,7 @@ namespace Alchemi.Manager
 			AuthenticateUser(sc);
 			EnsurePermission(sc, Permission.ManageAllApps);
 
-			logger.Debug(String.Format("Deleting thread.", threadToDelete.ThreadId));
+			logger.Debug(String.Format("Deleting thread {0}.", threadToDelete.ThreadId));
 
 			ManagerStorageFactory.ManagerStorage().DeleteThread(threadToDelete);
 		}
@@ -1197,10 +1197,22 @@ namespace Alchemi.Manager
 			AuthenticateUser(sc);
 			EnsurePermission(sc, Permission.ManageAllApps);
 
-			logger.Debug(String.Format("Deleting application.", applicationToDelete.ApplicationId));
+			logger.Debug(String.Format("Deleting application {0}.", applicationToDelete.ApplicationId));
 
 			ManagerStorageFactory.ManagerStorage().DeleteApplication(applicationToDelete);
 		}
+
+        public void Admon_PerformStorageMaintenance(SecurityCredentials sc, StorageMaintenanceParameters maintenanceParameters)
+        {
+            AuthenticateUser(sc);
+            EnsurePermission(sc, Permission.ManageAllApps);
+
+            logger.Debug(String.Format("Performing maintenance with parameters {0}.", maintenanceParameters));
+
+            Maintenance maintenance = new Maintenance();
+
+            maintenance.PerformMaintenance(ManagerStorageFactory.ManagerStorage(), maintenanceParameters);
+        }
 
         //-----------------------------------------------------------------------------------------------
     }

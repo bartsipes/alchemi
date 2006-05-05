@@ -141,6 +141,18 @@ namespace Alchemi.Core.Manager.Storage
 			}
 		}
 
+        /// <summary>
+        /// Gets a value indicating whether the TimeCompleted property is set or not.
+        /// <seealso cref="TimeCompleted"/>
+        /// </summary>
+        public bool TimeCompletedSet
+        {
+            get 
+            {
+                return m_timeCompleted != c_noDateTime;
+            }
+        }
+
 		/// <summary>
 		/// Gets a value indicating whether this is the primary application.
 		/// </summary>
@@ -261,7 +273,7 @@ namespace Alchemi.Core.Manager.Storage
 			) : this (
 				null,
 				ApplicationState.Stopped,
-				DateTime.Now,
+                c_noDateTime,
 				true,
 				username
 			)

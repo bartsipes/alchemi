@@ -665,6 +665,23 @@ namespace Alchemi.Manager.Storage
 			UpdateExecutorCpuUsage(executor.ExecutorId, executor.MaxCpu, executor.CpuUsage, executor.AvailableCpu, executor.TotalCpuUsage);
 		}
 
+        public void DeleteExecutor(ExecutorStorageView executorToDelete)
+        {
+            if (executorToDelete == null)
+            {
+                return;
+            }
+
+            String sqlQuery;
+
+            sqlQuery = string.Format("DELETE FROM executor WHERE executor_id='{0}'",
+                executorToDelete.ExecutorId);
+
+            logger.Debug(String.Format("Deleting executor {0}.", executorToDelete.ExecutorId));
+
+            RunSql(sqlQuery);
+        }
+
 		public ExecutorStorageView[] GetExecutors()
 		{
 			return GetExecutors(TriStateBoolean.Undefined);
@@ -810,6 +827,10 @@ namespace Alchemi.Manager.Storage
 			String applicationId = Guid.NewGuid().ToString();
 
 			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
+            if (!application.TimeCreatedSet)
+            {
+                dateTimeParameter.Value = DBNull.Value;
+            }
 
 			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{1}', {2}, {0}time_created, {3}, '{4}')",
 				DatabaseParameterDecoration(),
@@ -831,6 +852,10 @@ namespace Alchemi.Manager.Storage
 			}
 
 			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", updatedApplication.TimeCreated, DbType.DateTime);
+            if (!updatedApplication.TimeCreatedSet)
+            {
+                dateTimeParameter.Value = DBNull.Value;
+            }
 
 			RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, is_primary = {3}, usr_name = '{4}' where application_id = '{1}'",
 				DatabaseParameterDecoration(),

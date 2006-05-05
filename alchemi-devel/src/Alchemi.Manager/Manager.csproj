@@ -145,6 +145,7 @@
     <Compile Include="Storage\InMemoryManagerStorage.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Storage\Maintenance.cs" />
     <Compile Include="Storage\ManagerStorageBase.cs">
       <SubType>Code</SubType>
     </Compile>

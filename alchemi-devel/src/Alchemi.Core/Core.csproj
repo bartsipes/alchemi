@@ -181,6 +181,7 @@
     <Compile Include="Manager\Storage\PermissionStorageView.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Manager\Storage\StorageMaintenanceParameters.cs" />
     <Compile Include="Manager\Storage\SystemSummary.cs">
       <SubType>Code</SubType>
     </Compile>
