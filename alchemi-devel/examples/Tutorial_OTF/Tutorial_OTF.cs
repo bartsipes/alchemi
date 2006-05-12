@@ -10,7 +10,7 @@ namespace Alchemi.Examples.Tutorial
         private int _A;
         private int _B;
         private int _Result;
-    
+
         public int Result
         {
             get { return _Result; }
@@ -38,14 +38,17 @@ namespace Alchemi.Examples.Tutorial
             Console.WriteLine("[enter] to start grid application ...");
             Console.ReadLine();
 
-            // create grid application with a standard connection and a last thread timeout of one minute
-            ga = new GApplication(new GConnection("localhost", 9000, "user", "user"), new TimeSpan(0, 1, 0));
+            // create standard grid connection 
+            GConnection gc = new GConnection("localhost", 9000, "user", "user");
+
+            // create multi-use grid application
+            ga = new GApplication(true);
+
+            // use standard grid connection
+            ga.Connection = gc;
 
             // add GridThread module (this executable) as a dependency
             ga.Manifest.Add(new ModuleDependency(typeof(MultiplierThread).Module));
-
-            // set the application finish callback method
-            ga.ApplicationFinish += new GApplicationFinish(ApplicationFinished);
 
             // set the thread finish callback method
             ga.ThreadFinish += new GThreadFinish(ThreadFinished);
@@ -84,11 +87,6 @@ namespace Alchemi.Examples.Tutorial
                 "thread # {0} finished with result '{1}'",
                 thread.Id,
                 thread.Result);
-        }
-
-        static void ApplicationFinished()
-        {
-            Console.WriteLine("\napplication finished");
         }
 
         static void ApplicationStopped()
