@@ -71,10 +71,6 @@ namespace Alchemi.Core.Owner
 
 		private bool _stopGetFinished = false;
 
-        //last thread time out fields.
-        private TimeSpan _LastThreadTimeout = new TimeSpan(0);
-        private DateTime _LastThreadTime = DateTime.Now;
-
 		/// <summary>
 		/// ThreadFinish event: is raised when the thread has completed execution successfully.
 		/// </summary>
@@ -124,14 +120,6 @@ namespace Alchemi.Core.Owner
 		{
 			get { return _Running; }
 		}
-
-        /// <summary>
-        /// Gets the last thread time out. This is the time span after the last thread when the application is deemed to have finished.
-        /// </summary>
-        public TimeSpan LastThreadTimeout
-        {
-            get { return _LastThreadTimeout; }
-        }
 
 		/// <summary>
 		/// Gets the state of the given GThread
@@ -190,27 +178,6 @@ namespace Alchemi.Core.Owner
 			InitializeComponent();
 			_MultiUse = multiUse;
 		}
-
-        /// <summary>
-        /// Creates an instance of the GApplication
-        /// </summary>
-        /// <param name="lastThreadTimeout">specifies the last thread timeout</param>
-        public GApplication(TimeSpan lastThreadTimeout)
-        {
-            InitializeComponent();
-            _LastThreadTimeout = lastThreadTimeout;
-        }
-
-        /// <summary>
-        /// Creates an instance of the GApplication
-        /// </summary>
-        /// <param name="connection">specifies the connection to the alchemi manager</param>
-        /// <param name="lastThreadTimeout">specifies the last thread timeout</param>
-        public GApplication(GConnection connection, TimeSpan lastThreadTimeout) : base(connection)
-        {
-            InitializeComponent();
-            _LastThreadTimeout = lastThreadTimeout;
-        }
 
 		/// <summary>
 		/// Disposes the GApplication object and performs clean up operations.
@@ -294,6 +261,15 @@ namespace Alchemi.Core.Owner
 		/// <param name="thread">thread to start</param>
 		public void StartThread(GThread thread)
 		{
+            /// May 10, 2006 michael@meadows.force9.co.uk: Fix for bug 1482578
+            /// Prevents the client from executing StartThread on single-use 
+            /// applications. StartThread should only be called for starting 
+            /// on-the-fly threads to multi-use applications.
+            if (!_MultiUse)
+            {
+                throw new InvalidOperationException("Cannot use StartThread with single-use GApplication objects.");
+            }
+
 			Init();
 			Threads.Add(thread);
 			SetThreadOnManager(thread);
@@ -475,32 +451,19 @@ namespace Alchemi.Core.Owner
 							}
 						}
 
-                        //if a thread has just finished...
-						if (FinishedThreads.Length > 0) 
-						{
-                            //...update last thread time.
-							_LastThreadTime = DateTime.Now;
-						}
-
-                        //determine whether last thread has "timed out".
-                        bool hasLastThreadTimedout = (DateTime.Now.Subtract(_LastThreadTime) >= _LastThreadTimeout);
-
-                        //application has finished when all threads have finished and the last thread has "timed out".
-						if ((_NumThreadsFinished == Threads.Count) && (hasLastThreadTimedout))
+                        // May 10, 2006 michael@meadows.force9.co.uk: Fix for bug 1485426
+						if ((!_MultiUse) && (_NumThreadsFinished == Threads.Count))
 						{
 							logger.Debug("Application finished!"+_Id);
 
 							if (!appCleanedup)
 							{
 								//clean up manager,executor.
-								if (!_MultiUse)
-								{
-									logger.Debug("SingleUse-Application finished cleaning up..."+_Id);
-									Manager.Owner_CleanupApplication(Credentials,_Id);
-									appCleanedup = true;
-								}
+								logger.Debug("SingleUse-Application finished cleaning up..."+_Id);
+								Manager.Owner_CleanupApplication(Credentials,_Id);
+								appCleanedup = true;
 							}
-							if (ApplicationFinish != null && !this._MultiUse)
+							if (ApplicationFinish != null)
 							{
 								/// January 25, 2006 tb@tbiro.com: Fix for bug 1410797 
 								/// Mark the application as stopped in the database
