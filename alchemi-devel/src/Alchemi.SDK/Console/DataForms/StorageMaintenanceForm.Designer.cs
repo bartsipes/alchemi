@@ -91,7 +91,11 @@ namespace Alchemi.Console.DataForms
             this.Controls.Add(this.chkRemoveAllApplications);
             this.Controls.Add(this.chkRemoveAllExecutors);
             this.Controls.Add(this.btnPerformMaintenance);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "StorageMaintenanceForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Storage Maintenance Form";
             this.ResumeLayout(false);
             this.PerformLayout();

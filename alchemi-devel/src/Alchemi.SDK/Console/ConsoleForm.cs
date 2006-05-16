@@ -115,9 +115,9 @@ namespace Alchemi.Console
 		private ToolBarButton tbtnConnect;
 		private ToolBarButton tbtnSep3;
 		private ToolBarButton tbtnSysSummaryGraph;
-		private ToolBarButton tbtnStop;
-        private MenuItem menuItem1;
+        private ToolBarButton tbtnStop;
         private MenuItem mnuStorageMaintenance;
+        private MenuItem mnuTools;
 		private MenuItem mnuContextAction;
 
 		public ConsoleForm()
@@ -127,6 +127,8 @@ namespace Alchemi.Console
 			//
 			InitializeComponent();
 			InitTreeView();
+
+            ShowMenuItems();
 		}
 
 		/// <summary>
@@ -163,6 +165,8 @@ namespace Alchemi.Console
             this.mnuNew = new System.Windows.Forms.MenuItem();
             this.mnuDelete = new System.Windows.Forms.MenuItem();
             this.mnuProperties = new System.Windows.Forms.MenuItem();
+            this.mnuTools = new System.Windows.Forms.MenuItem();
+            this.mnuStorageMaintenance = new System.Windows.Forms.MenuItem();
             this.mnuView = new System.Windows.Forms.MenuItem();
             this.mnuLargeIcons = new System.Windows.Forms.MenuItem();
             this.mnuSmallIcons = new System.Windows.Forms.MenuItem();
@@ -198,15 +202,13 @@ namespace Alchemi.Console
             this.lv = new System.Windows.Forms.ListView();
             this.ch1 = new System.Windows.Forms.ColumnHeader();
             this.ch2 = new System.Windows.Forms.ColumnHeader();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.mnuStorageMaintenance = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.mnuAction,
-            this.menuItem1,
+            this.mnuTools,
             this.mnuView});
             // 
             // mnuAction
@@ -235,6 +237,19 @@ namespace Alchemi.Console
             this.mnuProperties.Index = 2;
             this.mnuProperties.Text = "Properties";
             this.mnuProperties.Click += new System.EventHandler(this.mnuAction_Click);
+            // 
+            // mnuTools
+            // 
+            this.mnuTools.Index = 1;
+            this.mnuTools.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuStorageMaintenance});
+            this.mnuTools.Text = "Tools";
+            // 
+            // mnuStorageMaintenance
+            // 
+            this.mnuStorageMaintenance.Index = 0;
+            this.mnuStorageMaintenance.Text = "StorageMaintenance";
+            this.mnuStorageMaintenance.Click += new System.EventHandler(this.mnuStorageMaintenance_Click);
             // 
             // mnuView
             // 
@@ -526,19 +541,6 @@ namespace Alchemi.Console
             this.ch2.Text = "";
             this.ch2.Width = 150;
             // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 1;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mnuStorageMaintenance});
-            this.menuItem1.Text = "Tools";
-            // 
-            // mnuStorageMaintenance
-            // 
-            this.mnuStorageMaintenance.Index = 0;
-            this.mnuStorageMaintenance.Text = "StorageMaintenance";
-            this.mnuStorageMaintenance.Click += new System.EventHandler(this.mnuStorageMaintenance_Click);
-            // 
             // ConsoleForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -754,6 +756,8 @@ namespace Alchemi.Console
 					connected = true;
 					InitTreeView();
 				}
+
+                ShowMenuItems();
 			}
 			catch (Exception ex)
 			{
@@ -1779,6 +1783,23 @@ namespace Alchemi.Console
             DataForms.StorageMaintenanceForm maintenanceForm = new DataForms.StorageMaintenanceForm(console);
 
             maintenanceForm.ShowDialog();
+        }
+
+        /// <summary>
+        /// Show or hide menu items depending on wether the console is connected to a Manager or not
+        /// </summary>
+        private void ShowMenuItems()
+        {
+            if (console == null)
+            {
+                mnuTools.Visible = false;
+            }
+            else
+            {
+                // TODO: make sure the right permissions are set
+                mnuTools.Visible = true;
+            }
+
         }
 	}
 }

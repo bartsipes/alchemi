@@ -30,6 +30,7 @@ namespace Alchemi.Core.Manager.Storage
     /// <summary>
     /// Parameters passed to the Maintenance class to perform storage maintenance tasks.
     /// </summary>
+    [Serializable]
     public class StorageMaintenanceParameters
     {
         // Application maintenance parameters

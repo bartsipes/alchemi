@@ -161,6 +161,12 @@
     <Compile Include="DataForms\PasswordForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DataForms\PleaseWait.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataForms\PleaseWait.Designer.cs">
+      <DependentUpon>PleaseWait.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataForms\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -208,6 +214,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DataForms\PasswordForm.resx">
       <DependentUpon>PasswordForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataForms\PleaseWait.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PleaseWait.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DataForms\SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>
