@@ -115,6 +115,17 @@ namespace Alchemi.Core
             }
         }
 
+        public Alchemi.Core.Owner.GConnection GConnection
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
         //----------------------------------------------------------------------------------------------- 
         // constructors
         //----------------------------------------------------------------------------------------------- 

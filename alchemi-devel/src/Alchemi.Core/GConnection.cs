@@ -168,5 +168,16 @@ namespace Alchemi.Core.Owner
 
             return new GConnection(host, int.Parse(port), username, password);
         }
+
+        public Alchemi.Core.SecurityCredentials SecurityCredentials
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
     }
 }
