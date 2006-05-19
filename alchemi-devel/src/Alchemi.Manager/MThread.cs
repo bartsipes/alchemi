@@ -166,11 +166,17 @@ namespace Alchemi.Manager
             {
                 try
                 {
-                    return (Exception) Utils.DeserializeFromFile(ExceptionFile);
+                    if (File.Exists(ExceptionFile))
+                    {
+                        return (Exception)Utils.DeserializeFromFile(ExceptionFile);
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
                 catch
-                {	//TODO: if there is no file, we just assume there is no exception?
-					//may be we should have a better way to make sure of this as well.
+                {
                     return null;
                 }
             }
