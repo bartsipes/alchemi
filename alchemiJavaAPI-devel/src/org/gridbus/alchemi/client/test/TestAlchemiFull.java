@@ -49,22 +49,28 @@ public class TestAlchemiFull implements IJobListener{
 		try{
 			GApplication ga = taf.ga;
 			//create a new application, and set its manifest
-			ga = new GApplication("http://localhost:81/Alchemi.CrossPlatformManager/CrossPlatformManager.asmx",sc);
+			ga = new GApplication("http://localhost:80/Alchemi.CrossPlatformManager/CrossPlatformManager.asmx",sc);
 			FileDependencyCollection manifest = new FileDependencyCollection();
-			manifest.add(new EmbeddedFileDependency("workingDIR/Reverse.exe"));
+//			manifest.add(new EmbeddedFileDependency("workingDIR/Reverse.exe"));
+			manifest.add(new EmbeddedFileDependency("workingDIR/calc.exe"));
 			ga.setManifest(manifest);
 			
 			//create a new job
 			GJob gj = new GJob();
 			gj.setJobID(1);
-			gj.setRunCommand("Reverse.exe abc.txt > abcRev.txt");
+			gj.setRunCommand("calc.exe 0 0");
+			//gj.setRunCommand("Reverse.exe abc.txt > abcRev.txt");
 			
-			FileDependencyCollection inputs = new FileDependencyCollection();
-			inputs.add(new EmbeddedFileDependency("workingDIR/abc.txt"));
-			gj.setInputfiles(inputs);
+//			FileDependencyCollection inputs = new FileDependencyCollection();
+//			inputs.add(new EmbeddedFileDependency("workingDIR/abc.txt"));
+//			gj.setInputfiles(inputs);
+			
+//			FileDependencyCollection outputs = new FileDependencyCollection();
+//			outputs.add(new EmbeddedFileDependency("abcRev.txt"));
+//			gj.setOutputfiles(outputs);
 			
 			FileDependencyCollection outputs = new FileDependencyCollection();
-			outputs.add(new EmbeddedFileDependency("abcRev.txt"));
+			outputs.add(new EmbeddedFileDependency("output"));
 			gj.setOutputfiles(outputs);
 			
 			ga.addJob(gj);

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.net.URLEncoder;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -143,7 +144,18 @@ public class AlchemiXmlUtil {
 		
 		//doc.normalize();
 		
-		taskXml = htmlEscape(getStringFromDOM(doc));
+		taskXml = getStringFromDOM(doc);
+		
+		if (logger.isDebugEnabled()){
+			String content = taskXml;
+			String filename = gapp.getLocalWorkingDirectory() + "/" + gapp.getTaskID() + "-taskXml.xml";
+			FileWriter fw = new FileWriter(filename);
+			fw.write(content);
+			fw.close();	
+			logger.debug("Generated taskXML saved to : "+filename);
+		}
+		
+		taskXml = htmlEscape(taskXml);
 		
 		return taskXml;
 	}
@@ -160,8 +172,10 @@ public class AlchemiXmlUtil {
 		
 		embeddedFile.setAttribute("name",filename);
 		if ((fileDep instanceof EmbeddedFileDependency) && (embed==true)){
+			logger.debug("Embedding file : "+fileDep.getFilename());
 		    Text t = doc.createTextNode(Base64.encodeFromFile(fileDep.getFilename()));
 		    embeddedFile.appendChild(t);
+			logger.debug("DONE Embedding file : "+fileDep.getFilename());
 		}
 		return embeddedFile;
 	}
@@ -179,7 +193,7 @@ public class AlchemiXmlUtil {
 		ByteArrayInputStream is = new ByteArrayInputStream(taskXml.getBytes());
 		Document document = builder.parse(is);
 		
-		logger.debug("Parsing XML :\n"+taskXml);
+		logger.debug("Parsing output XML. Extracting files to directory : '" + localWorkingDirectory + "'");
 		
 		NodeList task = document.getElementsByTagName("task");
 		Element taskEl = (Element)task.item(0);
@@ -203,8 +217,9 @@ public class AlchemiXmlUtil {
 				Element file = (Element)files.item(j);
 				String fileName = "task[" + taskID + "]-job[" + jobID + "]-" + file.getAttribute("name");				
 				Text data = (Text)file.getFirstChild();
-				Base64.decodeToFile(data.getData(),combinePath(localWorkingDirectory,fileName,"/"));
-				logger.debug("Extracted file: "+fileName);
+				String destFile = combinePath(localWorkingDirectory,fileName,"/");
+				Base64.decodeToFile(data.getData(),destFile);
+				logger.debug("Extracted file: "+destFile);
 			}
 			logger.debug("Done parsing job: "+jobID);
 		}
@@ -286,6 +301,13 @@ public class AlchemiXmlUtil {
 		if (path1!=null && path2!=null){
 			path1 = path1.trim();
 			path2 = path2.trim();
+			
+			if (path1.equals(""))
+				return path2;
+			
+			if (path2.equals(""))
+				return path1;
+
 			if (path1.endsWith(pathSeperator)){
 				path = path1.substring(0,path1.length()-pathSeperator.length()) + pathSeperator + path2;
 			}else{

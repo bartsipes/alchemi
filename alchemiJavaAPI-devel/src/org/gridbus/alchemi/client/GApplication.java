@@ -110,6 +110,10 @@ public class GApplication {
 		
 		logger.debug("Submitting application to Alchemi manager service at : "+managerURL);
 		this.taskID = manager.submitTask(securityCredentials.getUsername(),securityCredentials.getPassword(),taskXml);
+		if (taskID==null){
+			throw new Exception("Error submitting application...");
+		}
+		
 		logger.debug("Application submitted successfully. ApplicationID="+taskID);
 		//setJobHandle for each job
 		for (int i=0;i<this.jobs.size();i++){
@@ -142,7 +146,6 @@ public class GApplication {
 	private void getFinishedJobs() throws Exception{
 		logger.debug("Getting finished jobs so far...");
 		String resultXml = manager.getFinishedJobs(securityCredentials.getUsername(),securityCredentials.getPassword(),taskID);
-		logger.debug("Server returned response: \n"+resultXml);
 		AlchemiXmlUtil.parseXmlOutput(resultXml,localWorkingDirectory);
 	}
 
@@ -316,6 +319,9 @@ public class GApplication {
 						GJob j = jobs.get(i);
 						int status = queryJobStatus(j.getHandle());
 						if (status == GJob.Finished || status == GJob.Dead){
+							//get the finished jobs as soon as they are done.
+							getFinishedJobs();
+
 							//check if we need to raise the finished/failed event
 							if (j.getExecutionException()!=null){ 
 								logger.debug("Raising job failed event: "+j.getHandle());
@@ -326,9 +332,6 @@ public class GApplication {
 								raiseJobFinishedEvent(j);
 								doneJobs++;
 							}
-							
-							//get the finished jobs as soon as they are done.
-							getFinishedJobs();
 						}
 					}
 					
@@ -456,6 +459,13 @@ public class GApplication {
 	 */
 	public void setLocalWorkingDirectory(String localWorkingDirectory) {
 		this.localWorkingDirectory = localWorkingDirectory;
+	}
+
+	/**
+	 * @return Returns the taskID.
+	 */
+	public String getTaskID() {
+		return taskID;
 	}
 
 }

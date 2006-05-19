@@ -1,5 +1,7 @@
 package org.gridbus.alchemi.client.util;
 
+import org.apache.log4j.Logger;
+
 /**
  * Encodes and decodes to and from Base64 notation.
  *
@@ -49,6 +51,10 @@ package org.gridbus.alchemi.client.util;
  */
 public class Base64
 {
+	/**
+	 * Logger for this class
+	 */
+	private static final Logger logger = Logger.getLogger(Base64.class);
     
 /* ********  P U B L I C   F I E L D S  ******** */   
     
@@ -963,8 +969,18 @@ public class Base64
                       new java.io.FileInputStream( file ) ), Base64.ENCODE );
             
             // Read until done
-            while( ( numBytes = bis.read( buffer, length, 4096 ) ) >= 0 )
+//            logger.debug("***************************** Encoding from file ... " + filename);
+//            logger.debug("***************************** File length = "+file.length());
+//            logger.debug("***************************** START buffer : "+buffer.length);
+//            logger.debug("***************************** START off : "+length);
+            
+            while( ( numBytes = bis.read( buffer, length, 4096 ) ) >= 0 ){
+//            	logger.debug("***************************** buffer : "+buffer.length);
+//            	logger.debug("***************************** off : "+length);
+//            	logger.debug("***************************** numBytes read : "+ numBytes);
                 length += numBytes;
+            }
+                
             
             // Save in a variable to return
             encodedData = new String( buffer, 0, length, Base64.PREFERRED_ENCODING );
@@ -999,6 +1015,12 @@ public class Base64
      */
     public static class InputStream extends java.io.FilterInputStream
     {
+		/**
+		 * Logger for this class
+		 */
+		private static final Logger logger = Logger
+				.getLogger(InputStream.class);
+
         private boolean encode;         // Encoding or decoding
         private int     position;       // Current position in the buffer
         private byte[]  buffer;         // Small buffer holding converted data
@@ -1191,19 +1213,43 @@ public class Base64
         {
             int i;
             int b;
-            for( i = 0; i < len; i++ )
+            
+            //kna added "max". to avoid ArrayIndexOutOfBoundsException
+            int max = len;
+            if (dest.length < max)
+            	max = dest.length;
+            
+            //logger.debug("************************* Starting READ max = "+max + " , len ="+len + ", off = "+off);
+            for( i = 0; i < max; i++ )
             {
+            	//debug
+//            	if (max - i < 5)
+//            		logger.debug("***************************** i = "+ i+ ", len = "+len);
                 b = read();
                 
                 //if( b < 0 && i == 0 )
                 //    return -1;
                 
-                if( b >= 0 )
-                    dest[off + i] = (byte)b;
-                else if( i == 0 )
+                if( b >= 0 ){
+                	//debug
+//                	if (max - i < 5)
+//                		logger.debug("***************************** PUTTING IN DEST: dest size = "+ dest.length+ ", off+i = "+(off+i) + ",   b = "+b);
+                    
+                	if ((off+i)>=dest.length)
+                		break; 
+                	
+                	dest[off + i] = (byte)b;
+                }
+                else if( i == 0 ){
+//                	if (max - i < 5)
+//                		logger.debug("***************************** NOT PUTTING IN DEST: dest size = "+ dest.length+ ", off+i = "+(off+i)+ ",   b = "+b);
                     return -1;
-                else
+                }
+                else{
+//                	if (max - i < 5)
+//                		logger.debug("***************************** NOT PUTTING IN DEST: dest size = "+ dest.length+ ", off+i = "+(off+i)+ ",   b = "+b);
                     break; // Out of 'for' loop
+                }
             }   // end for: each byte read
             return i;
         }   // end read
@@ -1229,6 +1275,12 @@ public class Base64
      */
     public static class OutputStream extends java.io.FilterOutputStream
     {
+		/**
+		 * Logger for this class
+		 */
+		private static final Logger logger = Logger
+				.getLogger(OutputStream.class);
+
         private boolean encode;
         private int     position;
         private byte[]  buffer;
