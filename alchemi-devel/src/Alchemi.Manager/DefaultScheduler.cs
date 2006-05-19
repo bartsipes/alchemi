@@ -51,6 +51,8 @@ namespace Alchemi.Manager
 
 		private static object threadChooserLock = new object();
 
+        private int nextExecutorIndex = 0;
+
         /// <summary>
         /// Sets the collection of applications.
         /// </summary>
@@ -89,31 +91,36 @@ namespace Alchemi.Manager
             return new ThreadIdentifier(appid, threadId, priority);
         }
 
-		/// <summary>
-		/// Return the next available ExecutorId. 
-		/// For an executor to be available the following considions have to be met:
-		/// - executor is dedicated
-		/// - executor is conected
-		/// - executor has no threads running or scheduled
-		/// </summary>
-		/// <returns></returns>
-		protected ExecutorStorageView GetNextAvailableExecutor()
-		{
-			ExecutorStorageView[] executors = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
+        /// <summary>
+        /// Return the next available ExecutorId. 
+        /// For an executor to be available the following considions have to be met:
+        /// - executor is dedicated
+        /// - executor is conected
+        /// - executor has no threads running or scheduled
+        /// </summary>
+        /// <returns></returns>
+        protected ExecutorStorageView GetNextAvailableExecutor()
+        {
+            // michael@meadows.force9.co.uk; gets next available executor without bias based upon position in executors list.
+            ExecutorStorageView[] executors = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
 
-			foreach (ExecutorStorageView executor in executors)
-			{
-				if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, 
-					ThreadState.Ready, /*Added this to match the condition checked in MExecutor.ExecuteThread*/
-					ThreadState.Scheduled, 
-					ThreadState.Started) == 0)
-				{
-					return executor;
-				}
-			}
+            for (int i = 0; i < executors.Length; i++)
+            {
+                nextExecutorIndex++;
+                if (nextExecutorIndex >= executors.Length)
+                {
+                    nextExecutorIndex = 0;
+                }
 
-			return null;
-		}
+                ExecutorStorageView executor = executors[nextExecutorIndex];
+                if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, ThreadState.Ready, ThreadState.Scheduled, ThreadState.Started) == 0)
+                {
+                    return executor;
+                }
+            }
+
+            return null;
+        }
 
 		/// <summary>
 		/// Return the thread with the highest priority from the pool of Ready threads.
