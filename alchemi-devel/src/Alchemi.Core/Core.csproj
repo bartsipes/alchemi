@@ -151,6 +151,7 @@
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -213,6 +214,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Owner\GApplication.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Owner\GApplicationBuffered.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Owner\GJob.cs">
