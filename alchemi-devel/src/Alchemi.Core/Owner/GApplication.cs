@@ -218,7 +218,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Starts the grid application
 		/// </summary>
-		public void Start()
+        public virtual void Start()
 		{
 			logger.Debug("Start GApp..."+ _Id + " with " + _Threads.Count+" threads.");
 			if (_Running) return;
@@ -259,7 +259,7 @@ namespace Alchemi.Core.Owner
 		/// Starts the given thread
 		/// </summary>
 		/// <param name="thread">thread to start</param>
-		public void StartThread(GThread thread)
+		public virtual void StartThread(GThread thread)
 		{
             /// May 10, 2006 michael@meadows.force9.co.uk: Fix for bug 1482578
             /// Prevents the client from executing StartThread on single-use 
@@ -281,7 +281,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Stops the grid application
 		/// </summary>
-		public void Stop()
+		public virtual void Stop()
 		{
 			if (_Running)
 			{
@@ -417,37 +417,15 @@ namespace Alchemi.Core.Owner
                         
 							if (ex == null)
 							{
-								logger.Debug("Thread completed successfully:"+th.Id);
-								//raise the thread finish event
-								if (ThreadFinish!=null)
-								{
-									logger.Debug("Raising thread finish event...");
-									try
-									{
-										ThreadFinish(th); //TODO: Need to see the effect of calling it async. 
-									}
-									catch (Exception eventhandlerEx)
-									{
-										logger.Debug("Error in ThreadFinish Event handler: "+eventhandlerEx);
-									}
-								}
+                                logger.Debug("Thread completed successfully:" + th.Id);
+                                //raise the thread finish event
+                                OnThreadFinish(th);
 							}
 							else
 							{
-								logger.Debug("Thread failed:"+th.Id);
-								//raise the thread failed event
-								if (ThreadFailed!=null)
-								{
-									logger.Debug("Raising thread failed event...");
-									try
-									{
-										ThreadFailed(th, ex); //TODO: Need to see the effect of calling it async. 
-									}
-									catch (Exception eventhandlerEx)
-									{
-										logger.Debug("Error in ThreadFailed Event handler: "+eventhandlerEx);
-									}
-								}
+                                logger.Debug("Thread failed:" + th.Id);
+                                //raise the thread failed event
+                                OnThreadFailed(th, ex);
 							}
 						}
 
@@ -517,7 +495,48 @@ namespace Alchemi.Core.Owner
 
 			logger.Info("GetFinishedThreads thread exited..");
 		}
-        
+
+        /// <summary>
+        /// Fires the thread finish event.
+        /// </summary>
+        /// <param name="th">thread</param>
+        protected virtual void OnThreadFinish(GThread th)
+        {
+            if (ThreadFinish != null)
+            {
+                logger.Debug("Raising thread finish event...");
+                try
+                {
+                    ThreadFinish(th); //TODO: Need to see the effect of calling it async. 
+                }
+                catch (Exception eventhandlerEx)
+                {
+                    logger.Debug("Error in ThreadFinish Event handler: " + eventhandlerEx);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fires the thread failed event.
+        /// </summary>
+        /// <param name="th">thread</param>
+        /// <param name="ex">ex</param>
+        protected virtual void OnThreadFailed(GThread th, Exception ex)
+        {
+            if (ThreadFailed != null)
+            {
+                logger.Debug("Raising thread failed event...");
+                try
+                {
+                    ThreadFailed(th, ex); //TODO: Need to see the effect of calling it async. 
+                }
+                catch (Exception eventhandlerEx)
+                {
+                    logger.Debug("Error in ThreadFailed Event handler: " + eventhandlerEx);
+                }
+            }
+        }
+
 		//----------------------------------------------------------------------------------------------- 
         
 		//start seperate threads to get the finished grid-threads.
