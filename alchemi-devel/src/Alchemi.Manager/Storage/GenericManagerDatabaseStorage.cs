@@ -774,7 +774,7 @@ namespace Alchemi.Manager.Storage
 
 					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
 					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
-					DateTime pingTime = dataReader.IsDBNull(dataReader.GetOrdinal("ping_time")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("ping_time"));
+					DateTime pingTime = GetDateTime(dataReader, "ping_time");
 					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
 					Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
@@ -886,7 +886,7 @@ namespace Alchemi.Manager.Storage
 					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
-					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
@@ -906,7 +906,7 @@ namespace Alchemi.Manager.Storage
 					{
 						application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));					
 					}
-					application.TimeCompleted = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					application.TimeCompleted = GetDateTime(dataReader, "time_created");
 
 					if (populateThreadCount)
 					{
@@ -942,7 +942,7 @@ namespace Alchemi.Manager.Storage
 					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
-					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
@@ -955,7 +955,7 @@ namespace Alchemi.Manager.Storage
 						);
 
 					application.ApplicationName = dataReader.IsDBNull(dataReader.GetOrdinal("application_name")) ? "" : dataReader.GetString(dataReader.GetOrdinal("application_name"));
-					application.TimeCompleted = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+					application.TimeCompleted = GetDateTime(dataReader, "time_created");
 
 					if (populateThreadCount)
 					{
@@ -984,7 +984,7 @@ namespace Alchemi.Manager.Storage
 				if(dataReader.Read())
 				{
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
-					DateTime timeCreated = dataReader.GetDateTime(dataReader.GetOrdinal("time_created"));
+                    DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
 					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
@@ -1350,9 +1350,8 @@ namespace Alchemi.Manager.Storage
 					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
 					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 
-					// for lack of a better default set the dates to DateTime.MinValue.
-					DateTime timeStarted = dataReader.IsDBNull(dataReader.GetOrdinal("time_started")) ? DateTime.MinValue: dataReader.GetDateTime(dataReader.GetOrdinal("time_started"));
-					DateTime timeFinished = dataReader.IsDBNull(dataReader.GetOrdinal("time_finished")) ? DateTime.MinValue : dataReader.GetDateTime(dataReader.GetOrdinal("time_finished"));
+					DateTime timeStarted = GetDateTime(dataReader, "time_started");
+					DateTime timeFinished = GetDateTime(dataReader, "time_finished");
 
 					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
 					bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
@@ -1642,6 +1641,36 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
+        /// <summary>
+        /// Gets the date time from the given data reader checking for db null. If date time is db null then it returns DateTime.MinValue.
+        /// </summary>
+        /// <param name="dataReader">data reader</param>
+        /// <param name="strColumnName">column name</param>
+        /// <returns>date time</returns>
+        private DateTime GetDateTime(IDataReader dataReader, string columnName)
+        {
+            return GetDateTime(dataReader, columnName, DateTime.MinValue);
+        }
+
+        /// <summary>
+        /// Gets the date time from the given data reader checking for db null. If date time is db null then it returns the given default date time.
+        /// </summary>
+        /// <param name="dataReader">data reader</param>
+        /// <param name="columnName">column name</param>
+        /// <param name="defaultDateTime">default date time</param>
+        /// <returns>date time</returns>
+        private DateTime GetDateTime(IDataReader dataReader, string columnName, DateTime defaultDateTime)
+        {
+            int nOrdinal = dataReader.GetOrdinal(columnName);
+
+            if (dataReader.IsDBNull(nOrdinal))
+            {
+                return defaultDateTime;
+            }
+
+            return dataReader.GetDateTime(nOrdinal);
+        }
+
 		#endregion
 
 		private String GetStringFromEmbededScriptFile(String folder, String scriptFileName)
@@ -1663,6 +1692,5 @@ namespace Alchemi.Manager.Storage
 				return data;
 			}
 		}
-
 	}
 }
