@@ -349,22 +349,17 @@ namespace Alchemi.Core.Owner
 					_Id = Manager.Owner_CreateApplication(Credentials);
 					logger.Debug("newId for GApp..."+_Id);
 				}
-				//here we use the method meant for executors, to check for the existence of the manifest.
+
 				logger.Debug("Checking for manifest...GApp id= " + _Id);
 
-				FileDependencyCollection manifest = null;
-				try
-				{
-					manifest = Manager.Executor_GetApplicationManifest(Credentials,_Id);	
-				}catch {}
-
-				if (manifest==null)
-				{
-					//app manifest needs to be set again, since the manager doesnt have it.
-					logger.Debug("Setting manifest...GApp id= " + _Id);
-					Manager.Owner_SetApplicationManifest(Credentials, _Id, _Manifest);
-				}
-				logger.Debug("Manifest set up...GApp id= " + _Id);
+                if (!Manager.Owner_HasApplicationManifest(Credentials, _Id))
+                {
+                    //app manifest needs to be set again, since the manager doesnt have it.
+                    logger.Debug("Setting manifest...GApp id= " + _Id);
+                    Manager.Owner_SetApplicationManifest(Credentials, _Id, _Manifest);
+                }
+				
+                logger.Debug("Manifest set up...GApp id= " + _Id);
 			}
 		}
 
