@@ -74,7 +74,17 @@ namespace Alchemi.Core
 		/// <param name="appId"></param>
 		/// <param name="manifest"></param>
 		void Owner_SetApplicationManifest(SecurityCredentials sc, string appId, FileDependencyCollection manifest);
-        
+
+
+        /// <summary>
+        /// Determines whether the manager has the application manifest for the given application id.
+        /// <br/>(Generally meant to be called by a Owner of an application)
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        bool Owner_HasApplicationManifest(SecurityCredentials sc, string appId);
+
 		/// <summary>
 		/// Set the thread on the manager. i.e provide the manager with a byte array[] representing the thread code.
 		/// <br/>(Generally meant to be called by a Owner of an application)
