@@ -144,7 +144,35 @@ namespace Alchemi.Manager
             _Applications[appId].Manifest = manifest;
         }
 
-        //-----------------------------------------------------------------------------------------------          
+        //-----------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Determines whether the manager has the application manifest for the given application id.
+        /// </summary>
+        /// <param name="sc">security credentials</param>
+        /// <param name="appId">application id</param>
+        /// <returns>whether the manager has the application manifest</returns>
+        public bool Owner_HasApplicationManifest(SecurityCredentials sc, string appId)
+        {
+            // This method only returns whether an application has a manifest or not and should not require authentication or authorization.
+
+            //AuthenticateUser(sc);
+            //ApplicationAuthorizationCheck(sc, appId);
+
+            logger.Debug("Checking application for manifest: " + appId);
+
+            try
+            {
+                MApplication app = _Applications[appId];
+                return ((app != null) && (app.Manifest != null));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        //-----------------------------------------------------------------------------------------------
 
 		/// <summary>
 		/// Initializes a thread and stores it into the database.
