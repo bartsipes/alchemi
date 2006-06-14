@@ -66,7 +66,7 @@ namespace Alchemi.Console.DataForms
 					{
 						GroupItem gi = new GroupItem(group.GroupName);
 						gi.ImageIndex = 2;
-						gi.Group = group;
+						gi.GroupView = group;
 						lvMembers.Items.Add(gi);
 					}
 				}

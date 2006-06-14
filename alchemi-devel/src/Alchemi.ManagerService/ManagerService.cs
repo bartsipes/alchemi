@@ -164,7 +164,7 @@ namespace Alchemi.ManagerService
 			try
 			{
 				logger.Info("Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);
-				ThreadStart ts = new ThreadStart(Start);
+				ThreadStart ts = new ThreadStart(StartContainer);
 				Thread t = new Thread(ts);
 				t.Start();
 			}
@@ -213,7 +213,7 @@ namespace Alchemi.ManagerService
 		{
 			try
 			{
-				ThreadStart ts = new ThreadStart(Stop);
+				ThreadStart ts = new ThreadStart(StopContainer);
 				Thread t = new Thread(ts);
 				t.Start();
 			}
@@ -223,7 +223,7 @@ namespace Alchemi.ManagerService
 			}
 		}
 
-		private void Start()
+		private void StartContainer()
 		{
 			try
 			{
@@ -232,11 +232,11 @@ namespace Alchemi.ManagerService
 			catch (Exception ex)
 			{
 				logger.Error("Error starting manager container",ex);
-				Stop();
+				StopContainer();
 			}
 		}
 
-		private void Stop()
+		private void StopContainer()
 		{
 			try
 			{

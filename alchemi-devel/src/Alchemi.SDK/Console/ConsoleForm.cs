@@ -1050,7 +1050,7 @@ namespace Alchemi.Console
 						{
 							GroupItem grp = new GroupItem(group.GroupName);
 							grp.ImageIndex = 2;
-							grp.Group = group;
+							grp.GroupView = group;
 							lv.Items.Add(grp);
 						}
 
@@ -1591,7 +1591,7 @@ namespace Alchemi.Console
 					GroupItem gitem = (GroupItem)li;
 
 					GroupProperties groupProps = new GroupProperties(console);
-					groupProps.SetData(gitem.Group);
+					groupProps.SetData(gitem.GroupView);
 					groupProps.ShowDialog(this);	
 				}
 				else if (li is PermissionItem)
@@ -1708,7 +1708,7 @@ namespace Alchemi.Console
 													"Delete Group", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 						if (result == DialogResult.Yes)
 						{
-							console.Manager.Admon_DeleteGroup(console.Credentials, gitem.Group);
+							console.Manager.Admon_DeleteGroup(console.Credentials, gitem.GroupView);
 							
 							//refresh groups list
 							FillGroupsList();

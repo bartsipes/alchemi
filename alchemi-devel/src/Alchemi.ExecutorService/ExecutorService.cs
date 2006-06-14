@@ -162,7 +162,7 @@ namespace Alchemi.ExecutorService
 			try
 			{
 				logger.Info("Starting Alchemi Executor Service v."+Utils.AssemblyVersion);
-				ThreadStart ts = new ThreadStart(Start);
+				ThreadStart ts = new ThreadStart(StartContainer);
 				starterThread = new Thread(ts);
 				starterThread.Start();
 				//let the thread continue: for eg: in case the connection is not available, it will keep trying forever.
@@ -173,7 +173,7 @@ namespace Alchemi.ExecutorService
 			}
 		}
 
-		private void Start()
+		private void StartContainer()
 		{
 			//the executor service is for dedicated machines only
 			try
@@ -206,7 +206,7 @@ namespace Alchemi.ExecutorService
 			}
 		}
 
-		private void Stop()
+		private void StopContainer()
 		{
 			try
 			{
@@ -318,7 +318,7 @@ namespace Alchemi.ExecutorService
 			try
 			{
 				logger.Info("Stopping Executor Service...");
-				ThreadStart ts = new ThreadStart(Stop);
+				ThreadStart ts = new ThreadStart(StopContainer);
 				Thread t = new Thread(ts);
 				t.Start();
 				t.Join(25000); //in this case we really want things to be stopped within the 25 seconds.

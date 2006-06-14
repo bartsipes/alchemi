@@ -68,7 +68,7 @@ namespace Alchemi.Console
 
 	public class GroupItem : ListViewItem
 	{
-		public GroupStorageView Group;
+		public GroupStorageView GroupView;
 
 		public GroupItem(String text) : base(text)
 		{

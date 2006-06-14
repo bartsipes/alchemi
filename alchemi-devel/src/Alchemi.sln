@@ -31,9 +31,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Executor", "Alchemi.Executo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager", "Alchemi.Manager\Manager.csproj", "{3122055C-044A-4C0C-80BB-82232FB333C5}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://localhost/Alchemi.CrossPlatformManager/", "http://localhost/Alchemi.CrossPlatformManager", "{B3EDA024-7864-4335-9817-67A78064C360}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorServiceController", "Alchemi.ExecutorServiceController\ExecutorServiceController.csproj", "{23CC92DA-8780-4A17-BF9A-E567CB0548C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerServiceController", "Alchemi.ManagerServiceController\ManagerServiceController.csproj", "{85660E73-08EB-4927-9C77-4009B8533F01}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F520AA3-7252-4D9D-BDA6-EED249B0EEE2}"
+	ProjectSection(SolutionItems) = preProject
+		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager", "{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}"
 	ProjectSection(WebsiteProperties) = preProject
-		ProjectReferences = "{3122055C-044A-4C0C-80BB-82232FB333C5}|Alchemi.Manager.dll;{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}|Alchemi.Core.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Alchemi.CrossPlatformManager"
 		Debug.AspNetCompiler.PhysicalPath = "Alchemi.CrossPlatformManager\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Alchemi.CrossPlatformManager\"
@@ -48,16 +56,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://localhost/Alchemi.Cr
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "Alchemi.CrossPlatformManager\"
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorServiceController", "Alchemi.ExecutorServiceController\ExecutorServiceController.csproj", "{23CC92DA-8780-4A17-BF9A-E567CB0548C5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerServiceController", "Alchemi.ManagerServiceController\ManagerServiceController.csproj", "{85660E73-08EB-4927-9C77-4009B8533F01}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F520AA3-7252-4D9D-BDA6-EED249B0EEE2}"
-	ProjectSection(SolutionItems) = preProject
-		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
 	EndProjectSection
 EndProject
 Global
@@ -238,21 +236,6 @@ Global
 		{3122055C-044A-4C0C-80BB-82232FB333C5}.ServiceRelease|Any CPU.Build.0 = Release|Any CPU
 		{3122055C-044A-4C0C-80BB-82232FB333C5}.ServiceRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3122055C-044A-4C0C-80BB-82232FB333C5}.ServiceRelease|Mixed Platforms.Build.0 = Release|Any CPU
-		{B3EDA024-7864-4335-9817-67A78064C360}.Debug|.NET.ActiveCfg = Debug|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Debug|.NET.Build.0 = Debug|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Debug|Any CPU.ActiveCfg = Debug|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Debug|Mixed Platforms.ActiveCfg = Debug|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Debug|Mixed Platforms.Build.0 = Debug|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Release|.NET.ActiveCfg = Release|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Release|.NET.Build.0 = Release|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Release|Any CPU.ActiveCfg = Release|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Release|Mixed Platforms.ActiveCfg = Release|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.Release|Mixed Platforms.Build.0 = Release|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease|.NET.ActiveCfg = ServiceRelease|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease|.NET.Build.0 = ServiceRelease|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease|Any CPU.ActiveCfg = ServiceRelease|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease|Mixed Platforms.ActiveCfg = ServiceRelease|.NET
-		{B3EDA024-7864-4335-9817-67A78064C360}.ServiceRelease|Mixed Platforms.Build.0 = ServiceRelease|.NET
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -283,6 +266,21 @@ Global
 		{85660E73-08EB-4927-9C77-4009B8533F01}.ServiceRelease|Any CPU.Build.0 = ServiceRelease|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.ServiceRelease|Mixed Platforms.ActiveCfg = ServiceRelease|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.ServiceRelease|Mixed Platforms.Build.0 = ServiceRelease|Any CPU
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Debug|.NET.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Debug|.NET.Build.0 = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Debug|Any CPU.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Debug|Mixed Platforms.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Debug|Mixed Platforms.Build.0 = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|.NET.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|.NET.Build.0 = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Any CPU.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.Build.0 = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.ServiceRelease|.NET.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.ServiceRelease|.NET.Build.0 = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.ServiceRelease|Any CPU.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.ServiceRelease|Mixed Platforms.ActiveCfg = Debug|.NET
+		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.ServiceRelease|Mixed Platforms.Build.0 = Debug|.NET
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

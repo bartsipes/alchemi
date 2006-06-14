@@ -54,7 +54,12 @@ namespace Alchemi.Executor
         public byte[] ExecuteThread(byte[] thread)
         {
 			// (tb@tbiro.com): this should be revised - there is no log listener in this app domain so these logs do not go anywhere
-			GThread gridThread = (GThread) Utils.DeserializeFromByteArray(thread);
+			//kna: Since this method is actually
+            //called on a different AppDomain, 
+            //we can catch exceptions in the caller
+            //since cross-appdomain calls use remoting.
+            //so the exception would be passed back! :)
+            GThread gridThread = (GThread) Utils.DeserializeFromByteArray(thread);
 			logger.Debug("Executor running GThread: "+gridThread.Id);
 			logger.Debug("Working dir="+AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
 

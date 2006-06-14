@@ -66,7 +66,10 @@ namespace Alchemi.Manager
 		/// <returns>Id of the newly created application</returns>
 		public string CreateNew(string username)
 		{
-			ApplicationStorageView application = new ApplicationStorageView(username);
+            //Krishna: changed to use the constructor with created-time
+            ApplicationStorageView application =
+                new ApplicationStorageView(ApplicationState.Ready, DateTime.Now, true, username);
+                //new ApplicationStorageView(username);
 			
 			string appId = ManagerStorageFactory.ManagerStorage().AddApplication(application);
 

@@ -59,7 +59,7 @@ namespace Alchemi.Console.PropertiesDialogs
 				if (groupStorageView != null)
 				{
 					GroupItem grpItem = new GroupItem(groupStorageView.GroupName);
-					grpItem.Group = groupStorageView;
+					grpItem.GroupView = groupStorageView;
 					grpItem.ImageIndex = 2;
 					lvGrp.Items.Add(grpItem);
 				}
@@ -247,7 +247,7 @@ namespace Alchemi.Console.PropertiesDialogs
 					if (lvGrp.Items[0] is GroupItem)
 					{
 						GroupItem grpItem  = (GroupItem)lvGrp.Items[0];
-						groupId = grpItem.Group.GroupId; //set the group Id. For now, a user can be part of one group only.
+						groupId = grpItem.GroupView.GroupId; //set the group Id. For now, a user can be part of one group only.
 					}
 				}
 
@@ -336,7 +336,7 @@ namespace Alchemi.Console.PropertiesDialogs
 				//for now only one item can be included
 				if (items!=null && items.Count>0)
 				{
-					_User.GroupId = ((GroupItem)items[0]).Group.GroupId;
+					_User.GroupId = ((GroupItem)items[0]).GroupView.GroupId;
 
 					UserStorageView[] users = new UserStorageView[1];
 					users[0] = this._User;
