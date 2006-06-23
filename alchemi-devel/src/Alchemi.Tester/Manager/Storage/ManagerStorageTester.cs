@@ -923,7 +923,7 @@ namespace Alchemi.Tester.Manager.Storage
 		public void AddApplicationTestWithUsernameOnly()
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username3");
-
+            
 			String applicationId = ManagerStorage.AddApplication(application);
 
 			Assert.AreEqual(ApplicationState.Stopped, application.State);
@@ -931,6 +931,42 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.IsFalse(application.TimeCreatedSet);
 			Assert.IsTrue(applicationId != null && applicationId.Length > 0, "Invalid ApplicationID!");
 		}
+
+        // testing bug: [ 1482565 ] Application TimeCompleted not persisted
+        [Test]
+        public void AddApplicationTestIfTimeCompletedIsSaved()
+        {
+            DateTime now = DateTime.Now;
+
+            DateTime timeCompleted = new DateTime(now.Year + 1, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+            ApplicationStorageView application = new ApplicationStorageView("username3");
+
+            application.TimeCompleted = timeCompleted;
+
+            String applicationId = ManagerStorage.AddApplication(application);
+
+            ApplicationStorageView resultApplication = ManagerStorage.GetApplication(applicationId);
+
+            Assert.AreEqual(timeCompleted, resultApplication.TimeCompleted);
+        }
+
+        // un-logged bug, the application name is not saved in some cases
+        [Test]
+        public void AddApplicationTestIfApplicationNameIsSaved()
+        {
+            String applicationName = "some name!";
+
+            ApplicationStorageView application = new ApplicationStorageView("username3");
+
+            application.ApplicationName = applicationName;
+
+            String applicationId = ManagerStorage.AddApplication(application);
+
+            ApplicationStorageView resultApplication = ManagerStorage.GetApplication(applicationId);
+
+            Assert.AreEqual(applicationName, resultApplication.ApplicationName);
+        }
 		
 		#endregion
 
@@ -1006,6 +1042,52 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.AreEqual(1, applications.Length);
 		}
+
+        // testing bug: [ 1482565 ] Application TimeCompleted not persisted
+        [Test]
+        public void UpdateApplicationTestIfTimeCompletedIsSaved()
+        {
+            // TB: due to rounding errors the milliseconds might be lost in the database storage.
+            // TB: I think this is OK so we create a test DateTime without milliseconds
+            DateTime now = DateTime.Now;
+            DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+            now = now.AddDays(1);
+            DateTime timeCompleted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
+
+            String applicationId = AddApplication(ApplicationState.Ready, timeCreated, false, "test");
+
+            ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, timeCreated, true, "test2");
+
+            updatedApplication.ApplicationId = applicationId;
+            updatedApplication.TimeCompleted = timeCompleted;
+
+            ManagerStorage.UpdateApplication(updatedApplication);
+
+            ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+            Assert.AreEqual(1, applications.Length);
+            Assert.AreEqual(timeCompleted, applications[0].TimeCompleted);
+        }
+
+        // un-logged bug, the application name is not saved in some cases
+        [Test]
+        public void UpdateApplicationTestIfApplicationNameIsSaved()
+        {
+            String applicationName = "another name!";
+            String applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
+
+            ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, true, "test2");
+
+            updatedApplication.ApplicationId = applicationId;
+            updatedApplication.ApplicationName = applicationName;
+
+            ManagerStorage.UpdateApplication(updatedApplication);
+
+            ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+            Assert.AreEqual(1, applications.Length);
+            Assert.AreEqual(applicationName, applications[0].ApplicationName);
+        }
 
 		#endregion
 
@@ -1096,6 +1178,18 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(3, applications[0].UnfinishedThreads);
 		}
 
+        [Test]
+        public void GetApplicationsTestApplicationNameDefaultValue()
+        {
+            String applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
+            String expectedName = String.Format("Noname: [{0}]", applicationId);
+
+            ApplicationStorageView[] applications = ManagerStorage.GetApplications();
+
+            Assert.AreEqual(1, applications.Length);
+            Assert.AreEqual(expectedName, applications[0].ApplicationName);
+        }
+
 		#endregion
 
 		#region "GetApplication Tests"
@@ -1181,6 +1275,18 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.IsNull(application);
 		}
+
+        [Test]
+        public void GetApplicationTestApplicationNameDefaultValue()
+        {
+            String applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
+            String expectedName = String.Format("Noname: [{0}]", applicationId);
+
+            ApplicationStorageView application = ManagerStorage.GetApplication(applicationId);
+
+            Assert.IsNotNull(application);
+            Assert.AreEqual(expectedName, application.ApplicationName);
+        }
 
 
 		#endregion

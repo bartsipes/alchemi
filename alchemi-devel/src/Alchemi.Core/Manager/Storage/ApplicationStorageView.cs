@@ -64,7 +64,14 @@ namespace Alchemi.Core.Manager.Storage
 		{
 			get
 			{
-				return m_appName;
+                if (m_appName != null && m_appName.Length > 0)
+                {
+                    return m_appName;
+                }
+                else
+                {
+                    return String.Format("Noname: [{0}]", ApplicationId);
+                }
 			}
 			set
 			{

@@ -826,23 +826,43 @@ namespace Alchemi.Manager.Storage
 
 			String applicationId = Guid.NewGuid().ToString();
 
-			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
+            IDataParameter timeCreatedParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
             if (!application.TimeCreatedSet)
             {
-                dateTimeParameter.Value = DBNull.Value;
+                timeCreatedParameter.Value = DBNull.Value;
             }
 
-			RunSql(String.Format("insert into application(application_id, state, time_created, is_primary, usr_name) values ('{1}', {2}, {0}time_created, {3}, '{4}')",
+            IDataParameter timeCompletedParameter = GetParameter(DatabaseParameterDecoration() + "time_completed", application.TimeCompleted, DbType.DateTime);
+            if (!application.TimeCompletedSet)
+            {
+                timeCompletedParameter.Value = DBNull.Value;
+            }
+
+            RunSql(String.Format("insert into application(application_id, state, time_created, time_completed, is_primary, usr_name) values ('{1}', {2}, {0}time_created,{0}time_completed, {3}, '{4}')",
 				DatabaseParameterDecoration(),
 				applicationId,
 				(int)application.State,
 				Convert.ToInt16(application.Primary),
 				Utils.MakeSqlSafe(application.Username)
-				), 
-				dateTimeParameter);
+				),
+                timeCreatedParameter,
+                timeCompletedParameter);
+
+            application.ApplicationId = applicationId;
+
+            UpdateApplicationName(application);
 
 			return applicationId;
 		}
+
+        private void UpdateApplicationName(ApplicationStorageView application)
+        {
+            RunSql(String.Format("update application set application_name='{2}' where application_id = '{1}'",
+                DatabaseParameterDecoration(),
+                application.ApplicationId,
+                Utils.MakeSqlSafe(application.ApplicationName)
+                ));
+        }
 
 		public void UpdateApplication(ApplicationStorageView updatedApplication)
 		{
@@ -851,20 +871,29 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "time_created", updatedApplication.TimeCreated, DbType.DateTime);
+			IDataParameter timeCreatedParameter = GetParameter(DatabaseParameterDecoration() + "time_created", updatedApplication.TimeCreated, DbType.DateTime);
             if (!updatedApplication.TimeCreatedSet)
             {
-                dateTimeParameter.Value = DBNull.Value;
+                timeCreatedParameter.Value = DBNull.Value;
             }
 
-			RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, is_primary = {3}, usr_name = '{4}' where application_id = '{1}'",
+            IDataParameter timeCompletedParameter = GetParameter(DatabaseParameterDecoration() + "time_completed", updatedApplication.TimeCompleted, DbType.DateTime);
+            if (!updatedApplication.TimeCompletedSet)
+            {
+                timeCompletedParameter.Value = DBNull.Value;
+            }
+
+            RunSql(String.Format("update application set state = {2}, time_created = {0}time_created, time_completed = {0}time_completed, is_primary = {3}, usr_name = '{4}' where application_id = '{1}'",
 				DatabaseParameterDecoration(),
 				updatedApplication.ApplicationId,
 				(int)updatedApplication.State,
 				Convert.ToInt16(updatedApplication.Primary),
-				Utils.MakeSqlSafe(updatedApplication.Username)
-				), 
-				dateTimeParameter);
+                Utils.MakeSqlSafe(updatedApplication.Username)
+                ),
+                timeCreatedParameter,
+                timeCompletedParameter);
+
+            UpdateApplicationName(updatedApplication);
 		}
 
 		public ApplicationStorageView[] GetApplications()
@@ -898,15 +927,8 @@ namespace Alchemi.Manager.Storage
 						username
 						);
 
-					if (dataReader.IsDBNull(dataReader.GetOrdinal("application_name")))
-					{
-						application.ApplicationName = String.Format("Noname: [{0}]", applicationId);
-					}
-					else
-					{
-						application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));					
-					}
-					application.TimeCompleted = GetDateTime(dataReader, "time_created");
+					application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));
+					application.TimeCompleted = GetDateTime(dataReader, "time_completed");
 
 					if (populateThreadCount)
 					{
@@ -955,7 +977,7 @@ namespace Alchemi.Manager.Storage
 						);
 
 					application.ApplicationName = dataReader.IsDBNull(dataReader.GetOrdinal("application_name")) ? "" : dataReader.GetString(dataReader.GetOrdinal("application_name"));
-					application.TimeCompleted = GetDateTime(dataReader, "time_created");
+					application.TimeCompleted = GetDateTime(dataReader, "time_completed");
 
 					if (populateThreadCount)
 					{
@@ -979,7 +1001,7 @@ namespace Alchemi.Manager.Storage
 
 		public ApplicationStorageView GetApplication(String applicationId)
 		{
-			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, state, time_created, is_primary, usr_name from application where application_id='{0}'", applicationId)))
+            using (IDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, application_name, state, time_created, is_primary, usr_name, time_completed from application where application_id='{0}'", applicationId)))
 			{
 				if(dataReader.Read())
 				{
@@ -995,6 +1017,9 @@ namespace Alchemi.Manager.Storage
 						primary,
 						username
 						);
+
+                    application.ApplicationName = dataReader.IsDBNull(dataReader.GetOrdinal("application_name")) ? "" : dataReader.GetString(dataReader.GetOrdinal("application_name")); 
+                    application.TimeCompleted = GetDateTime(dataReader, "time_completed");
 
 					dataReader.Close();
 					return application;
