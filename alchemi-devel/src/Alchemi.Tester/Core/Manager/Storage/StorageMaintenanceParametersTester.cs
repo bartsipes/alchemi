@@ -90,5 +90,31 @@ namespace Alchemi.Tester.Core.Manager.Storage
             Assert.AreEqual(ApplicationState.Ready, maintanenceParameters.ApplicationStatesToRemove[0]);
         }
 
+        [Test]
+        public void AddApplicationStatesToRemoveTestNull()
+        {
+            StorageMaintenanceParameters maintanenceParameters = new StorageMaintenanceParameters();
+
+            maintanenceParameters.AddApplicationStatesToRemove(null);
+
+            Assert.AreEqual(0, maintanenceParameters.ApplicationStatesToRemove.Length);
+        }
+
+        [Test]
+        public void AddApplicationStatesToRemoveTestAddingFromArray()
+        {
+            StorageMaintenanceParameters maintanenceParameters = new StorageMaintenanceParameters();
+
+            ApplicationState[] states = new ApplicationState[2];
+            states[0] = ApplicationState.Ready;
+            states[1] = ApplicationState.Stopped;
+
+            maintanenceParameters.AddApplicationStatesToRemove(states);
+
+            Assert.AreEqual(2, maintanenceParameters.ApplicationStatesToRemove.Length);
+            Assert.AreEqual(ApplicationState.Ready, maintanenceParameters.ApplicationStatesToRemove[0]);
+            Assert.AreEqual(ApplicationState.Stopped, maintanenceParameters.ApplicationStatesToRemove[1]);
+        }
+
     }
 }

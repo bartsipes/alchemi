@@ -248,7 +248,7 @@ namespace Alchemi.Console
             // mnuStorageMaintenance
             // 
             this.mnuStorageMaintenance.Index = 0;
-            this.mnuStorageMaintenance.Text = "StorageMaintenance";
+            this.mnuStorageMaintenance.Text = "Storage Maintenance";
             this.mnuStorageMaintenance.Click += new System.EventHandler(this.mnuStorageMaintenance_Click);
             // 
             // mnuView

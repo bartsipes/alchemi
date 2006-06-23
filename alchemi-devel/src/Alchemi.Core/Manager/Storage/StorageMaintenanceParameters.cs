@@ -138,5 +138,19 @@ namespace Alchemi.Core.Manager.Storage
             m_applicationStatesToRemove.Add(stateToAdd);
         }
 
+        public void AddApplicationStatesToRemove(IEnumerable<ApplicationState> enumerable)
+        {
+            if (enumerable == null)
+            {
+                return;
+            }
+
+            IEnumerator<ApplicationState> enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                AddApplicationStateToRemove(enumerator.Current);
+            }
+        }
+
     }
 }
