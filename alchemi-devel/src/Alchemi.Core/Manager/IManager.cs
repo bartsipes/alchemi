@@ -56,7 +56,15 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <returns>Application id</returns>
         string Owner_CreateApplication(SecurityCredentials sc);
-		
+
+        /// <summary>
+        /// Set the application human readable name.
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="appId"></param>
+        /// <param name="applicationName"></param>
+        void Owner_SetApplicationName(SecurityCredentials sc, string appId, String applicationName);
+
 		/// <summary>
 		/// Verify if an application exists.
 		/// <br/>(Generally meant to be called by a Owner of an application)

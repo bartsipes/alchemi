@@ -126,6 +126,16 @@ namespace Alchemi.Manager
             return _Applications.CreateNew(sc.Username);
         }
 
+        public void Owner_SetApplicationName(SecurityCredentials sc, string appId, String applicationName)
+        {
+            AuthenticateUser(sc);
+            EnsurePermission(sc, Permission.ManageOwnApp);
+
+            logger.Debug("Creating new application...");
+
+            _Applications[appId].ApplicationName = applicationName;
+        }
+
         //-----------------------------------------------------------------------------------------------          
 
 		/// <summary>

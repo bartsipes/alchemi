@@ -74,6 +74,8 @@ namespace Tutorial
 				}catch{}
 			}
 
+            App.ApplicationName = "Prime Number Generator - Alchemi sample";
+
 			Console.WriteLine("Connecting to Alchemi Grid...");
             // initialise application
             Init();

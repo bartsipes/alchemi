@@ -59,6 +59,7 @@ namespace Alchemi.Core.Owner
 		private ThreadCollection _Threads = new ThreadCollection();
 		private string _Id = "";
 		private int _LastThreadId = -1;
+        private String _ApplicationName;
 
 		private int _NumThreadsFinished = 0;
 		private Thread _GetFinishedThreadsThread;
@@ -112,6 +113,14 @@ namespace Alchemi.Core.Owner
 		{
 			get { return _Id; }
 		}
+
+        public String ApplicationName
+        {
+            set
+            {
+                _ApplicationName = value;
+            }
+        }
 
 		/// <summary>
 		/// Gets a value indicating whether the application is currently running
@@ -361,7 +370,9 @@ namespace Alchemi.Core.Owner
 				
                 logger.Debug("Manifest set up...GApp id= " + _Id);
 			}
-		}
+        
+            Manager.Owner_SetApplicationName(Credentials, Id, _ApplicationName);
+        }
 
 		//----------------------------------------------------------------------------------------------- 
 		

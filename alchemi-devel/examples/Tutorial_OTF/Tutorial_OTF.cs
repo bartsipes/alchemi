@@ -43,6 +43,7 @@ namespace Alchemi.Examples.Tutorial
 
             // create multi-use grid application
             ga = new GApplication(true);
+            ga.ApplicationName = "Tutorial OTF - Alchemi sample";
 
             // use standard grid connection
             ga.Connection = gc;

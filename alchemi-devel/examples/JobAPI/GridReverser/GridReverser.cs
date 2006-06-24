@@ -18,6 +18,7 @@ namespace Alchemi.Examples.CrossPlatformDemo
             try
             {
                 ga = new GApplication(GConnection.FromConsole("localhost", "9000", "user", "user"));
+                ga.ApplicationName = "Grid Reverser - Alchemi sample";
 
                 ga.ThreadFinish += new GThreadFinish(JobFinished);
                 ga.ApplicationFinish += new GApplicationFinish(ApplicationFinished);

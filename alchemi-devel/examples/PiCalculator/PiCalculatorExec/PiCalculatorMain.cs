@@ -66,6 +66,7 @@ namespace Alchemi.Examples.PiCalculator
                 
                 // create a new grid application
                 App = new GApplication(gc);
+                App.ApplicationName = "PI Calculator - Alchemi sample";
 
                 // add the module containing PiCalcGridThread to the application manifest        
                 App.Manifest.Add(new ModuleDependency(typeof(PiCalculator.PiCalcGridThread).Module));

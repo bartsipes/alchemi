@@ -550,6 +550,7 @@ namespace Alchemi.Examples.Renderer
 				gcd.ShowDialog();
 
 				ga = new GApplication(true);
+                ga.ApplicationName = "Alchemi POV-Ray Renderer - Alchemi sample";
 				ga.Connection = gcd.Connection;
 				ga.ThreadFinish += new GThreadFinish(ga_ThreadFinish);
 				ga.ThreadFailed += new GThreadFailed(ga_ThreadFailed);

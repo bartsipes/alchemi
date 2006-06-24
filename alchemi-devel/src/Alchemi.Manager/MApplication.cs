@@ -161,6 +161,24 @@ namespace Alchemi.Manager
             Directory.CreateDirectory(DataDir);
         }
 
+        public String ApplicationName
+        {
+            get
+            {
+                ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+                return application.ApplicationName;
+            }
+            set
+            {
+                ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
+
+                application.ApplicationName = value;
+
+                ManagerStorageFactory.ManagerStorage().UpdateApplication(application);
+            }
+        }
+
 		/// <summary>
 		/// Gets or sets the application state
 		/// </summary>

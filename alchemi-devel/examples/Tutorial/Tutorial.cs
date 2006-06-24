@@ -39,6 +39,7 @@ namespace Alchemi.Examples.Tutorial
       
             // create grid application
             ga = new GApplication(new GConnection("localhost", 9000, "user", "user"));
+            ga.ApplicationName = "Alchemi Tutorial - Alchemi sample";
 
             // add GridThread module (this executable) as a dependency
             ga.Manifest.Add(new ModuleDependency(typeof(MultiplierThread).Module));

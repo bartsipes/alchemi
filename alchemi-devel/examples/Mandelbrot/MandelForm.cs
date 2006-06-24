@@ -392,6 +392,7 @@ namespace Alchemi.Examples.Mandelbrot
                 {
                     // initialise application
                     ga = new GApplication(true);
+                    ga.ApplicationName = "Alchemi Fractal Generator - Alchemi sample";
 					
 					ga.Connection = gcd.Connection;
                 }
