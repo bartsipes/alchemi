@@ -49,8 +49,15 @@ namespace Alchemi.Console.PropertiesDialogs
 			txId.Text = _app.ApplicationId;
 			txUsername.Text = _app.Username;
 
-			txCreated.Text = _app.TimeCreated.ToString();
-			txCompleted.Text = _app.TimeCompleted.ToString();
+            if (_app.TimeCreatedSet)
+            {
+                txCreated.Text = _app.TimeCreated.ToString();
+            }
+
+            if (_app.TimeCompletedSet)
+            {
+                txCompleted.Text = _app.TimeCompleted.ToString();
+            }
 
 			txState.Text = _app.StateString;
 			chkPrimary.Checked = _app.Primary;

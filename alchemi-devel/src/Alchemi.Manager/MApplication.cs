@@ -262,6 +262,7 @@ namespace Alchemi.Manager
 
 				//update the application
 				app.State = ApplicationState.Stopped;
+                app.TimeCompleted = DateTime.Now;
 				store.UpdateApplication(app);
 
 				logger.Debug("Stopped the current application."+_Id);				
