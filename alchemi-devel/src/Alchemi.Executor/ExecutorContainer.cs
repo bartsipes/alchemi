@@ -51,13 +51,13 @@ namespace Alchemi.Executor
 
 		private int GetNumberOfExecutors()
 		{
-			int numberOfExecutors;
+            int numberOfExecutors;
 
-			object appSetting = ConfigurationSettings.AppSettings["NumberOfExecutors"];
+            AppSettingsReader configurationReader = new AppSettingsReader();
 
 			try
 			{
-				numberOfExecutors = Convert.ToInt32(appSetting);
+                numberOfExecutors = (int)configurationReader.GetValue("NumberOfExecutors", typeof(int));
 
 				if (numberOfExecutors <= 0)
 				{
