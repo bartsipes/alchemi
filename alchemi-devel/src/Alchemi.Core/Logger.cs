@@ -57,6 +57,25 @@ namespace Alchemi.Core
 			RaiseLogEvent(msg,LogLevel.Info,null);
 		}
 
+        /// <summary>
+        /// Raises a log event with the given message and Debug level in the target application domain
+        /// </summary>
+        /// <param name="targetAppDomain"></param>
+        /// <param name="debugMsg"></param>
+        public void Debug(AppDomain targetAppDomain, string debugMsg)
+        {
+            if (targetAppDomain != null)
+            {
+                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg);
+
+                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.Debug));
+            }
+            else
+            {
+                Debug(debugMsg);
+            }
+        }
+
 		/// <summary>
 		/// Raises a log event with the given message and Debug level
 		/// </summary>
@@ -154,6 +173,35 @@ namespace Alchemi.Core
 			}catch {} //always handle errors when raising events. (since event-handlers are not in our control).
 
 		}
+
+        /// <summary>
+        /// Used to temporarily store the log message and call the logging method on the other AppDomain
+        /// 
+        /// Usage scemario: ...
+        /// </summary>
+        [Serializable]
+        private class LoggerAppDomainBoundaryCrosser
+        {
+            private String m_message;
+            private Exception m_exception;
+
+            public LoggerAppDomainBoundaryCrosser(String message, Exception exception)
+            {
+                m_message = message;
+                m_exception = exception;
+            }
+
+            public LoggerAppDomainBoundaryCrosser(String message) : this(message, null)
+            {
+            }
+
+            public void Debug()
+            {
+                Logger logger = new Logger();
+
+                logger.Debug(m_message);
+            }
+        }
 	}
 
 	/// <summary>

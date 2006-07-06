@@ -31,9 +31,12 @@ using System.Net.Sockets;
 using System.Security;
 using System.Security.Policy;
 using System.Threading;
+using System.Configuration;
+
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Executor;
+
 using Microsoft.Win32;
 
 namespace Alchemi.Executor
@@ -679,6 +682,11 @@ namespace Alchemi.Executor
 							//kna changed this to get the AppDomainExecutor type from the Alchemi.Executor.dll assembly.
 							AppDomainExecutor executor = (AppDomainExecutor) domain.CreateInstanceFromAndUnwrap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory ,"Alchemi.Executor.dll"), "Alchemi.Executor.AppDomainExecutor");
 
+                            if (IsSandboxAppDomainAllowedToSendLogsToExecutorAppDomain())
+                            {
+                                executor.ExecutorAppDomain = AppDomain.CurrentDomain;
+                            }
+
 							_GridAppDomains.Add(
 								_CurTi.ApplicationId,
 								new GridAppDomain(domain, executor)
@@ -914,6 +922,32 @@ namespace Alchemi.Executor
 				_BaseDir,
 				string.Format(@"dat\application_{0}\executor_{1}",applicationId, _Id));
 		}
+
+        /// <summary>
+        /// Check if the sandboxed application domain is allowed to send logs into the 
+        /// executor's application domain.
+        /// </summary>
+        /// <returns></returns>
+        private bool IsSandboxAppDomainAllowedToSendLogsToExecutorAppDomain()
+        {
+            bool allowed;
+
+            AppSettingsReader configurationReader = new AppSettingsReader();
+
+            try
+            {
+                allowed = (bool)configurationReader.GetValue("SandboxAppDomainAllowedToSendLogsToExecutorAppDomain", typeof(bool));
+
+                return allowed;
+            }
+            catch
+            {
+                allowed = false;
+            }
+
+            return allowed;
+        
+        }
 
 		/*
 		private void GridAppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

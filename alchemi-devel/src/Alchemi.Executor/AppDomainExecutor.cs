@@ -38,10 +38,26 @@ namespace Alchemi.Executor
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
 
+        /// <summary>
+        /// The executor's application domain 
+        /// Used to support calling back into the executor's application domain
+        /// </summary>
+        private AppDomain m_executorAppDomain = null;
+
 		/// <summary>
 		/// Creates a instance of the AppDomainExecutor class.
 		/// </summary>
-        public AppDomainExecutor() {}
+        public AppDomainExecutor() 
+        {
+        }
+
+        public AppDomain ExecutorAppDomain
+        {
+            set
+            {
+                m_executorAppDomain = value;
+            }
+        }
 
         //----------------------------------------------------------------------------------------------- 
 
@@ -60,14 +76,14 @@ namespace Alchemi.Executor
             //since cross-appdomain calls use remoting.
             //so the exception would be passed back! :)
             GThread gridThread = (GThread) Utils.DeserializeFromByteArray(thread);
-			logger.Debug("Executor running GThread: "+gridThread.Id);
-			logger.Debug("Working dir="+AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
+			logger.Debug(m_executorAppDomain, "Executor running GThread: "+gridThread.Id);
+            logger.Debug(m_executorAppDomain, "Working dir=" + AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
 
             gridThread.SetWorkingDirectory(AppDomain.CurrentDomain.SetupInformation.PrivateBinPath);
             
             gridThread.Start();
 
-			logger.Debug("GThread "+gridThread.Id+" done. Serializing it to send back to the manager...");
+            logger.Debug(m_executorAppDomain, "GThread " + gridThread.Id + " done. Serializing it to send back to the manager...");
 
             return Utils.SerializeToByteArray(gridThread);
         }

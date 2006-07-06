@@ -54,7 +54,7 @@ namespace Alchemi.Executor
             int numberOfExecutors;
 
             AppSettingsReader configurationReader = new AppSettingsReader();
-
+            
 			try
 			{
                 numberOfExecutors = (int)configurationReader.GetValue("NumberOfExecutors", typeof(int));
