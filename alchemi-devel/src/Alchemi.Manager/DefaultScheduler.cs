@@ -63,6 +63,13 @@ namespace Alchemi.Manager
 		/// </summary>
         public MExecutorCollection Executors { set { _Executors = value; } }
         
+        /// <summary>
+        /// Default constructor required by scheduler factory.
+        /// </summary>
+        public DefaultScheduler()
+        {
+        }
+
 		/// <summary>
 		/// Return a non-dedicated schedule: i.e a threadIdentifier of the next thread to be executed.
 		/// This is to support voluntary / non-dedicated execution, where an executor asks for the next

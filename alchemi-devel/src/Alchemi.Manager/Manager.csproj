@@ -97,6 +97,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MappingScheduler.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -139,6 +140,7 @@
     <Compile Include="MThread.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SchedulerFactory.cs" />
     <Compile Include="Storage\GenericManagerDatabaseStorage.cs">
       <SubType>Code</SubType>
     </Compile>

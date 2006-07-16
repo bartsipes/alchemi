@@ -242,8 +242,11 @@ namespace Alchemi.Manager
 					logger.Debug("Error in ManagerStartStatus event-handler: "+ex.ToString());
 				}
 
-				logger.Debug("Initialising a new scheduler");
-                IScheduler scheduler = new DefaultScheduler();
+				logger.Debug("Creating a new scheduler");
+                SchedulerFactory schedulerFactory = new SchedulerFactory();
+                IScheduler scheduler = schedulerFactory.CreateScheduler();
+
+                logger.Debug("Initialising new scheduler");
                 scheduler.Executors = _Executors;
                 scheduler.Applications = _Applications;
 

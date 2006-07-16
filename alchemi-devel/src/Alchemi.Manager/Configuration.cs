@@ -100,6 +100,16 @@ namespace Alchemi.Manager
 		/// </summary>
         public bool Dedicated = false;
 
+        /// <summary>
+        /// Specifies the scheduler assembly name; null or empty indicates the default scheduler assembly name.
+        /// </summary>
+        public string SchedulerAssemblyName = "";
+
+        /// <summary>
+        /// Specifies the scheduler type name; null or empty indicates the default scheduler type name.
+        /// </summary>
+        public string SchedulerTypeName = "";
+
         //-----------------------------------------------------------------------------------------------
 		
 		/// <summary>
