@@ -47,7 +47,6 @@ namespace Alchemi.Manager
 		private readonly static Hashtable _DedicatedExecutors = new Hashtable();
         
         private string _Id;
-		private ThreadIdentifier currentTI;
 
 		private const int MAX_CONCURRENT_THREADS = 1;
 
@@ -260,10 +259,11 @@ namespace Alchemi.Manager
 
 					logger.Debug(String.Format("Scheduling thread {0} to executor: {1}", ds.TI.ThreadId, ds.ExecutorId));
 
-					this.currentTI = ds.TI;
-					Thread dispatchThread = new Thread(new ThreadStart(this.ExecuteCurrentThread));
+                    // michael@meadows.force9.co.uk - Jul 17, 2006: changed to parameterized thread start.
+                    ExecuteCurrentThreadParameters oParameters = new ExecuteCurrentThreadParameters(ds.TI, mt);
+                    Thread dispatchThread = new Thread(new ParameterizedThreadStart(this.ExecuteCurrentThread));
 					dispatchThread.Name = "ScheduleDispatchThread";
-					dispatchThread.Start();
+					dispatchThread.Start(oParameters);
 
 					success = true;
 				}
@@ -281,10 +281,68 @@ namespace Alchemi.Manager
 			return success;
 		}
 
-		private void ExecuteCurrentThread()
+        /// <summary>
+        /// Executes the current thread.
+        /// </summary>
+        /// <param name="oObject">execute current thread parameters</param>
+		private void ExecuteCurrentThread(object oObject)
 		{
-			this.RemoteRef.Manager_ExecuteThread(this.currentTI);
-		}
+            // michael@meadows.force9.co.uk - Jul 17, 2006: added exception handling; fix for bug 1523762.
+            ExecuteCurrentThreadParameters oParameters = (ExecuteCurrentThreadParameters) oObject;
+            try
+            {
+                this.RemoteRef.Manager_ExecuteThread(oParameters.ThreadIdentifier);
+            }
+            catch (Exception oException)
+            {
+                // restore the thread status so another executor can pick it up
+                oParameters.MThread.CurrentExecutorId = null;
+                oParameters.MThread.State = ThreadState.Ready;
 
+                logger.Debug("Error scheduling thread on executor " + _Id, oException);
+            }
+		}
+    }
+
+    /// <summary>
+    /// ExecuteCurrentThreadParameters class represents the parameters required by the ExecuteCurrentThread method.
+    /// </summary>
+    public class ExecuteCurrentThreadParameters
+    {
+        private ThreadIdentifier m_oThreadIdentifier;
+        private MThread m_oMThread;
+
+        /// <summary>
+        /// Constructor that takes the thread identifier and mthread.
+        /// </summary>
+        /// <param name="oThreadIdentifier">thread identifier parameter</param>
+        /// <param name="oMThread">mthread parameter</param>
+        public ExecuteCurrentThreadParameters(ThreadIdentifier oThreadIdentifier, MThread oMThread)
+        {
+            m_oThreadIdentifier = oThreadIdentifier;
+            m_oMThread = oMThread;
+        }
+
+        /// <summary>
+        /// ThreadIdentifier property represents the thread identifier parameter.
+        /// </summary>
+        public ThreadIdentifier ThreadIdentifier
+        {
+            get
+            {
+                return m_oThreadIdentifier;
+            }
+        }
+
+        /// <summary>
+        /// MThread property represents the mthread parameter.
+        /// </summary>
+        public MThread MThread
+        {
+            get
+            {
+                return m_oMThread;
+            }
+        }
     }
 }
