@@ -264,7 +264,8 @@ namespace Alchemi.Manager
         /// <returns>application ids</returns>
         public IList GetApplicationIds(string strExecutorId)
         {
-            return (IList) m_cExecutorApplication[strExecutorId];
+            IList cList = (IList) m_cExecutorApplication[strExecutorId];
+            return (cList != null) ? cList : new ArrayList();
         }
 
         /// <summary>
@@ -274,7 +275,8 @@ namespace Alchemi.Manager
         /// <returns>executor ids</returns>
         public IList GetExecutorIds(string strApplicationId)
         {
-            return (IList) m_cApplicationExecutor[strApplicationId];
+            IList cList = (IList) m_cApplicationExecutor[strApplicationId];
+            return (cList != null) ? cList : new ArrayList();
         }
 
         /// <summary>
