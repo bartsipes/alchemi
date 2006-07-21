@@ -23,7 +23,6 @@
 */ 
 #endregion
 
-
 using System;
 using System.IO;
 using System.Xml.Serialization;
@@ -59,6 +58,18 @@ namespace Alchemi.Manager
 		/// Database name
 		/// </summary>
         public string DbName = "Alchemi";
+        /// <summary>
+        /// Database connect timeout
+        /// </summary>
+        public int DbConnectTimeout = 5;
+        /// <summary>
+        /// Database max pool size
+        /// </summary>
+        public int DbMaxPoolSize = 5;
+        /// <summary>
+        /// Database min pool size
+        /// </summary>
+        public int DbMinPoolSize = 5;
 
 		/// <summary>
 		/// The storage used by this Manager.

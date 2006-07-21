@@ -98,20 +98,26 @@ namespace Alchemi.Manager.Storage
 					{ 
 						// build sql server configuration string
 						sqlConnStr = string.Format(
-							"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							"user id={1};password={2};initial catalog={3};data source={0};Connect Timeout={4}; Max Pool Size={5}; Min Pool Size={6}",
 							configuration.DbServer,
 							configuration.DbUsername,
 							configuration.DbPassword,
-							configuration.DbName
+							configuration.DbName,
+                            configuration.DbConnectTimeout,
+                            configuration.DbMaxPoolSize,
+                            configuration.DbMinPoolSize
 							);
 					}
 					else
 					{
 						sqlConnStr = string.Format(
-							"user id={1};password={2};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							"user id={1};password={2};data source={0};Connect Timeout={3}; Max Pool Size={4}; Min Pool Size={5}",
 							configuration.DbServer,
 							configuration.DbUsername,
-							configuration.DbPassword
+							configuration.DbPassword,
+                            configuration.DbConnectTimeout,
+                            configuration.DbMaxPoolSize,
+                            configuration.DbMinPoolSize
 							);
 					}
 
@@ -124,20 +130,26 @@ namespace Alchemi.Manager.Storage
 					{ 
 						// build sql server configuration string
 						sqlConnStr = string.Format(
-							"user id={1};password={2};database={3};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							"user id={1};password={2};database={3};data source={0};Connect Timeout={4}; Max Pool Size={5}; Min Pool Size={6}",
 							configuration.DbServer,
 							configuration.DbUsername,
 							configuration.DbPassword,
-							configuration.DbName
+							configuration.DbName,
+                            configuration.DbConnectTimeout,
+                            configuration.DbMaxPoolSize,
+                            configuration.DbMinPoolSize
 							);
 					}
 					else
 					{
 						sqlConnStr = string.Format(
-							"user id={1};password={2};data source={0};Connect Timeout=5; Max Pool Size=5; Min Pool Size=5",
+							"user id={1};password={2};data source={0};Connect Timeout={3}; Max Pool Size={4}; Min Pool Size={5}",
 							configuration.DbServer,
 							configuration.DbUsername,
-							configuration.DbPassword
+							configuration.DbPassword,
+                            configuration.DbConnectTimeout,
+                            configuration.DbMaxPoolSize,
+                            configuration.DbMinPoolSize
 							);						
 					}
 
