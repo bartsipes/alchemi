@@ -14,11 +14,12 @@ using log4net;
 
 namespace Alchemi.Examples.Mandelbrot
 {
-
     public class MandelForm : Form
     {
 		// Create a logger for use in this class
 		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+        private delegate void UpdateHandler(GThread thread);
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.ComponentModel.IContainer components;
@@ -43,6 +44,7 @@ namespace Alchemi.Examples.Mandelbrot
         private System.Windows.Forms.PictureBox pbColorOne;
 
         bool initted = false;
+        bool closing = false;
 
         int totalHorzMaps;
         int totalVertMaps;
@@ -409,20 +411,17 @@ namespace Alchemi.Examples.Mandelbrot
                 ga.ThreadFinish += new GThreadFinish(UpdateBitmap);
 				ga.ApplicationFinish += new GApplicationFinish(AppDone);
 
+                try
+                {
+                    ga.Start();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                }
+
                 initted = true;
             }
-            
-			try
-			{
-				if (ga.Running)
-				{
-					ga.Stop();
-				}
-			}
-			catch (Exception ex1)
-			{
-				MessageBox.Show("Error trying to stop already running gApplication: " + ex1.ToString());
-			}
 
             startTime = DateTime.Now;
 
@@ -442,21 +441,13 @@ namespace Alchemi.Examples.Mandelbrot
                         pbColorTwo.BackColor
                         );
 
-                    ga.Threads.Add(mandel);
+                    ga.StartThread(mandel);
                 }
             }
 
             pb.Minimum = 0;
             pb.Value = 0;
             pb.Maximum = totalHorzMaps * totalVertMaps;
-			try
-			{
-				ga.Start();
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show(e.ToString());
-			}
         }
 
 		void AppDone()
@@ -465,6 +456,14 @@ namespace Alchemi.Examples.Mandelbrot
 		}
 
         void UpdateBitmap(GThread thread)
+        {
+            if (!closing)
+            {
+                this.Invoke(new UpdateHandler(UpdateBitmap0), thread);
+            }
+        }
+
+        void UpdateBitmap0(GThread thread)
         {
             // update progress bar
             if (pb.Value + 1 <= pb.Maximum)
@@ -556,6 +555,7 @@ namespace Alchemi.Examples.Mandelbrot
 
         private void MandelForm_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            closing = true;
             if (ga != null && ga.Running)
             {
 				ga.Stop();
