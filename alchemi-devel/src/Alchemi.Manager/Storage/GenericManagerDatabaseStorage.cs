@@ -133,7 +133,7 @@ namespace Alchemi.Manager.Storage
 		/// GetSystemSummary implementation for RDBMS.
 		/// </summary>
 		/// <returns></returns>
-		public SystemSummary GetSystemSummary()
+		public SystemSummary  GetSystemSummary()
 		{
 			//build the System_Summary SQLs
 						
@@ -150,7 +150,7 @@ namespace Alchemi.Manager.Storage
 			string sqlQuery3 = 
 				"select count(*) as unfinished_apps " +
 				"from application " +
-				"where state not in (0,1) ";
+				"where state not in (2) ";
 			
 			SystemSummary summary = null;
 			String maxPower= null;
