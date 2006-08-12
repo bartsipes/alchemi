@@ -136,12 +136,12 @@ namespace Alchemi.Manager
         /// <returns>thread identifier</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
-            lock(this)
+            lock (this)
             {
                 m_oMapping.Update();
 
-                ThreadStorageView oThreadStorage = GetNextThread();
-                if (oThreadStorage != null)
+                IList cThreads = SortThreadsByPriority(GetThreads());
+                foreach (ThreadStorageView oThreadStorage in cThreads)
                 {
                     string strApplicationId = oThreadStorage.ApplicationId;
                     string strExecutorId = GetNextExecutor(strApplicationId);
@@ -162,28 +162,25 @@ namespace Alchemi.Manager
         }
 
         /// <summary>
-        /// Gets the next thread with the highest priority.
-        /// </summary>
-        /// <returns>next thread</returns>
-        private ThreadStorageView GetNextThread()
-        {
-            IList cThreads = GetThreads();
-
-            if (cThreads.Count != 0)
-            {
-                return GetHighestPriorityThread(cThreads);
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Gets the threads.
         /// </summary>
         /// <returns></returns>
         private IList GetThreads()
         {
             return new ArrayList(ManagerStorageFactory.ManagerStorage().GetThreads(ApplicationState.Ready, ThreadState.Ready));
+        }
+
+        /// <summary>
+        /// Sorts the given threads by priority where highest priority is sorted to the start of the list.
+        /// </summary>
+        /// <param name="cUnsortedThreads">unsorted threads</param>
+        /// <returns>sorted threads</returns>
+        private IList SortThreadsByPriority(IList cUnsortedThreads)
+        {
+            ArrayList cSortedThreads = new ArrayList(cUnsortedThreads);
+            cSortedThreads.Sort(new ThreadPriorityComparer());
+
+            return cSortedThreads;
         }
 
         /// <summary>
@@ -396,5 +393,36 @@ namespace Alchemi.Manager
             }
             cList.Add(strValue);
         }
+    }
+
+    /// <summary>
+    /// ThreadPriorityComparer class compares two threads by priority where highest priority is sorted to the start of the list.
+    /// </summary>
+    public class ThreadPriorityComparer : IComparer
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public ThreadPriorityComparer()
+        {
+        }
+
+        #region IComparer Members
+
+        /// <summary>
+        /// Compares two objects.
+        /// </summary>
+        /// <param name="oObject0">object 0</param>
+        /// <param name="oObject1">object 1</param>
+        /// <returns>comparison</returns>
+        public int Compare(object oObject0, object oObject1)
+        {
+            ThreadStorageView oThread0 = oObject0 as ThreadStorageView;
+            ThreadStorageView oThread1 = oObject1 as ThreadStorageView;
+
+            return (oThread1.Priority - oThread0.Priority);
+        }
+
+        #endregion
     }
 }
