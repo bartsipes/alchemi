@@ -58,7 +58,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[SetUp]
 		public void TestStartUp()
 		{
-			String connectionString = ConfigurationSettings.AppSettings["SqlTesterConnectionString"];
+			String connectionString = ConfigurationManager.AppSettings["SqlTesterConnectionString"];
 			
 			if (connectionString == null)
 			{

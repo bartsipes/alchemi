@@ -23,6 +23,7 @@
 #endregion
 
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Alchemi Core Library")]
 [assembly: AssemblyDescription(".NET Grid Computing Framework")]
@@ -33,6 +34,7 @@ using System.Reflection;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.5")]
+[assembly: AssemblyVersion("1.0.5.*")]
 [assembly: AssemblyInformationalVersion("1.0.5")]
 
+[assembly: ComVisible(false)]

@@ -775,7 +775,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 		#endregion
 
-		#region "GetGroupUsers Tests"
+		#region "Admon_GetGroupUsers Tests"
 		
 		[Test]
 		public void GetGroupUsersTestSimpleScenario()
@@ -903,7 +903,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 		/// <summary>
 		/// Add a null application.
-		/// No errors are expected, nothing should be added. Return value should be null.
+		/// No errors are expected, nothing should be added. Return name should be null.
 		/// </summary>
 		[Test]
 		public void AddApplicationTest2()
@@ -1393,7 +1393,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 		/// <summary>
 		/// Add a null executor.
-		/// No errors are expected, nothing should be added. Return value should be null.
+		/// No errors are expected, nothing should be added. Return name should be null.
 		/// </summary>
 		[Test]
 		public void AddExecutorTest2()
@@ -1403,7 +1403,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 		/// <summary>
 		/// Add a null executor.
-		/// No errors are expected, nothing should be added. Return value should be null.
+		/// No errors are expected, nothing should be added. Return name should be null.
 		/// </summary>
 		[Test]
 		public void AddExecutorTestLatestConstructor()

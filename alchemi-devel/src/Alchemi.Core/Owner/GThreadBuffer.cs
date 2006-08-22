@@ -98,7 +98,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Adds a thread to the buffer.
 		/// </summary>
-		/// <param name="oThread">thread</param>
+		/// <param name="thread">thread</param>
 		public void Add(GThread oThread) 
 		{
 			if (IsFull()) 
@@ -232,7 +232,7 @@ namespace Alchemi.Core.Owner
 		/// Constructor that takes the given message and exception.
 		/// </summary>
 		/// <param name="strMessage">message</param>
-		/// <param name="oException">exception</param>
+		/// <param name="ex">exception</param>
 		public ThreadBufferFullException(string strMessage, Exception oException) : base(strMessage, oException) 
 		{
 		}

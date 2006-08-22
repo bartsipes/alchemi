@@ -73,16 +73,12 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Alchemi.Core">
-      <Name>Alchemi.Core</Name>
-      <HintPath>..\..\bin\Alchemi.Core.dll</HintPath>
-    </Reference>
     <Reference Include="complex">
       <Name>complex</Name>
       <HintPath>complex.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System">
@@ -110,13 +106,20 @@
     <Compile Include="MandelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MandelThread.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <EmbeddedResource Include="MandelForm.resx">
       <DependentUpon>MandelForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Alchemi.Core\Core.csproj">
+      <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="MandelThread\MandelThread.csproj">
+      <Project>{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}</Project>
+      <Name>MandelThread</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

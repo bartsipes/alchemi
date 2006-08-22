@@ -25,8 +25,6 @@
 
 using System;
 using System.IO;
-using Microsoft.Win32.Security;
-
 
 //even though this class belongs to the Core namespace, we dont put it in the Manager/Executor-Service project,
 //and link it in the Manager/Executor-Service since we dont want a dependency on the Win32.Security dll in the core dll.

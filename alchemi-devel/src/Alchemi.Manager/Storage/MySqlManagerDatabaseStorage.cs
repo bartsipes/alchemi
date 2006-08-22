@@ -57,7 +57,7 @@ namespace Alchemi.Manager.Storage
 			object value = paramValue;
 			if (datatype == DbType.Guid && value!=DBNull.Value)
 			{
-				//logger.Debug("GUID GIVEN = "+value.ToString());
+				//logger.Debug("GUID GIVEN = "+name.ToString());
 				value = new Guid(paramValue.ToString());
 			}
 			MySqlParameter param  = new MySqlParameter(name, value);

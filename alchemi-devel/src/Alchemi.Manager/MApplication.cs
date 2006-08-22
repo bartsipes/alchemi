@@ -113,7 +113,7 @@ namespace Alchemi.Manager
         {
             get
             {
-                return Path.Combine(InternalShared.Instance.DataRootDirectory, "application_" + _Id);
+                return InternalShared.Instance.GetApplicationDirectory(_Id);
             }
         }
         
@@ -166,15 +166,12 @@ namespace Alchemi.Manager
             get
             {
                 ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
-
                 return application.ApplicationName;
             }
             set
             {
                 ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(_Id);
-
                 application.ApplicationName = value;
-
                 ManagerStorageFactory.ManagerStorage().UpdateApplication(application);
             }
         }
@@ -222,7 +219,7 @@ namespace Alchemi.Manager
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the manager is at the top of the hierarchy.
+		/// Gets a name indicating whether the manager is at the top of the hierarchy.
 		/// If true, this node is a primary manager.
 		/// </summary>
 		public bool IsPrimary

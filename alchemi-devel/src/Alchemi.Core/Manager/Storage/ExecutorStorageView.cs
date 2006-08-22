@@ -151,7 +151,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the Executor is dedicated or not.
+		/// Gets or sets a name indicating whether the Executor is dedicated or not.
 		/// </summary>
 		public bool Dedicated
 		{
@@ -166,7 +166,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the Executor is connected or not.
+		/// Gets or sets a name indicating whether the Executor is connected or not.
 		/// </summary>
 		public bool Connected
 		{
@@ -196,7 +196,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the PingTime property is set or not.
+		/// Gets a name indicating whether the PingTime property is set or not.
 		/// </summary>
 		public bool PingTimeSet
 		{

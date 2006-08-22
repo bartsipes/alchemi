@@ -65,17 +65,17 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.GNode" Collapsed="true">
-    <Position X="3.5" Y="3.5" Width="1.5" />
+    <Position X="3.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <FileName>GNode.cs</FileName>
-      <HashCode>BAAAIQQAEAAAAAECAUAIAgAAAAAERAAABIACAAIAAgI=</HashCode>
+      <HashCode>BAAAIQQAEAAAAAECAUAIAgAAAAAERAAARIACAAIAAgI=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Logger" Collapsed="true">
     <Position X="17.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Logger.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAYAAAAAAAAAAAAAAAAEEAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAYAAAAAIAAAAAAAAAAEEAAAAAEAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.LogEventArgs" Collapsed="true">
@@ -86,7 +86,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.OwnEndPoint" Collapsed="true">
-    <Position X="0.5" Y="4.5" Width="1.5" />
+    <Position X="0.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>OwnEndPoint.cs</FileName>
       <HashCode>AAAAAAAAAAAAAgAAAAAAAAEACAABCAAAAAAAAAAACAA=</HashCode>
@@ -100,7 +100,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.RemoteEndPoint" Collapsed="true">
-    <Position X="0.5" Y="5.75" Width="1.5" />
+    <Position X="0.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <FileName>RemoteEndPoint.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAACAAAAAAAAAAAAAA=</HashCode>
@@ -117,7 +117,7 @@
     <Position X="12.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>GConnection.cs</FileName>
-      <HashCode>AAAAAAAAQCAAAEAAAQKAAECCCAAECAACAAAAAAAACAA=</HashCode>
+      <HashCode>AAAAAAAAQCAAAEAAAQKAAECCCAAECAACAAAAAAIACAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Owner.GConnectionDialog" Collapsed="true">
@@ -135,7 +135,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Owner.EmbeddedFileDependency" Collapsed="true">
-    <Position X="0.5" Y="1.75" Width="2" />
+    <Position X="0.5" Y="1.25" Width="2" />
     <TypeIdentifier>
       <FileName>Owner\EmbeddedFileDependency.cs</FileName>
       <HashCode>AAAAAAAAAAAEAGQAAAAAAAAAAAAAAAAAAAAIAAAAAAI=</HashCode>
@@ -156,14 +156,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Owner.GApplication" Collapsed="true">
-    <Position X="3.5" Y="5" Width="1.5" />
+    <Position X="3.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <FileName>Owner\GApplication.cs</FileName>
-      <HashCode>AAACAQASRCAIEAECAICgAAESEAAAAkAIJAACBDBEBAA=</HashCode>
+      <HashCode>AUICAQASRCAMEAECAICgAAESEAAAAkAIJAACBDBEBAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Owner.GJob" Collapsed="true">
-    <Position X="3.5" Y="2" Width="1.5" />
+    <Position X="3" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <FileName>Owner\GJob.cs</FileName>
       <HashCode>AAAAAAAAACAAAAACAAAAAQAAAAAAIACAADAAAAQAAAE=</HashCode>
@@ -177,11 +177,18 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Owner.ModuleDependency" Collapsed="true">
-    <Position X="0.5" Y="3.25" Width="1.75" />
+    <Position X="0.5" Y="2.25" Width="1.75" />
     <TypeIdentifier>
       <FileName>Owner\ModuleDependency.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
+    <InheritanceLine Type="Alchemi.Core.Owner.EmbeddedFileDependency" ManuallyRouted="true">
+      <Path>
+        <Point X="1.5" Y="1.88" />
+        <Point X="1.5" Y="2.25" />
+        <Point X="1.375" Y="2.25" />
+      </Path>
+    </InheritanceLine>
   </Class>
   <Class Name="Alchemi.Core.Owner.ThreadCollection" Collapsed="true">
     <Position X="9" Y="4.5" Width="1.5" />
@@ -194,21 +201,21 @@
     <Position X="12.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Owner\ThreadIdentifier.cs</FileName>
-      <HashCode>AAAAAAAAAAAgIEAEAQAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgIEAEAQAAAAAAAAAAAAAgAAAAAAAAQAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Config" Collapsed="true">
     <Position X="14.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>GConnectionDialogForm.cs</FileName>
-      <HashCode>AAAAAAAAAAAAAAACAQAAAAAgCAAACAACAAAAAAEAEAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAACAQAAAAAgCAAACAACAAAAAAEAECA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Manager.Storage.ApplicationStorageView" Collapsed="true">
     <Position X="9" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Manager\Storage\ApplicationStorageView.cs</FileName>
-      <HashCode>gAAAQgAAAAAFAAAAUQAABgCBAAAIAAAAAAAABACCALg=</HashCode>
+      <HashCode>gAAAQgAAAAAFAAAAUQAABgCBABAIAAAAAAAABACCALg=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Manager.Storage.ExecutorStorageView" Collapsed="true">
@@ -271,7 +278,7 @@
     <Position X="17.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>Utility\Utils.cs</FileName>
-      <HashCode>EAAAAgIBABABQAQACABAAgAAAAAAkBABAAAAQAABAAA=</HashCode>
+      <HashCode>EAAAAgIBABABRAQACABAAgAAAAAAkFAAAAAAQAABAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Alchemi.Core.Utility.XmlStringWriter" Collapsed="true">
@@ -279,6 +286,28 @@
     <TypeIdentifier>
       <FileName>Utility\XmlStringWriter.cs</FileName>
       <HashCode>AAAIAAAAAAAAAACAAAAAAAQAAAAAAAAAAAAAAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Alchemi.Core.Owner.GThreadBuffer" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Owner\GThreadBuffer.cs</FileName>
+      <HashCode>AAIEAAAAACCAABAAEAAAEAQCAGAAAAAoAgIAAAAAIAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Alchemi.Core.Owner.ThreadBufferFullException" Collapsed="true">
+    <Position X="7.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Owner\GThreadBuffer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Alchemi.Core.Owner.GApplicationBuffered" Collapsed="true">
+    <Position X="3.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Owner\GApplicationBuffered.cs</FileName>
+      <HashCode>AQIQAAAAEAAAABAAAAAAAAAQAAAAAAAgAAAAIAAAEAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Struct Name="Alchemi.Core.Executor.ExecutorInfo" Collapsed="true">
@@ -317,10 +346,10 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="Alchemi.Core.IManager" Collapsed="true">
-    <Position X="6.5" Y="1.75" Width="1.5" />
+    <Position X="6.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>Manager\IManager.cs</FileName>
-      <HashCode>QCEImAABAgEhFQAEICCMAIDSAQAQAAQACIqEJAAAEAA=</HashCode>
+      <HashCode>QCEImAABAgEhFQAEICGMAJDSAQAQCAQACIqEJAAAEAA=</HashCode>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Alchemi.Core.IOwner" Collapsed="true">
@@ -334,7 +363,7 @@
     <Position X="10.75" Y="8" Width="1.5" />
     <TypeIdentifier>
       <FileName>Manager\Storage\IManagerStorage.cs</FileName>
-      <HashCode>YCAACACADSAQAQAEQQACACgAEAAkAUAEQAAACAAAEBU=</HashCode>
+      <HashCode>cCAACACADSAQAQAEQQACACgAEAAkAUAEQAAACAAAEBU=</HashCode>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Alchemi.Core.Manager.Storage.IManagerStorageSetup" Collapsed="true">
@@ -412,6 +441,13 @@
     <TypeIdentifier>
       <FileName>Owner\Delegates.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Alchemi.Core.Owner.FullEventHandler" Collapsed="true">
+    <Position X="7.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Owner\GThreadBuffer.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Delegate>
 </ClassDiagram>

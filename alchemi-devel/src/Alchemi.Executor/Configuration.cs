@@ -26,6 +26,7 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Executor
 {
@@ -37,13 +38,12 @@ namespace Alchemi.Executor
 	/// </summary>
     public class Configuration
     {
-        [NonSerialized] private string ConfigFile = "";
-        private const string ConfigFileName = "Alchemi.Executor.config.xml";
+        public const string ConfigFileName = "Alchemi.Executor.config.xml";
 
 		/// <summary>
 		/// Executor Id
 		/// </summary>
-        public string[] Id;
+        public string Id;
 		/// <summary>
 		/// Host of the Manager
 		/// </summary>
@@ -53,7 +53,7 @@ namespace Alchemi.Executor
 		/// </summary>
         public int ManagerPort = 9000;
 		/// <summary>
-		/// Specifies whether the Eexecutor is dedicated
+		/// Specifies whether the Executor is dedicated
 		/// </summary>
         public bool Dedicated = true;
 		/// <summary>
@@ -61,7 +61,8 @@ namespace Alchemi.Executor
 		/// </summary>
         public int OwnPort = 9001;
 		/// <summary>
-		/// Specifies if the Executor connected successfully with the current settings for the ManagerHost,ManagerPort
+		/// Specifies if the Executor connected successfully with the current settings 
+        /// for the ManagerHost,ManagerPort
 		/// </summary>
         public bool ConnectVerified = false;
 		/// <summary>
@@ -74,7 +75,8 @@ namespace Alchemi.Executor
         public string Password = "executor";
 
 		/// <summary>
-		/// Time interval (in seconds) between "heartbeats", ie. pinging the Manager to notify that this Executor is alive.
+		/// Time interval (in seconds) between "heartbeats", ie. pinging the Manager 
+        /// to notify that this Executor is alive.
 		/// </summary>
 		public int HeartBeatInterval = 5; //seconds
 		
@@ -91,32 +93,28 @@ namespace Alchemi.Executor
 		/// <summary>
 		/// Maximum number of times to retry connecting
 		/// </summary>
-		public int RetryMax = 3; //try reconnecting max 3 times
+		public int RetryMax = -1; //try reconnecting forever.
 
-//		/// <summary>
-//		/// Specifies whether to revert to non-dedicated executor mode, if the Manager cannot be contacted in dedicatd mode.
-//		/// </summary> 
-//		public bool RevertToNDE = false; //not needed?
+        /// <summary>
+        /// Specifies whether to automatically revert to non-dedicated executor mode, 
+        /// if the Manager cannot be contacted in dedicated mode.
+        /// </summary> 
+        public bool AutoRevertToNDE = false;
+        /// <summary>
+        /// Enforce secure sandboxed execution. Default: false.
+        /// Turn this off to allow legacy applications (ie. GJobs)
+        /// </summary>
+        public bool SecureSandboxedExecution = false;
     
         //-----------------------------------------------------------------------------------------------
     
 		/// <summary>
-		/// Returns the configuration read from the xml file: "Alchemi.Executor.config.xml"
+		/// Returns the configuration read from the xml config file.
 		/// </summary>
 		/// <returns>Configuration object</returns>
 		public static Configuration GetConfiguration()
         {
-            return DeSlz(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName));
-        }
-
-		/// <summary>
-		/// Returns the configuration read from the xml file ("Alchemi.Executor.config.xml") at the given location
-		/// </summary>
-		/// <param name="location">Location of the config file</param>
-		/// <returns>Configuration object</returns>
-        public static Configuration GetConfiguration(string location)
-        {
-            return DeSlz(Path.Combine(location, ConfigFileName));
+            return (Configuration)DeSlz(typeof(Configuration));
         }
     
 		/// <summary>
@@ -124,110 +122,48 @@ namespace Alchemi.Executor
 		/// </summary>
         public Configuration()
         {
-            ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName);
         }
-
-		//Code added by Rodrigo Assirati Dias
-		/* Log 12/03, 2004
-		 * Modifyied by Rodrigo Assirati Dias (rdias@ime.usp.br)
-		 * Created additional constructor for Configuration class, to enable a windows service to create
-		 * a configuration file in other directory than the running application directory (%WINDOWSDIR%/System32 to services)
-		 */
-		/// <summary>
-		/// Creates an instance of the Configuration class.
-		/// </summary>
-		/// <param name="location"></param>
-		public Configuration(string location)
-		{
-			ConfigFile = location + ConfigFileName;
-		}
 
         //-----------------------------------------------------------------------------------------------
     
 		/// <summary>
-		///  Serialises and saves the configuration to the xml file: "Alchemi.Executor.config.xml"
+		///  Serialises and saves the configuration to the xml config file
 		/// </summary>
 		public void Slz()
         {
-			XmlSerializer xs = new XmlSerializer(typeof(Configuration));
-            StreamWriter sw = new StreamWriter(ConfigFile);
+			XmlSerializer xs = new XmlSerializer(this.GetType());
+            StreamWriter sw = new StreamWriter(DefaultConfigFile);
             xs.Serialize(sw, this);
             sw.Close();
         }
 
         //-----------------------------------------------------------------------------------------------
 
-		/// <summary>
-		/// Deserialises and reads the configuration from the given xml file
-		/// </summary>
-		/// <param name="file">Name of the config file</param>
-		/// <returns>Configuration object</returns>
-		private static Configuration DeSlz(string file)
+        private static string DefaultConfigFile
         {
-            XmlSerializer xs = new XmlSerializer(typeof(Configuration));
-            FileStream fs = new FileStream(file, FileMode.Open);
-            Configuration temp = (Configuration) xs.Deserialize(fs);
-            fs.Close();
-            temp.ConfigFile = file;
-            return temp;
+            get
+            {
+                return Utils.GetFilePath(ConfigFileName, AlchemiRole.Executor, true);
+            }
         }
 
 		/// <summary>
-		/// Get the number of Executor IDs.
+		/// Deserialises and reads the configuration from the given xml file
 		/// </summary>
-		/// <returns></returns>
-		public int GetIdCount()
-		{
-			if (Id == null)
-			{
-				return 0;
-			}
-
-			return Id.Length;
-		}
-
-		/// <summary>
-		/// Get the executor Id at a given location in the Id array.
-		/// </summary>
-		/// <param name="location"></param>
-		/// <returns></returns>
-		public string GetIdAtLocation(int location)
-		{
-			if (Id == null || Id.Length < location + 1 || Id[location] == null)
-			{
-				return String.Empty;
-			}
-
-			return Id[location];
-		}
-
-		/// <summary>
-		/// Set an executor Id at the given location.
-		/// </summary>
-		/// <param name="location"></param>
-		/// <param name="newId"></param>
-		public void SetIdAtLocation(int location, string newId)
-		{
-			// initialize if not already set
-			if (Id == null)
-			{
-				Id = new string[location + 1];
-			}
-
-			// resize if needed
-			if (Id.Length < location + 1)
-			{
-				string[] tempIds = new string[location + 1];
-
-				for(int index = 0; index < Id.Length; index++)
-				{
-					tempIds[index] = Id[index];
-				}
-
-				Id = tempIds;
-			}
-
-			Id[location] = newId;
-		}
+		/// <returns>Configuration object</returns>
+		private static Object DeSlz(Type type)
+        {
+            XmlSerializer xs = new XmlSerializer(type);
+            string configFile = DefaultConfigFile;
+            if (!File.Exists(DefaultConfigFile))
+            {
+                //look in current dir
+                configFile = ConfigFileName;
+            }
+            FileStream fs = new FileStream(configFile, FileMode.Open);
+            Object obj = xs.Deserialize(fs);
+            fs.Close();
+            return obj;
+        }
     }
 }

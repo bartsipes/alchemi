@@ -59,7 +59,6 @@ namespace Alchemi.ExecutorService
 		// Create a logger for use in this class
 		private static ILog logger;
 
-
 		public ExecutorService()
 		{
 			InitializeComponent();
@@ -81,13 +80,11 @@ namespace Alchemi.ExecutorService
 
 			try
 			{
-				Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-				logger = LogManager.GetLogger(typeof(ExecutorService));
-				XmlConfigurator.Configure(new FileInfo(string.Format("{0}.config",Assembly.GetExecutingAssembly ().Location)));
+                Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-				//create directory and set permissions for dat directory...for logging.
-				string datDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"dat");
-				ServiceUtil.CreateDir(datDir,"SYSTEM");
+                string configFilePath = string.Format("{0}.config", Assembly.GetExecutingAssembly().Location);
+                logger = LogManager.GetLogger(typeof(ExecutorService));
+				XmlConfigurator.Configure(new FileInfo(configFilePath));
 
 				string opt = null ;
 				if ( args.Length > 0)
@@ -113,7 +110,7 @@ namespace Alchemi.ExecutorService
 					//
 
 					ExecutorService es = new ExecutorService();
-					if (!ServiceHelper.checkServiceInstallation(es.ServiceName))
+					if (!ServiceHelper.CheckServiceInstallation(es.ServiceName))
 					{
 						installService();
 					}
@@ -162,10 +159,12 @@ namespace Alchemi.ExecutorService
 			try
 			{
 				logger.Info("Starting Alchemi Executor Service v."+Utils.AssemblyVersion);
+                logger.Debug(Utils.GetEnv());
+
 				ThreadStart ts = new ThreadStart(StartContainer);
 				starterThread = new Thread(ts);
+                starterThread.Name = "ExecutorServiceStarter";
 				starterThread.Start();
-				//let the thread continue: for eg: in case the connection is not available, it will keep trying forever.
 			}
 			catch (Exception e)
 			{
@@ -241,20 +240,32 @@ namespace Alchemi.ExecutorService
 			}
 			else
 			{
-				try
-				{
-					TextWriter tw = File.CreateText("alchemiExecutorError.txt");
-					tw.WriteLine("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender);
-					tw.WriteLine(ex.ToString());
-					tw.Flush();
-					tw.Close();
-					tw = null;
-				}
-				catch
-				{
-					//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
-					//throw new Exception("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender,e);
-				}
+                TextWriter tw = null;
+                try
+                {
+                    string path = Utils.GetFilePath("AlchemiExecutorError.txt", AlchemiRole.Manager, true);
+                    tw = File.CreateText(path);
+                    tw.WriteLine("Unhandled Error in Alchemi Executor Service. Logger is null. Sender =" + sender);
+                    tw.WriteLine(ex.ToString());
+                    tw.Flush();
+                }
+                catch
+                {
+                    //can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
+                    //throw new Exception("Unhandled Error in Alchemi Executor Service. Logger is null. Sender ="+sender,e);
+                }
+                finally
+                {
+                    try
+                    {
+                        if (tw != null)
+                        {
+                            tw.Close();
+                            tw = null;
+                        }
+                    }
+                    catch { }
+                }
 			}		
 		}
 
@@ -320,6 +331,7 @@ namespace Alchemi.ExecutorService
 				logger.Info("Stopping Executor Service...");
 				ThreadStart ts = new ThreadStart(StopContainer);
 				Thread t = new Thread(ts);
+                t.Name = "ExecutorServiceStopper";
 				t.Start();
 				t.Join(25000); //in this case we really want things to be stopped within the 25 seconds.
 			}
@@ -349,13 +361,13 @@ namespace Alchemi.ExecutorService
 		private static void installService()
 		{
 			string path = string.Format ("/assemblypath={0}",Assembly.GetExecutingAssembly ().Location);
-			ServiceHelper.installService(new ProjectInstaller(),path);
+			ServiceHelper.InstallService(new ProjectInstaller(),path);
 		}
 
 		private static void uninstallService()
 		{
 			string path = string.Format ("/assemblypath={0}", Assembly.GetExecutingAssembly ().Location);
-			ServiceHelper.uninstallService(new ProjectInstaller(),path);
+			ServiceHelper.UninstallService(new ProjectInstaller(),path);
 		}
 
 		private void Log(object sender, LogEventArgs e)

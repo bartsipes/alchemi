@@ -81,6 +81,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -105,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Owner\CVS\Entries" />
+    <None Include="Owner\CVS\Repository" />
+    <None Include="Owner\CVS\Root" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,6 +159,10 @@
     <Compile Include="Core\Owner\FileDependencyMock.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Owner\EmbeddedFileDependencyTester.cs" />
+    <Compile Include="Owner\FileDepencencyCollectionTester.cs" />
+    <Compile Include="Owner\FileDependencyTester.cs" />
+    <Compile Include="Owner\FileDependencyTestFiller.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

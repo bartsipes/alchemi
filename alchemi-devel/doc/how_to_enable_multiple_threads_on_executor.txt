@@ -3,7 +3,7 @@ $Date$
 $Revision$
 Name: How to enable multiple executing threads on the same executor
 
-By default the executors only run one thread at any given time. If you are running the Executor ona machine with multiple CPUs it might be worth having multiple executing threads on the Executor.
+By default the executors only run one thread at any given time. If you are running the Executor on a machine with multiple CPUs it might be worth having multiple executing threads on the Executor.
 
 To enable multiple executing threads edit the NumberOfExecutors setting in the config file and restart the Executor.
 

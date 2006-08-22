@@ -58,11 +58,45 @@ namespace Alchemi.ExecutorService
         /// </summary>
         private void InitializeComponent()
         {
-			this.SuspendLayout();
-			this.Name = "ExecutorMainForm";
-			this.Text = "Alchemi Executor Service Controller";
-			this.Load += new EventHandler(ExecutorMainForm_Load);
-			this.ResumeLayout(false);
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udHBInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRetry)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udReconnectInterval)).BeginInit();
+            this.tabControl.SuspendLayout();
+            this.tabConnection.SuspendLayout();
+            this.tabExecution.SuspendLayout();
+            this.tabOptions.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 540);
+            // 
+            // ExecutorMainForm
+            // 
+            this.ClientSize = new System.Drawing.Size(458, 562);
+            this.Name = "ExecutorMainForm";
+            this.Text = "Alchemi Executor Service Controller";
+            this.Load += new System.EventHandler(this.ExecutorMainForm_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udHBInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRetry)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udReconnectInterval)).EndInit();
+            this.tabControl.ResumeLayout(false);
+            this.tabConnection.ResumeLayout(false);
+            this.tabExecution.ResumeLayout(false);
+            this.tabOptions.ResumeLayout(false);
+            this.tabOptions.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
 		}
         #endregion
     
@@ -91,7 +125,7 @@ namespace Alchemi.ExecutorService
 				Config = ec.Config;
 				ec = null;
 
-				this.btConnect.Text = "Start";
+				this.btConnect.Text = "StartApplication";
 				this.btDisconnect.Text = "Stop";
 
 				RefreshUIControls();
@@ -178,19 +212,7 @@ namespace Alchemi.ExecutorService
 			bool connected = Started;
 
             txMgrHost.Text = Config.ManagerHost;
-            txMgrPort.Text = Config.ManagerPort.ToString();
-			
-			cmbId.Items.Clear();
-			for(int index=0; index < Config.GetIdCount(); index++)
-			{
-				cmbId.Items.Add(Config.GetIdAtLocation(index));
-
-				if (index == 0)
-				{
-					cmbId.SelectedIndex = index;
-				}
-			}
-			
+            txMgrPort.Text = Config.ManagerPort.ToString();			
 			txOwnPort.Text = Config.OwnPort.ToString();
             txUsername.Text = Config.Username;
             txPassword.Text = Config.Password;

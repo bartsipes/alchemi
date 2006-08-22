@@ -28,7 +28,7 @@ using System;
 namespace Alchemi.Core.Utility
 {
 	/// <summary>
-	/// Define a structure that holds a tri state boolean value: true, false, undefined
+	/// Define a structure that holds a tri state boolean name: true, false, undefined
 	/// </summary>
 	public struct TriStateBoolean
 	{

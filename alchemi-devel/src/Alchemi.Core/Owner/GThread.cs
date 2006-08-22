@@ -85,7 +85,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Sets the thread state to failed
 		/// </summary>
-		/// <param name="failed">value indicating whether to set the thread to failed</param>
+		/// <param name="failed">name indicating whether to set the thread to failed</param>
         public void SetFailed(bool failed)
         {
             _Failed = failed;
@@ -129,7 +129,7 @@ namespace Alchemi.Core.Owner
         public Exception RemoteExecutionException
         {
             get { return _RemoteExecutionException; }
-            set { _RemoteExecutionException = value; }
+            set { _RemoteExecutionException = name; }
         }
         */
 

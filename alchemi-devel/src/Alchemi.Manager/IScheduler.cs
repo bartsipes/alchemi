@@ -37,16 +37,6 @@ namespace Alchemi.Manager
     public interface IScheduler
     {
 		/// <summary>
-		/// Sets the collection Applications
-		/// </summary>
-        MApplicationCollection Applications { set; }
-
-		/// <summary>
-		/// Sets the collection of Executors.
-		/// </summary>
-        MExecutorCollection Executors { set; }
-
-		/// <summary>
 		/// Returns a thread-identifier representing the next thread scheduled to the given executor.
 		/// This represents a non-dedicated schedule, since the Executor would ask for this  thread-identifier.
 		/// </summary>

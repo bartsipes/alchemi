@@ -59,7 +59,7 @@ namespace Alchemi.Console.PropertiesDialogs
 			lvMembers.Items.Clear();
 			try
 			{
-				UserStorageView[] users = console.Manager.GetGroupUsers(console.Credentials, _Group.GroupId);
+				UserStorageView[] users = console.Manager.Admon_GetGroupUsers(console.Credentials, _Group.GroupId);
 				//get the group this user belongs to.
 
 				foreach (UserStorageView user in users)

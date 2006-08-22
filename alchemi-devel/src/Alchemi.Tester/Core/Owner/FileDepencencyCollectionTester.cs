@@ -127,7 +127,7 @@ namespace Alchemi.Tester.Core.Owner
 			{
 				collection.Add((FileDependency)null);
 
-				Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
+				Assert.IsTrue(false, "Adding a null name to the collection should throw an InvalidOretationException.");
 			}
 			catch (InvalidOperationException e)
 			{
@@ -150,7 +150,7 @@ namespace Alchemi.Tester.Core.Owner
 			{
 				collection.Add(fd2);
 
-				Assert.IsTrue(false, "Adding a duplicate value to the collection should throw an InvalidOretationException.");
+				Assert.IsTrue(false, "Adding a duplicate name to the collection should throw an InvalidOretationException.");
 			}
 			catch (InvalidOperationException e)
 			{
@@ -187,7 +187,7 @@ namespace Alchemi.Tester.Core.Owner
             {
                 collection.Add((FileDependency[])null);
 
-                Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
+                Assert.IsTrue(false, "Adding a null name to the collection should throw an InvalidOretationException.");
             }
             catch (InvalidOperationException e)
             {
@@ -208,7 +208,7 @@ namespace Alchemi.Tester.Core.Owner
             {
                 collection.Add(fdList);
 
-                Assert.IsTrue(false, "Adding a null value to the collection should throw an InvalidOretationException.");
+                Assert.IsTrue(false, "Adding a null name to the collection should throw an InvalidOretationException.");
             }
             catch (InvalidOperationException e)
             {
@@ -232,7 +232,7 @@ namespace Alchemi.Tester.Core.Owner
             {
                 collection.Add(fdList);
 
-                Assert.IsTrue(false, "Adding a duplicate value to the collection should throw an InvalidOretationException.");
+                Assert.IsTrue(false, "Adding a duplicate name to the collection should throw an InvalidOretationException.");
             }
             catch (InvalidOperationException e)
             {

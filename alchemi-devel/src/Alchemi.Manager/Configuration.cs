@@ -28,6 +28,7 @@ using System.IO;
 using System.Xml.Serialization;
 
 using Alchemi.Manager.Storage;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Manager
 {
@@ -73,9 +74,9 @@ namespace Alchemi.Manager
 
 		/// <summary>
 		/// The storage used by this Manager.
-		/// Defaults to Sql Server.
+		/// Defaults to In-memory.
 		/// </summary>
-		public ManagerStorageEnum DbType = ManagerStorageEnum.SqlServer;
+		public ManagerStorageEnum DbType = ManagerStorageEnum.InMemory;
 
 		/// <summary>
 		/// Manager id (valid only if the Manager is also an Executor)
@@ -129,37 +130,16 @@ namespace Alchemi.Manager
 		/// <returns>Configuration object</returns>
         public static Configuration GetConfiguration()
         {
-			return GetConfiguration(AppDomain.CurrentDomain.BaseDirectory);
+            return DeSlz(Utils.GetFilePath(ConfigFileName, AlchemiRole.Manager, true));
         }
-
-		/// <summary>
-		/// Created:
-		/// Jan 18, 2006 - tb@tbiro.com
-		///		Needed by tools that edit the manager configuration file.
-		/// </summary>
-		/// <param name="location"></param>
-		/// <returns></returns>
-		public static Configuration GetConfiguration(String location)
-		{
-			return DeSlz(Path.Combine(location, ConfigFileName));
-		}
 
 		/// <summary>
 		/// Default constructor. ConfigFileName is set to "Alchemi.Manager.config.xml"
 		/// </summary>
         public Configuration()
         {
-			ConfigFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigFileName);
+            ConfigFile = Utils.GetFilePath(ConfigFileName, AlchemiRole.Manager, true);
 		}
-
-		/// <summary>
-		/// This Constructor for the Configuration class sets the ConfigFileName to the given location and "Alchemi.Manager.Config.xml"
-		/// </summary>
-		/// <param name="location">Location of the config file</param>
-        public Configuration(string location)
-        {
-            ConfigFile = Path.Combine(location, ConfigFileName);
-        }
 
         //-----------------------------------------------------------------------------------------------    
 

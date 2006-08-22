@@ -137,7 +137,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the TimeCreated property is set or not.
+		/// Gets a name indicating whether the TimeCreated property is set or not.
 		/// <seealso cref="TimeCreated"/>
 		/// </summary>
 		public bool TimeCreatedSet
@@ -149,7 +149,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
         /// <summary>
-        /// Gets a value indicating whether the TimeCompleted property is set or not.
+        /// Gets a name indicating whether the TimeCompleted property is set or not.
         /// <seealso cref="TimeCompleted"/>
         /// </summary>
         public bool TimeCompletedSet
@@ -161,7 +161,7 @@ namespace Alchemi.Core.Manager.Storage
         }
 
 		/// <summary>
-		/// Gets a value indicating whether this is the primary application.
+		/// Gets a name indicating whether this is the primary application.
 		/// </summary>
 		public bool Primary
 		{
@@ -191,7 +191,7 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				if (m_totalThreads == c_valueNotSet)
 				{
-					throw new Exception("The total thread value is not set for this application object.");
+					throw new Exception("The total thread name is not set for this application object.");
 				}
 
 				return m_totalThreads;
@@ -211,7 +211,7 @@ namespace Alchemi.Core.Manager.Storage
 			{
 				if (m_unfinishedThreads == c_valueNotSet)
 				{
-					throw new Exception("The unfinished thread value is not set for this application object.");
+					throw new Exception("The unfinished thread name is not set for this application object.");
 				}
 
 				return m_unfinishedThreads;

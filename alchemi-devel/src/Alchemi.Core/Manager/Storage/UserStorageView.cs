@@ -57,7 +57,7 @@ namespace Alchemi.Core.Manager.Storage
 		#region "Properties"
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this user is a system user.
+		/// Gets or sets a name indicating whether this user is a system user.
 		/// </summary>
 		public bool IsSystem
 		{
@@ -87,7 +87,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 		
 		/// <summary>
-		/// The password. This value is never stored in the database.
+		/// The password. This name is never stored in the database.
 		/// This is used to calculate the MD5 hash stored in the database. 
 		/// <seealso cref="PasswordMd5Hash"/>
 		/// </summary>

@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Net.Sockets;
 using System.Threading;
 using Alchemi.Core.Utility;
+using System.Collections.Generic;
 
 namespace Alchemi.Core.Owner
 {
@@ -53,8 +54,9 @@ namespace Alchemi.Core.Owner
 
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
-       
+
 		private Container components = null;
+       
 		private FileDependencyCollection _Manifest = new FileDependencyCollection();
 		private ThreadCollection _Threads = new ThreadCollection();
 		private string _Id = "";
@@ -63,6 +65,9 @@ namespace Alchemi.Core.Owner
 
 		private int _NumThreadsFinished = 0;
 		private Thread _GetFinishedThreadsThread;
+
+        private Thread _StartAppThread;
+
 		private bool _Running = false;
 		private bool _Initted = false;
 		private bool _MultiUse = false;
@@ -70,7 +75,7 @@ namespace Alchemi.Core.Owner
 		//to prevent starting of already started app. also to prevent re-suing single-use apps.
 		private bool firstuse = true;
 
-		private bool _stopGetFinished = false;
+		private bool _StopGetFinished = false;
 
 		/// <summary>
 		/// ThreadFinish event: is raised when the thread has completed execution successfully.
@@ -114,8 +119,16 @@ namespace Alchemi.Core.Owner
 			get { return _Id; }
 		}
 
-        public String ApplicationName
+        /// <summary>
+        /// Gets or Sets the application name
+        /// </summary>
+        /// <param name="name"></param>
+        public string ApplicationName
         {
+            get
+            {
+                return _ApplicationName;
+            }
             set
             {
                 _ApplicationName = value;
@@ -123,7 +136,7 @@ namespace Alchemi.Core.Owner
         }
 
 		/// <summary>
-		/// Gets a value indicating whether the application is currently running
+		/// Gets a name indicating whether the application is currently running
 		/// </summary>
 		public bool Running
 		{
@@ -196,15 +209,9 @@ namespace Alchemi.Core.Owner
 		{
 			if( disposing )
 			{
-				if (_Running & (_GetFinishedThreadsThread != null))
-				{
-					_stopGetFinished = true;
-					//_GetFinishedThreadsThread.Abort();
-					_GetFinishedThreadsThread.Join();
-				}
-
 				try
 				{
+                    Stop();
 					Manager.Owner_CleanupApplication(Credentials,_Id);
 				}
 				catch (Exception ex)
@@ -223,44 +230,79 @@ namespace Alchemi.Core.Owner
 		//----------------------------------------------------------------------------------------------- 
 		// public methods
 		//----------------------------------------------------------------------------------------------- 
+        public void Start()
+        {
+            //start the app on a new thread
+            _StartAppThread = new Thread(new ThreadStart(StartApplication));
+            _StartAppThread.Name = "GAppStarterThread";
+            _StartAppThread.Start();
+        }
 
 		/// <summary>
 		/// Starts the grid application
 		/// </summary>
-        public virtual void Start()
+        protected internal virtual void StartApplication()
 		{
-			logger.Debug("Start GApp..."+ _Id + " with " + _Threads.Count+" threads.");
-			if (_Running) return;
+            try
+            {
+                if (_Running)
+                {
+                    logger.Info("Application is already running...");
+                    return;
+                }
 
-			if (!_MultiUse)
-			{
-				logger.Debug("This is not a multi-use GApplication");
-				if (!firstuse) 
-					throw new InvalidOperationException("Cannot re-use a single-use GApplication.");
-			}
+                if (!_MultiUse)
+                {
+                    logger.Debug("This is not a multi-use GApplication");
+                    if (!firstuse)
+                        throw new InvalidOperationException("Cannot re-use a single-use GApplication.");
+                }
 
-			Init();
+                Init();
+                logger.Debug("StartApplication GApp..." + _Id + " with " + _Threads.Count + " threads.");
 
-			logger.Debug("Completed Init...for GApp");
+                //lock it to make doubly sure that the collection enumeration is sync-ed.
+                List<ThreadIdentifier> thIds = new List<ThreadIdentifier>();
+                List<byte[]> serializedThreads = new List<byte[]>();
+                lock (_Threads)
+                {
+                    logger.Debug("Enter Thread Lock to SetThreads On Manager...GApp " + _Id);
+                    
+                    foreach (GThread thread in _Threads)
+                    {
+                        if (thread.Id == -1) //only send threads which are not yet started.
+                        {
+                            thread.SetId(++_LastThreadId);
+                            thread.SetApplication(this);
 
-			//lock it to make doubly sure that the collection enumeration is sync-ed.
-			lock(_Threads)
-			{
-				logger.Debug("Enter Thread Lock to SetThreads On Manager...GApp " + _Id);
-				foreach (GThread thread in _Threads)
-				{
-					if (thread.Id == -1)
-					{
-						SetThreadOnManager(thread);
-					}
-				}
-			}
-			logger.Debug("Exit Thread Lock. Finished setting threads on Manager...GApp " + _Id);
+                            //create the lists to be sent out.
+                            thIds.Add(new ThreadIdentifier(_Id, thread.Id));
+                            serializedThreads.Add(Utils.SerializeToByteArray(thread));
+                        }
+                    }
+                }
+                //send all threads in one call.
+                SendThreadsToManager(thIds, serializedThreads);
 
-			StartGetFinishedThreads();
+                logger.Debug("Exit Thread Lock. Finished setting threads on Manager...GApp " + _Id);
 
-			firstuse = false; //this should be the only place this value should be set. to make sure the first use is over
+                StartGetFinishedThreads();
+
+                firstuse = false; //this should be the only place this name should be set. to make sure the first use is over
+            }
+            catch (ThreadAbortException)
+            {
+                logger.Info("Aborting application start...");
+                Thread.ResetAbort();
+            }
 		}
+
+        private void SendThreadsToManager(List<ThreadIdentifier> thIds, List<byte[]> serializedThreads)
+        {
+            ThreadIdentifier[] threadIds = thIds.ToArray();
+            byte[][] serializedThs = serializedThreads.ToArray();
+            Manager.Owner_SetThreads(Credentials, threadIds, serializedThs);
+        }
         
 		//----------------------------------------------------------------------------------------------- 
         
@@ -270,6 +312,9 @@ namespace Alchemi.Core.Owner
 		/// <param name="thread">thread to start</param>
 		public virtual void StartThread(GThread thread)
 		{
+            if (thread == null)
+                throw new ArgumentNullException("thread", "GThread cannot be null.");
+
             /// May 10, 2006 michael@meadows.force9.co.uk: Fix for bug 1482578
             /// Prevents the client from executing StartThread on single-use 
             /// applications. StartThread should only be called for starting 
@@ -287,25 +332,36 @@ namespace Alchemi.Core.Owner
         
 		//----------------------------------------------------------------------------------------------- 
 
+        //stop the local thread-monitor
+        private void StopApplication()
+        {
+            if (_Running)
+            {
+                //first check if app is starting.
+                if (_StartAppThread != null && _StartAppThread.IsAlive)
+                {
+                    _StartAppThread.Abort();
+                    _StartAppThread.Join();
+                }
+
+                if (_GetFinishedThreadsThread != null && _GetFinishedThreadsThread.IsAlive)
+                {
+                    _StopGetFinished = true;
+                    _GetFinishedThreadsThread.Join();
+                }
+            }
+            _Running = false;
+        }
+
 		/// <summary>
-		/// Stops the grid application
+		/// Stops the grid application. This will also send a message to the manager to stop all
+        /// threads on remote machines.
 		/// </summary>
 		public virtual void Stop()
 		{
-			if (_Running)
-			{
+            StopApplication();
 
-				Manager.Owner_StopApplication(Credentials, this._Id);
-            
-				if (_GetFinishedThreadsThread != null && _GetFinishedThreadsThread.IsAlive)
-				{
-					_stopGetFinished = true;
-					//_GetFinishedThreadsThread.Abort();
-					_GetFinishedThreadsThread.Join();
-				}
-			}
-			_Running = false; //just making sure again
-
+            Manager.Owner_StopApplication(Credentials, this._Id);
 			//TODO: may be we need not have a seperate "state" for the application. if all threads are dead, app should have state: stopped as well isnt it?
 			//how do we handle multi-use apps then?
 		}
@@ -376,17 +432,17 @@ namespace Alchemi.Core.Owner
 
 		//----------------------------------------------------------------------------------------------- 
 		
-		//initialises the thread on the manager
-		private void SetThreadOnManager(GThread thread)
-		{
-			thread.SetId(++_LastThreadId);
-			thread.SetApplication(this);
-      
-			Manager.Owner_SetThread(
-				Credentials, 
-				new ThreadIdentifier(_Id, thread.Id, thread.Priority),
-				Utils.SerializeToByteArray(thread));
-		}
+        //initialises one thread on the manager
+        private void SetThreadOnManager(GThread thread)
+        {
+            thread.SetId(++_LastThreadId);
+            thread.SetApplication(this);
+
+            Manager.Owner_SetThread(
+                Credentials,
+                new ThreadIdentifier(_Id, thread.Id, thread.Priority),
+                Utils.SerializeToByteArray(thread));
+        }
 
 		//----------------------------------------------------------------------------------------------- 
         
@@ -397,20 +453,30 @@ namespace Alchemi.Core.Owner
 			logger.Info("GetFinishedThreads thread started.");
 			try
 			{
-				while (!_stopGetFinished)
+                int logCounter = 0;
+				while (!_StopGetFinished)
 				{
 					try
 					{
-						Thread.Sleep(1000);
+                        //a couple of potential issues here:
+                        //1. the first and second calls may return different thread counts.
+                        //since more threads may finish meanwhile.
+                        //2. this sleeps for 700 ms ... which means really quick threads can't 
+                        //be retrieved before 700ms.
+						Thread.Sleep(700);
         
 						byte[][] FinishedThreads = Manager.Owner_GetFinishedThreads(Credentials, _Id);
-
 						_NumThreadsFinished = Manager.Owner_GetFinishedThreadCount(Credentials,_Id);
-						//we replace this with the above, to have the correct count always.
-						//_NumThreadsFinished += FinishedThreads.Length;
 
-						logger.Debug("Threads finished this poll..."+FinishedThreads.Length);
-						logger.Debug("Total Threads finished so far..."+_NumThreadsFinished);
+                        if (logCounter > 10 || FinishedThreads.Length > 0)
+                        {
+                            //print log only once in a while
+                            logger.Debug("Threads finished this poll..." + FinishedThreads.Length);
+                            logger.Debug("Total Threads finished so far..." + _NumThreadsFinished);
+                        }
+                        logCounter++;
+                        if (logCounter > 20)
+                            logCounter = 0;
 
 						for (int i=0; i<FinishedThreads.Length; i++)
 						{
@@ -499,7 +565,7 @@ namespace Alchemi.Core.Owner
 				logger.Error("Error in GetFinishedThreads. GetFinishedThreads thread stopping...",e);
 			}
 
-			logger.Info("GetFinishedThreads thread exited..");
+			logger.Info("GetFinishedThreads thread exited...");
 		}
 
         /// <summary>
@@ -551,9 +617,10 @@ namespace Alchemi.Core.Owner
 			if (!_Running)
 			{
 				logger.Debug("Starting a thread to get finished threads...");
-				_stopGetFinished = false;
+				_StopGetFinished = false;
 				_GetFinishedThreadsThread = new Thread(new ThreadStart(GetFinishedThreads));
-				_GetFinishedThreadsThread.Start();
+				_GetFinishedThreadsThread.Name = "MonitorThread";
+                _GetFinishedThreadsThread.Start();
 			}
 
 			_Running = true;

@@ -73,12 +73,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Alchemi.Core">
-      <Name>Alchemi.Core</Name>
-      <HintPath>..\..\..\bin\Alchemi.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\lib\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System">
@@ -96,21 +92,48 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\..\..\src\Alchemi.Core\Core.csproj">
+      <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RendererLibrary\RenderLibrary.csproj">
-      <Name>RenderLibrary</Name>
       <Project>{9C912A86-D566-49D9-A940-14672768B4A8}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>RenderLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="App.ico" />
+    <Content Include="status_anim.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MoviePreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MoviePreview.Designer.cs">
+      <DependentUpon>MoviePreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
     </Compile>
     <Compile Include="RendererForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Starter.cs" />
+    <EmbeddedResource Include="MoviePreview.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MoviePreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RendererForm.resx">
       <DependentUpon>RendererForm.cs</DependentUpon>
       <SubType>Designer</SubType>

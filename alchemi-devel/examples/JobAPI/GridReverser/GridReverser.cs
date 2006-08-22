@@ -58,7 +58,7 @@ namespace Alchemi.Examples.CrossPlatformDemo
             foreach (FileDependency fd in job.OutputFiles)
             {
             	Directory.CreateDirectory("job_" + job.Id);
-                fd.UnPack(Path.Combine("job_" + job.Id, fd.FileName));
+                fd.Unpack(Path.Combine("job_" + job.Id, fd.FileName));
                 Console.WriteLine("Unpacked file {0} for job {1}", fd.FileName, job.Id);
             }
             Console.WriteLine();

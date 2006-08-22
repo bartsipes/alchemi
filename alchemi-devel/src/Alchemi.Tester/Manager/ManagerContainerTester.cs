@@ -77,10 +77,13 @@ namespace Alchemi.Tester.Manager
 
 			// whatever was not responsive in the last 60 seconds should get lost
 			TimeSpan timeSpan = new TimeSpan(0, 0, 60);
-			DisconnectTimedOutExecutors(timeSpan);
-			
-			// check what was disconnected
 
+			//TODO: This is now moved to the "watchdog" class
+            //need a seperate tester for that.
+            //DisconnectTimedOutExecutors(timeSpan);
+            Assert.Fail("DisconnectTimedOutExecutors(timeSpan) is moved to a seperate class now. Need a new test case.");
+
+            // check what was disconnected
 			Assert.IsTrue(m_managerStorage.GetExecutor(executorId1).Connected);
 			Assert.IsFalse(m_managerStorage.GetExecutor(executorId2).Connected);
 			Assert.IsFalse(m_managerStorage.GetExecutor(executorId3).Connected);
@@ -96,7 +99,11 @@ namespace Alchemi.Tester.Manager
 		{
 			// whatever was not responsive in the last 60 seconds should get lost
 			TimeSpan timeSpan = new TimeSpan(0, 0, 60);
-			DisconnectTimedOutExecutors(timeSpan);
+
+            //TODO: This is now moved to the "watchdog" class
+            //need a seperate tester for that.
+            //DisconnectTimedOutExecutors(timeSpan);
+            Assert.Fail("DisconnectTimedOutExecutors(timeSpan) is moved to a seperate class now. Need a new test case.");
 			
 			Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
 		}

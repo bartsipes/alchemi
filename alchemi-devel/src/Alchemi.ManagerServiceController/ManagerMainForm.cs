@@ -33,6 +33,7 @@ using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Manager;
 using log4net;
+using System.Diagnostics;
 
 
 // Configure log4net using the .config file
@@ -58,21 +59,56 @@ namespace Alchemi.ManagerService
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ManagerMainForm));
-			this.SuspendLayout();
-			// 
-			// cbIntermediate
-			// 
-			this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
-			// 
-			// ManagerMainForm
-			// 
-			this.Name = "ManagerMainForm";
-			this.Text = "Alchemi Manager";
-			this.Load += new System.EventHandler(this.ManagerMainForm_Load);
-			this.ResumeLayout(false);
+            this.tabPage1.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.gpBoxNodeConfig.SuspendLayout();
+            this.gpBoxActions.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // cbIntermediate
+            // 
+            this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 556);
+            // 
+            // lnkViewLog
+            // 
+            this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
+            // 
+            // ManagerMainForm
+            // 
+            this.ClientSize = new System.Drawing.Size(458, 578);
+            this.Name = "ManagerMainForm";
+            this.Load += new System.EventHandler(this.ManagerMainForm_Load);
+            this.tabPage1.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.gpBoxNodeConfig.ResumeLayout(false);
+            this.gpBoxNodeConfig.PerformLayout();
+            this.gpBoxActions.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
 		}
+
+        private void lnkViewLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //show the log .
+            string logFile = null;
+            try
+            {
+                logFile = GetLogFilePath();
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = true;
+                p.StartInfo.FileName = logFile;
+                p.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Could not show log file {0}! Error : {1}", logFile, ex.Message), "Alchemi Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 		#endregion
 
 		//-----------------------------------------------------------------------------------------------    
@@ -115,7 +151,7 @@ namespace Alchemi.ManagerService
 			//in case it is a service, the container would be null since we dont need it really.
 			//but we still need to get the config from it, so create a new one and read the config.
 			ManagerContainer mc = new ManagerContainer();
-			mc.ReadConfig(useDefault);
+			mc.ReadConfig();
 			Config = mc.Config;
 			mc = null;
 		}

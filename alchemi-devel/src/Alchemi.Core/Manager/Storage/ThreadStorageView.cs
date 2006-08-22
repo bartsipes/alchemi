@@ -163,7 +163,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the TimeStarted property is set.
+		/// Gets a name indicating whether the TimeStarted property is set.
 		/// <seealso cref="TimeStarted"/>
 		/// </summary>
 		public bool TimeStartedSet
@@ -175,7 +175,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the TimeFinished property is set.
+		/// Gets a name indicating whether the TimeFinished property is set.
 		/// </summary>
 		public bool TimeFinishedSet
 		{
@@ -201,7 +201,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this thread failed running.
+		/// Gets a name indicating whether this thread failed running.
 		/// </summary>
 		public bool Failed
 		{
@@ -214,7 +214,7 @@ namespace Alchemi.Core.Manager.Storage
 		#endregion
 
 		/// <summary>
-		/// Reset the TimeStarted property to the default value.
+		/// Reset the TimeStarted property to the default name.
 		/// </summary>
 		public void ResetTimeStarted()
 		{
@@ -222,7 +222,7 @@ namespace Alchemi.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Reset the TimeFinished property to the default value.
+		/// Reset the TimeFinished property to the default name.
 		/// </summary>
 		public void ResetTimeFinished()
 		{

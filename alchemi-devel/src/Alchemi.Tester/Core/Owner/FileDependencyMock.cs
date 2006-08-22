@@ -36,7 +36,7 @@ namespace Alchemi.Tester.Core.Owner
 		{
 		}
 
-		public override void UnPack(string fileLocation)
+		public override void Unpack(string fileLocation)
 		{
 			return;
 		}

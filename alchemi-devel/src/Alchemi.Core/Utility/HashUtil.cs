@@ -34,9 +34,9 @@ namespace Alchemi.Core.Utility {
 	// original author blog: http://weblogs.asp.net/CumpsD
 
 	/// <summary>Class used to generate and check hashes.</summary>
-	public class HashUtil {
+	public sealed class HashUtil {
 		/// <summary></summary>
-		public HashUtil() { }
+		private HashUtil() { }
 		
 		#region Hash Choices
 		/// <summary>The wanted hash function.</summary>
@@ -56,97 +56,108 @@ namespace Alchemi.Core.Utility {
 		
 		#region Public Methods
 		/// <summary>Generates the hash of a text.</summary>
-		/// <param name="strPlain">The text of which to generate a hash of.</param>
-		/// <param name="hshType">The hash function to use.</param>
+        /// <param name="input">The text of which to generate a hash of.</param>
+		/// <param name="hashType">The hash function to use.</param>
 		/// <returns>The hash as a hexadecimal string.</returns>
-		public static string GetHash(string strPlain, HashType hshType) {
-			string strRet;
-			switch (hshType) {
-				case HashType.MD5: strRet = GetMD5(strPlain);	break;
-				case HashType.SHA1: strRet = GetSHA1(strPlain);	break;
-				case HashType.SHA256: strRet = GetSHA256(strPlain); break;
-				case HashType.SHA384: strRet = GetSHA384(strPlain); break;
-				case HashType.SHA512: strRet = GetSHA512(strPlain); break;
-				default: strRet = "Invalid HashType"; break;
+		public static string GetHash(string input, HashType hashType) {
+			string result;
+			switch (hashType) {
+				case HashType.MD5: result = GetMD5(input);	break;
+				case HashType.SHA1: result = GetSHA1(input);	break;
+				case HashType.SHA256: result = GetSHA256(input); break;
+				case HashType.SHA384: result = GetSHA384(input); break;
+				case HashType.SHA512: result = GetSHA512(input); break;
+				default: result = "Invalid HashType"; break;
 			}
-			return strRet;
+			return result;
 		} /* GetHash */
 		
 		/// <summary>Checks a text with a hash.</summary>
-		/// <param name="strOriginal">The text to compare the hash against.</param>
-		/// <param name="strHash">The hash to compare against.</param>
-		/// <param name="hshType">The type of hash.</param>
+		/// <param name="original">The text to compare the hash against.</param>
+		/// <param name="hashed">The hash to compare against.</param>
+		/// <param name="hashType">The type of hash.</param>
 		/// <returns>True if the hash validates, false otherwise.</returns>
-		public static bool CheckHash(string strOriginal, string strHash, HashType hshType) {
-			string strOrigHash = GetHash(strOriginal, hshType);
-			return (strOrigHash == strHash);
+		public static bool CheckHash(string original, string hashed, HashType hashType) {
+			string strOrigHash = GetHash(original, hashType);
+			return (strOrigHash == hashed);
 		} /* CheckHash */
 		#endregion
 		
 		#region Hashers
-		private static string GetMD5(string strPlain) {
+		private static string GetMD5(string input)
+        {
 			UnicodeEncoding UE = new UnicodeEncoding();
-			byte[] HashValue, MessageBytes = UE.GetBytes(strPlain);
+			byte[] HashValue, MessageBytes = UE.GetBytes(input);
 			MD5 md5 = new MD5CryptoServiceProvider();
-			string strHex = "";
+            StringBuilder hex = new StringBuilder();
 			
 			HashValue = md5.ComputeHash(MessageBytes);
-			foreach(byte b in HashValue) {
-				strHex += String.Format("{0:x2}", b);
+			foreach(byte b in HashValue) 
+            {
+				hex.AppendFormat("{0:x2}", b);
 			}
-			return strHex;
+
+			return hex.ToString();
 		} /* GetMD5 */
 		
-		private static string GetSHA1(string strPlain) {
+		private static string GetSHA1(string input)
+        {
 			UnicodeEncoding UE = new UnicodeEncoding();
-			byte[] HashValue, MessageBytes = UE.GetBytes(strPlain);
+			byte[] HashValue, MessageBytes = UE.GetBytes(input);
 			SHA1Managed SHhash = new SHA1Managed();
-			string strHex = "";
+            StringBuilder hex = new StringBuilder();
 
 			HashValue = SHhash.ComputeHash(MessageBytes);
-			foreach(byte b in HashValue) {
-				strHex += String.Format("{0:x2}", b);
+			foreach(byte b in HashValue) 
+            {
+				hex.AppendFormat("{0:x2}", b);
 			}
-			return strHex;
+			return hex.ToString();
 		} /* GetSHA1 */
 		
-		private static string GetSHA256(string strPlain) {
+		private static string GetSHA256(string input)
+        {
 			UnicodeEncoding UE = new UnicodeEncoding();
-			byte[] HashValue, MessageBytes = UE.GetBytes(strPlain);
+			byte[] HashValue, MessageBytes = UE.GetBytes(input);
 			SHA256Managed SHhash = new SHA256Managed();
-			string strHex = "";
+            StringBuilder hex = new StringBuilder();
 
 			HashValue = SHhash.ComputeHash(MessageBytes);
-			foreach(byte b in HashValue) {
-				strHex += String.Format("{0:x2}", b);
+			foreach(byte b in HashValue)
+            {
+				hex.AppendFormat("{0:x2}", b);
 			}
-			return strHex;
+			return hex.ToString();
 		} /* GetSHA256 */
 		
-		private static string GetSHA384(string strPlain) {
+		private static string GetSHA384(string input) 
+        {
 			UnicodeEncoding UE = new UnicodeEncoding();
-			byte[] HashValue, MessageBytes = UE.GetBytes(strPlain);
+			byte[] HashValue, MessageBytes = UE.GetBytes(input);
 			SHA384Managed SHhash = new SHA384Managed();
-			string strHex = "";
+            StringBuilder hex = new StringBuilder();
 
 			HashValue = SHhash.ComputeHash(MessageBytes);
-			foreach(byte b in HashValue) {
-				strHex += String.Format("{0:x2}", b);
+			foreach(byte b in HashValue)
+            {
+				hex.AppendFormat("{0:x2}", b);
 			}
-			return strHex;
+			return hex.ToString();
 		} /* GetSHA384 */
 		
-		private static string GetSHA512(string strPlain) {
+		private static string GetSHA512(string input) 
+        {
 			UnicodeEncoding UE = new UnicodeEncoding();
-			byte[] HashValue, MessageBytes = UE.GetBytes(strPlain);
+			byte[] HashValue, MessageBytes = UE.GetBytes(input);
 			SHA512Managed SHhash = new SHA512Managed();
-			string strHex = "";
+            StringBuilder hex = new StringBuilder();
 
 			HashValue = SHhash.ComputeHash(MessageBytes);
-			foreach(byte b in HashValue) {
-				strHex += String.Format("{0:x2}", b);
+			foreach(byte b in HashValue)
+            {
+				hex.AppendFormat("{0:x2}", b);
 			}
-			return strHex;
+			return hex.ToString();
 		} /* GetSHA512 */
 		#endregion
 	} /* Hash */

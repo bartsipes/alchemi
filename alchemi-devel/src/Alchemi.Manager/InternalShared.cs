@@ -27,6 +27,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Manager
 {
@@ -35,56 +36,49 @@ namespace Alchemi.Manager
 	/// These mainly deal with communicating with the scheduler.
 	/// This class, therefore is like a container for the common objects.
 	/// </summary>
-    public class InternalShared
+    internal class InternalShared
     {	
 		/// <summary>
 		/// The location of the working directory of the manager.
 		/// This property is readonly.
 		/// </summary>
-        public readonly string DataRootDirectory;
+        internal readonly string DataRootDirectory;
 
 		/// <summary>
 		/// This property is used to synchronize access to the scheduler by multiple threads at once.
 		/// </summary>
-        public ManualResetEvent DedicatedSchedulerActive;
+        internal ManualResetEvent DedicatedSchedulerActive;
 
-		/// <summary>
-		/// The scheduler used by Alchemi
-		/// </summary>
-        public readonly IScheduler Scheduler; 
-		//TODO currently this is readonly. meaning the scheduling algo cant be flipped at runtime.
-		//need to change that.
+        internal readonly IScheduler Scheduler;
 
-        private InternalShared(string dataRootDirectory, IScheduler scheduler)
+        private InternalShared()
         {
-            DataRootDirectory = dataRootDirectory;
+            DataRootDirectory = Utils.GetFilePath("dat", AlchemiRole.Manager, true); 
             DedicatedSchedulerActive = new ManualResetEvent(true);
-            Scheduler = scheduler;
+            Scheduler = (new SchedulerFactory()).CreateScheduler();
         }
 
 		/// <summary>
 		/// Represents the static instance of this class
 		/// </summary>
-        public static InternalShared Instance;
+        internal static InternalShared Instance;
         
 		/// <summary>
 		/// Gets an instance of this class (creates it, the first time).
 		/// </summary>
-		/// <!--param name="database"></param-->
-		/// <param name="dataRootDirectory"></param>
-		/// <param name="scheduler"></param>
 		/// <returns></returns>
-        public static InternalShared GetInstance(string dataRootDirectory, IScheduler scheduler)
+        internal static InternalShared GetInstance()
         {
             if (Instance == null)
             {
-                if (!Directory.Exists(dataRootDirectory))
-                {
-                    Directory.CreateDirectory(dataRootDirectory);
-                }
-                Instance = new InternalShared(dataRootDirectory, scheduler);
+                Instance = new InternalShared();
             }
             return Instance;
+        }
+
+        internal string GetApplicationDirectory(string applicationId)
+        {
+            return Path.Combine(DataRootDirectory, string.Format("application_{0}", applicationId));
         }
     }
 }

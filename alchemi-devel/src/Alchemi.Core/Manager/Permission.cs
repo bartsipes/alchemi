@@ -36,7 +36,12 @@ namespace Alchemi.Core.Manager
 	/// </summary>
     public enum Permission
     {
-		/// <summary>
+        /// <summary>
+        /// No permission
+        /// </summary>
+        None = 0,
+
+        /// <summary>
 		/// Allowed to execute threads.
 		/// </summary>
         ExecuteThread = 1,
@@ -55,5 +60,6 @@ namespace Alchemi.Core.Manager
 		/// Allowed to manage users.
 		/// </summary>
         ManageUsers = 4
+
     }
 }

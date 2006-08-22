@@ -31,7 +31,7 @@ namespace Alchemi.Core
 	/// <summary>
 	/// Represents a exception that occured in Remoting
 	/// </summary>
-    public class RemotingException : ApplicationException
+    public class RemotingException : Exception
     {
 		/// <summary>
 		/// Creates an instance of the RemotingException
@@ -47,7 +47,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occured during Authentication
 	/// </summary>
     [Serializable]
-    public class AuthenticationException : ApplicationException
+    public class AuthenticationException : Exception
     {
 		/// <summary>
 		///  Creates an instance of the AuthenticationException
@@ -69,7 +69,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occured during authorization (checking user permissions).
 	/// </summary>
     [Serializable]
-    public class AuthorizationException : ApplicationException
+    public class AuthorizationException : Exception
     {
 		/// <summary>
 		/// Creates an instance of the AuthorizationException
@@ -91,7 +91,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occurs when the executor id is invalid.
 	/// </summary>
     [Serializable]
-    public class InvalidExecutorException : ApplicationException
+    public class InvalidExecutorException : Exception
     {
 		/// <summary>
 		/// Creates an instance of the InvalidExecutorException
@@ -111,7 +111,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occurs when the application id is invalid.
 	/// </summary>
 	[Serializable]
-	public class InvalidApplicationException : ApplicationException
+	public class InvalidApplicationException : Exception
 	{
 		/// <summary>
 		/// Creates an instance of the InvalidApplicationException
@@ -131,7 +131,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occurs when the thread id is invalid.
 	/// </summary>
 	[Serializable]
-	public class InvalidThreadException : ApplicationException
+	public class InvalidThreadException : Exception
 	{
 		/// <summary>
 		/// Creates an instance of the InvalidThreadException
@@ -153,7 +153,7 @@ namespace Alchemi.Core
 	/// Represents an exception that occurs when the manager cannot connect back to the executor
 	/// </summary>
     [Serializable]
-    public class ConnectBackException : ApplicationException
+    public class ConnectBackException : Exception
     {
 		/// <summary>
 		/// Creates an instance of the ConnectBackException
@@ -175,7 +175,7 @@ namespace Alchemi.Core
 	/// Represents an exception used to indicate that there is an error related to saving/retrieving the Application Manifest file.
 	/// </summary>
 	[Serializable]
-	public class ManifestFileException : ApplicationException
+	public class ManifestFileException : Exception
 	{
 		/// <summary>
 		/// Id of the ApplicationId
@@ -200,7 +200,7 @@ namespace Alchemi.Core
 	/// Represents an exception used to indicate that there is an error related to saving/retrieving the Thread Data file.
 	/// </summary>
 	[Serializable]
-	public class ThreadDatFileException : ApplicationException
+	public class ThreadDatFileException : Exception
 	{
 		/// <summary>
 		/// Id of the Application
@@ -226,12 +226,32 @@ namespace Alchemi.Core
 		public ThreadDatFileException(SerializationInfo info, StreamingContext context) : base(info, context) {}
 	}
 
-	/*
+    /// <summary>
+    /// Represents an exception used to indicate that there is an error communicating with the Executor
+    /// </summary>
     [Serializable]
-    public class FrameworkException : ApplicationException
+    public class ExecutorCommException : Exception
     {
-        public FrameworkException (string message, Exception innerException) : base(message, innerException) {}
-        public FrameworkException (SerializationInfo info, StreamingContext context) : base(info, context) {}
+        /// <summary>
+        /// Id of the Executor
+        /// </summary>
+        public readonly string ExecutorId;
+
+        /// <summary>
+        /// Creates an instance of the ExecutorCommException class
+        /// </summary>
+        /// <param name="executorId"></param>
+        /// <param name="innerException"></param>
+        public ExecutorCommException(string executorId, Exception innerException)
+            : base("", innerException)
+        {
+            ExecutorId = executorId;
+        }
+
+        public ExecutorCommException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            ExecutorId = "";
+        }
     }
-    */
 }

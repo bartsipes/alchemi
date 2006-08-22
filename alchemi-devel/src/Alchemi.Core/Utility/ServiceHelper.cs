@@ -32,27 +32,32 @@ namespace Alchemi.Core.Utility
 	/// <summary>
 	/// Summary description for ServiceHelper.
 	/// </summary>
-	public class ServiceHelper
+	public sealed class ServiceHelper
 	{
+        //FxCop rules specify having no public constructors for static helpers
+        private ServiceHelper() { }
 
 		/// <summary>
 		/// Verifies if the Window service with the given name is installed.
 		/// </summary>
 		/// <param name="serviceName"></param>
 		/// <returns>true if the service is installed properly. false otherwise</returns>
-		public static bool checkServiceInstallation(string serviceName)
+		public static bool CheckServiceInstallation(string serviceName)
 		{
 			bool exists = false;
-			try
-			{
-				ServiceController sc = new ServiceController(serviceName);
-				sc.Refresh(); //just a dummy call to make sure the service exists.
-				sc.Close();
-				sc = null;
-				exists = true;
-			}
-			catch
-			{}
+            ServiceController sc = null;
+            try
+            {
+                sc = new ServiceController(serviceName);
+                sc.Refresh(); //just a dummy call to make sure the service exists.
+			    exists = true;
+            }
+            finally
+            {
+                if (sc!=null)
+                    sc.Close();
+                sc = null;
+            }
 			return exists;
 		}
 
@@ -61,7 +66,7 @@ namespace Alchemi.Core.Utility
 		/// </summary>
 		/// <param name="pi"></param>
 		/// <param name="pathToService"></param>
-		public static void installService(Installer pi, string pathToService)
+		public static void InstallService(Installer pi, string pathToService)
 		{
 			TransactedInstaller ti = new TransactedInstaller ();
 			ti.Installers.Add (pi);
@@ -70,12 +75,13 @@ namespace Alchemi.Core.Utility
 			ti.Context = ctx;
 			ti.Install ( new Hashtable ());
 		}
+
 		/// <summary>
 		/// UnInstalls the Windows service with the given "installer" object.
 		/// </summary>
 		/// <param name="pi"></param>
 		/// <param name="pathToService"></param>
-		public static void uninstallService(Installer pi, string pathToService)
+		public static void UninstallService(Installer pi, string pathToService)
 		{
 			TransactedInstaller ti = new TransactedInstaller ();
 			ti.Installers.Add (pi);

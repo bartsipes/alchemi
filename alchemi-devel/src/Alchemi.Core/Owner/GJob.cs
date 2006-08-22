@@ -26,6 +26,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Alchemi.Core.Owner
 {
@@ -37,14 +38,54 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public class GJob : GThread
     {
-		private static readonly Logger logger = new Logger();
-
 		private FileDependencyCollection _InputFiles = new FileDependencyCollection();
         private FileDependencyCollection _OutputFiles = new FileDependencyCollection();
         private string _RunCommand;
 
-		//TODO let the user specify what the stdout and stderr are to be called.
-		//by default we can call them stdout.txt and stderr.txt
+        private string _Stdout;
+        private string _Stderr;
+        private string _Log;
+
+        [NonSerialized]
+        private StringBuilder output;
+        [NonSerialized]
+        private StringBuilder error;
+        [NonSerialized]
+        private StringBuilder log;
+        [NonSerialized]
+        private Process process = null;
+
+        /// <summary>
+        /// Gets the alchemi log messages, that were output during the job execution.
+        /// </summary>
+        public string Log
+        {
+            get
+            {
+                return _Log;
+            }
+        }
+
+        /// <summary>
+        /// Gets the entire standard output text of the job.
+        /// </summary>
+        public string Stdout
+        {
+            get
+            {
+                return _Stdout;
+            }
+        }
+        /// <summary>
+        /// Gets the entire standard error text of the job.
+        /// </summary>
+        public string Stderr
+        {
+            get
+            {
+                return _Stderr;
+            }
+        }
 
         //-----------------------------------------------------------------------------------------------    
 
@@ -80,75 +121,125 @@ namespace Alchemi.Core.Owner
 		/// </summary>
         public override void Start()
         {
-            foreach (FileDependency dep in _InputFiles)
+            try
             {
-                dep.UnPackToFolder(WorkingDirectory);
-				logger.Debug("Unpacking input file: " + dep.FileName);
-            }
-      
-			Process process = new Process();
-            process.StartInfo.WorkingDirectory = WorkingDirectory;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
+                log.AppendLine("Starting Job ... ");
 
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardOutput = true;
+                output = new StringBuilder();
+                error = new StringBuilder();
+                log = new StringBuilder();
 
-			logger.Debug("Starting a new process...");
-            process.StartInfo.FileName = "cmd"; //_RunCommand; //
-            process.StartInfo.Arguments = "/C " + _RunCommand;
- 
-            process.Start();
-            process.WaitForExit();
-      
-            foreach (EmbeddedFileDependency dep in _OutputFiles)
-            {
-				//handle errors connected to missing output files.
-                try
+                foreach (FileDependency dep in _InputFiles)
                 {
-                    dep.Pack(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
-                    // cleanup
-                	File.Delete(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
-					logger.Debug("Packing output file: "+dep.FileName);
+                    dep.UnpackToFolder(WorkingDirectory);
+                    log.AppendFormat("Unpacking input file: {0}", dep.FileName).AppendLine();
                 }
-                catch (Exception ex)
+
+                process = new Process();
+                process.StartInfo.WorkingDirectory = WorkingDirectory;
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+                process.EnableRaisingEvents = true;
+
+                process.OutputDataReceived += new DataReceivedEventHandler(process_OutputDataReceived);
+                process.ErrorDataReceived += new DataReceivedEventHandler(process_ErrorDataReceived);
+                process.Exited += new EventHandler(process_Exited);
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.RedirectStandardOutput = true;
+
+                process.StartInfo.FileName = "cmd"; //_RunCommand; //
+                process.StartInfo.Arguments = "/C " + _RunCommand;
+
+                log.Append("Forking process: ").AppendLine(process.StartInfo.FileName);
+                log.Append("Arguments: ").AppendLine(process.StartInfo.Arguments);
+                log.Append("WorkingDirectory: ").AppendLine(process.StartInfo.WorkingDirectory);
+
+                process.Start();
+                process.WaitForExit();
+
+                foreach (EmbeddedFileDependency dep in _OutputFiles)
                 {
-                    dep.Base64EncodedContents = "";
-					logger.Debug("Error packing outputfile " + dep.FileName + ". Continuing with other files...",ex);
+                    //handle errors connected to missing output files.
+                    try
+                    {
+                        dep.Pack(Path.Combine(WorkingDirectory, dep.FileName));
+                        log.AppendFormat("Packed output file: {0}", dep.FileName).AppendLine();
+                        // cleanup
+                        File.Delete(Path.Combine(WorkingDirectory, dep.FileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        dep.Base64EncodedContents = "";
+                        log.AppendFormat("Error packing file {0}", dep.FileName).AppendLine();
+                        log.AppendLine(ex.ToString()).AppendLine("Continuing with other files ...");
+                    }
                 }
-            }
 
-            foreach (FileDependency dep in _InputFiles)
+                //let us not clean up input files - because some may be some of them
+                //are actually readonly files elsewhere on the file system! 
+                //the working dir would be clean up by the Executor anyway.
+
+                log.AppendFormat("Job {0} complete.", Id).AppendLine();
+            }
+            finally
             {
-                // cleanup
-				try
-				{
-					File.Delete(string.Format("{0}\\{1}", WorkingDirectory, dep.FileName));
-				}
-				catch (Exception ex)
-				{
-					logger.Debug("Error deleting file " + dep.FileName + ". Continuing with other files...",ex);
-				}
+                CloseProcess(process);
+                _Stderr = error.ToString();
+                _Stdout = output.ToString();
+                _Log = log.ToString();
             }
-
-            AddStandardFile(process.StandardError, "stderr.txt");
-            AddStandardFile(process.StandardOutput, "stdout.txt");
-			
-			logger.Debug("GJob Process complete: "+Id);
         }
 
-        //-----------------------------------------------------------------------------------------------    
-    
-        private void AddStandardFile(StreamReader reader, string name)
+        private void CloseProcess(Process process)
         {
-            EmbeddedFileDependency fileDep = new EmbeddedFileDependency(name);
-        	UTF8Encoding encoding = new UTF8Encoding();
-			fileDep.Base64EncodedContents = Convert.ToBase64String(
-                encoding.GetBytes(reader.ReadToEnd())
-                );
-            _OutputFiles.Add(fileDep);
-			logger.Debug("Added/packed output file: " + name);
+            try
+            {
+                if (process != null)
+                {
+                    if (!process.HasExited)
+                    {
+                        process.Kill();
+                    }
+                    process.Close();
+                    process.Dispose();
+                    process = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Append("Error shutting down process: ")
+                    .AppendLine(ex.ToString()); 
+            }
         }
+
+        #region Process Events
+        void process_Exited(object sender, EventArgs e)
+        {
+            if (process != null)
+            {
+                log.AppendFormat("Process {0} has exited at {1} with exit code {2}.",
+                    process.Id,
+                    process.ExitTime.ToUniversalTime(),
+                    process.ExitCode).AppendLine();
+            }
+        }
+
+        void process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            lock (error)
+            {
+                error.AppendLine(e.Data);
+            }
+        }
+
+        void process_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            lock (output)
+            {
+                output.AppendLine(e.Data);
+            }
+        }
+        #endregion
     }
 }

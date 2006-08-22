@@ -101,7 +101,16 @@ namespace Alchemi.Core
 		/// <param name="ti"></param>
 		/// <param name="thread"></param>
 		void Owner_SetThread(SecurityCredentials sc, ThreadIdentifier ti, byte[] thread);
-        
+
+        /// <summary>
+        /// Set a group of threads on the manager. i.e provide the manager with a byte array[][] representing the threads code.
+        /// <br/>(Generally meant to be called by a Owner of an application)
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="ti"></param>
+        /// <param name="thread"></param>
+        void Owner_SetThreads(SecurityCredentials sc, ThreadIdentifier[] threadIds, byte[][] threads);
+
 		/// <summary>
 		/// Retrieve the finished threads for an application with the given id, as a 2-D byte array [][]
 		/// </summary>
@@ -121,7 +130,7 @@ namespace Alchemi.Core
         
 		/// <summary>
 		/// Gets the exception, if any, for a thread. If the thread has failed the exception object contains the Exception that 
-		/// caused the failure. Otherwise, the return value is null.
+		/// caused the failure. Otherwise, the return name is null.
 		/// <br/>(Generally meant to be called by a Owner of an application)
 		/// </summary>
 		/// <param name="sc"></param>
@@ -192,7 +201,7 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="executorId"></param>
 		/// <param name="executorEP"></param>
-		void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP);
+		void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
 
 		/// <summary>
 		/// Connects an Executor to the Manager in non-dedicated mode.
@@ -201,7 +210,7 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="executorId"></param>
 		/// <param name="executorEP"></param>
-		void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP);
+		void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
         
 		/// <summary>
 		/// Disconnects an Executor from the Manager.
@@ -346,7 +355,7 @@ namespace Alchemi.Core
 		/// <param name="sc"></param>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		UserStorageView[] GetGroupUsers(SecurityCredentials sc, Int32 groupId);
+		UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, Int32 groupId);
 
 		/// <summary>
 		/// Updates the Manager database with the given table of users.

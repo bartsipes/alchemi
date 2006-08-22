@@ -111,7 +111,7 @@ namespace Alchemi.Console.DataForms
             m_success = false;
 
             m_maintenanceThread = new Thread(new ThreadStart(MaintenanceWorkerThread));
-
+            m_maintenanceThread.Name = "MaintenanceWorkerThread";
             m_maintenanceThread.Start();
 
             //wait a bit to see if it is done already and if so no longer display the wait dialog.

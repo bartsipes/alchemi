@@ -15,37 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2BDB9B67F5C1D14A09156FA76B0B8112"
-        "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_328D51FB32D5FDFDCE444A54164EC930"
-        "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_328D51FB32D5FDFDCE444A54164EC930"
-        "OwnerKey" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_328D51FB32D5FDFDCE444A54164EC930"
-        "OwnerKey" = "8:_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -57,14 +27,26 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
+        "MsmKey" = "8:_8ADB2AB4B5B8CCA28967A87ACC010068"
         "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
-        "OwnerKey" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
+        "MsmKey" = "8:_9D555B95BC192045362D47E6A333BFD2"
+        "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B43E5680EF39149697C8A09FBAFF7C5D"
+        "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B43E5680EF39149697C8A09FBAFF7C5D"
+        "OwnerKey" = "8:_9D555B95BC192045362D47E6A333BFD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -81,18 +63,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CAEF8E48F4FD930E0668C21601003B0F"
-        "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_CAEF8E48F4FD930E0668C21601003B0F"
-        "OwnerKey" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_F0FEBF6CBB14456EBC11EB186FB44383"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -100,37 +70,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_328D51FB32D5FDFDCE444A54164EC930"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4D3C2FDD8EAD44A1AE4123617EA40F93"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2BDB9B67F5C1D14A09156FA76B0B8112"
+        "OwnerKey" = "8:_8ADB2AB4B5B8CCA28967A87ACC010068"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CAEF8E48F4FD930E0668C21601003B0F"
+        "OwnerKey" = "8:_9D555B95BC192045362D47E6A333BFD2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
+        "OwnerKey" = "8:_B43E5680EF39149697C8A09FBAFF7C5D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -209,20 +167,6 @@
             "InstallerClass" = "11:TRUE"
             "CustomActionData" = "8:"
             }
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_5A46B064E02B44EE957485852675AA5D"
-            {
-            "Name" = "8:Alchemi.ExecutorServiceController"
-            "Condition" = "8:"
-            "Object" = "8:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
-            "FileType" = "3:2"
-            "InstallAction" = "3:2"
-            "Arguments" = "8:"
-            "EntryPoint" = "8:"
-            "Sequence" = "3:2"
-            "Identifier" = "8:_E16B2A6D_4B44_4157_AC54_C257E322318C"
-            "InstallerClass" = "11:FALSE"
-            "CustomActionData" = "8:"
-            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_61801708ED3A43748A4151A2FB1E92E0"
             {
             "Name" = "8:Primary output from ExecutorService (Active)"
@@ -289,68 +233,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2BDB9B67F5C1D14A09156FA76B0B8112"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Win32Security, Version=0.3.2020.34576, Culture=neutral"
-                "ScatterAssemblies"
-                {
-                    "_2BDB9B67F5C1D14A09156FA76B0B8112"
-                    {
-                    "Name" = "8:Win32Security.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Win32Security.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_328D51FB32D5FDFDCE444A54164EC930"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_328D51FB32D5FDFDCE444A54164EC930"
-                    {
-                    "Name" = "8:Alchemi.Core.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Alchemi.Core.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_84B161FC672E46A0848376DFEF7F5804"
             {
             "SourcePath" = "8:..\\..\\..\\graphics\\Executor (multiformat).ico"
@@ -371,20 +253,82 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8ADB2AB4B5B8CCA28967A87ACC010068"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Executor, Version=1.0.3.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905"
                 "ScatterAssemblies"
                 {
-                    "_86B6F1E8012CB97AFC5E45B1D9F1DCD0"
+                    "_8ADB2AB4B5B8CCA28967A87ACC010068"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:log4net.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9D555B95BC192045362D47E6A333BFD2"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Executor, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9D555B95BC192045362D47E6A333BFD2"
                     {
                     "Name" = "8:Alchemi.Executor.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:Alchemi.Executor.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B43E5680EF39149697C8A09FBAFF7C5D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B43E5680EF39149697C8A09FBAFF7C5D"
+                    {
+                    "Name" = "8:Alchemi.Core.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Alchemi.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
@@ -440,37 +384,6 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CAEF8E48F4FD930E0668C21601003B0F"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905"
-                "ScatterAssemblies"
-                {
-                    "_CAEF8E48F4FD930E0668C21601003B0F"
-                    {
-                    "Name" = "8:log4net.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:log4net.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F0FEBF6CBB14456EBC11EB186FB44383"
@@ -604,7 +517,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Alchemi Executor"
         "ProductCode" = "8:{937E69AA-13FB-4E41-98B7-A83907F08161}"
-        "PackageCode" = "8:{EB074D74-5452-4B53-BF56-45BFE14031F3}"
+        "PackageCode" = "8:{AE8222A8-E955-405B-BA7E-77B9FC09F5A5}"
         "UpgradeCode" = "8:{54AB0565-A75F-4E37-AAE7-371B928F5CCD}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -1175,9 +1088,9 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5E8299EDA86E4A7AB1AC4AE45D734D7F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A53FA157C72B42FE97667B7B1D9635BE"
             {
-            "SourcePath" = "8:..\\..\\Alchemi.ExecutorServiceController\\obj\\Debug\\Alchemi.ExecutorServiceController.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D0E41C201A9B413AA892C6BEE2BDFDC2"
@@ -1196,8 +1109,8 @@
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{23CC92DA-8780-4A17-BF9A-E567CB0548C5}"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{F196CA7C-D8B0-4031-9989-D43406AEB3B8}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

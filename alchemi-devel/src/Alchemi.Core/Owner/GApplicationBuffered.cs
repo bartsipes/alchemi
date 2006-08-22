@@ -29,7 +29,13 @@ using System;
 namespace Alchemi.Core.Owner
 {
     /// <summary>
-    /// GApplicationBuffered class represents a buffered multi-use application. StartThread method has been overridden such that the thread is not immediately started rather it is placed in a thread buffer. When the thread buffer count reaches the thread buffer capacity then that thread buffer is sent to the manager as one thread. The GApplicationBuffered class should be used when there are many threads with short execution times. Under these conditions, using GApplicationBuffered class can significantly improve performance compared to using GApplication class.
+    /// GApplicationBuffered class represents a buffered multi-use application. 
+    /// StartThread method has been overridden such that the thread is not immediately started rather 
+    /// it is placed in a thread buffer. When the thread buffer count reaches the thread buffer capacity 
+    /// then that thread buffer is sent to the manager as one thread. The GApplicationBuffered class 
+    /// should be used when there are many threads with short execution times. Under these conditions, 
+    /// using GApplicationBuffered class can significantly improve performance compared to 
+    /// using GApplication class.
     /// </summary>
     public class GApplicationBuffered : GApplication
     {
@@ -51,43 +57,43 @@ namespace Alchemi.Core.Owner
         /// Constructor that takes the given connection.
         /// </summary>
         /// <param name="connection">connection to alchemi manager</param>
-        public GApplicationBuffered(GConnection oConnection) : this(DefaultThreadBufferCapacity)
+        public GApplicationBuffered(GConnection connection) : this(DefaultThreadBufferCapacity)
         {
-            if (oConnection == null)
+            if (connection == null)
             {
-                throw new ArgumentNullException("oConnection");
+                throw new ArgumentNullException("connection");
             }
 
-            Connection = oConnection;
+            Connection = connection;
         }
 
         /// <summary>
         /// Constructor that takes the given connection and the thread buffer capacity.
         /// </summary>
-        /// <param name="oConnection"></param>
-        /// <param name="nThreadBufferCapacity"></param>
-        public GApplicationBuffered(GConnection oConnection, int nThreadBufferCapacity) : this(nThreadBufferCapacity)
+        /// <param name="connection"></param>
+        /// <param name="threadBufferCapacity"></param>
+        public GApplicationBuffered(GConnection connection, int threadBufferCapacity) : this(threadBufferCapacity)
         {
-            if (oConnection == null)
+            if (connection == null)
             {
-                throw new ArgumentNullException("oConnection");
+                throw new ArgumentNullException("connection");
             }
 
-            Connection = oConnection;
+            Connection = connection;
         }
 
         /// <summary>
         /// Constructor that takes the thread buffer capacity.
         /// </summary>
-        /// <param name="nThreadBufferCapacity">thread buffer capacity</param>
-        public GApplicationBuffered(int nThreadBufferCapacity) : base(true)
+        /// <param name="threadBufferCapacity">thread buffer capacity</param>
+        public GApplicationBuffered(int threadBufferCapacity) : base(true)
         {
-            if (nThreadBufferCapacity < 1)
+            if (threadBufferCapacity < 1)
             {
-                throw new ArgumentOutOfRangeException("nThreadBufferCapacity", nThreadBufferCapacity, "0 < nThreadBufferCapacity <= Int32.MaxValue");
+                throw new ArgumentOutOfRangeException("threadBufferCapacity", threadBufferCapacity, "0 < threadBufferCapacity <= Int32.MaxValue");
             }
 
-            m_nThreadBufferCapacity = nThreadBufferCapacity;
+            m_nThreadBufferCapacity = threadBufferCapacity;
             m_oThreadBuffer = CreateThreadBuffer();
         }
 
@@ -105,25 +111,25 @@ namespace Alchemi.Core.Owner
         /// <summary>
         /// Starts the given thread indirectly by adding it to the thread buffer. When the thread buffer count reaches the thread buffer capacity then that thread buffer is sent to the manager as one thread.
         /// </summary>
-        /// <param name="oThread">thread</param>
-        public override void StartThread(GThread oThread)
+        /// <param name="thread">thread</param>
+        public override void StartThread(GThread thread)
         {
             lock (this)
             {
                 // assign an internal thread id...
-                oThread.SetId(m_nInternalThreadId++);
+                thread.SetId(m_nInternalThreadId++);
 
                 // add thread to thread buffer...
-                m_oThreadBuffer.Add(oThread);
+                m_oThreadBuffer.Add(thread);
             }
         }
 
         /// <summary>
         /// Handles the thread buffer full event. It flushes the thread buffer.
         /// </summary>
-        /// <param name="oSender">sender</param>
-        /// <param name="oEventArgs">event args</param>
-        private void oThreadBuffer_Full(object oSender, EventArgs oEventArgs)
+        /// <param name="sender">sender</param>
+        /// <param name="e">event args</param>
+        private void ThreadBuffer_Full(object sender, EventArgs e)
         {
             FlushThreads();
         }
@@ -139,7 +145,7 @@ namespace Alchemi.Core.Owner
                 if (m_oThreadBuffer.Count > 0)
                 {
                     // remove full event handler from thread buffer...
-                    m_oThreadBuffer.Full -= new FullEventHandler(oThreadBuffer_Full);
+                    m_oThreadBuffer.Full -= new FullEventHandler(ThreadBuffer_Full);
 
                     // start thread buffer thread...
                     base.StartThread(m_oThreadBuffer);
@@ -156,17 +162,17 @@ namespace Alchemi.Core.Owner
         private GThreadBuffer CreateThreadBuffer()
         {
             GThreadBuffer oThreadBuffer = new GThreadBuffer(m_nThreadBufferCapacity);
-            oThreadBuffer.Full += new FullEventHandler(oThreadBuffer_Full);
+            oThreadBuffer.Full += new FullEventHandler(ThreadBuffer_Full);
             return oThreadBuffer;
         }
 
         /// <summary>
         /// Fires the thread finish event.
         /// </summary>
-        /// <param name="oThread0">thread</param>
-        protected override void OnThreadFinish(GThread oThread0)
+        /// <param name="thread">thread</param>
+        protected override void OnThreadFinish(GThread thread)
         {
-            GThreadBuffer oThreadBuffer = oThread0 as GThreadBuffer;
+            GThreadBuffer oThreadBuffer = thread as GThreadBuffer;
             if (oThreadBuffer != null)
             {
                 foreach (GThread oThread1 in oThreadBuffer)
@@ -187,16 +193,16 @@ namespace Alchemi.Core.Owner
         /// <summary>
         /// Fires the thread failed event.
         /// </summary>
-        /// <param name="oThread0">thread</param>
-        /// <param name="oException">exception</param>
-        protected override void OnThreadFailed(GThread oThread0, Exception oException)
+        /// <param name="thread">thread</param>
+        /// <param name="ex">exception</param>
+        protected override void OnThreadFailed(GThread thread, Exception ex)
         {
-            GThreadBuffer oThreadBuffer = oThread0 as GThreadBuffer;
+            GThreadBuffer oThreadBuffer = thread as GThreadBuffer;
             if (oThreadBuffer != null)
             {
                 foreach (GThread oThread1 in oThreadBuffer)
                 {
-                    base.OnThreadFailed(oThread1, oException);
+                    base.OnThreadFailed(oThread1, ex);
                 }
             }
         }

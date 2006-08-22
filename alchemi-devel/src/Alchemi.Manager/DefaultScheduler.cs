@@ -46,28 +46,18 @@ namespace Alchemi.Manager
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
 
-		private MApplicationCollection _Applications;
-        private MExecutorCollection _Executors;
+        private static object threadChooserLock = new object();
 
-		private static object threadChooserLock = new object();
+        private IManagerStorage store;
 
         private int nextExecutorIndex = 0;
-
-        /// <summary>
-        /// Sets the collection of applications.
-        /// </summary>
-        public MApplicationCollection Applications { set { _Applications = value; } }
-
-		/// <summary>
-		/// Sets the collection of executors
-		/// </summary>
-        public MExecutorCollection Executors { set { _Executors = value; } }
-        
+       
         /// <summary>
         /// Default constructor required by scheduler factory.
         /// </summary>
         public DefaultScheduler()
         {
+            store = ManagerStorageFactory.ManagerStorage();
         }
 
 		/// <summary>
@@ -93,7 +83,6 @@ namespace Alchemi.Manager
 			string appid = threadStorage.ApplicationId;
 			int threadId = threadStorage.ThreadId;
 			int priority = threadStorage.Priority;
-			
 
             return new ThreadIdentifier(appid, threadId, priority);
         }
@@ -109,7 +98,7 @@ namespace Alchemi.Manager
         protected ExecutorStorageView GetNextAvailableExecutor()
         {
             // michael@meadows.force9.co.uk; gets next available executor without bias based upon position in executors list.
-            ExecutorStorageView[] executors = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
+            ExecutorStorageView[] executors = store.GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
 
             for (int i = 0; i < executors.Length; i++)
             {
@@ -120,7 +109,11 @@ namespace Alchemi.Manager
                 }
 
                 ExecutorStorageView executor = executors[nextExecutorIndex];
-                if (ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(executor.ExecutorId, ThreadState.Ready, ThreadState.Scheduled, ThreadState.Started) == 0)
+                int threadsOnExecutor = store.GetExecutorThreadCount(executor.ExecutorId, 
+                    ThreadState.Ready, 
+                    ThreadState.Scheduled,
+                    ThreadState.Started);
+                if (threadsOnExecutor == 0)
                 {
                     return executor;
                 }
@@ -142,9 +135,7 @@ namespace Alchemi.Manager
 			// this lock is not enough, we should lock until the thread status changes
 			lock(threadChooserLock)
 			{
-				ThreadStorageView[] threads = ManagerStorageFactory.ManagerStorage().GetThreads(
-					ApplicationState.Ready,  
-					ThreadState.Ready);
+				ThreadStorageView[] threads = store.GetThreads(ApplicationState.Ready, ThreadState.Ready);
 
 				if (threads == null || threads.Length == 0)
 				{
@@ -165,7 +156,6 @@ namespace Alchemi.Manager
 			}
 		}
 
-
 		/// <summary>
 		/// Queries the database to return the next dedicated schedule.
 		/// </summary>
@@ -173,7 +163,6 @@ namespace Alchemi.Manager
         public DedicatedSchedule ScheduleDedicated()
         {
 			ExecutorStorageView executorStorage = GetNextAvailableExecutor();
-
 			if (executorStorage == null)
 			{
 				return null;
@@ -186,53 +175,15 @@ namespace Alchemi.Manager
 			}
 
 			DedicatedSchedule dsched = null;
-
 			string executorId = executorStorage.ExecutorId;
-				
 			string appid = threadStorage.ApplicationId;
-				
 			int threadId = threadStorage.ThreadId;
-				
 			int priority = threadStorage.Priority;
 
-//			if (priority == -1)
-//			{
-//				priority = 5; //DEFAULT PRIORITY - TODO: have to put this in some Constants.cs file or something...
-//			}
-			
-			ThreadIdentifier ti= new ThreadIdentifier(appid, threadId,priority);
-			logger.Debug(String.Format("Schedule dedicated. app_id={0},threadID={1}, executor-id={2}",																								   
-				appid, 
-				threadId, 
-				executorId)
-				);
-
+			ThreadIdentifier ti= new ThreadIdentifier(appid, threadId, priority);
 			dsched = new DedicatedSchedule(ti, executorId);
 
             return dsched;
         }
-
-		 
-		/*
-		 * //non-optimised code for demonstration on how a custom scheduler might be written
-			DataTable executors = _Executors.AvailableDedicatedExecutors;
-			if (executors.Rows.Count == 0)
-			{
-				return null;
-			}
-			string executorId = executors.Rows[0]["executor_id"].ToString();
-
-            
-			DataTable threads = _Applications.ReadyThreads;
-			if (threads.Rows.Count == 0)
-			{
-				return null;
-			}
-			ThreadIdentifier ti = new ThreadIdentifier(
-				threads.Rows[0]["application_id"].ToString(),
-				int.Parse(threads.Rows[0]["thread_id"].ToString()),
-				int.Parse(threads.Rows[0]["priority"].ToString())
-				);
-		*/
     }
 }

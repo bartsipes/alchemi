@@ -34,18 +34,34 @@ namespace Alchemi.Core.Executor
     [Serializable]
     public struct HeartbeatInfo
     {
+        private int _Interval;
+        private int _PercentUsedCpuPower;
+        private int _PercentAvailCpuPower;
+
 		/// <summary>
 		/// Heartbeat interval
 		/// </summary>
-        public int Interval;
+        public int Interval
+        {
+            get { return _Interval; }
+            set { _Interval = value; }
+        }
 		/// <summary>
 		/// PercentUsedCpuPower
 		/// </summary>
-        public int PercentUsedCpuPower;
+        public int PercentUsedCpuPower
+        {
+            get { return _PercentUsedCpuPower; }
+            set { _PercentUsedCpuPower = value; }
+        }
 		/// <summary>
 		/// PercentAvailCpuPower
 		/// </summary>
-        public int PercentAvailCpuPower;
+        public int PercentAvailCpuPower
+        {
+            get { return _PercentAvailCpuPower; }
+            set { _PercentAvailCpuPower = value; }
+        }
 
 		/// <summary>
 		/// Creates an instance of the HeartBeat object with the given interval, used, and available CPU power.
@@ -55,9 +71,9 @@ namespace Alchemi.Core.Executor
 		/// <param name="avail"></param>
         public HeartbeatInfo(int interval, int used, int avail)
         {
-            this.Interval = interval;
-            this.PercentUsedCpuPower = used;
-            this.PercentAvailCpuPower = avail;
+            _Interval = interval;
+            _PercentUsedCpuPower = used;
+            _PercentAvailCpuPower = avail;
         }
     }
 }

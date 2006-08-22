@@ -28,7 +28,7 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Core\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -51,7 +51,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Core\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -73,7 +73,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'ServiceRelease|AnyCPU' ">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Core\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -151,7 +151,6 @@
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Manager\Storage\ApplicationDataStorageView.cs" />
     <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
       <SubType>Code</SubType>
@@ -193,7 +192,7 @@
     <Compile Include="Manager\Storage\UserStorageView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OwnEndPoint.cs">
+    <Compile Include="EndPoint.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Owner\ApplicationState.cs">
@@ -241,9 +240,6 @@
     <Compile Include="Owner\ThreadState.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RemoteEndPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="RemotingMechanism.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -280,6 +276,13 @@
     <EmbeddedResource Include="Owner\GApplication.resx">
       <DependentUpon>GApplication.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreClassDiagram.cd">
+      <SubType>
+      </SubType>
+    </None>
+    <None Include="GAppClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

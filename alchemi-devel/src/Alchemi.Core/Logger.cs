@@ -23,7 +23,6 @@
 */ 
 #endregion
 
-
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -34,7 +33,7 @@ namespace Alchemi.Core
 	/// The Alchemi logger class raises log events which can be handled by other classes.
 	/// This allows to log messages using any logging system the log-event-handler may choose.
 	/// </summary>
-	public class Logger
+	public class Logger : MarshalByRefObject
 	{
 		/// <summary>
 		/// Logger Event Handler
@@ -48,126 +47,7 @@ namespace Alchemi.Core
 		{
         }
 
-        #region AppDomain overloads
-        /// TiborBiro (tb@tbiro.com): Allow logging into another application domain
-
-
-        /// <summary>
-        /// Raises a log event with the given message and Debug level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Debug(AppDomain targetAppDomain, string debugMsg)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Debug);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Debug(debugMsg);
-            }
-        }
-
-        /// <summary>
-        /// Raises a log event with the given message and Debug level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Debug(AppDomain targetAppDomain, string debugMsg, Exception exception)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Debug, exception);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Debug(debugMsg, exception);
-            }
-        }
-
-        /// <summary>
-        /// Raises a log event with the given message and Info level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Info(AppDomain targetAppDomain, string debugMsg)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Info);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Info(debugMsg);
-            }
-        }
-
-        /// <summary>
-        /// Raises a log event with the given message and Warn level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Warn(AppDomain targetAppDomain, string debugMsg)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Warn);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Warn(debugMsg);
-            }
-        }
-
-        /// <summary>
-        /// Raises a log event with the given message and Warn level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Warn(AppDomain targetAppDomain, string debugMsg, Exception exception)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Warn, exception);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Warn(debugMsg, exception);
-            }
-        }
-
-        /// <summary>
-        /// Raises a log event with the given message and Debug level in the target application domain
-        /// </summary>
-        /// <param name="targetAppDomain"></param>
-        /// <param name="debugMsg"></param>
-        public void Error(AppDomain targetAppDomain, string debugMsg, Exception exception)
-        {
-            if (targetAppDomain != null)
-            {
-                LoggerAppDomainBoundaryCrosser crosser = new LoggerAppDomainBoundaryCrosser(debugMsg, LogLevel.Error, exception);
-
-                targetAppDomain.DoCallBack(new CrossAppDomainDelegate(crosser.RaiseLogEvent));
-            }
-            else
-            {
-                Error(debugMsg, exception);
-            }
-        }
-
-
-        #endregion
+        //kna: modified this class to inherit from MarshalByRef so we can use the logger across app-domains
 
         /// <summary>
 		/// Raises a log event with the given message and Info level
@@ -235,22 +115,6 @@ namespace Alchemi.Core
 
                 if (LogHandler == null)
                 {
-                    //					try
-                    //					{
-                    //						TextWriter tw = File.CreateText("alchemiLog.txt");
-                    //						tw.WriteLine(msg);
-                    //						if (ex!=null)
-                    //							tw.WriteLine(ex.ToString());
-                    //	
-                    //						tw.Flush();
-                    //						tw.Close();
-                    //						tw = null;
-                    //					}
-                    //					catch
-                    //					{
-                    //						//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
-                    //						//throw new Exception("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender,e);
-                    //					}
                     return;
                 }
 
@@ -273,62 +137,22 @@ namespace Alchemi.Core
 
 		private void RaiseLogEvent(string msg, LogLevel level, Exception ex, String source, String member)
 		{
-
 			try
 			{
 				//Raise the log event
 				if (LogHandler != null)
 					LogHandler(source,new LogEventArgs(source,member,msg,level,ex));
-			}catch {} //always handle errors when raising events. (since event-handlers are not in our control).
+			}catch (Exception){} //always handle errors when raising events. (since event-handlers are not in our control).
 
 		}
 
         /// <summary>
-        /// Used to temporarily store the log message and call the logging method on the other AppDomain
         /// 
-        /// Usage scemario:
-        ///     Used from the sandbox AppDomain to pass the logging data into the executor's AppDomain.
         /// </summary>
-        [Serializable]
-        private class LoggerAppDomainBoundaryCrosser
+        /// <returns></returns>
+        public override object InitializeLifetimeService()
         {
-            private String m_message;
-            private LogLevel m_level;
-            private Exception m_exception;
-
-            private String m_source = "?source?";
-            private String m_member = "?member?";
-
-            public LoggerAppDomainBoundaryCrosser(String message, LogLevel level, Exception exception)
-            {
-                m_message = message;
-                m_level = level;
-                m_exception = exception;
-
-                // get the caller details now before we switch to the other AppDomain
-
-                // look 3 frames up for the caller
-                StackFrame s = new StackFrame(3, true);
-                if (s != null)
-                {
-                    if (s.GetMethod().DeclaringType != null)
-                        m_source = s.GetMethod().DeclaringType.Name;
-
-                    if (s.GetMethod() != null)
-                        m_member = s.GetMethod().Name + "():" + s.GetFileLineNumber();
-                }
-            }
-
-            public LoggerAppDomainBoundaryCrosser(String message, LogLevel level) : this(message, level, null)
-            {
-            }
-
-            public void RaiseLogEvent()
-            {
-                Logger logger = new Logger();
-
-                logger.RaiseLogEvent(m_message, m_level, m_exception, m_source, m_member);
-            }
+            return null;
         }
 	}
 

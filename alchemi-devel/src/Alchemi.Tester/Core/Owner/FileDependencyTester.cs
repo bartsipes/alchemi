@@ -92,7 +92,7 @@ namespace Alchemi.Tester.Core.Owner
             return targetFileName;
         }
 
-        #region "UnPackToFolder tests"
+        #region "UnpackToFolder tests"
 
         [Test]
         public void UnPackToFolderTestNoFolders()
@@ -104,7 +104,7 @@ namespace Alchemi.Tester.Core.Owner
 
             FileDependency fd = new EmbeddedFileDependency(fileName, fileLocation);
 
-            fd.UnPackToFolder(_rootFolderNameToExtractTo);
+            fd.UnpackToFolder(_rootFolderNameToExtractTo);
 
             // just make sure the file is there
             Assert.IsTrue(File.Exists(Path.Combine(_rootFolderNameToExtractTo, fileName)));
@@ -123,8 +123,8 @@ namespace Alchemi.Tester.Core.Owner
             FileDependency fd1 = new EmbeddedFileDependency(fileName1, fileLocation1);
             FileDependency fd2 = new EmbeddedFileDependency(fileName2, fileLocation2);
 
-            fd1.UnPackToFolder(_rootFolderNameToExtractTo);
-            fd2.UnPackToFolder(_rootFolderNameToExtractTo);
+            fd1.UnpackToFolder(_rootFolderNameToExtractTo);
+            fd2.UnpackToFolder(_rootFolderNameToExtractTo);
 
             // just make sure the files are there
             Assert.IsTrue(File.Exists(Path.Combine(_rootFolderNameToExtractTo, fileName1)));

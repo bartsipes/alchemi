@@ -33,6 +33,8 @@ using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Manager;
 using log4net;
+using Alchemi.Core.Utility;
+using System.Diagnostics;
 
 
 // Configure log4net using the .config file
@@ -42,7 +44,7 @@ namespace Alchemi.ManagerExec
 {
 	public class ManagerMainForm : ManagerTemplateForm
 	{
-		public ManagerMainForm():base()
+		public ManagerMainForm() : base()
 		{
 			InitializeComponent();
 			this.Text = "Alchemi Manager";
@@ -56,153 +58,61 @@ namespace Alchemi.ManagerExec
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.tabPage1.SuspendLayout();
-			this.tabControl.SuspendLayout();
-			this.gpBoxNodeConfig.SuspendLayout();
-			this.gpBoxLog.SuspendLayout();
-			this.gpBoxDB.SuspendLayout();
-			this.gpBoxActions.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// btStart
-			// 
-			this.btStart.Name = "btStart";
-			// 
-			// txLog
-			// 
-			this.txLog.Name = "txLog";
-			// 
-			// txOwnPort
-			// 
-			this.txOwnPort.Name = "txOwnPort";
-			// 
-			// txManagerHost
-			// 
-			this.txManagerHost.Name = "txManagerHost";
-			// 
-			// txManagerPort
-			// 
-			this.txManagerPort.Name = "txManagerPort";
-			// 
-			// txId
-			// 
-			this.txId.Name = "txId";
-			// 
-			// cbIntermediate
-			// 
-			this.cbIntermediate.Name = "cbIntermediate";
-			this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
-			// 
-			// btStop
-			// 
-			this.btStop.Name = "btStop";
-			// 
-			// btReset
-			// 
-			this.btReset.Name = "btReset";
-			// 
-			// cbDedicated
-			// 
-			this.cbDedicated.Name = "cbDedicated";
-			// 
-			// txDbPassword
-			// 
-			this.txDbPassword.Name = "txDbPassword";
-			// 
-			// txDbUsername
-			// 
-			this.txDbUsername.Name = "txDbUsername";
-			// 
-			// txDbServer
-			// 
-			this.txDbServer.Name = "txDbServer";
-			// 
-			// txDbName
-			// 
-			this.txDbName.Name = "txDbName";
-			// 
-			// statusBar
-			// 
-			this.statusBar.Name = "statusBar";
-			// 
-			// tabPage1
-			// 
-			this.tabPage1.Name = "tabPage1";
-			// 
-			// pbar
-			// 
-			this.pbar.Name = "pbar";
-			// 
-			// tabControl
-			// 
-			this.tabControl.Name = "tabControl";
-			// 
-			// lbMgrHost
-			// 
-			this.lbMgrHost.Name = "lbMgrHost";
-			// 
-			// lbOwnPort
-			// 
-			this.lbOwnPort.Name = "lbOwnPort";
-			// 
-			// gpBoxNodeConfig
-			// 
-			this.gpBoxNodeConfig.Name = "gpBoxNodeConfig";
-			// 
-			// lbId
-			// 
-			this.lbId.Name = "lbId";
-			// 
-			// lbMgrPort
-			// 
-			this.lbMgrPort.Name = "lbMgrPort";
-			// 
-			// gpBoxLog
-			// 
-			this.gpBoxLog.Name = "gpBoxLog";
-			// 
-			// lbDBPassword
-			// 
-			this.lbDBPassword.Name = "lbDBPassword";
-			// 
-			// lbDBUsername
-			// 
-			this.lbDBUsername.Name = "lbDBUsername";
-			// 
-			// lbDBServer
-			// 
-			this.lbDBServer.Name = "lbDBServer";
-			// 
-			// lbDBName
-			// 
-			this.lbDBName.Name = "lbDBName";
-			// 
-			// gpBoxDB
-			// 
-			this.gpBoxDB.Name = "gpBoxDB";
-			// 
-			// gpBoxActions
-			// 
-			this.gpBoxActions.Name = "gpBoxActions";
-			// 
-			// ManagerMainForm
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.ClientSize = new System.Drawing.Size(458, 579);
-			this.Name = "ManagerMainForm";
-			this.Load += new System.EventHandler(this.ManagerMainForm_Load);
-			this.tabPage1.ResumeLayout(false);
-			this.tabControl.ResumeLayout(false);
-			this.gpBoxNodeConfig.ResumeLayout(false);
-			this.gpBoxLog.ResumeLayout(false);
-			this.gpBoxDB.ResumeLayout(false);
-			this.gpBoxActions.ResumeLayout(false);
-			this.ResumeLayout(false);
+            this.tabPage1.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.gpBoxNodeConfig.SuspendLayout();
+            this.gpBoxActions.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // cbIntermediate
+            // 
+            this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 517);
+            // 
+            // lnkViewLog
+            // 
+            this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
+            // 
+            // ManagerMainForm
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.ClientSize = new System.Drawing.Size(458, 539);
+            this.Name = "ManagerMainForm";
+            this.Load += new System.EventHandler(this.ManagerMainForm_Load);
+            this.tabPage1.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.gpBoxNodeConfig.ResumeLayout(false);
+            this.gpBoxNodeConfig.PerformLayout();
+            this.gpBoxActions.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
+
 		#endregion
 
 		//-----------------------------------------------------------------------------------------------    
+
+        private void lnkViewLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //show the log .
+            string logFile = null;
+            try
+            {
+                logFile = GetLogFilePath();
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = true;
+                p.StartInfo.FileName = logFile;
+                p.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Could not show log file {0}! Error : {1}", logFile, ex.Message), "Alchemi Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 
 		private void LogHandler(object sender, LogEventArgs e)
 		{
@@ -232,7 +142,7 @@ namespace Alchemi.ManagerExec
 		{
 			//normal startup. not a service
 			_container = new  ManagerContainer();
-			_container.ReadConfig(false);
+			_container.ReadConfig();
 			Config = _container.Config;
 			
 			RefreshUIControls();
@@ -271,7 +181,7 @@ namespace Alchemi.ManagerExec
 
 		protected override void ResetManager()
 		{
-			_container.ReadConfig(true);
+			_container.ReadConfig();
 			Config = _container.Config;
 
 			RefreshUIControls();
@@ -336,9 +246,7 @@ namespace Alchemi.ManagerExec
 				_container = new ManagerContainer();
 
 			_container.Config = Config;
-			_container.RemotingConfigFile = "Alchemi.ManagerExec.exe.config";
-
-			Log("app name == " + System.IO.Path.GetFileName(Application.ExecutablePath));
+			_container.RemotingConfigFile = Assembly.GetExecutingAssembly().Location + ".config";
 
 			try
 			{

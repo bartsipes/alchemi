@@ -23,16 +23,17 @@
 */ 
 #endregion
 
-
 using System;
 using System.Reflection;
+
+using Alchemi.Executor.Sandbox;
 
 namespace Alchemi.Executor
 {
 	/// <summary>
 	/// This class is a container for the AppDomainExecutor and AppDomain.
 	/// </summary>
-    public class GridAppDomain
+    internal class GridAppDomain
     {
         private AppDomain _Domain;
         private AppDomainExecutor _Executor;
@@ -42,7 +43,7 @@ namespace Alchemi.Executor
 		/// <summary>
 		/// Gets the AppDomain
 		/// </summary>
-        public AppDomain Domain
+        internal AppDomain Domain
         {
             get { return _Domain; }
         }
@@ -50,7 +51,7 @@ namespace Alchemi.Executor
 		/// <summary>
 		/// Gets the AppDommainExecutor
 		/// </summary>
-        public AppDomainExecutor Executor
+        internal AppDomainExecutor Executor
         {
             get { return _Executor; }
         }
@@ -62,7 +63,7 @@ namespace Alchemi.Executor
 		/// </summary>
 		/// <param name="domain"></param>
 		/// <param name="executor"></param>
-        public GridAppDomain(AppDomain domain, AppDomainExecutor executor)
+        internal GridAppDomain(AppDomain domain, AppDomainExecutor executor)
         {
             _Domain = domain;
             _Executor = executor;

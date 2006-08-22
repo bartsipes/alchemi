@@ -85,17 +85,25 @@ namespace Alchemi.Manager
 		/// <returns>true if the application is set up in the database</returns>
 		public bool VerifyApp(string id)
 		{
+            IManagerStorage store = ManagerStorageFactory.ManagerStorage();
 			bool appSetup = true;
 
 			//create directory can be repeated, and wont throw an error even if the dir already exists.
 			this[id].CreateDataDirectory();
 
-			ApplicationStorageView application = ManagerStorageFactory.ManagerStorage().GetApplication(id);
+			ApplicationStorageView application = store.GetApplication(id);
 
-			if (application == null)
-			{
-				appSetup = false;
-			}
+            if (application == null)
+            {
+                appSetup = false;
+            }
+            else
+            {
+                //just make sure the status is set to ready, or else it may remain Stopped
+                //in case of re-started multi-use apps.
+                application.State = ApplicationState.Ready;
+                store.UpdateApplication(application);
+            }
 
 			return appSetup;
 		}

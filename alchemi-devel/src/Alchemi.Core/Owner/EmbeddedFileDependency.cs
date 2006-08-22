@@ -41,7 +41,7 @@ namespace Alchemi.Core.Owner
     public class EmbeddedFileDependency : FileDependency
     {
 		/// <summary>
-		/// Contents of the file representing using base64 encoding.
+		/// contents of the file representing using base64 encoding.
 		/// </summary>
         protected string _Base64EncodedContents = "";
 
@@ -89,7 +89,7 @@ namespace Alchemi.Core.Owner
 		/// Unpacks (writes out) the file to the specified location
 		/// </summary>
 		/// <param name="fileLocation">file location</param>
-        public override void UnPack(string fileLocation)
+        public override void Unpack(string fileLocation)
         {
             Utils.WriteBase64EncodedToFile(fileLocation, _Base64EncodedContents);
         }

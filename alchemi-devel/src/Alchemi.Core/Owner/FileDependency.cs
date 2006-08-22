@@ -40,7 +40,7 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// File name
 		/// </summary>
-        protected readonly string _FileName;
+        private readonly string _FileName;
   
         //-----------------------------------------------------------------------------------------------    
     
@@ -58,7 +58,7 @@ namespace Alchemi.Core.Owner
 		/// Creates an instance of the FileDependency
 		/// </summary>
 		/// <param name="fileName">name of the file</param>
-        public FileDependency(string fileName)
+        protected FileDependency(string fileName)
         {
             _FileName = fileName;
         }
@@ -69,7 +69,7 @@ namespace Alchemi.Core.Owner
 		/// Unpacks the file to the specified location
 		/// </summary>
 		/// <param name="fileLocation">location and file name to unpack the file</param>
-        public abstract void UnPack(string fileLocation);
+        public abstract void Unpack(string fileLocation);
 
         /// <summary>
         /// Unpacks the file to the specified folder.
@@ -80,11 +80,11 @@ namespace Alchemi.Core.Owner
         /// This can be used to reproduce a folder structure.
         /// </remarks>
         /// <param name="targetFolder">Folder where the current file will be unpacked</param>
-        public void UnPackToFolder(string targetFolder)
+        public void UnpackToFolder(string targetFolder)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(targetFolder, FileName)));
 
-            UnPack(Path.Combine(targetFolder, FileName));
+            Unpack(Path.Combine(targetFolder, FileName));
         }
 
     }

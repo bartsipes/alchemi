@@ -28,7 +28,7 @@
     </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>..\..\bin\Executor\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -51,7 +51,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\bin\Executor\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -77,6 +77,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -87,9 +88,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDomainExecutor.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ExecutorUtil.cs" />
+    <Compile Include="Sandbox\AppDomainExecutor.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -99,12 +99,19 @@
     <Compile Include="ExecutorContainer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ExecutorWorker.cs" />
     <Compile Include="GExecutor.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GridAppDomain.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HeartbeatWorker.cs" />
+    <Compile Include="NonDedicatedExecutorWorker.cs" />
+    <Compile Include="Sandbox\SecurityConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ExecutorClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

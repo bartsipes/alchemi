@@ -34,6 +34,8 @@ using Alchemi.Executor;
 
 using log4net;
 using Timer = System.Windows.Forms.Timer;
+using Alchemi.Core.Utility;
+using System.Diagnostics;
 
 // Configure log4net using the .config file
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
@@ -56,31 +58,67 @@ namespace Alchemi.ExecutorExec
         /// </summary>
         private void InitializeComponent()
         {
-			this.SuspendLayout();
-			// 
-			// udMaxRetry
-			// 
-			this.udMaxRetry.ValueChanged += new System.EventHandler(this.udMaxRetry_ValueChanged);
-			// 
-			// chkRetryConnect
-			// 
-			this.chkRetryConnect.CheckedChanged += new System.EventHandler(this.chkRetryConnect_CheckedChanged);
-			// 
-			// udReconnectInterval
-			// 
-			this.udReconnectInterval.ValueChanged += new System.EventHandler(this.udReconnectInterval_ValueChanged);
-			// 
-			// udHBInterval
-			// 
-			this.udHBInterval.ValueChanged += new System.EventHandler(this.udHBInterval_ValueChanged);
-			// 
-			// ExecutorMainForm
-			// 
-			this.Name = "ExecutorMainForm";
-			this.Text = "Alchemi Executor";
-			this.Load += new EventHandler(ExecutorMainForm_Load);
-			this.ResumeLayout(false);
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udHBInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRetry)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udReconnectInterval)).BeginInit();
+            this.tabControl.SuspendLayout();
+            this.tabConnection.SuspendLayout();
+            this.tabExecution.SuspendLayout();
+            this.tabOptions.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // udHBInterval
+            // 
+            this.udHBInterval.ValueChanged += new System.EventHandler(this.udHBInterval_ValueChanged);
+            // 
+            // chkRetryConnect
+            // 
+            this.chkRetryConnect.CheckedChanged += new System.EventHandler(this.chkRetryConnect_CheckedChanged);
+            // 
+            // udMaxRetry
+            // 
+            this.udMaxRetry.ValueChanged += new System.EventHandler(this.udMaxRetry_ValueChanged);
+            // 
+            // udReconnectInterval
+            // 
+            this.udReconnectInterval.ValueChanged += new System.EventHandler(this.udReconnectInterval_ValueChanged);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Location = new System.Drawing.Point(0, 520);
+            // 
+            // lnkViewLog
+            // 
+            this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
+            // 
+            // ExecutorMainForm
+            // 
+            this.ClientSize = new System.Drawing.Size(458, 542);
+            this.Name = "ExecutorMainForm";
+            this.Load += new System.EventHandler(this.ExecutorMainForm_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.udHBInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udMaxRetry)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.udReconnectInterval)).EndInit();
+            this.tabControl.ResumeLayout(false);
+            this.tabConnection.ResumeLayout(false);
+            this.tabExecution.ResumeLayout(false);
+            this.tabOptions.ResumeLayout(false);
+            this.tabOptions.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
 		}
+
+
         #endregion
     
 		#region Form Event Handlers
@@ -99,15 +137,31 @@ namespace Alchemi.ExecutorExec
 
 			_container.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(this.RefreshUIControls);
 			_container.GotDisconnected += new GotDisconnectedEventHandler(this.Executor_GotDisconnected);
-			_container.ExecConnectEvent += new ExecutorConnectStatusEventHandler(this.ExecutorConnect_Status);
+			//_container.ExecConnectEvent += new ExecutorConnectStatusEventHandler(this.ExecutorConnect_Status);
 
 			ConnectOnStartup();
 
 			RefreshUIControls();
 			btConnect.Focus();
-
         }
-    
+
+        private void lnkViewLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //show the log .
+            string logFile = null;
+            try
+            {
+                logFile = Utils.GetFilePath(@"logs\alchemi-executor.log", AlchemiRole.Executor, false);
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = true;
+                p.StartInfo.FileName = logFile;
+                p.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Could not show log file {0}! Error : {1}", logFile, ex.Message), "Alchemi Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
 		private void chkRetryConnect_CheckedChanged(object sender, EventArgs e)
 		{
 			udReconnectInterval.Enabled = chkRetryConnect.Checked;
@@ -192,7 +246,7 @@ namespace Alchemi.ExecutorExec
         {
 			try
 			{
-				_container.Executors = null;
+				//_container.Executors = null;
 				RefreshUIControls();
 
 				//just double check.
@@ -319,7 +373,7 @@ namespace Alchemi.ExecutorExec
 			catch (Exception ex)
 			{
 				logger.Error("Error connecting to manager.",ex);
-				Log("Error connecting to manager.");
+				Log("Error connecting to manager." + ex.Message);
 			}
 			RefreshUIControls();
 		}
@@ -328,10 +382,13 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
+                //_container.
+                /*
 				foreach (GExecutor executor in _container.Executors)
 				{
 					executor.StartNonDedicatedExecuting(1000);
 				}
+                */
 			}
 			catch (Exception ex)
 			{
@@ -345,10 +402,12 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
+                /*
 				foreach (GExecutor executor in _container.Executors)
 				{
 					executor.StopNonDedicatedExecuting();
 				}
+                */
 			}
 			catch (Exception ex)
 			{
@@ -363,19 +422,9 @@ namespace Alchemi.ExecutorExec
 			//dont need to keep calling the getter of the property, since it keeps querying the service
 			bool connected = Started;
 
+            txId.Text = Config.Id;
 			txMgrHost.Text = Config.ManagerHost;
 			txMgrPort.Text = Config.ManagerPort.ToString();
-
-			cmbId.Items.Clear();
-			for(int index=0; index < Config.GetIdCount(); index++)
-			{
-				cmbId.Items.Add(Config.GetIdAtLocation(index));
-
-				if (index == 0)
-				{
-					cmbId.SelectedIndex = index;
-				}
-			}
 
 			txOwnPort.Text = Config.OwnPort.ToString();
 			txUsername.Text = Config.Username;
@@ -403,18 +452,12 @@ namespace Alchemi.ExecutorExec
 			pbar.Value = 0;
            
 			bool executing = false;
-			if (_container!=null && _container.Executors!=null)
+            
+			if (_container!=null)
 			{
-				foreach (GExecutor executor in _container.Executors)
-				{
-					if (executor != null && executor.ExecutingNonDedicated)
-					{
-						executing = true;
-						break;
-					}
-				}
-				
+				//executing = _container.Ex
 			}
+
 			btStartExec.Enabled = ((!Config.Dedicated) && (connected) && (!executing));
 			btStopExec.Enabled = ((!Config.Dedicated) && (connected) && (executing));
 

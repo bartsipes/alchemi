@@ -56,7 +56,7 @@ namespace Alchemi.Manager
         public void PingManager()
         {
             // for testing communication
-			logger.Debug("Manager pinged successfully.");
+			//logger.Debug("Manager pinged successfully."); //don't fill up the logs! :)
         }
 
         //-----------------------------------------------------------------------------------------------          
@@ -67,7 +67,7 @@ namespace Alchemi.Manager
         public void PingExecutor()
         {
             // for testing communication
-			logger.Debug("Sub-Manager pinged successfully.");
+			//logger.Debug("Sub-Manager pinged successfully.");
         }
 
 		/// <summary>
@@ -131,8 +131,7 @@ namespace Alchemi.Manager
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
 
-            logger.Debug("Creating new application...");
-
+            logger.Debug(string.Format("Setting application name {0} for app {1}...", applicationName, appId));
             _Applications[appId].ApplicationName = applicationName;
         }
 
@@ -164,13 +163,10 @@ namespace Alchemi.Manager
         /// <returns>whether the manager has the application manifest</returns>
         public bool Owner_HasApplicationManifest(SecurityCredentials sc, string appId)
         {
-            // This method only returns whether an application has a manifest or not and should not require authentication or authorization.
-
-            //AuthenticateUser(sc);
-            //ApplicationAuthorizationCheck(sc, appId);
+            AuthenticateUser(sc);
+            ApplicationAuthorizationCheck(sc, appId);
 
             logger.Debug("Checking application for manifest: " + appId);
-
             try
             {
                 MApplication app = _Applications[appId];
@@ -199,11 +195,36 @@ namespace Alchemi.Manager
             MThread t = _Applications[ti.ApplicationId][ti.ThreadId];
             t.Value = thread;
             t.Init(true);
-            t.Priority = ti.Priority; //??
+            t.Priority = ti.Priority;
             
-			logger.Debug("Initialised thread:"+ti.ThreadId );
+			logger.Debug("Initialised thread : "+ti.ThreadId );
             InternalShared.Instance.DedicatedSchedulerActive.Set();
         }
+
+        /// <summary>
+        /// Initializes a set of threads and stores them into the database.
+        /// </summary>
+        /// <param name="sc">security credentials to verify if the owner has permission to perform this operation 
+        /// (i.e SetThread, which is associated with the ManageOwnApp permission)</param>
+        /// <param name="ti">array of thread identifiers</param>
+        /// <param name="threads">array of byte arrays representing the serialized threads</param>
+        public void Owner_SetThreads(SecurityCredentials sc, ThreadIdentifier[] threadIds, byte[][] threads)
+        {
+            AuthenticateUser(sc);
+            ApplicationAuthorizationCheck(sc, threadIds[0].ApplicationId);
+            for (int i = 0; i < threadIds.Length; i++)
+            {
+                ThreadIdentifier thId = threadIds[i];
+                MThread t = _Applications[thId.ApplicationId][thId.ThreadId];
+                t.Value = threads[i]; //[thread number][serialized thread]
+                t.Init(true);
+                t.Priority = thId.Priority;
+
+                logger.Debug("Initialised thread : " + thId.ThreadId);
+                InternalShared.Instance.DedicatedSchedulerActive.Set();
+            }
+        }
+
 
 		//-----------------------------------------------------------------------------------------------
 
@@ -339,14 +360,13 @@ namespace Alchemi.Manager
 		/// <param name="appId">id of the application to be stopped</param>
         public void Owner_StopApplication(SecurityCredentials sc, string appId)
         {
-			if (ManagerStorageFactory.ManagerStorage().GetApplication(appId) == null)
+            AuthenticateUser(sc);
+            ApplicationAuthorizationCheck(sc, appId);
+			
+            if (ManagerStorageFactory.ManagerStorage().GetApplication(appId) == null)
 			{
 				return;
 			}
-
-            AuthenticateUser(sc);
-            ApplicationAuthorizationCheck(sc, appId);
-
 			logger.Debug("Stopping application:"+appId);
             MApplication a = _Applications[appId];
             a.Stop();
@@ -381,17 +401,21 @@ namespace Alchemi.Manager
 					}
 					catch{}
 				}
-				logger.Debug("Cleaning up files on the manager for app: "+appid);
-				string appDir = string.Format("{0}\\dat\\application_{1}", AppDomain.CurrentDomain.BaseDirectory, appid);
-				logger.Debug("Deleting: " + appDir);
-				Directory.Delete(appDir,true);
-				logger.Debug("Clean up finished for app: "+appid);
+                Cleanup(appid);
 			}
 			catch (Exception e)
 			{
 				logger.Debug("Clean up app: " + appid + " error: " + e.Message );
 			}
 		}
+
+        private void Cleanup(string appId)
+        {
+            string appDir = InternalShared.Instance.GetApplicationDirectory(appId);
+            logger.Debug("Cleaning up files on the manager for app: " + appId + ". Deleting: " + appDir);
+            Directory.Delete(appDir, true);
+            logger.Debug("Clean up finished for app: " + appId);
+        }
         
         //-----------------------------------------------------------------------------------------------          
 
@@ -438,7 +462,7 @@ namespace Alchemi.Manager
 		/// <param name="sc">security credentials to verify if the executor has permission to perform this operation 
 		/// (i.e connect non-dedicated, which is associated with the ExecuteThread permission)</param>
 		/// <param name="executorId">executor id</param>
-        public void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP)
+        public void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
         {
             logger.Debug("Executor called: ConnectNonDedicated");
 			AuthenticateUser(sc);
@@ -460,7 +484,7 @@ namespace Alchemi.Manager
 		/// (i.e connect dedicated, which is associated with the ExecuteThread permission)</param>
 		/// <param name="executorId">executor id</param>
 		/// <param name="executorEP">end point of the executor</param>
-        public void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, RemoteEndPoint executorEP)
+        public void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
         {
 			logger.Debug("Executor called: ConnectDedicated: Authenticate,EnsurePermission,Connect,Set DedicatedScheduler");
             AuthenticateUser(sc);
@@ -510,26 +534,22 @@ namespace Alchemi.Manager
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ExecuteThread);
 
-            bool scheduled = false;
-            ThreadIdentifier ti;
-            
+            ThreadIdentifier ti = null;
             // critical section .. don't want to schedule same thread on multiple executors
-			Monitor.Enter(InternalShared.Instance);
+			lock(InternalShared.Instance){
+                // try and get a local thread
+                ti = InternalShared.Instance.Scheduler.ScheduleNonDedicated(executorId);
+                if (ti != null)
+                {
+                    logger.Debug("obtained thread..." + ti.ThreadId);
+                    MThread t = new MThread(ti);
+                    t.State = ThreadState.Scheduled;
+                    t.CurrentExecutorId = executorId;
+                    // finished scheduling thread
+                    logger.Debug("set state of thread to scheduled. set executorID for the thread. released lock");
+                }
+            }
 
-			//logger.Debug("Entering monitor...");
-            // try and get a local thread
-            ti = InternalShared.Instance.Scheduler.ScheduleNonDedicated(executorId);
-            if (ti != null)
-            {
-				//logger.Debug("Schedule-non-dedicated gave Ti:"+ti.ThreadId);
-                scheduled = true;
-            }
-            else
-            {
-                // no thread, so can release lock immediately
-                Monitor.Exit(InternalShared.Instance);
-				//logger.Debug("No thread. so releasing lock immediately.");
-            }
             // TODO: hierarchical grids ignored until after v1.0.0
             /*
             else if ((ti == null) & (Manager != null))
@@ -546,17 +566,6 @@ namespace Alchemi.Manager
                 }
             }
             */
-
-            if (scheduled)
-            {
-				logger.Debug("obtained thread..."+ti.ThreadId);
-                MThread t = new MThread(ti);
-                t.State = ThreadState.Scheduled;
-                t.CurrentExecutorId = executorId;
-                // finished scheduling thread, can release lock
-                Monitor.Exit(InternalShared.Instance);
-				logger.Debug("set state of thread to scheduled. set executorID for the thread. released lock");
-            }
 
             return ti;
         }
@@ -721,6 +730,9 @@ namespace Alchemi.Manager
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ExecuteThread);
 
+            //kna : added this since sometimes disconnected Executors  
+            //may think they are still connected.
+            _Executors[executorId].VerifyExists();
             _Executors[executorId].HeartbeatUpdate(info);
         }
 
@@ -923,7 +935,7 @@ namespace Alchemi.Manager
 			ManagerStorageFactory.ManagerStorage().DeleteGroup(groupToDelete);
 		}
 
-		public UserStorageView[] GetGroupUsers(SecurityCredentials sc, Int32 groupId)
+		public UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, Int32 groupId)
 		{
 			AuthenticateUser(sc);
 			EnsurePermission(sc, Permission.ManageUsers);

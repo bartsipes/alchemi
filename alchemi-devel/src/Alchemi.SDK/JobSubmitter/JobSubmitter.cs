@@ -61,7 +61,7 @@ namespace Alchemi.DevTools
             
             try
             {
-                manager = (IManager) GNode.GetRemoteRef(new RemoteEndPoint(args[0], int.Parse(args[1]), RemotingMechanism.TcpBinary));
+                manager = (IManager) GNode.GetRemoteRef(new EndPoint(args[0], int.Parse(args[1]), RemotingMechanism.TcpBinary));
                 manager.PingManager();
                 sc = new SecurityCredentials(args[2], args[3]);
                 manager.AuthenticateUser(sc);

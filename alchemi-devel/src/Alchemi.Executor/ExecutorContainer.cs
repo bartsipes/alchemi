@@ -23,56 +23,28 @@
 */ 
 #endregion
 
-
 using System;
 using System.Configuration;
 using System.Threading;
 using Alchemi.Core;
+using Alchemi.Core.Utility;
+using System.IO;
 
 namespace Alchemi.Executor
-{
-	public delegate void ExecutorConnectStatusEventHandler(string statusMessage, int percentDone);
-	
+{	
 	/// <summary>
 	/// Summary description for ExecutorContainer.
 	/// </summary>
 	public class ExecutorContainer
 	{
-		private const int DefaultNumberOfExecutors = 1;
 		public event GotDisconnectedEventHandler GotDisconnected;
 		public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
-		public event ExecutorConnectStatusEventHandler ExecConnectEvent;
 		
 		public Configuration Config=null;
-		public GExecutor[] Executors = null;
+		private GExecutor _Executor = null;
 
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
-
-		private int GetNumberOfExecutors()
-		{
-            int numberOfExecutors;
-
-            AppSettingsReader configurationReader = new AppSettingsReader();
-            
-			try
-			{
-                numberOfExecutors = (int)configurationReader.GetValue("NumberOfExecutors", typeof(int));
-
-				if (numberOfExecutors <= 0)
-				{
-					numberOfExecutors = DefaultNumberOfExecutors;
-				}
-
-				return numberOfExecutors;
-			}
-			catch
-			{
-				numberOfExecutors = DefaultNumberOfExecutors;
-			}
-
-			return numberOfExecutors;
-		}
 
 		public ExecutorContainer()
 		{
@@ -80,84 +52,34 @@ namespace Alchemi.Executor
 
 		public bool Connected
 		{
-			get { return (Executors == null? false : true);}
+			get { return (_Executor == null? false : true);}
 		}
 
-		public void Connect()
+		public void Connect() //TODO FIX RECONNECT PROPERLY.
 		{
 			logger.Info("Connecting....");
+			EndPoint rep = new EndPoint(
+				Config.ManagerHost,
+				Config.ManagerPort,
+				RemotingMechanism.TcpBinary
+				);
 
-			if (ExecConnectEvent!=null){
-				ExecConnectEvent("Connecting....",0);
-			}
+			logger.Debug("Created remote-end-point");
+			EndPoint oep = new EndPoint(Config.OwnPort,RemotingMechanism.TcpBinary);
 
-
-			Executors = new GExecutor[GetNumberOfExecutors()];
-
-			for (int executorIndex = 0; executorIndex < Executors.Length; executorIndex++)
-			{
-				RemoteEndPoint rep = new RemoteEndPoint(
-					Config.ManagerHost,
-					Config.ManagerPort,
-					RemotingMechanism.TcpBinary
-					);
-
-				logger.Debug("Created remote-end-point");
-				if (ExecConnectEvent!=null)
-				{
-					ExecConnectEvent("Created remote-end-point",20);
-				}
-
-				// TODO: kind of hack-ish way of determining the port for higher thread numbers
-				OwnEndPoint oep = new OwnEndPoint(
-					Config.OwnPort + executorIndex,
-					RemotingMechanism.TcpBinary
-					);
-
-				logger.Debug("Created own-end-point");
-				if (ExecConnectEvent!=null)
-				{
-					ExecConnectEvent("Created own-end-point",40);
-				}
-
-				string executorId = Config.GetIdAtLocation(executorIndex);
-
-				// the executorId is used in the remoting URI so it MUST be initialized here
-				if (executorId == String.Empty)
-				{
-					executorId = Guid.NewGuid().ToString();
-				}
-
-				// connect to manager
-				Executors[executorIndex] = new GExecutor(rep, oep, executorId, Config.Dedicated, new SecurityCredentials(Config.Username, Config.Password), AppDomain.CurrentDomain.BaseDirectory);
-			
-				if (ExecConnectEvent!=null)
-				{
-					ExecConnectEvent("Updating executor configuration.",80);
-				}
-				Config.ConnectVerified = true;
-				Config.SetIdAtLocation(executorIndex, Executors[executorIndex].Id);
-				Config.Dedicated = Executors[executorIndex].Dedicated;
-
-				if (ExecConnectEvent!=null)
-				{
-					ExecConnectEvent("Saved configuration.",60);
-				}
-
-
-				if (ExecConnectEvent!=null)
-				{
-					ExecConnectEvent("Connected successfully.",100);
-				}
-
-				Executors[executorIndex].GotDisconnected += new GotDisconnectedEventHandler(GExecutor_GotDisconnected);
-				Executors[executorIndex].NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(GExecutor_NonDedicatedExecutingStatusChanged);
-
-			}
-
-			Config.Slz();
+			logger.Debug("Created own-end-point");
+			// connect to manager
+			_Executor = new GExecutor(rep, oep, Config.Id, Config.Dedicated, Config.AutoRevertToNDE, 
+                new SecurityCredentials(Config.Username, Config.Password), ExecutorUtil.BaseDirectory);
 
 			Config.ConnectVerified = true;
+			Config.Id = _Executor.Id;
+			Config.Dedicated = _Executor.Dedicated;
+
+			_Executor.GotDisconnected += new GotDisconnectedEventHandler(GExecutor_GotDisconnected);
+			_Executor.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(GExecutor_NonDedicatedExecutingStatusChanged);
+
+			Config.Slz();
 
 			logger.Info("Connected successfully.");
 		}
@@ -180,8 +102,26 @@ namespace Alchemi.Executor
 		{
 			int retryCount = 0;
 			const int DEFAULT_RETRY_INTERVAL = 30; //30 seconds
+
+            //first unregister channel etc... wait for a bit and then start  again.
+            try
+            {
+                if (_Executor != null)
+                    _Executor.UnRemoteSelf();
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(" Error unremoting self when trying to Re-connect. ", ex);
+            }
+
 			while (true)
 			{
+                //play safe & also wait for a bit first...
+                if (retryInterval < 0 || retryInterval > System.Int32.MaxValue)
+                    retryInterval = DEFAULT_RETRY_INTERVAL;
+
+                Thread.Sleep(retryInterval * 1000); //convert to milliseconds
+
 				if (maxRetryCount >= 0 && retryCount < maxRetryCount)
 					break;
 
@@ -189,41 +129,29 @@ namespace Alchemi.Executor
 				retryCount++;
 				try //handle the error since we want to retry later.
 				{
-					Connect();						
+					Connect();
 				}
 				catch (Exception ex)
 				{
 					//ignore the error. retry later.
 					logger.Debug("Error re-connecting attempt: " + retryCount, ex);
-				} 
+				}
 
-				if (!Connected)
-				{
-					//play safe.
-					if (retryInterval<0 || retryInterval>System.Int32.MaxValue)
-						retryInterval = DEFAULT_RETRY_INTERVAL;
-					Thread.Sleep(retryInterval*1000); //convert to milliseconds
-				}
-				else
-				{
-					break;
-				}
+                if (Connected)
+                    break;
 			}
 
 			//if Executor is null, then it is not Connected. The Connected property actually checks for that.
-			if (Executors!=null)
+			if (_Executor!=null)
 			{
-				foreach (GExecutor executor in Executors)
+				if (_Executor.Dedicated)
 				{
-					if (executor.Dedicated)
-					{
-						logger.Debug("Reconnected successfully.[Dedicated mode.]");
-					}
-					else //not dedicated...
-					{
-						logger.Debug("Reconnected successfully.[Non-dedicated mode.]");
-						executor.StartNonDedicatedExecuting(1000);
-					}
+					logger.Debug("Reconnected successfully.[Dedicated mode.]");
+				}
+				else //not dedicated...
+				{
+					logger.Debug("Reconnected successfully.[Non-dedicated mode.]");
+					_Executor.StartNonDedicatedExecuting(1000);
 				}
 			}
 		}
@@ -232,18 +160,8 @@ namespace Alchemi.Executor
 		{
 			if (Connected)
 			{
-				if (Executors != null)
-				{
-					foreach (GExecutor executor in Executors)
-					{
-						if (executor != null)
-						{
-							executor.Disconnect();
-						}
-					}
-				}
-
-				Executors = null;
+                _Executor.Disconnect();
+				_Executor = null;
 				logger.Info("Disconnected successfully.");
 			}
 		}
@@ -272,7 +190,8 @@ namespace Alchemi.Executor
 				}
 			}
 
-			//this needs to be a seperate if-block, since we may have a problem getting existing config. then we use default
+			//this needs to be a seperate if-block, 
+            //since we may have a problem getting existing config. then we use default
 			if (useDefault)
 			{
 				Config = new Configuration();
@@ -281,7 +200,7 @@ namespace Alchemi.Executor
 		}
 
 		/// <summary>
-		/// Returns a value specifying whether the Connection has been verified previously.
+		/// Returns a name specifying whether the Connection has been verified previously.
 		/// </summary>
 		public bool ConnectVerified
 		{
@@ -299,7 +218,35 @@ namespace Alchemi.Executor
 			}
 			
 			Disconnect();
+
+            Cleanup();
 		}
+
+        private void Cleanup()
+        {
+            //handle errors since clean up shouldnt hold up the other actions.
+            try
+            {
+                logger.Debug("Cleaning up all apps before disconnect...");
+                string datDir = ExecutorUtil.DataDirectory;
+                string[] dirs = Directory.GetDirectories(datDir);
+                foreach (string s in dirs)
+                {
+                    //handle error since clean up shouldnt hold up the other actions.
+                    try
+                    {
+                        Directory.Delete(s, true);
+                        logger.Debug("Deleted directory: " + s);
+                    }
+                    catch { }
+                }
+                logger.Debug("Clean up all apps done.");
+            }
+            catch (Exception e)
+            {
+                logger.Debug("Clean up error. Continuing...", e);
+            }
+        }
 
 		/// <summary>
 		/// Starts the Executor Container
@@ -331,7 +278,7 @@ namespace Alchemi.Executor
 				if (GotDisconnected!=null)
 					GotDisconnected();
 			}catch {}
-		}
+		} //TODO REVIEW Catch ALLs everywhere
 
 		private void GExecutor_NonDedicatedExecutingStatusChanged()
 		{
@@ -346,12 +293,9 @@ namespace Alchemi.Executor
 
 		public void UpdateHeartBeatBInterval(int newHBInterval)
 		{
-			if (Executors != null)
+			if (_Executor != null)
 			{
-				foreach (GExecutor executor in Executors)
-				{
-					executor.HeartBeatInterval = newHBInterval;
-				}
+	            _Executor.HeartBeatInterval = newHBInterval;
 			}
 		}
 

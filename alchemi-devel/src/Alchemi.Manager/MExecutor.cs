@@ -44,11 +44,10 @@ namespace Alchemi.Manager
 		// Create a logger for use in this class
 		private static readonly Logger logger = new Logger();
 		
+        //contains the remote-refs for the executors
 		private readonly static Hashtable _DedicatedExecutors = new Hashtable();
         
         private string _Id;
-
-		private const int MAX_CONCURRENT_THREADS = 1;
 
 		/// <summary>
 		/// Creates a new instance of the MExecutor class.
@@ -62,7 +61,7 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Connects to the executor in non-dedicated mode.
 		/// </summary>
-        public void ConnectNonDedicated(RemoteEndPoint ep)
+        public void ConnectNonDedicated(EndPoint ep)
         {
 			logger.Debug("Trying to connect NON-Dedicated to executor: "+_Id);
             if (!VerifyExists(ep))
@@ -88,7 +87,7 @@ namespace Alchemi.Manager
 		/// Connects to the executor in dedicated mode.
 		/// </summary>
 		/// <param name="ep">end point of the executor</param>
-        public void ConnectDedicated(RemoteEndPoint ep)
+        public void ConnectDedicated(EndPoint ep)
         {
 			logger.Debug("Trying to connect Dedicated to executor: "+_Id);
 			if (!VerifyExists(ep))
@@ -101,7 +100,7 @@ namespace Alchemi.Manager
             IExecutor executor;
             try
             {
-                executor = (IExecutor) GNode.GetRemoteRef(ep, _Id);
+                executor = (IExecutor) GNode.GetRemoteRef(ep);
                 executor.PingExecutor(); //connect back to executor.
                 success = true;
 				logger.Debug("Connected dedicated. Executor_id="+_Id);
@@ -117,11 +116,15 @@ namespace Alchemi.Manager
 				
 				logger.Debug("Updated db after ping back to executor. dedicated executor_id="+_Id + ", dedicated = true, connected = "+success);
 				// update hashtable
-				if (!_DedicatedExecutors.ContainsKey(_Id))
-				{
-					_DedicatedExecutors.Add(_Id, executor);
-					logger.Debug("Added to list of dedicated executors: executor_id="+_Id);
-				}
+                //for thread-safety
+                lock (_DedicatedExecutors)
+                {
+                    if (!_DedicatedExecutors.ContainsKey(_Id))
+                    {
+                        _DedicatedExecutors.Add(_Id, executor);
+                        logger.Debug("Added to list of dedicated executors: executor_id=" + _Id);
+                    }
+                }
 			}
             catch (Exception e)
             {
@@ -144,26 +147,21 @@ namespace Alchemi.Manager
 		/// </summary>
 		/// <param name="ep"></param>
 		/// <returns></returns>
-        private bool VerifyExists(RemoteEndPoint ep)
+        private bool VerifyExists(EndPoint ep)
         {
             bool exists = false;
-
+            //TODO: review the use of this method!
             try
             {
-				logger.Debug("Checking if executor :"+_Id+" exists in db");
-
 				ExecutorStorageView executorStorage = ManagerStorageFactory.ManagerStorage().GetExecutor(_Id);
-
-				bool remoteEndPointNullOrHostIsSameAsExecutor;
-				remoteEndPointNullOrHostIsSameAsExecutor = 
-					ep == null || (ep != null && executorStorage.HostName == ep.Host);
-
-				if (executorStorage != null && remoteEndPointNullOrHostIsSameAsExecutor)
+				if (executorStorage != null)
 				{
-					exists = true;
+				    bool remoteEndPointNullOrHostIsSameAsExecutor;
+				    remoteEndPointNullOrHostIsSameAsExecutor = 
+					    ep == null || (ep != null && executorStorage.HostName == ep.Host);
+					
+                    exists = remoteEndPointNullOrHostIsSameAsExecutor;
 				}
-
-				logger.Debug("Executor :" + _Id + " exists in db=" + exists);
             }
             catch (Exception ex)
             {
@@ -213,7 +211,12 @@ namespace Alchemi.Manager
         {
             get
             {
-                return (IExecutor) _DedicatedExecutors[_Id];
+                IExecutor executor = null; //TODO use generics, synchronized hashtable
+                lock (_DedicatedExecutors)
+                {
+                    executor = (IExecutor)_DedicatedExecutors[_Id];
+                }
+                return executor;
             }
         }
 
@@ -230,44 +233,24 @@ namespace Alchemi.Manager
 		public bool ExecuteThread(DedicatedSchedule ds)
 		{
 			bool success = false;
-
-			//kna added this to allow controlling MAX_CONCURRENT_THREADS per executor. Aug19. 05
-			//find # of executing threads from the db.
-			int numConcurrentThreads = 0;
-
 			MThread mt = new MThread(ds.TI);
-
 			try
 			{
-				numConcurrentThreads = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(
-					_Id, 
-					ThreadState.Ready, 
-					ThreadState.Scheduled,
-					ThreadState.Started);
+				/// tb@tbiro.com - Feb 28, 2006:
+				/// moved the thread status updating here from ManagerContainer.StartDispatch 
+				/// to make sure that the thread state is written in the right order
+				mt.CurrentExecutorId = ds.ExecutorId;
+				mt.State = ThreadState.Scheduled;
 
-				if (numConcurrentThreads >= MAX_CONCURRENT_THREADS)
-				{
-					success = false;
-				}
-				else
-				{
-					/// tb@tbiro.com - Feb 28, 2006:
-					/// moved the thread status updating here from ManagerContainer.ScheduleDedicated 
-					/// to make sure that the thread state is written in the right order
-					mt.CurrentExecutorId = ds.ExecutorId;
-					mt.State = ThreadState.Scheduled;
+				logger.Debug(String.Format("Dispatching thread {0} to executor: {1}", ds.TI.ThreadId, ds.ExecutorId));
 
-					logger.Debug(String.Format("Scheduling thread {0} to executor: {1}", ds.TI.ThreadId, ds.ExecutorId));
+                // michael@meadows.force9.co.uk - Jul 17, 2006: changed to parameterized thread start.
+                ExecuteCurrentThreadParameters oParameters = new ExecuteCurrentThreadParameters(ds.TI, mt);
+                Thread dispatchThread = new Thread(new ParameterizedThreadStart(this.ExecuteCurrentThread));
+				dispatchThread.Name = "ScheduleDispatchThread";
+				dispatchThread.Start(oParameters);
 
-                    // michael@meadows.force9.co.uk - Jul 17, 2006: changed to parameterized thread start.
-                    ExecuteCurrentThreadParameters oParameters = new ExecuteCurrentThreadParameters(ds.TI, mt);
-                    Thread dispatchThread = new Thread(new ParameterizedThreadStart(this.ExecuteCurrentThread));
-					dispatchThread.Name = "ScheduleDispatchThread";
-					dispatchThread.Start(oParameters);
-
-					success = true;
-				}
-
+				success = true;
 			}
 			catch (Exception ex)
 			{

@@ -1,0 +1,3550 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.35" Name="My FxCop Project">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-au" />
+  <VersionAware>False</VersionAware>
+  <OverrideRuleVisibilities>True</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+ </ProjectOptions>
+ <Targets>
+  <Target Name="$(ProjectDir)/../bin/Core/Alchemi.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="False" AllRulesEnabled="False" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.35">
+  <Namespaces>
+   <Namespace Name="Alchemi.Core">
+    <Messages>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Alchemi.Core.Executor">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2006-08-11 07:54:25Z">
+      <Issue>
+       <Item>Alchemi.Core.Executor</Item>
+      </Issue>
+     </Message>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core.Executor</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Alchemi.Core.Manager">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2006-08-11 07:54:25Z">
+      <Issue>
+       <Item>Alchemi.Core.Manager</Item>
+      </Issue>
+     </Message>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core.Manager</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Alchemi.Core.Manager.Storage">
+    <Messages>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core.Manager.Storage</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Alchemi.Core.Owner">
+    <Messages>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core.Owner</Item>
+      </Issue>
+      <Notes>
+       <User Name="Krishna">
+        <Note Id="6" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Alchemi.Core.Utility">
+    <Messages>
+     <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2006-08-11 07:54:25Z">
+      <Issue Name="Namespace">
+       <Item>Alchemi</Item>
+       <Item>Alchemi.Core.Utility</Item>
+      </Issue>
+      <Notes>
+       <User Name="Krishna">
+        <Note Id="1" />
+       </User>
+      </Notes>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/../bin/Core/Alchemi.Core.dll">
+    <Modules>
+     <Module Name="alchemi.core.dll">
+      <Messages>
+       <Message TypeName="AssembliesShouldDeclareMinimumSecurity" Category="Microsoft.Usage" CheckId="CA2209" Created="2006-08-12 02:40:22Z">
+        <Issue>
+         <Item>Alchemi.Core</Item>
+        </Issue>
+       </Message>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2006-08-12 02:40:22Z">
+        <Issue Name="NoStrongName">
+         <Item>Alchemi.Core</Item>
+        </Issue>
+       </Message>
+       <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Created="2006-08-12 02:40:22Z">
+        <Issue Name="NoAttr">
+         <Item>Alchemi.Core</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="">
+        <Types>
+         <Type Name="Config">
+          <Messages>
+           <Message TypeName="DeclareTypesInNamespaces" Category="Microsoft.Design" CheckId="CA1050" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Config</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="Read(System.String):Config">
+            <Messages>
+             <Message Id="filename" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>filename</Item>
+               <Item>parameter</Item>
+               <Item>filename</Item>
+               <Item>fileName</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Config.Read(String):Config</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>field</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Write():System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Config.Write():Void</Item>
+               <Item>System.Object</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotDisposeObjectsMultipleTimes" Category="Microsoft.Usage" CheckId="CA2202" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Config.Write():Void</Item>
+               <Item>'s'</Item>
+              </Issue>
+             </Message>
+             <Message Id="file" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Config.Write():Void</Item>
+               <Item>file</Item>
+               <Item>System.String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core">
+        <Types>
+         <Type Name="AuthenticationException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.AuthenticationException</Item>
+             <Item>public AuthenticationException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.AuthenticationException</Item>
+             <Item>public AuthenticationException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>AuthenticationException.AuthenticationException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="AuthorizationException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.AuthorizationException</Item>
+             <Item>public AuthorizationException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.AuthorizationException</Item>
+             <Item>public AuthorizationException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>AuthorizationException.AuthorizationException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ConnectBackException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.ConnectBackException</Item>
+             <Item>public ConnectBackException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.ConnectBackException</Item>
+             <Item>public ConnectBackException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>ConnectBackException.ConnectBackException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="CrossPlatformHelper">
+          <Messages>
+           <Message TypeName="StaticHolderTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1053" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>CrossPlatformHelper</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="AbortJob(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.Void">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.AbortJob(IManager, SecurityCredentials, ThreadIdentifier):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AbortTask(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String):System.Void">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.AbortTask(IManager, SecurityCredentials, String):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AddJob(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String,System.Int32,System.Int32,System.String):System.Void">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.AddJob(IManager, SecurityCredentials, String, Int32, Int32, String):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CreateTask(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials):System.String">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.CreateTask(IManager, SecurityCredentials):String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CreateTask(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String):System.String">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.CreateTask(IManager, SecurityCredentials, String):String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetApplicationState(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String):System.Int32">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.GetApplicationState(IManager, SecurityCredentials, String):Int32</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetFailedThreadException(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.String">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.GetFailedThreadException(IManager, SecurityCredentials, ThreadIdentifier):String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetFinishedJobs(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String):System.String">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.GetFinishedJobs(IManager, SecurityCredentials, String):String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetJobState(Alchemi.Core.IManager,Alchemi.Core.SecurityCredentials,System.String,System.Int32):System.Int32">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'manager'</Item>
+               <Item>CrossPlatformHelper.GetJobState(IManager, SecurityCredentials, String, Int32):Int32</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="EndPoint">
+          <Messages>
+           <Message Id="EndPoint" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+            <Issue Name="ShouldBeDiscreteTerm">
+             <Item>EndPoint</Item>
+             <Item>class</Item>
+             <Item>EndPoint</Item>
+             <Item>Endpoint</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="ExecutorCommException">
+          <Messages>
+           <Message Id="Comm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Type">
+             <Item>Comm</Item>
+             <Item>Alchemi.Core.ExecutorCommException</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ExecutorCommException</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.ExecutorCommException</Item>
+             <Item>public ExecutorCommException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.ExecutorCommException</Item>
+             <Item>public ExecutorCommException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>ExecutorCommException.ExecutorCommException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ExecutorId">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>ExecutorId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GNode">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_Channel</Item>
+               <Item>System.Runtime.Remoting.Channels.Tcp.TcpChannel</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_ChannelRegistered</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_Manager</Item>
+               <Item>Alchemi.Core.IManager</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_ManagerEP</Item>
+               <Item>Alchemi.Core.EndPoint</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode()</Item>
+               <Item>_OwnEP</Item>
+               <Item>Alchemi.Core.EndPoint</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(Alchemi.Core.EndPoint,Alchemi.Core.EndPoint,Alchemi.Core.SecurityCredentials,System.String)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.GNode(EndPoint, EndPoint, SecurityCredentials, String)</Item>
+               <Item>_Channel</Item>
+               <Item>System.Runtime.Remoting.Channels.Tcp.TcpChannel</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(EndPoint, EndPoint, SecurityCredentials, String)</Item>
+               <Item>_ChannelRegistered</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(EndPoint, EndPoint, SecurityCredentials, String)</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(EndPoint, EndPoint, SecurityCredentials, String)</Item>
+               <Item>_Manager</Item>
+               <Item>Alchemi.Core.IManager</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(Alchemi.Core.Owner.GConnection)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_Channel</Item>
+               <Item>System.Runtime.Remoting.Channels.Tcp.TcpChannel</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_ChannelRegistered</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_Manager</Item>
+               <Item>Alchemi.Core.IManager</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_ManagerEP</Item>
+               <Item>Alchemi.Core.EndPoint</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GNode.GNode(GConnection)</Item>
+               <Item>_OwnEP</Item>
+               <Item>Alchemi.Core.EndPoint</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_Initted">
+            <Messages>
+             <Message Id="Initted" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Initted</Item>
+               <Item>GNode._Initted</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GConnection">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-08-12 02:40:22Z" FixCategory="Breaking">
+              <Issue>
+               <Item>GNode.GConnection:GConnection</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="set_GConnection(Alchemi.Core.Owner.GConnection):System.Void">
+              <Messages>
+               <Message Id="value" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-08-12 02:40:22Z" FixCategory="Breaking">
+                <Issue>
+                 <Item>value</Item>
+                 <Item>GNode.set_GConnection(GConnection):Void</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="GetRemoteRef(Alchemi.Core.EndPoint,System.String):Alchemi.Core.GNode">
+            <Messages>
+             <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.GetRemoteRef(EndPoint, String):GNode</Item>
+               <Item>Activator.GetObject(Type, String):Object</Item>
+               <Item>&#xD;&#xA;-&gt;System.Activator.GetObject(System.Type,System.String) : Object&#xD;&#xA;-&gt;Alchemi.Core.GNode.GetRemoteRef(Alchemi.Core.EndPoint,System.String) : GNode</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'remoteEP'</Item>
+               <Item>GNode.GetRemoteRef(EndPoint, String):GNode</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="UnRemoteSelf():System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.UnRemoteSelf():Void</Item>
+               <Item>System.Object</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GNode.UnRemoteSelf():Void</Item>
+               <Item>RemotingServices.Disconnect(MarshalByRefObject):Boolean</Item>
+               <Item>&#xD;&#xA;-&gt;System.Runtime.Remoting.RemotingServices.Disconnect(System.MarshalByRefObject) : Boolean&#xD;&#xA;-&gt;Alchemi.Core.GNode.UnRemoteSelf : Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Un</Item>
+               <Item>GNode.UnRemoteSelf():Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ICrossPlatformManager">
+          <Members>
+           <Member Name="AddJob(System.String,System.String,System.String,System.Int32,System.Int32,System.String):System.Void">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CreateTask(System.String,System.String):System.String">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetFinishedJobs(System.String,System.String,System.String):System.String">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetJobState(System.String,System.String,System.String,System.Int32):System.Int32">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SubmitTask(System.String,System.String,System.String):System.String">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IExecutor">
+          <Members>
+           <Member Name="Manager_AbortThread(Alchemi.Core.Owner.ThreadIdentifier):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Manager_AbortThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Manager_CleanupApplication(System.String):System.Void">
+            <Messages>
+             <Message Id="0#appid" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>IExecutor.Manager_CleanupApplication(String):Void</Item>
+               <Item>appid</Item>
+               <Item>appid</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Manager_CleanupApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Manager_ExecuteThread(Alchemi.Core.Owner.ThreadIdentifier):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Manager_ExecuteThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IManager">
+          <Members>
+           <Member Name="Admon_AddUsers(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.UserStorageView[]):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_AddUsers(SecurityCredentials, UserStorageView[]):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_AddUsers</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_DeleteApplication(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.ApplicationStorageView):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_DeleteApplication(SecurityCredentials, ApplicationStorageView):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_DeleteApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_DeleteGroup(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.GroupStorageView):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_DeleteGroup(SecurityCredentials, GroupStorageView):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_DeleteGroup</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_DeleteThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.ThreadStorageView):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_DeleteThread(SecurityCredentials, ThreadStorageView):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_DeleteThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_DeleteUser(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.UserStorageView):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_DeleteUser(SecurityCredentials, UserStorageView):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_DeleteUser</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetExecutor(Alchemi.Core.SecurityCredentials,System.String):Alchemi.Core.Manager.Storage.ExecutorStorageView">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetExecutor(SecurityCredentials, String):ExecutorStorageView</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetExecutor</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetExecutors(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.ExecutorStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetExecutors(SecurityCredentials):ExecutorStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetExecutors</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetGroup(Alchemi.Core.SecurityCredentials,System.Int32):Alchemi.Core.Manager.Storage.GroupStorageView">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetGroup(SecurityCredentials, Int32):GroupStorageView</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetGroup</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetGroupPermissions(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.GroupStorageView):Alchemi.Core.Manager.Storage.PermissionStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetGroupPermissions(SecurityCredentials, GroupStorageView):PermissionStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetGroupPermissions</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetGroups(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.GroupStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetGroups(SecurityCredentials):GroupStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetGroups</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetLiveApplicationList(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.ApplicationStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetLiveApplicationList(SecurityCredentials):ApplicationStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetLiveApplicationList</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetPermissions(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.PermissionStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetPermissions(SecurityCredentials):PermissionStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetPermissions</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetSystemSummary(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.SystemSummary">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetSystemSummary(SecurityCredentials):SystemSummary</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetSystemSummary</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetThreadList(Alchemi.Core.SecurityCredentials,System.String):Alchemi.Core.Manager.Storage.ThreadStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetThreadList(SecurityCredentials, String):ThreadStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetThreadList</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetThreadList(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.Owner.ThreadState):Alchemi.Core.Manager.Storage.ThreadStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetThreadList(SecurityCredentials, String, ThreadState):ThreadStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetThreadList</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetUserApplicationList(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.ApplicationStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetUserApplicationList(SecurityCredentials):ApplicationStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetUserApplicationList</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_GetUserList(Alchemi.Core.SecurityCredentials):Alchemi.Core.Manager.Storage.UserStorageView[]">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_GetUserList(SecurityCredentials):UserStorageView[]</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_GetUserList</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_PerformStorageMaintenance(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.StorageMaintenanceParameters):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_PerformStorageMaintenance(SecurityCredentials, StorageMaintenanceParameters):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_PerformStorageMaintenance</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Admon_UpdateUsers(Alchemi.Core.SecurityCredentials,Alchemi.Core.Manager.Storage.UserStorageView[]):System.Void">
+            <Messages>
+             <Message Id="Admon" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon</Item>
+               <Item>IManager.Admon_UpdateUsers(SecurityCredentials, UserStorageView[]):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Admon_UpdateUsers</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_ConnectDedicatedExecutor(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.EndPoint):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_ConnectDedicatedExecutor</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_ConnectNonDedicatedExecutor(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.EndPoint):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_ConnectNonDedicatedExecutor</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_DisconnectExecutor(Alchemi.Core.SecurityCredentials,System.String):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_DisconnectExecutor</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_GetApplicationManifest(Alchemi.Core.SecurityCredentials,System.String):Alchemi.Core.Owner.FileDependencyCollection">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_GetApplicationManifest</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_GetNextScheduledThreadIdentifier(Alchemi.Core.SecurityCredentials,System.String):Alchemi.Core.Owner.ThreadIdentifier">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_GetNextScheduledThreadIdentifier</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_GetThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.Byte[]">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_GetThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_Heartbeat(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.Executor.HeartbeatInfo):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_Heartbeat</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_RegisterNewExecutor(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.Executor.ExecutorInfo):System.String">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_RegisterNewExecutor</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_RelinquishThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_RelinquishThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Executor_SetFinishedThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier,System.Byte[],System.Exception):System.Void">
+            <Messages>
+             <Message Id="3#e" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ParameterOneLetter">
+               <Item>IManager.Executor_SetFinishedThread(SecurityCredentials, ThreadIdentifier, Byte[], Exception):Void</Item>
+               <Item>e</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Executor_SetFinishedThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_AbortThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_AbortThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_CleanupApplication(Alchemi.Core.SecurityCredentials,System.String):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_CleanupApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_CreateApplication(Alchemi.Core.SecurityCredentials):System.String">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_CreateApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_GetApplicationState(Alchemi.Core.SecurityCredentials,System.String):Alchemi.Core.Owner.ApplicationState">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_GetApplicationState</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_GetFailedThreadException(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):System.Exception">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_GetFailedThreadException</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_GetFinishedThreadCount(Alchemi.Core.SecurityCredentials,System.String):System.Int32">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_GetFinishedThreadCount</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_GetFinishedThreads(Alchemi.Core.SecurityCredentials,System.String):System.Byte[][]">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_GetFinishedThreads</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_GetThreadState(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier):Alchemi.Core.Owner.ThreadState">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_GetThreadState</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_HasApplicationManifest(Alchemi.Core.SecurityCredentials,System.String):System.Boolean">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_HasApplicationManifest</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_SetApplicationManifest(Alchemi.Core.SecurityCredentials,System.String,Alchemi.Core.Owner.FileDependencyCollection):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_SetApplicationManifest</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_SetApplicationName(Alchemi.Core.SecurityCredentials,System.String,System.String):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_SetApplicationName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_SetThread(Alchemi.Core.SecurityCredentials,Alchemi.Core.Owner.ThreadIdentifier,System.Byte[]):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_SetThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_StopApplication(Alchemi.Core.SecurityCredentials,System.String):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_StopApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Owner_VerifyApplication(Alchemi.Core.SecurityCredentials,System.String):System.Boolean">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Owner_VerifyApplication</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="InvalidApplicationException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.InvalidApplicationException</Item>
+             <Item>public InvalidApplicationException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.InvalidApplicationException</Item>
+             <Item>public InvalidApplicationException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>InvalidApplicationException.InvalidApplicationException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="InvalidExecutorException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.InvalidExecutorException</Item>
+             <Item>public InvalidExecutorException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.InvalidExecutorException</Item>
+             <Item>public InvalidExecutorException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>InvalidExecutorException.InvalidExecutorException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="InvalidThreadException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.InvalidThreadException</Item>
+             <Item>public InvalidThreadException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.InvalidThreadException</Item>
+             <Item>public InvalidThreadException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>InvalidThreadException.InvalidThreadException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IOwner">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>IOwner</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="LogEventArgs">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>LogEventArgs.LogEventArgs()</Item>
+               <Item>exception</Item>
+               <Item>System.Exception</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="LogEventHandler">
+          <Messages>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.LogEventHandler</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="Logger">
+          <Members>
+           <Member Name="InitializeLifetimeService():System.Object">
+            <Messages>
+             <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Created="2006-08-12 02:40:22Z">
+              <Issue Name="BaseOnly">
+               <Item>Logger.InitializeLifetimeService():Object</Item>
+               <Item>MarshalByRefObject.InitializeLifetimeService():Object</Item>
+               <Item>[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.Infrastructure)]</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="LogHandler">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>LogHandler</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RaiseLogEvent(System.String,Alchemi.Core.LogLevel,System.Exception):System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Logger.RaiseLogEvent(String, LogLevel, Exception):Void</Item>
+               <Item>System.Object</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>RaiseLogEvent</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="RaiseLogEvent(System.String,Alchemi.Core.LogLevel,System.Exception,System.String,System.String):System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Logger.RaiseLogEvent(String, LogLevel, Exception, String, String):Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-08-12 02:40:22Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>Logger.RaiseLogEvent(String, LogLevel, Exception, String, String):Void</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>RaiseLogEvent</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ManifestFileException">
+          <Messages>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ManifestFileException</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.ManifestFileException</Item>
+             <Item>public ManifestFileException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.ManifestFileException</Item>
+             <Item>public ManifestFileException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>ManifestFileException.ManifestFileException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationId">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>ApplicationId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="RemotingException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.RemotingException</Item>
+             <Item>protected RemotingException(SerializationInfo, StreamingContext)</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.RemotingException</Item>
+             <Item>public RemotingException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.RemotingException</Item>
+             <Item>public RemotingException(String)</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Created="2006-08-12 02:40:22Z">
+            <Issue Level="Error">
+             <Item>RemotingException</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="SecurityCredentials">
+          <Members>
+           <Member Name=".ctor(System.String,System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Password">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Password</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>field</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Username</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ThreadDatFileException">
+          <Messages>
+           <Message TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ThreadDatFileException</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.ThreadDatFileException</Item>
+             <Item>public ThreadDatFileException()</Item>
+            </Issue>
+            <Issue>
+             <Item>Alchemi.Core.ThreadDatFileException</Item>
+             <Item>public ThreadDatFileException(String)</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <Messages>
+             <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Accessibility">
+               <Item>ThreadDatFileException.ThreadDatFileException(SerializationInfo, StreamingContext)</Item>
+               <Item>protected</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationId">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>ApplicationId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ThreadId">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>ThreadId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core.Executor">
+        <Types>
+         <Type Name="ExecutorInfo">
+          <Messages>
+           <Message TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Equals">
+             <Item>Alchemi.Core.Executor.ExecutorInfo</Item>
+            </Issue>
+            <Issue Name="op_Equality">
+             <Item>Alchemi.Core.Executor.ExecutorInfo</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="_Hostname">
+            <Messages>
+             <Message Id="Hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Hostname</Item>
+               <Item>field</Item>
+               <Item>_Hostname</Item>
+               <Item>HostName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_MemLimit">
+            <Messages>
+             <Message Id="Mem" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Mem</Item>
+               <Item>ExecutorInfo._MemLimit</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CostPerCPUSec">
+            <Messages>
+             <Message Id="Member" TypeName="LongAcronymsShouldBePascalCased" Category="Microsoft.Naming" CheckId="CA1705" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>ExecutorInfo.CostPerCPUSec:Single</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CPULimit">
+            <Messages>
+             <Message Id="Member" TypeName="LongAcronymsShouldBePascalCased" Category="Microsoft.Naming" CheckId="CA1705" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>ExecutorInfo.CPULimit:Int32</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Hostname">
+            <Messages>
+             <Message Id="Hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Hostname</Item>
+               <Item>property</Item>
+               <Item>Hostname</Item>
+               <Item>HostName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="MemLimit">
+            <Messages>
+             <Message Id="Mem" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Mem</Item>
+               <Item>ExecutorInfo.MemLimit:Single</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Number_of_CPUs">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Number_of_CPUs</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="HeartbeatInfo">
+          <Messages>
+           <Message TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Equals">
+             <Item>Alchemi.Core.Executor.HeartbeatInfo</Item>
+            </Issue>
+            <Issue Name="op_Equality">
+             <Item>Alchemi.Core.Executor.HeartbeatInfo</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core.Manager">
+        <Types>
+         <Type Name="Permission">
+          <Messages>
+           <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.Manager.Permission</Item>
+             <Item>Permission</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core.Manager.Storage">
+        <Types>
+         <Type Name="ApplicationStorageView">
+          <Members>
+           <Member Name=".ctor(Alchemi.Core.Owner.ApplicationState,System.DateTime,System.Boolean,System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,Alchemi.Core.Owner.ApplicationState,System.DateTime,System.Boolean,System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_username">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>field</Item>
+               <Item>m_username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="TotalThreads">
+            <Accessors>
+             <Accessor Name="get_TotalThreads():System.Int32">
+              <Messages>
+               <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2006-08-12 02:40:22Z">
+                <Issue Name="TooGeneric">
+                 <Item>ApplicationStorageView.get_TotalThreads():Int32</Item>
+                 <Item>System.Exception</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="UnfinishedThreads">
+            <Accessors>
+             <Accessor Name="get_UnfinishedThreads():System.Int32">
+              <Messages>
+               <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2006-08-12 02:40:22Z">
+                <Issue Name="TooGeneric">
+                 <Item>ApplicationStorageView.get_UnfinishedThreads():Int32</Item>
+                 <Item>System.Exception</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>property</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ExecutorStorageView">
+          <Members>
+           <Member Name=".ctor(System.Boolean,System.Boolean,System.DateTime,System.String,System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.Single)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.Boolean,System.Boolean,System.String,System.String,System.Int32,System.Single,System.Single,System.Int32,System.String,System.String)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Boolean,System.Boolean,System.DateTime,System.String,System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.Single)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Boolean,System.Boolean,System.DateTime,System.String,System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single,System.Int32,System.String,System.String)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Boolean,System.Boolean,System.String,System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.Single)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Boolean,System.Boolean,System.String,System.String,System.Int32,System.Single,System.Single,System.Int32,System.String,System.String)">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>parameter</Item>
+               <Item>hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_hostname">
+            <Messages>
+             <Message Id="hostname" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>hostname</Item>
+               <Item>field</Item>
+               <Item>m_hostname</Item>
+               <Item>hostName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_username">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>field</Item>
+               <Item>m_username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Os">
+            <Messages>
+             <Message Id="Member" TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Os</Item>
+               <Item>ExecutorStorageView.Os:String</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>property</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IManagerStorage">
+          <Members>
+           <Member Name="GetApplicationThreadCount(System.String,System.Int32&amp;,System.Int32&amp;):System.Void">
+            <Messages>
+             <Message Id="1#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>totalthreads</Item>
+              </Issue>
+             </Message>
+             <Message Id="2#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>unfinishedThreads</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#totalthreads" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>IManagerStorage.GetApplicationThreadCount(String, Int32&amp;, Int32&amp;):Void</Item>
+               <Item>totalthreads</Item>
+               <Item>totalthreads</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetSystemSummary():Alchemi.Core.Manager.Storage.SystemSummary">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-08-12 02:40:22Z">
+              <Issue Certainty="50">
+               <Item>GetSystemSummary</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IManagerStorageSetup">
+          <Members>
+           <Member Name="SetUpStorage():System.Void">
+            <Messages>
+             <Message Id="SetUp" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>SetUp</Item>
+               <Item>method</Item>
+               <Item>SetUpStorage</Item>
+               <Item>Setup</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="TearDownStorage():System.Void">
+            <Messages>
+             <Message Id="TearDown" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>TearDown</Item>
+               <Item>method</Item>
+               <Item>TearDownStorage</Item>
+               <Item>Teardown</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PermissionStorageView">
+          <Members>
+           <Member Name="GetPermissionStorageView(Alchemi.Core.Manager.Permission[]):Alchemi.Core.Manager.Storage.PermissionStorageView[]">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'permissions'</Item>
+               <Item>PermissionStorageView.GetPermissionStorageView(Permission[]):PermissionStorageView[]</Item>
+              </Issue>
+              <Issue>
+               <Item>'permissions'</Item>
+               <Item>PermissionStorageView.GetPermissionStorageView(Permission[]):PermissionStorageView[]</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_prmId">
+            <Messages>
+             <Message Id="prm" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>prm</Item>
+               <Item>PermissionStorageView.m_prmId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_prmname">
+            <Messages>
+             <Message Id="prmname" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>prmname</Item>
+               <Item>PermissionStorageView.m_prmname</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="StorageMaintenanceParameters">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>StorageMaintenanceParameters.StorageMaintenanceParameters()</Item>
+               <Item>m_applicationTimeCompletedCutOffSet</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>StorageMaintenanceParameters.StorageMaintenanceParameters()</Item>
+               <Item>m_applicationTimeCreatedCutOffSet</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>StorageMaintenanceParameters.StorageMaintenanceParameters()</Item>
+               <Item>m_executorPingTimeCutOffSet</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>StorageMaintenanceParameters.StorageMaintenanceParameters()</Item>
+               <Item>m_removeAllApplications</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>StorageMaintenanceParameters.StorageMaintenanceParameters()</Item>
+               <Item>m_removeAllExecutors</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationStatesToRemove">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>StorageMaintenanceParameters.ApplicationStatesToRemove:ApplicationState[]</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationTimeCompletedCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>property</Item>
+               <Item>ApplicationTimeCompletedCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationTimeCreatedCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>property</Item>
+               <Item>ApplicationTimeCreatedCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ExecutorPingTimeCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>property</Item>
+               <Item>ExecutorPingTimeCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_applicationTimeCompletedCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>field</Item>
+               <Item>m_applicationTimeCompletedCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_applicationTimeCreatedCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>field</Item>
+               <Item>m_applicationTimeCreatedCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_executorPingTimeCutOffSet">
+            <Messages>
+             <Message Id="OffSet" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>OffSet</Item>
+               <Item>field</Item>
+               <Item>m_executorPingTimeCutOffSet</Item>
+               <Item>Offset</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="UserStorageView">
+          <Members>
+           <Member Name=".ctor(System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.String,System.Int32)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>UserStorageView.UserStorageView(String, String, Int32)</Item>
+               <Item>m_passwordMd5Hash</Item>
+               <Item>System.String</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="m_username">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>field</Item>
+               <Item>m_username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>property</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core.Owner">
+        <Types>
+         <Type Name="EmbeddedFileDependency">
+          <Members>
+           <Member Name="_Base64EncodedContents">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>_Base64EncodedContents</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>_Base64EncodedContents</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="AddFilesToList(System.Collections.ArrayList,System.String,System.String):System.Void">
+            <Messages>
+             <Message Id="subFolder" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>subFolder</Item>
+               <Item>parameter</Item>
+               <Item>subFolderToAddToFileName</Item>
+               <Item>subfolder</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="FileDependencyCollection">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>FileDependencyCollection</Item>
+             <Item>ICollection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>FileDependencyCollection</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="Contains(Alchemi.Core.Owner.FileDependency):System.Boolean">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'dependency'</Item>
+               <Item>FileDependencyCollection.Contains(FileDependency):Boolean</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="FullEventHandler">
+          <Messages>
+           <Message TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.Owner.FullEventHandler</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="Invoke(System.Object,System.EventArgs):System.Void">
+            <Messages>
+             <Message Id="0#o" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>FullEventHandler.Invoke(Object, EventArgs):Void</Item>
+               <Item>o</Item>
+               <Item>oSender</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#o" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>FullEventHandler.Invoke(Object, EventArgs):Void</Item>
+               <Item>o</Item>
+               <Item>oEventArgs</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GApplication">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>_MultiUse</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>_NumThreadsFinished</Item>
+               <Item>System.Int32</Item>
+               <Item>0</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>_Running</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>_stopGetFinished</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication()</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(Alchemi.Core.Owner.GConnection)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>_MultiUse</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>_NumThreadsFinished</Item>
+               <Item>System.Int32</Item>
+               <Item>0</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>_Running</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>_stopGetFinished</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(GConnection)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.Boolean)">
+            <Messages>
+             <Message Id="multiUse" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>multiUse</Item>
+               <Item>parameter</Item>
+               <Item>multiUse</Item>
+               <Item>multiuse</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>_NumThreadsFinished</Item>
+               <Item>System.Int32</Item>
+               <Item>0</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>_Running</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>_stopGetFinished</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+             <Message Id="0#multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>GApplication.GApplication(Boolean)</Item>
+               <Item>multi</Item>
+               <Item>multiUse</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.ComponentModel.IContainer)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>_Initted</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>_MultiUse</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>_NumThreadsFinished</Item>
+               <Item>System.Int32</Item>
+               <Item>0</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>_Running</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>_stopGetFinished</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GApplication(IContainer)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'container'</Item>
+               <Item>GApplication.GApplication(IContainer)</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_Initted">
+            <Messages>
+             <Message Id="Initted" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Initted</Item>
+               <Item>GApplication._Initted</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_MultiUse">
+            <Messages>
+             <Message Id="MultiUse" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeDiscreteTerm">
+               <Item>MultiUse</Item>
+               <Item>field</Item>
+               <Item>_MultiUse</Item>
+               <Item>Multiuse</Item>
+              </Issue>
+             </Message>
+             <Message Id="Multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Multi</Item>
+               <Item>GApplication._MultiUse</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_NumThreadsFinished">
+            <Messages>
+             <Message Id="Num" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>Num</Item>
+               <Item>GApplication._NumThreadsFinished</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationName">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>ApplicationName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Dispose(System.Boolean):System.Void">
+            <Messages>
+             <Message TypeName="DisposeMethodsShouldCallBaseClassDispose" Category="Microsoft.Usage" CheckId="CA2215" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.Dispose(Boolean):Void</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.Dispose(Boolean):Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ApplicationFinish" Kind="Event">
+            <Messages>
+             <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Created="2006-08-12 02:40:22Z">
+              <Issue Name="First">
+               <Item>GApplicationFinish</Item>
+              </Issue>
+              <Issue Name="Second">
+               <Item>GApplicationFinish</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Alchemi.Core.Owner.GApplicationFinish</Item>
+               <Item>EventHandler</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ThreadFailed" Kind="Event">
+            <Messages>
+             <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Created="2006-08-12 02:40:22Z">
+              <Issue Name="First">
+               <Item>GThreadFailed</Item>
+              </Issue>
+              <Issue Name="Second">
+               <Item>GThreadFailed</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Alchemi.Core.Owner.GThreadFailed</Item>
+               <Item>EventHandler</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ThreadFinish" Kind="Event">
+            <Messages>
+             <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Created="2006-08-12 02:40:22Z">
+              <Issue Name="First">
+               <Item>GThreadFinish</Item>
+              </Issue>
+              <Issue Name="Second">
+               <Item>GThreadFinish</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Alchemi.Core.Owner.GThreadFinish</Item>
+               <Item>EventHandler</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="firstuse">
+            <Messages>
+             <Message Id="firstuse" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>firstuse</Item>
+               <Item>GApplication.firstuse</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetFinishedThreads():System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.GetFinishedThreads():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GetFinishedThreads():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+              <Issue>
+               <Item>GApplication.GetFinishedThreads():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Init():System.Void">
+            <Messages>
+             <Message TypeName="DoNotDecreaseInheritedMemberVisibility" Category="Microsoft.Usage" CheckId="CA2222" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.Init():Void</Item>
+               <Item>Alchemi.Core.GNode</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="OnThreadFailed(Alchemi.Core.Owner.GThread,System.Exception):System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.OnThreadFailed(GThread, Exception):Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="OnThreadFinish(Alchemi.Core.Owner.GThread):System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GApplication.OnThreadFinish(GThread):Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GApplicationBuffered">
+          <Members>
+           <Member Name="OnThreadFailed(Alchemi.Core.Owner.GThread,System.Exception):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>thread</Item>
+               <Item>GApplicationBuffered.OnThreadFailed(GThread, Exception):Void</Item>
+               <Item>th</Item>
+               <Item>GApplication.OnThreadFailed(GThread, Exception):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="OnThreadFinish(Alchemi.Core.Owner.GThread):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>thread</Item>
+               <Item>GApplicationBuffered.OnThreadFinish(GThread):Void</Item>
+               <Item>th</Item>
+               <Item>GApplication.OnThreadFinish(GThread):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="StartThread(Alchemi.Core.Owner.GThread):System.Void">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'thread'</Item>
+               <Item>GApplicationBuffered.StartThread(GThread):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ThreadBuffer_Full(System.Object,System.EventArgs):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:56:08Z">
+              <Issue Name="Member">
+               <Item>ThreadBuffer_Full</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GConnection">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnection.GConnection()</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.ComponentModel.IContainer)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnection.GConnection(IContainer)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'container'</Item>
+               <Item>GConnection.GConnection(IContainer)</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Int32,System.String,System.String)">
+            <Messages>
+             <Message Id="username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>username</Item>
+               <Item>parameter</Item>
+               <Item>username</Item>
+               <Item>userName</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnection.GConnection(String, Int32, String, String)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>field</Item>
+               <Item>_Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="components">
+            <Messages>
+             <Message TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>components</Item>
+               <Item>Alchemi.Core.Owner.GConnection</Item>
+               <Item>System.ComponentModel.Container</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Dispose(System.Boolean):System.Void">
+            <Messages>
+             <Message TypeName="DisposeMethodsShouldCallBaseClassDispose" Category="Microsoft.Usage" CheckId="CA2215" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnection.Dispose(Boolean):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="FromConsole(System.String,System.String,System.String,System.String):Alchemi.Core.Owner.GConnection">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>parameter</Item>
+               <Item>defaultUsername</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="SecurityCredentials">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2006-08-12 02:40:22Z" FixCategory="Breaking">
+              <Issue>
+               <Item>GConnection.SecurityCredentials:SecurityCredentials</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="set_SecurityCredentials(Alchemi.Core.SecurityCredentials):System.Void">
+              <Messages>
+               <Message Id="value" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2006-08-12 02:40:22Z" FixCategory="Breaking">
+                <Issue>
+                 <Item>value</Item>
+                 <Item>GConnection.set_SecurityCredentials(SecurityCredentials):Void</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="Username">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>property</Item>
+               <Item>Username</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GConnectionDialog">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnectionDialog.GConnectionDialog()</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.ComponentModel.IContainer)">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnectionDialog.GConnectionDialog(IContainer)</Item>
+               <Item>components</Item>
+               <Item>System.ComponentModel.Container</Item>
+               <Item>null</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'container'</Item>
+               <Item>GConnectionDialog.GConnectionDialog(IContainer)</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Dispose(System.Boolean):System.Void">
+            <Messages>
+             <Message Id="form" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Alchemi.Core.Owner.GConnectionDialog</Item>
+               <Item>form</Item>
+               <Item>Alchemi.Core.Owner.GConnectionDialogForm</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DisposeMethodsShouldCallBaseClassDispose" Category="Microsoft.Usage" CheckId="CA2215" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnectionDialog.Dispose(Boolean):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GConnectionDialogForm">
+          <Members>
+           <Member Name="btOk_Click(System.Object,System.EventArgs):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>btOk_Click</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>btOk_Click</Item>
+              </Issue>
+             </Message>
+             <Message Id="Member" TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>bt</Item>
+               <Item>GConnectionDialogForm.btOk_Click(Object, EventArgs):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GConnectionDialogForm_Load(System.Object,System.EventArgs):System.Void">
+            <Messages>
+             <Message Id="Member" TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Member">
+               <Item>GConnectionDialogForm_Load</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="InitializeComponent():System.Void">
+            <Messages>
+             <Message Id="Alchemi" TypeName="LiteralsShouldBeSpelledCorrectly" Category="Microsoft.Usage" CheckId="CA2204" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>Alchemi</Item>
+               <Item>Alchemi Grid Connection</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="ReadConfig():System.Void">
+            <Messages>
+             <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Excluded" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GConnectionDialogForm.ReadConfig():Void</Item>
+               <Item>System.Int32.ToString</Item>
+               <Item>System.Int32.ToString(System.IFormatProvider)</Item>
+              </Issue>
+              <Notes>
+               <User Name="Krishna">
+                <Note Id="11" />
+               </User>
+              </Notes>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="txUsername">
+            <Messages>
+             <Message Id="Username" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2006-08-12 02:40:22Z">
+              <Issue Name="ShouldBeCompoundWord">
+               <Item>Username</Item>
+               <Item>field</Item>
+               <Item>txUsername</Item>
+               <Item>UserName</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GJob">
+          <Members>
+           <Member Name="AddStandardFile(System.IO.StreamReader,System.String):System.Void">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>reader</Item>
+               <Item>GJob.AddStandardFile(StreamReader, String):Void</Item>
+               <Item>System.IO.StreamReader</Item>
+               <Item>System.IO.TextReader</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Start():System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GJob.Start():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+              <Issue>
+               <Item>GJob.Start():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+              <Issue>
+               <Item>GJob.Start():Void</Item>
+               <Item>System.Object</Item>
+              </Issue>
+              <Issue>
+               <Item>GJob.Start():Void</Item>
+               <Item>System.Object</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GThread">
+          <Members>
+           <Member Name=".ctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GThread.GThread()</Item>
+               <Item>_Application</Item>
+               <Item>Alchemi.Core.Owner.GApplication</Item>
+               <Item>null</Item>
+              </Issue>
+              <Issue>
+               <Item>GThread.GThread()</Item>
+               <Item>_Failed</Item>
+               <Item>System.Boolean</Item>
+               <Item>false</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="_Failed">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GThread._Failed</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="GThreadBuffer">
+          <Messages>
+           <Message TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>GThreadBuffer</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.Owner.GThreadBuffer</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.Int32)">
+            <Messages>
+             <Message Id="0#n" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>GThreadBuffer.GThreadBuffer(Int32)</Item>
+               <Item>n</Item>
+               <Item>nCapacity</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Add(Alchemi.Core.Owner.GThread):System.Void">
+            <Messages>
+             <Message Id="0#o" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>GThreadBuffer.Add(GThread):Void</Item>
+               <Item>o</Item>
+               <Item>oThread</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="CopyTo(System.Array,System.Int32):System.Void">
+            <Messages>
+             <Message Id="0#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>oArray</Item>
+               <Item>GThreadBuffer.CopyTo(Array, Int32):Void</Item>
+               <Item>array</Item>
+               <Item>ICollection.CopyTo(Array, Int32):Void</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#" TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>nIndex</Item>
+               <Item>GThreadBuffer.CopyTo(Array, Int32):Void</Item>
+               <Item>index</Item>
+               <Item>ICollection.CopyTo(Array, Int32):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Full" Kind="Event">
+            <Messages>
+             <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Created="2006-08-12 02:40:22Z">
+              <Issue Name="First">
+               <Item>FullEventHandler</Item>
+              </Issue>
+              <Issue Name="Second">
+               <Item>FullEventHandler</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetException(System.Int32):System.Exception">
+            <Messages>
+             <Message Id="0#n" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>GThreadBuffer.GetException(Int32):Exception</Item>
+               <Item>n</Item>
+               <Item>nThreadId</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="Start():System.Void">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>GThreadBuffer.Start():Void</Item>
+               <Item>System.Exception</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ModuleDependency">
+          <Members>
+           <Member Name=".ctor(System.Reflection.Module)">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'module'</Item>
+               <Item>ModuleDependency.ModuleDependency(Module)</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ThreadBufferFullException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>Alchemi.Core.Owner.ThreadBufferFullException</Item>
+             <Item>protected ThreadBufferFullException(SerializationInfo, StreamingContext)</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Created="2006-08-12 02:40:22Z">
+            <Issue Level="Error">
+             <Item>ThreadBufferFullException</Item>
+            </Issue>
+           </Message>
+           <Message Id="System.ApplicationException" TypeName="TypesShouldNotExtendCertainBaseTypes" Category="Microsoft.Design" CheckId="CA1058" Created="2006-08-12 02:40:22Z">
+            <Issue Name="System.ApplicationException">
+             <Item>ThreadBufferFullException</Item>
+             <Item>System.ApplicationException</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name=".ctor(System.String)">
+            <Messages>
+             <Message Id="0#str" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>ThreadBufferFullException.ThreadBufferFullException(String)</Item>
+               <Item>str</Item>
+               <Item>strMessage</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name=".ctor(System.String,System.Exception)">
+            <Messages>
+             <Message Id="0#str" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>ThreadBufferFullException.ThreadBufferFullException(String, Exception)</Item>
+               <Item>str</Item>
+               <Item>strMessage</Item>
+              </Issue>
+             </Message>
+             <Message Id="1#o" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>ThreadBufferFullException.ThreadBufferFullException(String, Exception)</Item>
+               <Item>o</Item>
+               <Item>oException</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ThreadCollection">
+          <Messages>
+           <Message TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ThreadCollection</Item>
+             <Item>IList</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ThreadCollection</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ListsAreStronglyTyped" Category="Microsoft.Design" CheckId="CA1039" Created="2006-08-12 02:40:22Z">
+            <Issue>
+             <Item>ThreadCollection</Item>
+             <Item>Contains</Item>
+            </Issue>
+            <Issue>
+             <Item>ThreadCollection</Item>
+             <Item>IndexOf</Item>
+            </Issue>
+            <Issue>
+             <Item>ThreadCollection</Item>
+             <Item>Insert</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="ThreadIdentifier">
+          <Members>
+           <Member Name="UniqueId">
+            <Accessors>
+             <Accessor Name="get_UniqueId():System.String">
+              <Messages>
+               <Message Id="System.String.Format(System.String,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Excluded" Created="2006-08-12 02:40:22Z">
+                <Issue>
+                 <Item>ThreadIdentifier.get_UniqueId():String</Item>
+                 <Item>System.String.Format(System.String,System.Object,System.Object)</Item>
+                 <Item>System.String.Format(System.IFormatProvider,System.String,System.Object[])</Item>
+                </Issue>
+                <Notes>
+                 <User Name="Krishna">
+                  <Note Id="10" />
+                 </User>
+                </Notes>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Alchemi.Core.Utility">
+        <Types>
+         <Type Name="AlchemiRole">
+          <Messages>
+           <Message Id="Alchemi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Type">
+             <Item>Alchemi</Item>
+             <Item>Alchemi.Core.Utility.AlchemiRole</Item>
+            </Issue>
+            <Notes>
+             <User Name="Krishna">
+              <Note Id="7" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="HashUtil">
+          <Messages>
+           <Message Id="Util" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Type">
+             <Item>Util</Item>
+             <Item>Alchemi.Core.Utility.HashUtil</Item>
+            </Issue>
+            <Notes>
+             <User Name="Krishna">
+              <Note Id="8" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="Utils">
+          <Messages>
+           <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Excluded" Created="2006-08-12 02:40:22Z">
+            <Issue Name="Type">
+             <Item>Utils</Item>
+             <Item>Alchemi.Core.Utility.Utils</Item>
+            </Issue>
+            <Notes>
+             <User Name="Krishna">
+              <Note Id="9" />
+             </User>
+            </Notes>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="BoolToSqlBit(System.Boolean):System.Int32">
+            <Messages>
+             <Message Id="0#val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>Utils.BoolToSqlBit(Boolean):Int32</Item>
+               <Item>val</Item>
+               <Item>val</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="GetFilePath(System.String,Alchemi.Core.Utility.AlchemiRole,System.Boolean):System.String">
+            <Messages>
+             <Message Id="0#filepath" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2006-08-12 02:40:22Z">
+              <Issue Name="Parameter">
+               <Item>Utils.GetFilePath(String, AlchemiRole, Boolean):String</Item>
+               <Item>filepath</Item>
+               <Item>filepath</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="WriteByteArrayToFile(System.String,System.Byte[]):System.Void">
+            <Messages>
+             <Message TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062" Created="2006-08-12 02:40:22Z">
+              <Issue>
+               <Item>'buffer'</Item>
+               <Item>Utils.WriteByteArrayToFile(String, Byte[]):Void</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="XmlStringWriter">
+          <Members>
+           <Member Name="GetXmlString():System.String">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2006-08-12 02:40:22Z">
+              <Issue Certainty="50">
+               <Item>GetXmlString</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Notes>
+   <User Name="Krishna">
+    <Note Id="1" Modified="2006-08-11 07:57:59Z">Alchemi is the project name</Note>
+    <Note Id="6" Modified="2006-08-11 09:30:37Z">Alchemi is the project name</Note>
+    <Note Id="7" Modified="2006-08-12 02:41:03Z">Alchemi project name</Note>
+    <Note Id="8" Modified="2006-08-12 02:41:15Z">Util is short for utility</Note>
+    <Note Id="9" Modified="2006-08-12 02:41:26Z">Utils is short for utility</Note>
+    <Note Id="10" Modified="2006-08-12 02:51:49Z">Not doing globalization yet</Note>
+    <Note Id="11" Modified="2006-08-12 03:00:39Z">Not doing globalisation yet</Note>
+   </User>
+  </Notes>
+  <Rules>
+   <Rule TypeName="AssembliesShouldDeclareMinimumSecurity" Category="Microsoft.Usage" CheckId="CA2209">
+    <Resolution Name="Default">No valid permission requests were found for assembly '{0}'. You should always specify the minimum security permissions using SecurityAction.RequestMinimum.</Resolution>
+   </Rule>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign '{0}' with a strong name key.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
+    <Resolution Name="Default">Define a custom attribute to replace '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021">
+    <Resolution Name="Default">Consider a design that does not require that '{0}' be an out parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Resolution Name="Default">It appears that field '{0}' is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="CollectionsShouldImplementGenericInterface" Category="Microsoft.Design" CheckId="CA1010">
+    <Resolution Name="Default">'{0}' appears to be a non-generic, strongly typed collection. Add an implementation to the instance of {1}&lt;T&gt; where T is {0}'s underlying element type.</Resolution>
+   </Rule>
+   <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
+    <Resolution Name="ShouldBeCompoundWord">The discrete term '{0}' in {1} '{2}' should be expressed as a compound term, '{3}'.</Resolution>
+    <Resolution Name="ShouldBeDiscreteTerm">The compound word '{0}' in {1} '{2}' exists as a discrete term. If your usage is intended to be single word, case it as '{3}'.</Resolution>
+   </Rule>
+   <Rule TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011">
+    <Resolution Name="Default">Consider changing the type of parameter '{0}' in {1} from {2} to its base type {3}. This method appears to only require base class members in its implementation. Suppress this violation if there is a compelling reason to require the more derived type in the method signature.</Resolution>
+   </Rule>
+   <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+    <Resolution Name="First">Declare the first parameter of '{0}' as an object named 'sender'.</Resolution>
+    <Resolution Name="Second">Declare the second parameter of '{0}' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Resolution>
+   </Rule>
+   <Rule TypeName="DeclareTypesInNamespaces" Category="Microsoft.Design" CheckId="CA1050">
+    <Resolution Name="Default">'{0}' should be declared inside a namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
+    <Resolution Name="Default">'{0}' contains field '{1}' that is of IDisposable type: {2}. Change {0}'s Dispose method to call Dispose or Close on this field.</Resolution>
+   </Rule>
+   <Rule TypeName="DisposeMethodsShouldCallBaseClassDispose" Category="Microsoft.Usage" CheckId="CA2215">
+    <Resolution Name="Default">Change {0} so that it calls its base class Dispose method for all code paths. Place the call in a finally block to ensure that resources are cleaned up when an exception is raised.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Resolution Name="Default">Modify '{0}' to catch a more specific exception than '{1}' or rethrow the exception.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+    <Resolution Name="Default">Make '{0}' private or internal (Friend in VB, public private in C++) and provide a public or protected property to access it.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDecreaseInheritedMemberVisibility" Category="Microsoft.Usage" CheckId="CA2222">
+    <Resolution Name="Default">Make {0} non-private, mark it as final, or seal its declaring type. This method was originally defined in base class '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDisposeObjectsMultipleTimes" Category="Microsoft.Usage" CheckId="CA2202">
+    <Resolution Name="Default">'{0}' contains possible code paths that dispose {1} multiple times. Change this behavior so that Close or Dispose is only called once or ensure that the Dispose implementation of '{1}' is reentrant.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
+    <Resolution Name="Default">{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization as it will be done automatically by the runtime.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201">
+    <Resolution Name="TooGeneric">{0} creates an exception of type '{1}', an exception type that is not sufficiently specific and should never be raised by user code. If this exception instance might be thrown, use a different exception type.</Resolution>
+   </Rule>
+   <Rule TypeName="ICollectionImplementationsHaveStronglyTypedMembers" Category="Microsoft.Design" CheckId="CA1035">
+    <Resolution Name="Default">'{0}' should provide a strongly typed implementation of ICollection.CopyTo.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Resolution Name="Member">Correct the casing of member name '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Member">Correct the spelling of the unrecognized token '{0}' in member name '{1}'.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of the unrecognized token '{0}' in namespace '{1}'.</Resolution>
+    <Resolution Name="Parameter">In method {0}, correct the spelling of the unrecognized token '{1}' in parameter name '{2}' or strip it entirely if it represents any sort of hungarian notation.</Resolution>
+    <Resolution Name="ParameterOneLetter">In method {0}, consider providing a more meaningful name than the one-letter parameter name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of the unrecognized token '{0}' in type name '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
+    <Resolution Name="Default">Rename '{0}' to end in '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
+    <Resolution Name="Member">Remove all underscores from member '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711">
+    <Resolution Name="Default">Rename '{0}' so that it does not end in '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementISerializableCorrectly" Category="Microsoft.Usage" CheckId="CA2240">
+    <Resolution Name="Default">Add an implementation of GetObjectData to type '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032">
+    <Resolution Name="Accessibility">Change the accessibility of {0} to {1}.</Resolution>
+    <Resolution Name="Default">Add the following constructor to {0}: {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="ListsAreStronglyTyped" Category="Microsoft.Design" CheckId="CA1039">
+    <Resolution Name="Default">'{0}' should provide a strongly typed implementation of IList.{1}.</Resolution>
+   </Rule>
+   <Rule TypeName="LiteralsShouldBeSpelledCorrectly" Category="Microsoft.Usage" CheckId="CA2204">
+    <Resolution Name="Default">Correct the spelling of the unrecognized token '{0}' in the literal '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="LongAcronymsShouldBePascalCased" Category="Microsoft.Naming" CheckId="CA1705">
+    <Resolution Name="Member">Correct the capitalization of member name '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkAllNonSerializableFields" Category="Microsoft.Usage" CheckId="CA2235">
+    <Resolution Name="Default">Field {0} is a member of type {1}, which is serializable, but is of type {2}, which is not serializable. Add the NonSerializedAttribute to {0}.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014">
+    <Resolution Name="NoAttr">'{0}' should be marked with CLSCompliantAttribute and its value should be true.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
+    <Resolution Name="Default">Add [Serializable] to '{0}' as this type implements ISerializable.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Resolution Name="Default">The 'this' parameter (or 'Me' in VB) of {0} is never used. Mark the member as static (or Shared in VB) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
+    <Resolution Name="Default">Consider making '{0}' non-public or a constant.</Resolution>
+   </Rule>
+   <Rule TypeName="OverrideEqualsAndOperatorEqualsOnValueTypes" Category="Microsoft.Performance" CheckId="CA1815">
+    <Resolution Name="Equals">'{0}' should override Equals.</Resolution>
+    <Resolution Name="op_Equality">'{0}' should override the equality (==) and inequality (!=) operators.</Resolution>
+   </Rule>
+   <Rule TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123">
+    <Resolution Name="BaseOnly">Add the following security attribute to {0} in order to match a LinkDemand on base method {1}:  {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="ParameterNamesShouldMatchBaseDeclaration" Category="Microsoft.Naming" CheckId="CA1725">
+    <Resolution Name="Default">Change parameter name '{0}' of method {1} to '{2}' in order to match the identifier as it has been declared in {3}.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044">
+    <Resolution Name="Default">Add a property getter to '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
+    <Resolution Name="Default">Change {0} to return a collection or make it a method.</Resolution>
+   </Rule>
+   <Rule TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804">
+    <Resolution Name="Default">{0} declares a local, '{1}', of type {2}, which is never used or is only assigned to. Use this local or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Resolution Name="Default">Parameter '{0}' of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="ShortAcronymsShouldBeUppercase" Category="Microsoft.Naming" CheckId="CA1706">
+    <Resolution Name="Member">Correct the capitalization of '{0}' in member name '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default" />
+   </Rule>
+   <Rule TypeName="StaticHolderTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1053">
+    <Resolution Name="Default">Remove the public constructors from '{0}'.</Resolution>
+   </Rule>
+   <Rule TypeName="TypesShouldNotExtendCertainBaseTypes" Category="Microsoft.Design" CheckId="CA1058">
+    <Resolution Name="System.ApplicationException">Change {0}'s base type so that it no longer extends {1}. This base exception type does not provide any additional value for framework classes. Extend System.Exception or an existing unsealed exception type instead. Do not create a new exception base type unless there is specific value in enabling the creation of a catch handler for an entire class of exceptions.</Resolution>
+   </Rule>
+   <Rule TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030">
+    <Resolution Name="Default">Consider making '{0}' an event.</Resolution>
+   </Rule>
+   <Rule TypeName="UseGenericEventHandlerInstances" Category="Microsoft.Design" CheckId="CA1003">
+    <Resolution Name="Default">Remove '{0}' and replace its usage with EventHandler&lt;T&gt;</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Resolution Name="Default">Change '{0}' to a property if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="ValidateArgumentsOfPublicMethods" Category="Microsoft.Design" CheckId="CA1062">
+    <Resolution Name="Default">Validate parameter {0} passed to externally visible method {1}.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

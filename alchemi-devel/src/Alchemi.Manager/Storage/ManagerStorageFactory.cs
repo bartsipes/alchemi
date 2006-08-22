@@ -178,7 +178,8 @@ namespace Alchemi.Manager.Storage
 					break;
 
 				default:
-					throw new ConfigurationException(String.Format("Unknown storage type: {0}", configuration.DbType));
+                    throw new System.Configuration.ConfigurationErrorsException(
+                        string.Format("Unknown storage type: {0}", configuration.DbType));
 			}
 
 			return m_managerStorage;

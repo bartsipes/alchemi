@@ -130,11 +130,11 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Gets the "remoteEndPoint" object associated with the manager.
 		/// </summary>
-        public RemoteEndPoint RemoteEP
+        public EndPoint RemoteEP
         {
             get 
             {
-                return new RemoteEndPoint(_Host, _Port, RemotingMechanism.TcpBinary);
+                return new EndPoint(_Host, _Port, RemotingMechanism.TcpBinary);
             }
         }
 
@@ -167,17 +167,6 @@ namespace Alchemi.Core.Owner
             Console.WriteLine();
 
             return new GConnection(host, int.Parse(port), username, password);
-        }
-
-        public Alchemi.Core.SecurityCredentials SecurityCredentials
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
         }
     }
 }

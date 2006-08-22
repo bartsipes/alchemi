@@ -73,9 +73,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Alchemi.Core">
-      <Name>Alchemi.Core</Name>
-      <HintPath>..\..\..\bin\Alchemi.Core.dll</HintPath>
+    <Reference Include="Alchemi.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\Core\Alchemi.Core.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>

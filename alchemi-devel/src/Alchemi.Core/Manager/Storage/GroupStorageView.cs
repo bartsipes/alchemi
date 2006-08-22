@@ -47,7 +47,7 @@ namespace Alchemi.Core.Manager.Storage
 		#region "Properties"
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this Group is a system group.
+		/// Gets or sets a name indicating whether this Group is a system group.
 		/// </summary>
 		public bool IsSystem
 		{

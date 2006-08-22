@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderLibrary", "AlchemiRen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPManagerClient", "XPManagerClient\XPManagerClient.csproj", "{B293C212-4998-409E-B247-C9DFA28D7304}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MandelThread", "Mandelbrot\MandelThread\MandelThread.csproj", "{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "..\src\Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +98,18 @@ Global
 		{B293C212-4998-409E-B247-C9DFA28D7304}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B293C212-4998-409E-B247-C9DFA28D7304}.ServiceRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{B293C212-4998-409E-B247-C9DFA28D7304}.ServiceRelease|Any CPU.Build.0 = Release|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.ServiceRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{2B3C2B8F-57E2-4508-B839-9C6B7E2FDF8A}.ServiceRelease|Any CPU.Build.0 = Release|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease|Any CPU.ActiveCfg = ServiceRelease|Any CPU
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}.ServiceRelease|Any CPU.Build.0 = ServiceRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

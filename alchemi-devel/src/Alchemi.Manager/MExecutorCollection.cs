@@ -120,14 +120,14 @@ namespace Alchemi.Manager
         {
 			logger.Debug("Init-ing executor collection from db");
 
-			ExecutorStorageView[] executorsStorage = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True);
+			ExecutorStorageView[] executors = ManagerStorageFactory.ManagerStorage().GetExecutors(TriStateBoolean.True);
 
-			logger.Debug("# of dedicated executors = " + executorsStorage.Length);
+			logger.Debug("# of dedicated executors = " + executors.Length);
 
-            foreach (ExecutorStorageView executorStorage in executorsStorage)
+            foreach (ExecutorStorageView executor in executors)
             {
-                string executorId = executorStorage.ExecutorId;
-                RemoteEndPoint ep = new RemoteEndPoint(executorStorage.HostName, executorStorage.Port, RemotingMechanism.TcpBinary);
+                string executorId = executor.ExecutorId;
+                EndPoint ep = new EndPoint(executor.HostName, executor.Port, RemotingMechanism.TcpBinary);
                 MExecutor me = new MExecutor(executorId);
 				try
                 {

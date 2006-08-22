@@ -72,26 +72,27 @@ namespace Alchemi.ExecutorService
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-			this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
-			// 
-			// serviceProcessInstaller1
-			// 
-			this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-			this.serviceProcessInstaller1.Password = null;
-			this.serviceProcessInstaller1.Username = null;
-			// 
-			// serviceInstaller1
-			// 
-			this.serviceInstaller1.DisplayName = "Alchemi Executor Service";
-			this.serviceInstaller1.ServiceName = "Alchemi Executor Service";
-			this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-			// 
-			// ProjectInstaller
-			// 
-			this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-																					  this.serviceProcessInstaller1,
-																					  this.serviceInstaller1});
+            this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
+            // 
+            // serviceProcessInstaller1
+            // 
+            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
+            this.serviceProcessInstaller1.Password = null;
+            this.serviceProcessInstaller1.Username = null;
+            // 
+            // serviceInstaller1
+            // 
+            this.serviceInstaller1.Description = "The Alchemi Executor Service is the client side of an Alchemi Enterprise Grid,  a" +
+                "nd performs computation of the threads sent by the Manager";
+            this.serviceInstaller1.DisplayName = "Alchemi Executor Service";
+            this.serviceInstaller1.ServiceName = "Alchemi Executor Service";
+            // 
+            // ProjectInstaller
+            // 
+            this.Installers.AddRange(new System.Configuration.Install.Installer[] {
+            this.serviceProcessInstaller1,
+            this.serviceInstaller1});
 
 		}
 		#endregion

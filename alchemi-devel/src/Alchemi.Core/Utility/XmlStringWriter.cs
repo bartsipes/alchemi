@@ -32,7 +32,7 @@ namespace Alchemi.Core.Utility
 	/// <summary>
 	/// This class is used to read in / write out XML data from / in memory.
 	/// </summary>
-    public class XmlStringWriter
+    public class XmlStringWriter : IDisposable
     {
         private MemoryStream _Ms;
         private XmlTextWriter _Writer;
@@ -73,5 +73,25 @@ namespace Alchemi.Core.Utility
 
             return (new StreamReader(_Ms)).ReadToEnd();
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_Writer != null)
+                    _Writer.Close();
+            }
+            if (_Ms != null)
+                _Ms.Dispose();
+        }
+
+        #endregion
     }
 }

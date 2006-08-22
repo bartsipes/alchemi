@@ -37,6 +37,9 @@ using Alchemi.Core.Utility;
 using Alchemi.Manager;
 using log4net;
 using log4net.Config;
+using System.Security;
+using System.Text;
+using System.Security.Principal;
 
 namespace Alchemi.ManagerService
 {
@@ -80,15 +83,11 @@ namespace Alchemi.ManagerService
 			
 			try
 			{
-				string configFilePath = string.Format("{0}.config",Assembly.GetExecutingAssembly ().Location);
+                Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
+				string configFilePath = string.Format("{0}.config",Assembly.GetExecutingAssembly().Location);
 				logger = LogManager.GetLogger(typeof(ManagerService));
 				XmlConfigurator.Configure(new FileInfo(configFilePath));
-				Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-				//create directory and set permissions for dat directory...for logging.
-				string datDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"dat");
-				Alchemi.Core.Utility.ServiceUtil.CreateDir(datDir,"SYSTEM");
 
 				string opt = null ;
 				if ( args.Length > 0)
@@ -114,7 +113,7 @@ namespace Alchemi.ManagerService
 					//
 
 					ManagerService ms = new ManagerService();
-					if (!ServiceHelper.checkServiceInstallation(ms.ServiceName))
+					if (!ServiceHelper.CheckServiceInstallation(ms.ServiceName))
 					{
 						installService();
 					}
@@ -163,9 +162,12 @@ namespace Alchemi.ManagerService
 		{
 			try
 			{
-				logger.Info("Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);
-				ThreadStart ts = new ThreadStart(StartContainer);
+				logger.Info("Starting Alchemi Manager Service: v."+Utils.AssemblyVersion);                
+                logger.Debug(Utils.GetEnv());
+
+                ThreadStart ts = new ThreadStart(StartContainer);
 				Thread t = new Thread(ts);
+                t.Name = "ManagerServiceStarterThread";
 				t.Start();
 			}
 			catch (Exception e)
@@ -181,28 +183,40 @@ namespace Alchemi.ManagerService
 		}
 
 		//just to follow the same model as the manager windows forms app
-		private static void HandleAllUnknownErrors(string sender, Exception e)
+		private static void HandleAllUnknownErrors(string sender, Exception ex)
 		{
 			if (logger!=null)
 			{
-				logger.Error("Unhandled Exception in Alchemi Manager Service: sender = "+sender,e);
+				logger.Error("Unhandled Exception in Alchemi Manager Service: sender = "+sender, ex);
 			}
 			else
 			{
-				try
-				{
-					TextWriter tw = File.CreateText("alchemiManagerError.txt");
-					tw.WriteLine("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender);
-					tw.WriteLine(e.ToString());
-					tw.Flush();
-					tw.Close();
-					tw = null;
-				}
-				catch
-				{
-					//can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
-					//throw new Exception("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender,e);
-				}
+                TextWriter tw = null;
+                try
+                {
+                    string path = Utils.GetFilePath("AlchemiManagerError.txt", AlchemiRole.Manager, true);
+                    tw = File.CreateText(path);
+                    tw.WriteLine("Unhandled Error in Alchemi Manager Service. Logger is null. Sender =" + sender);
+                    tw.WriteLine(ex.ToString());
+                    tw.Flush();
+                }
+                catch
+                {
+                    //can't do much more. perhaps throw it? so that atleast the user knows something is wrong?
+                    //throw new Exception("Unhandled Error in Alchemi Manager Service. Logger is null. Sender ="+sender,e);
+                }
+                finally
+                {
+                    try
+                    {
+                        if (tw != null)
+                        {
+                            tw.Close();
+                            tw = null;
+                        }
+                    }
+                    catch { }
+                }
 			}
 		}
 
@@ -215,6 +229,7 @@ namespace Alchemi.ManagerService
 			{
 				ThreadStart ts = new ThreadStart(StopContainer);
 				Thread t = new Thread(ts);
+                t.Name = "ManagerServiceStopperThread";
 				t.Start();
 			}
 			catch (Exception e)
@@ -258,13 +273,13 @@ namespace Alchemi.ManagerService
 		private static void installService()
 		{
 			string path = string.Format ("/assemblypath={0}",Assembly.GetExecutingAssembly ().Location);
-			ServiceHelper.installService(new ProjectInstaller(),path);
+			ServiceHelper.InstallService(new ProjectInstaller(),path);
 		}
 
 		private static void uninstallService()
 		{
 			string path = string.Format ("/assemblypath={0}", Assembly.GetExecutingAssembly ().Location);
-			ServiceHelper.uninstallService(new ProjectInstaller(),path);
+			ServiceHelper.UninstallService(new ProjectInstaller(),path);
 		}
 
 		private void Log(object sender, LogEventArgs e)

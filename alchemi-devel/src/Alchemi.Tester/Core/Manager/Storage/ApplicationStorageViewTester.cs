@@ -39,7 +39,7 @@ namespace Alchemi.Tester.Core.Manager.Storage
 	public class ApplicationStorageViewTester
 	{
 		/// <summary>
-		/// Try to get the TotalThreads value when it was not initialized
+		/// Try to get the TotalThreads name when it was not initialized
 		/// It should throw an exception.
 		/// </summary>
 		[Test]
@@ -61,7 +61,7 @@ namespace Alchemi.Tester.Core.Manager.Storage
 		}
 
 		/// <summary>
-		/// Try to get the UnfinishedThreads value when it was not initialized
+		/// Try to get the UnfinishedThreads name when it was not initialized
 		/// It should throw an exception.
 		/// </summary>
 		[Test]

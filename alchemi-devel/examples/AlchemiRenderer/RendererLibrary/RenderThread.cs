@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using Alchemi.Core.Owner;
+using System.Text;
+using System.Threading;
+using System.Net;
 
 namespace Alchemi.Examples.Renderer
 {
@@ -31,12 +34,15 @@ namespace Alchemi.Examples.Renderer
 
 		private Bitmap crop;
 
-		//private string _stdout;
-		//private string _stderr;
+		[NonSerialized]private StringBuilder output;
+		[NonSerialized]private StringBuilder error;
+        [NonSerialized]
+        private Process megapov = null;
 
-		//private string _bitmapContent;
+        private string _stdout;
+        private string _stderr;
 
-		private string _basePath; 
+		private string _basePath;
 
 		public int Row
 		{
@@ -66,7 +72,7 @@ namespace Alchemi.Examples.Renderer
 		{
 			get
 			{
-				return _basePath;
+				return Environment.ExpandEnvironmentVariables(_basePath);
 			}
 			set
 			{
@@ -74,21 +80,21 @@ namespace Alchemi.Examples.Renderer
 			}
 		}
 
-//		public string stdout
-//		{
-//			get
-//			{
-//				return _stdout;
-//			}
-//		}
-//
-//		public string stderr
-//		{
-//			get
-//			{
-//				return _stderr;
-//			}
-//		}
+        public string Stdout
+        {
+            get
+            {
+                return _stdout;
+            }
+        }
+
+        public string Stderr
+        {
+            get
+            {
+                return _stderr;
+            }
+        }
 
 		public Bitmap RenderedImageSegment
 		{
@@ -97,23 +103,6 @@ namespace Alchemi.Examples.Renderer
 				return crop;
 			}
 		}
-
-		public string TempFile
-		{
-			get
-			{
-				string fileToSave = Col+"_"+Row+".png";
-				return fileToSave;
-			}
-		}
-
-//		public string BitmapContent
-//		{
-//			get
-//			{
-//				return _bitmapContent;	
-//			}
-//		}
 
 		public RenderThread(string InputFile, int ImageWidth, int ImageHeight, int SegmentWidth, int SegmentHeight, int StartRow, int EndRow, int StartCol, int EndCol, string MegaPOV_Options)
 		{
@@ -134,82 +123,202 @@ namespace Alchemi.Examples.Renderer
 			//do all the rendering by calling the povray stuff, and then crop it and send it back.
 			//first call megapov, and render the scence.
 			//direct it to save to some filename.
+            string outfilename = null;
+            try
+            {
+                outfilename = string.Format("{0}_{1}_tempPOV.png", Col, Row);
 
-			string tempDir = Path.Combine(_basePath, Path.GetFileName(WorkingDirectory));
-			if (!Directory.Exists(tempDir))
-				Directory.CreateDirectory(tempDir);
-			StreamWriter log = File.CreateText(tempDir+"/tempLog_"+Col+"_"+Row+".txt");
+                string cmd = "cmd";
+                string args = "/C " + Path.Combine(BasePath, @"bin\megapov.exe") +
+                    string.Format(" +I{0} +O{1} +H{2} +W{3} +SR{4} +ER{5} +SC{6} +EC{7} +FN16 {8}",
+                        Environment.ExpandEnvironmentVariables(_inputFile), outfilename,
+                        _imageHeight, _imageWidth,
+                        _startRowPixel, _endRowPixel,
+                        _startColPixel, _endColPixel,
+                        _megaPOV_Options
+                    );
 
-			log.WriteLine("Working dir is "+WorkingDirectory);
-			log.WriteLine("TempdIr is "+tempDir);
+                output = new StringBuilder();
+                error = new StringBuilder();
 
-			string megaPOV_outputFilename = Path.Combine(tempDir, Col+"_"+Row+"_tempPOV.png");
-			string cmd = "cmd";
-			string args = "/C " + Path.Combine(_basePath,"bin/megapov.exe") +
-				string.Format(" +I{0} +O{1} +H{2} +W{3} +SR{4} +ER{5} +SC{6} +EC{7} +FN16 {8}",
-					_inputFile, megaPOV_outputFilename,
-					_imageHeight, _imageWidth,
-					_startRowPixel, _endRowPixel,
-					_startColPixel, _endColPixel,
-					_megaPOV_Options
-				);
+                //no need to lock output here, since so far there won't be more than one thread
+                //using it.
+                output.AppendLine("**** BasePath is " + BasePath);
+                output.AppendLine("**** Working dir is " + WorkingDirectory);
+                output.AppendLine("**** Cmd for process is :" + cmd);
+                output.AppendLine("**** Args for process is :" + args);
 
-			log.WriteLine("Cmd for process is :"+cmd);
-			log.WriteLine("Args for process is :"+args);
+                megapov = new Process();
+                megapov.StartInfo.FileName = cmd;
+                megapov.StartInfo.Arguments = args;
+                megapov.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                megapov.StartInfo.UseShellExecute = false; //false, since we dont want WorkingDir to be used to find the exe
+                megapov.StartInfo.WorkingDirectory = WorkingDirectory;
+                megapov.StartInfo.CreateNoWindow = true;
+                megapov.EnableRaisingEvents = true;
 
-			Process megapov = new Process();
-			megapov.StartInfo.FileName = cmd;
-			megapov.StartInfo.Arguments = args;
-			megapov.StartInfo.WorkingDirectory = WorkingDirectory;
-			megapov.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			megapov.StartInfo.UseShellExecute = true;
-			megapov.StartInfo.CreateNoWindow = true;
+                megapov.StartInfo.RedirectStandardError = true;
+                megapov.StartInfo.RedirectStandardOutput = true;
 
-			megapov.StartInfo.RedirectStandardError = false;
-			megapov.StartInfo.RedirectStandardOutput = false;
+                megapov.OutputDataReceived += new DataReceivedEventHandler(megapov_OutputDataReceived);
+                megapov.ErrorDataReceived += new DataReceivedEventHandler(megapov_ErrorDataReceived);
+                megapov.Exited += new EventHandler(megapov_Exited);
+                megapov.Start();
 
-			megapov.Start();
-			megapov.WaitForExit();
+                megapov.BeginErrorReadLine();
+                megapov.BeginOutputReadLine();
 
-			//_stdout = ReadStream(megapov.StandardOutput);
-			//_stderr = ReadStream(megapov.StandardError);
-			
-			//then crop the image produced by megapov, and get it back.
-			int x = (Col-1)*_segWidth;
+                while (!megapov.HasExited)
+                {
+                    //since we are getting notified async.
+                    megapov.WaitForExit(1000);
+                }
 
-			if (File.Exists(megaPOV_outputFilename))
-			{
-				Bitmap im = new Bitmap(megaPOV_outputFilename);
-				crop = new Bitmap(_segWidth,_segHeight);
-				Graphics g = Graphics.FromImage(crop);
+                if (megapov.HasExited)
+                {
+                    LogOutput(
+                        string.Format("******** MegaPov Out of wait loop... time: {0}, exit code: {1}",
+                            Environment.TickCount,
+                            megapov.ExitCode)
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex.ToString());
+            }
+            finally
+            {
+                CloseProcess();
+                try
+                {
+                    CropImage(Path.Combine(WorkingDirectory, outfilename));
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex.ToString());
+                }
+                _stdout = output.ToString();
+                _stderr = error.ToString();
+            }
+        }
 
-				Rectangle sourceRectangle = new Rectangle(x, 0, _segWidth, _segHeight);
-				Rectangle destRectangle = new Rectangle(0, 0, _segWidth, _segHeight);
-				g.DrawImage(im,destRectangle,sourceRectangle,GraphicsUnit.Pixel);
+        private void CloseProcess()
+        {
+            try
+            {
+                if (megapov != null)
+                {
+                    //time to kill!
+                    if (!megapov.HasExited)
+                    {
+                        megapov.Kill();
+                    }
+                    megapov.Close();
+                    megapov.Dispose();
+                    megapov = null;
+                }
+            }
+            catch { }
 
-//				crop.Save(Path.Combine(tempDir,TempFile),ImageFormat.Png);
+        }
 
-//				_bitmapContent = ReadFile(Path.Combine(tempDir,TempFile));
-			}
+        private void CropImage(string imageFile)
+        {
+            Bitmap im = null;
+            try
+            {
+                //then crop the image produced by megapov, and get it back.
+                int x = (Col - 1) * _segWidth;
+                im = new Bitmap(imageFile);
+                crop = new Bitmap(_segWidth, _segHeight);
+                using (Graphics g = Graphics.FromImage(crop))
+                {
+                    Rectangle sourceRectangle = new Rectangle(x, 0, _segWidth, _segHeight);
+                    Rectangle destRectangle = new Rectangle(0, 0, _segWidth, _segHeight);
+                    g.DrawImage(im, destRectangle, sourceRectangle, GraphicsUnit.Pixel);
+                }
 
-			log.Flush();
-			log.Close();
-			log = null;
-		}
+                LogOutput(string.Format("Cropped ImageFile : {0}", imageFile));
+            }
+            catch (Exception ex)
+            {
+                LogError("Error cropping file : " + imageFile + "\n" + ex.ToString());
+            }
+            finally
+            {
+                try
+                {
+                    if (im != null)
+                    {
+                        im.Dispose();
+                    }
+                }
+                catch { }
+            }
+        }
 
-//		private string ReadFile(string filename)
-//		{
-//			string result = null;
-//			StreamReader sr =  new StreamReader(filename);
-//			result = sr.ReadToEnd();
-//			return result;
-//		}
-//
-//		private string ReadStream(System.IO.StreamReader sr)
-//		{
-//			string result = null;
-//			result = sr.ReadToEnd();
-//			return result;
-//		}
-	}
+        private string GetIPAddressString()
+        {
+            StringBuilder ip = new StringBuilder();
+            try
+            {
+                ip.AppendLine(string.Format("Host : {0}", Dns.GetHostName()));
+                IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
+                foreach (IPAddress ipaddr in addresses)
+                {
+                    ip.AppendLine(string.Format(", IP : {0}", ipaddr.ToString()));
+                }
+            }
+            catch { }
+            return ip.ToString();
+        }
+
+        //Thread-safe error-logging.
+        private void LogError(string e)
+        {
+            if (error != null)
+            {
+                lock (error)
+                {
+                    error.AppendLine(e);
+                }
+            }
+        }
+
+        //Thread-safe output-logging.
+        private void LogOutput(string o)
+        {
+            if (output != null)
+            {
+                lock (output)
+                {
+                    output.AppendLine(o);
+                }
+            }
+        }
+
+        #region MegaPov Process Events
+        void megapov_Exited(object sender, EventArgs e)
+        {
+            try
+            {
+                LogOutput(string.Format("********** Megapov process has exited at {0}, on {1}",
+                            Environment.TickCount,
+                            GetIPAddressString()));
+            }
+            catch { }
+        }
+
+        void megapov_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            LogError(e.Data);
+        }
+
+        void megapov_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            LogOutput(e.Data);
+        }
+        #endregion
+    }
 }

@@ -51,8 +51,8 @@ namespace Alchemi.Core
 		private string _RemoteObjPrefix = DefaultRemoteObjectPrefix;
 		private bool _ChannelRegistered = false;
         private IManager _Manager = null;
-        private RemoteEndPoint _ManagerEP = null;
-        private OwnEndPoint _OwnEP = null;
+        private EndPoint _ManagerEP = null;
+        private EndPoint _OwnEP = null;
         private TcpChannel _Channel = null;
         private SecurityCredentials _Credentials;
         private bool _Initted = false;
@@ -73,7 +73,7 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Gets the manager end point
 		/// </summary>
-        public RemoteEndPoint ManagerEP
+        public EndPoint ManagerEP
         {
             get { return _ManagerEP; }
         }
@@ -81,7 +81,7 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Gets the node end point
 		/// </summary>
-        public OwnEndPoint OwnEP
+        public EndPoint OwnEP
         {
             get { return _OwnEP; }
         }
@@ -110,7 +110,7 @@ namespace Alchemi.Core
                 if (value != null)
                 {
                     _Credentials = new SecurityCredentials(value.Username, value.Password);
-                    _ManagerEP = new RemoteEndPoint(value.Host, value.Port, RemotingMechanism.TcpBinary);
+                    _ManagerEP = new EndPoint(value.Host, value.Port, RemotingMechanism.TcpBinary);
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Creates a new instance of the GConnection class
 		/// </summary>
-        public GNode() {}
+        protected GNode() {}
         
 		/// <summary>
 		/// Creates a new instance of the GConnection class
@@ -141,11 +141,12 @@ namespace Alchemi.Core
 		/// <param name="managerEP">manager end point</param>
 		/// <param name="ownEP">own end point</param>
 		/// <param name="credentials"></param>
-        public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials) : this(managerEP, ownEP, credentials, DefaultRemoteObjectPrefix)
+        protected GNode(EndPoint managerEP, EndPoint ownEP, SecurityCredentials credentials)
+            : this(managerEP, ownEP, credentials, DefaultRemoteObjectPrefix)
         {
         }
 
-		public GNode(RemoteEndPoint managerEP, OwnEndPoint ownEP, SecurityCredentials credentials, string remoteObjectPrefix)
+        protected GNode(EndPoint managerEP, EndPoint ownEP, SecurityCredentials credentials, string remoteObjectPrefix)
 		{
 			_OwnEP = ownEP;
 			_Credentials = credentials;
@@ -158,7 +159,7 @@ namespace Alchemi.Core
 		/// Creates a new instance of the GConnection class
 		/// </summary>
 		/// <param name="connection"></param>
-        public GNode(GConnection connection)
+        protected GNode(GConnection connection)
         {
             Connection = connection;
             Init();
@@ -181,7 +182,7 @@ namespace Alchemi.Core
             if (_Connection != null)
             {
                 _Credentials = new SecurityCredentials(_Connection.Username, _Connection.Password);
-                _ManagerEP = new RemoteEndPoint(_Connection.Host, _Connection.Port, RemotingMechanism.TcpBinary);
+                _ManagerEP = new EndPoint(_Connection.Host, _Connection.Port, RemotingMechanism.TcpBinary);
             }
             GetManagerRef();
             RemoteSelf();
@@ -195,12 +196,12 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="remoteEP">end point of the remote node</param>
 		/// <returns>Node reference</returns>
-        public static GNode GetRemoteRef(RemoteEndPoint remoteEP)
+        public static GNode GetRemoteRef(EndPoint remoteEP)
         {
 			return GetRemoteRef(remoteEP, DefaultRemoteObjectPrefix);
         }
 
-		public static GNode GetRemoteRef(RemoteEndPoint remoteEP, string remoteObjectPrefix)
+		public static GNode GetRemoteRef(EndPoint remoteEP, string remoteObjectPrefix)
 		{
 			switch (remoteEP.RemotingMechanism)
 			{
@@ -219,7 +220,7 @@ namespace Alchemi.Core
 		/// </summary>
 		/// <param name="remoteEP">end point of the remote manager</param>
 		/// <returns>Manager reference</returns>
-        public static IManager GetRemoteManagerRef(RemoteEndPoint remoteEP)
+        public static IManager GetRemoteManagerRef(EndPoint remoteEP)
         {
             IManager manager;
 
@@ -268,18 +269,19 @@ namespace Alchemi.Core
                         {
                             try
                             {
-                            	Hashtable properties = new Hashtable();
+                                _Channel = new TcpChannel(_OwnEP.Port);
+                                //Hashtable properties = new Hashtable();
 
-								// the name must be Empty in order to allow multiple TCP channels
-								properties.Add("name", String.Empty);
-								properties.Add("port", _OwnEP.Port);
+                                //// the name must be Empty in order to allow multiple TCP channels
+                                //properties.Add("name", String.Empty);
+                                //properties.Add("port", _OwnEP.Port);
 
-                                _Channel = new TcpChannel(
-									properties, 
-									new BinaryClientFormatterSinkProvider(), 
-									new BinaryServerFormatterSinkProvider());
+                                //_Channel = new TcpChannel(
+                                //    properties, 
+                                //    new BinaryClientFormatterSinkProvider(), 
+                                //    new BinaryServerFormatterSinkProvider());
 
-								ChannelServices.RegisterChannel(_Channel);
+								ChannelServices.RegisterChannel(_Channel, false);
                                 _ChannelRegistered = true;
                             }
                             catch (Exception e)
@@ -304,7 +306,10 @@ namespace Alchemi.Core
                         {
                             try
                             {
+                                logger.Info("Trying to publish a GNode at : " + _RemoteObjPrefix);
                             	RemotingServices.Marshal(this, _RemoteObjPrefix);
+                                logger.Info("GetObjectURI from remoting services : " + RemotingServices.GetObjectUri(this));
+                                logger.Info("Server object type: " + RemotingServices.GetServerTypeForUri(RemotingServices.GetObjectUri(this)).FullName);
                             }
                             catch (Exception e)
                             {
@@ -332,7 +337,7 @@ namespace Alchemi.Core
 		/// <summary>
 		/// Unregister channel and disconnect remoting
 		/// </summary>
-        protected void UnRemoteSelf()
+        public void UnRemoteSelf() //TODO check if we need this protection level
         {
             if (_OwnEP != null)
             {

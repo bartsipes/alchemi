@@ -34,7 +34,11 @@ using Alchemi.Core;
 namespace Alchemi.Manager
 {
     /// <summary>
-    /// SchedulerFactory class is responsible for creating the scheduler. This factory uses reflection to create a scheduler based upon the scheduler assembly name and scheduler type name specified in the manager's configuration file. If a scheduler has not been specified or if it fails to create the specified scheduler then the default scheduler is created.
+    /// SchedulerFactory class is responsible for creating the scheduler. 
+    /// This factory uses reflection to create a scheduler based upon the scheduler 
+    /// assembly name and scheduler type name specified in the manager's configuration file.
+    /// If a scheduler has not been specified or if it fails to create the specified 
+    /// scheduler then the default scheduler is created.
     /// </summary>
     public class SchedulerFactory
     {
@@ -48,7 +52,9 @@ namespace Alchemi.Manager
         }
 
         /// <summary>
-        /// Creates a scheduler based upon the scheduler assembly name and scheduler type name specified in the manager's configuration file. If it fails to create the specified scheduler then it returns the default scheduler.
+        /// Creates a scheduler based upon the scheduler assembly name and 
+        /// scheduler type name specified in the manager's configuration file. 
+        /// If it fails to create the specified scheduler then it returns the default scheduler.
         /// </summary>
         /// <returns></returns>
         public IScheduler CreateScheduler()
@@ -140,9 +146,9 @@ namespace Alchemi.Manager
         }
 
         /// <summary>
-        /// Determines whether the given value is 'specified'.
+        /// Determines whether the given name is 'specified'.
         /// </summary>
-        /// <param name="strValue">value</param>
+        /// <param name="strValue">name</param>
         /// <returns>whether it is specified</returns>
         private bool IsSpecified(string strValue)
         {

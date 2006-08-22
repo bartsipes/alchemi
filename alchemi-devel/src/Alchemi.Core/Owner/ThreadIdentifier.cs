@@ -91,5 +91,13 @@ namespace Alchemi.Core.Owner
             _ThreadId = threadId;
             _Priority = priority;
         }
+
+        public string UniqueId
+        {
+            get
+            {
+                return string.Format("{0}.{1}", _ApplicationId, _ThreadId);
+            }
+        }
     }
 }
