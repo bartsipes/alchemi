@@ -211,17 +211,20 @@ namespace Alchemi.Manager
         public void Owner_SetThreads(SecurityCredentials sc, ThreadIdentifier[] threadIds, byte[][] threads)
         {
             AuthenticateUser(sc);
-            ApplicationAuthorizationCheck(sc, threadIds[0].ApplicationId);
-            for (int i = 0; i < threadIds.Length; i++)
+            if (threadIds.Length > 0)
             {
-                ThreadIdentifier thId = threadIds[i];
-                MThread t = _Applications[thId.ApplicationId][thId.ThreadId];
-                t.Value = threads[i]; //[thread number][serialized thread]
-                t.Init(true);
-                t.Priority = thId.Priority;
+                ApplicationAuthorizationCheck(sc, threadIds[0].ApplicationId);
+                for (int i = 0; i < threadIds.Length; i++)
+                {
+                    ThreadIdentifier thId = threadIds[i];
+                    MThread t = _Applications[thId.ApplicationId][thId.ThreadId];
+                    t.Value = threads[i]; //[thread number][serialized thread]
+                    t.Init(true);
+                    t.Priority = thId.Priority;
 
-                logger.Debug("Initialised thread : " + thId.ThreadId);
-                InternalShared.Instance.DedicatedSchedulerActive.Set();
+                    logger.Debug("Initialised thread : " + thId.ThreadId);
+                    InternalShared.Instance.DedicatedSchedulerActive.Set();
+                }
             }
         }
 
