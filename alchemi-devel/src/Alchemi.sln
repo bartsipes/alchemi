@@ -38,7 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager", "{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "E:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager\", "{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.VirtualPath = "/Alchemi.CrossPlatformManager"
 		Debug.AspNetCompiler.PhysicalPath = "Alchemi.CrossPlatformManager\"
@@ -54,6 +54,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "D:\...\Alchemi.CrossPlatfor
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "3154"
 	EndProjectSection
 EndProject
 Global

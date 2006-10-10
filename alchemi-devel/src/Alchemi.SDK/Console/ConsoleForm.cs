@@ -1167,39 +1167,40 @@ namespace Alchemi.Console
 					ExecutorStorageView[] executors = console.Manager.Admon_GetExecutors(console.Credentials);
 					int iterations = 0;
 					lv.Items.Clear();
-					foreach (ExecutorStorageView executor in executors)
-					{
-						if (executor.HostName != null)
-						{
-							ExecutorItem exi = new ExecutorItem(executor.HostName);
-							exi.Executor = executor;
+                    if (executors != null)
+                    {
+                        foreach (ExecutorStorageView executor in executors)
+                        {
+                            if (executor.HostName != null)
+                            {
+                                ExecutorItem exi = new ExecutorItem(executor.HostName);
+                                exi.Executor = executor;
 
-							if (exi.Executor.Connected)
-							{
-								exi.ImageIndex = 5;
-							}
-							else
-							{
-								exi.ImageIndex = 6;
-							}
-							lv.Items.Add(exi);
-						}
+                                if (exi.Executor.Connected)
+                                {
+                                    exi.ImageIndex = 5;
+                                }
+                                else
+                                {
+                                    exi.ImageIndex = 6;
+                                }
+                                lv.Items.Add(exi);
+                            }
 
-						iterations++;
+                            iterations++;
 
-						if (iterations > MAGIC_ITEM_NUMBER)
-						{
-							iterations = 0;
-							Application.DoEvents();
-						}
+                            if (iterations > MAGIC_ITEM_NUMBER)
+                            {
+                                iterations = 0;
+                                Application.DoEvents();
+                            }
 
-						if (stopFillingRequest)
-						{
-							break; //To make sure we dont get stuck in this loop when asked to stop.
-						}
-					}
-
-					
+                            if (stopFillingRequest)
+                            {
+                                break; //To make sure we dont get stuck in this loop when asked to stop.
+                            }
+                        }
+                    }
 				}			
 				catch (Exception ex)
 				{

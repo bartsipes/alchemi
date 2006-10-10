@@ -927,7 +927,15 @@ namespace Alchemi.Manager.Storage
 						username
 						);
 
-					application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));
+                    if (!dataReader.IsDBNull(dataReader.GetOrdinal("application_name")))
+                    {
+                        application.ApplicationName = dataReader.GetString(dataReader.GetOrdinal("application_name"));
+                    }
+                    else
+                    {
+                        application.ApplicationName = String.Empty;
+                    }
+
 					application.TimeCompleted = GetDateTime(dataReader, "time_completed");
 
 					if (populateThreadCount)
