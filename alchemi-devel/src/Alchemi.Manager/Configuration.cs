@@ -102,7 +102,7 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// 
 		/// </summary>
-        public bool InUse = false;
+        //public bool InUse = false;
 		/// <summary>
 		/// Specifies if this Manager is an "intermediate" Manager...ie. if it is performing the role of an Executor also.
 		/// </summary>

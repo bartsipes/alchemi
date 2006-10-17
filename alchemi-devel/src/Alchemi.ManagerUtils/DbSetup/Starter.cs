@@ -39,17 +39,8 @@ namespace Alchemi.ManagerUtils.DbSetup
 		[STAThread]
 		static void Main(string[] args) 
 		{
-			string installLocation = null;
-
-			if (args.Length >= 1)
-			{
-				installLocation = args[0];  
-			}
-
 			Application.EnableVisualStyles();
-
-			Application.Run(new Installer(installLocation));
+			Application.Run(new Installer());
 		}
-
 	}
 }

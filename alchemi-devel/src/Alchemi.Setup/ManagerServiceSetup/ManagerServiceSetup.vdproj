@@ -21,20 +21,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1DE02F861D4300D579BC0E5B2D3541D6"
+        "MsmKey" = "8:_171725511788A994B99F2DE301280CB4"
         "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3917A8D9AF15CFE1C30439644A61ED23"
-        "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
+        "MsmKey" = "8:_171725511788A994B99F2DE301280CB4"
+        "OwnerKey" = "8:_CA3A26C1D78BD21B7BEFC11E9D653E57"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3917A8D9AF15CFE1C30439644A61ED23"
-        "OwnerKey" = "8:_EFA58264E6A55AFE3A6D50AC85816163"
+        "MsmKey" = "8:_321A330B0DADDD44BBEB2CDBCCECE26E"
+        "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,19 +51,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A0D9B184740DC5259DF7615CAF0CCC12"
+        "OwnerKey" = "8:_CA3A26C1D78BD21B7BEFC11E9D653E57"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A0D9B184740DC5259DF7615CAF0CCC12"
+        "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BF98F425FE5309EBE9365C6C0930EE34"
-        "OwnerKey" = "8:_EFA58264E6A55AFE3A6D50AC85816163"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BF98F425FE5309EBE9365C6C0930EE34"
+        "MsmKey" = "8:_CA3A26C1D78BD21B7BEFC11E9D653E57"
         "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -75,8 +81,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EFA58264E6A55AFE3A6D50AC85816163"
-        "OwnerKey" = "8:_A184F1CF82644FE5B8A2639AB0D2E1AE"
+        "MsmKey" = "8:_E83912EBD069CEAF821CC7DB3B176E7E"
+        "OwnerKey" = "8:_A0D9B184740DC5259DF7615CAF0CCC12"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,25 +94,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1DE02F861D4300D579BC0E5B2D3541D6"
+        "OwnerKey" = "8:_CA3A26C1D78BD21B7BEFC11E9D653E57"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EFA58264E6A55AFE3A6D50AC85816163"
+        "OwnerKey" = "8:_171725511788A994B99F2DE301280CB4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BF98F425FE5309EBE9365C6C0930EE34"
+        "OwnerKey" = "8:_321A330B0DADDD44BBEB2CDBCCECE26E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3917A8D9AF15CFE1C30439644A61ED23"
+        "OwnerKey" = "8:_A0D9B184740DC5259DF7615CAF0CCC12"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E83912EBD069CEAF821CC7DB3B176E7E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -144,7 +156,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\..\\..\\bin\\Setup\\Manager\\Service\\Alchemi.ManagerServiceSetup.msi"
+        "OutputFilename" = "8:..\\..\\..\\build\\Setup\\Manager\\Service\\Alchemi.ManagerServiceSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -271,20 +283,15 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1DE02F861D4300D579BC0E5B2D3541D6"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_171725511788A994B99F2DE301280CB4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.6.35048, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1DE02F861D4300D579BC0E5B2D3541D6"
-                    {
-                    "Name" = "8:log4net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
-            "SourcePath" = "8:log4net.dll"
+            "SourcePath" = "8:Alchemi.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"
@@ -302,20 +309,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3917A8D9AF15CFE1C30439644A61ED23"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_321A330B0DADDD44BBEB2CDBCCECE26E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_3917A8D9AF15CFE1C30439644A61ED23"
+                    "_321A330B0DADDD44BBEB2CDBCCECE26E"
                     {
-                    "Name" = "8:Alchemi.Core.dll"
+                    "Name" = "8:log4net.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Alchemi.Core.dll"
+            "SourcePath" = "8:log4net.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"
@@ -373,20 +380,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BF98F425FE5309EBE9365C6C0930EE34"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A0D9B184740DC5259DF7615CAF0CCC12"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:MySql.Data, Version=1.0.7.30072, Culture=neutral, PublicKeyToken=c5687fc88969c44d"
                 "ScatterAssemblies"
                 {
-                    "_BF98F425FE5309EBE9365C6C0930EE34"
+                    "_A0D9B184740DC5259DF7615CAF0CCC12"
                     {
                     "Name" = "8:MySql.Data.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:MySql.Data.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA3A26C1D78BD21B7BEFC11E9D653E57"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Alchemi.Manager, Version=1.0.6.35049, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                }
+            "SourcePath" = "8:Alchemi.Manager.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"
@@ -424,20 +457,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EFA58264E6A55AFE3A6D50AC85816163"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E83912EBD069CEAF821CC7DB3B176E7E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Alchemi.Manager, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ICSharpCode.SharpZipLib, Version=0.81.0.1407, Culture=neutral, PublicKeyToken=1b03e6acf1164f73"
                 "ScatterAssemblies"
                 {
-                    "_EFA58264E6A55AFE3A6D50AC85816163"
+                    "_E83912EBD069CEAF821CC7DB3B176E7E"
                     {
-                    "Name" = "8:Alchemi.Manager.dll"
+                    "Name" = "8:ICSharpCode.SharpZipLib.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Alchemi.Manager.dll"
+            "SourcePath" = "8:ICSharpCode.SharpZipLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"
@@ -566,14 +599,14 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Alchemi Manager"
         "ProductCode" = "8:{DF611F3C-EC56-44AF-A714-A1ED5C72B590}"
-        "PackageCode" = "8:{EB5A6D1A-1070-48EC-9F61-74D15CA76920}"
+        "PackageCode" = "8:{854094B4-0EC8-4C81-9797-24EFD4BAF061}"
         "UpgradeCode" = "8:{738A7185-8588-4261-9F13-02C3527BF911}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.7.0"
-        "Manufacturer" = "8:Krishna Nadiminti"
+        "Manufacturer" = "8:The Gridbus Project, The University of Melbourne"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Alchemi Manager Setup"
@@ -581,7 +614,7 @@
         "ARPCONTACT" = "8:Krishna Nadiminti"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPURLINFOABOUT" = "8:www.alchemi.net"
         "ARPPRODUCTICON" = "8:_3B5B375507DA49068D1467C7B5EC387D"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
@@ -1111,7 +1144,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A184F1CF82644FE5B8A2639AB0D2E1AE"
             {
-            "SourcePath" = "8:..\\..\\Alchemi.ManagerService\\obj\\Debug\\Alchemi.ManagerService.exe"
+            "SourcePath" = "8:..\\..\\Alchemi.ManagerService\\obj\\Release\\Alchemi.ManagerService.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_CF177E21EA914BB0ABD5A8E5CA8811F9"

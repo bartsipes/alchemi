@@ -50,7 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\ManagerService\</OutputPath>
+    <OutputPath>..\..\build\ManagerService\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
@@ -96,9 +96,8 @@
       <Name>System.XML</Name>
     </Reference>
     <ProjectReference Include="..\Alchemi.Core\Core.csproj">
-      <Name>Core</Name>
       <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Alchemi.Manager\Manager.csproj">
       <Name>Manager</Name>

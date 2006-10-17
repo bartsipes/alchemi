@@ -34,7 +34,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.5.*")]
-[assembly: AssemblyInformationalVersion("1.0.5")]
+[assembly: AssemblyVersion("1.0.6.*")]
+[assembly: AssemblyInformationalVersion("1.0.6")]
 
 [assembly: ComVisible(false)]

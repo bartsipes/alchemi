@@ -70,7 +70,7 @@ namespace Alchemi.ManagerExec
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 517);
+            this.statusBar.Location = new System.Drawing.Point(0, 537);
             // 
             // lnkViewLog
             // 
@@ -79,7 +79,7 @@ namespace Alchemi.ManagerExec
             // ManagerMainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(458, 539);
+            this.ClientSize = new System.Drawing.Size(458, 559);
             this.Name = "ManagerMainForm";
             this.Load += new System.EventHandler(this.ManagerMainForm_Load);
             this.tabPage1.ResumeLayout(false);
@@ -143,9 +143,8 @@ namespace Alchemi.ManagerExec
 			//normal startup. not a service
 			_container = new  ManagerContainer();
 			_container.ReadConfig();
-			Config = _container.Config;
 			
-			RefreshUIControls();
+			RefreshUIControls(_container.Config);
 			btStart.Focus();
 		}
 
@@ -153,9 +152,8 @@ namespace Alchemi.ManagerExec
 
 		private void cbIntermediate_CheckedChanged(object sender, EventArgs e)
 		{
-			Config.Intermediate = cbIntermediate.Checked;
-			_container.Config = Config;
-			RefreshUIControls();
+			_container.Config.Intermediate = cbIntermediate.Checked;
+            RefreshUIControls(_container.Config);
 		}
 
 		#region Implementation of methods from ManagerTemplateForm
@@ -182,9 +180,7 @@ namespace Alchemi.ManagerExec
 		protected override void ResetManager()
 		{
 			_container.ReadConfig();
-			Config = _container.Config;
-
-			RefreshUIControls();
+			RefreshUIControls(_container.Config);
 		}
      
 		protected override void StopManager()
@@ -215,16 +211,16 @@ namespace Alchemi.ManagerExec
 
 			}
 			
-			RefreshUIControls();
+			RefreshUIControls(_container.Config);
 
 		}
     
 		protected override void StartManager()
 		{
 
-			if (Started)
+			if (Started && _container!=null)
 			{
-				RefreshUIControls();
+				RefreshUIControls(_container.Config);
 				return;
 			}
 
@@ -240,12 +236,10 @@ namespace Alchemi.ManagerExec
 			pbar.Value = 0;
 			pbar.Show();
 
-			Config = GetConfigFromUI();
-
 			if (_container == null)
 				_container = new ManagerContainer();
 
-			_container.Config = Config;
+			_container.Config = GetConfigFromUI();
 			_container.RemotingConfigFile = Assembly.GetExecutingAssembly().Location + ".config";
 
 			try
@@ -273,7 +267,7 @@ namespace Alchemi.ManagerExec
 				Log(errorMsg);
 				logger.Error(errorMsg,ex);
 			}
-			RefreshUIControls();
+			RefreshUIControls(_container.Config);
 		}
 		#endregion
 
