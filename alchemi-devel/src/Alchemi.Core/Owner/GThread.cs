@@ -60,7 +60,7 @@ namespace Alchemi.Core.Owner
 		/// Sets the id of the grid thread
 		/// </summary>
 		/// <param name="id"></param>
-        public void SetId (int id)
+        protected internal void SetId (int id)
         {
             _Id = id;
         }

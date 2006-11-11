@@ -51,11 +51,11 @@ namespace Alchemi.Manager
 
         internal readonly IScheduler Scheduler;
 
-        private InternalShared()
+        private InternalShared(Configuration config)
         {
             DataRootDirectory = Utils.GetFilePath("dat", AlchemiRole.Manager, true); 
             DedicatedSchedulerActive = new ManualResetEvent(true);
-            Scheduler = (new SchedulerFactory()).CreateScheduler();
+            Scheduler = (new SchedulerFactory()).CreateScheduler(config);
         }
 
 		/// <summary>
@@ -67,11 +67,11 @@ namespace Alchemi.Manager
 		/// Gets an instance of this class (creates it, the first time).
 		/// </summary>
 		/// <returns></returns>
-        internal static InternalShared GetInstance()
+        internal static InternalShared GetInstance(Configuration config)
         {
             if (Instance == null)
             {
-                Instance = new InternalShared();
+                Instance = new InternalShared(config);
             }
             return Instance;
         }

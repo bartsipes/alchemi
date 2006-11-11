@@ -258,7 +258,6 @@ namespace Alchemi.ManagerExec
 			}
 			catch (Exception ex)
 			{
-				_container = null;
 				string errorMsg = string.Format("Could not start Manager. Reason: {0}{1}", Environment.NewLine, ex.Message);
 				if (ex.InnerException != null)
 				{

@@ -270,7 +270,7 @@ namespace Alchemi.DevTools
                     return;
                 }
             }
-
+            
         }
 
     	private static void DefaultErrorHandler(object sender, UnhandledExceptionEventArgs e)
@@ -324,6 +324,7 @@ namespace Alchemi.DevTools
             Console.WriteLine("\tsubmittask");
             Console.WriteLine("\texit");
             Console.WriteLine("\nUse 'help <command>' for help on a particular command.");
+            Console.Read();
         }
 
         public static void Usage(string cmd)

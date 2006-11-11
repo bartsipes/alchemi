@@ -178,20 +178,15 @@ namespace Alchemi.Manager
                 }
                 */
 
-                logger.Debug("Creating a new scheduler");
-                SchedulerFactory schedulerFactory = new SchedulerFactory();
-                IScheduler scheduler = schedulerFactory.CreateScheduler();
-
-                logger.Debug("Configuring internal shared class...");
-
+                logger.Debug("Configuring storage...");
                 ManagerStorageFactory.CreateManagerStorage(Config);
-
                 if (!ManagerStorageFactory.ManagerStorage().VerifyConnection())
                 {
                     throw new Exception("Error connecting to manager storage. Please check manager log file for details.");
                 }
 
-                InternalShared common = InternalShared.GetInstance();
+                logger.Debug("Configuring internal shared class...");
+                InternalShared common = InternalShared.GetInstance(Config);
 
                 logger.Debug("Starting dispatcher thread");
                 dispatcher.Start();

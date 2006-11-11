@@ -139,6 +139,7 @@ namespace Alchemi.ManagerService
 
 		private void ManagerMainForm_Load(object sender, EventArgs e)
 		{
+
 			//this is a service. just read the config.
 			ReadManagerConfig(false);
 			

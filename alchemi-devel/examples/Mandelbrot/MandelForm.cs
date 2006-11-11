@@ -440,7 +440,7 @@ namespace Alchemi.Examples.Mandelbrot
                         pbColorOne.BackColor,
                         pbColorTwo.BackColor
                         );
-
+                    //ga.Threads.Add(mandel);
                     ga.StartThread(mandel);
                 }
             }

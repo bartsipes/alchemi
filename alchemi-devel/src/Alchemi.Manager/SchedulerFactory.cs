@@ -57,9 +57,8 @@ namespace Alchemi.Manager
         /// If it fails to create the specified scheduler then it returns the default scheduler.
         /// </summary>
         /// <returns></returns>
-        public IScheduler CreateScheduler()
+        public IScheduler CreateScheduler(Configuration oConfiguration)
         {
-            Configuration oConfiguration = GetConfiguration();
             if (oConfiguration != null)
             {
                 string strSchedulerAssemblyName = oConfiguration.SchedulerAssemblyName;

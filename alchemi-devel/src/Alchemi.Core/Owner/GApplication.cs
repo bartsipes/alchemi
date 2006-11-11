@@ -468,15 +468,14 @@ namespace Alchemi.Core.Owner
 						byte[][] FinishedThreads = Manager.Owner_GetFinishedThreads(Credentials, _Id);
 						_NumThreadsFinished = Manager.Owner_GetFinishedThreadCount(Credentials,_Id);
 
-                        if (logCounter > 10 || FinishedThreads.Length > 0)
+                        if (logCounter > 20 || FinishedThreads.Length > 0)
                         {
                             //print log only once in a while
                             logger.Debug("Threads finished this poll..." + FinishedThreads.Length);
                             logger.Debug("Total Threads finished so far..." + _NumThreadsFinished);
+                            logCounter = 0;
                         }
                         logCounter++;
-                        if (logCounter > 20)
-                            logCounter = 0;
 
 						for (int i=0; i<FinishedThreads.Length; i++)
 						{

@@ -31,6 +31,9 @@ namespace Alchemi.Tester.Core.Owner
     [TestFixture]
     public class GThreadTester
     {
+        /*
+         * krishna : removed this test, since we are NOT supposed to set the 
+         * thread id from outside.
         #region "SetId tests"
 
         [Test]
@@ -46,6 +49,7 @@ namespace Alchemi.Tester.Core.Owner
         }
 
         #endregion
+        */
 
         #region "SetWorkingDirectory tests"
 

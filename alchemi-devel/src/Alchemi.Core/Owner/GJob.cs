@@ -123,11 +123,11 @@ namespace Alchemi.Core.Owner
         {
             try
             {
-                log.AppendLine("Starting Job ... ");
-
                 output = new StringBuilder();
                 error = new StringBuilder();
                 log = new StringBuilder();
+
+                log.AppendLine("Starting Job ... ");
 
                 foreach (FileDependency dep in _InputFiles)
                 {
