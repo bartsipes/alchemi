@@ -140,30 +140,27 @@ namespace Alchemi.ManagerService
 		private void ManagerMainForm_Load(object sender, EventArgs e)
 		{
 
-			//this is a service. just read the config.
-			ReadManagerConfig(false);
-			
-			RefreshUIControls();
+			//this is a service. just read the config.			
+			RefreshUIControls(ReadManagerConfig(false));
 			btStart.Focus();
 		}
 
-		private void ReadManagerConfig(bool useDefault)
+		private Configuration ReadManagerConfig(bool useDefault)
 		{
 			//in case it is a service, the container would be null since we dont need it really.
 			//but we still need to get the config from it, so create a new one and read the config.
 			ManagerContainer mc = new ManagerContainer();
 			mc.ReadConfig();
-			Config = mc.Config;
-			mc = null;
+            return mc.Config;
 		}
 
 		//-----------------------------------------------------------------------------------------------    
 
 		private void cbIntermediate_CheckedChanged(object sender, EventArgs e)
 		{
-			Config.Intermediate = cbIntermediate.Checked;
-			_container.Config = Config;
-			RefreshUIControls();
+			//Config.Intermediate = cbIntermediate.Checked;
+			//_container.Config = Config;
+			//RefreshUIControls();
 		}
 
 		#region Implementation of methods from ManagerTemplateForm
@@ -198,8 +195,7 @@ namespace Alchemi.ManagerService
 		protected override void ResetManager()
 		{
 			//only reset the GUI.
-			ReadManagerConfig(true);
-			RefreshUIControls();
+			RefreshUIControls(ReadManagerConfig(true));
 		}
      
 		protected override void StopManager()
@@ -207,7 +203,7 @@ namespace Alchemi.ManagerService
 			if (!Started)
 			{
 				Log("The Manager Service is already stopped.");
-				RefreshUIControls();
+                RefreshUIControls(ReadManagerConfig(true));
 				return;
 			}
 
@@ -238,8 +234,7 @@ namespace Alchemi.ManagerService
 				Log("Error stopping ManagerService");
 				logger.Error(ex.Message, ex);
 			}
-			RefreshUIControls();
-
+            RefreshUIControls(ReadManagerConfig(true));
 		}
     
 		protected override void StartManager()
@@ -247,7 +242,7 @@ namespace Alchemi.ManagerService
 			if (Started)
 			{
 				Log("Manager Service is already started.");
-				RefreshUIControls();
+                RefreshUIControls(ReadManagerConfig(true));
 				return;
 			}
 
@@ -266,7 +261,7 @@ namespace Alchemi.ManagerService
 				if (sc.Status != ServiceControllerStatus.Running && sc.Status != ServiceControllerStatus.StartPending)
 				{
 					//get latest config from UI and serialize the  object, so that the service uses the latest config.
-					Config = GetConfigFromUI();
+					Configuration Config = GetConfigFromUI();
 					if (Config!=null)
 					{					
 						Config.Slz();
@@ -286,7 +281,7 @@ namespace Alchemi.ManagerService
 				logger.Error("Error starting ManagerService",ex);
 				StopManager();
 			}
-			RefreshUIControls();
+            RefreshUIControls(ReadManagerConfig(true));
 		}
 		#endregion
 
