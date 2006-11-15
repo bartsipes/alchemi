@@ -123,12 +123,12 @@ namespace Alchemi.Core.Owner
         {
             try
             {
+
                 output = new StringBuilder();
                 error = new StringBuilder();
                 log = new StringBuilder();
 
                 log.AppendLine("Starting Job ... ");
-
                 foreach (FileDependency dep in _InputFiles)
                 {
                     dep.UnpackToFolder(WorkingDirectory);
@@ -181,6 +181,9 @@ namespace Alchemi.Core.Owner
                 //the working dir would be clean up by the Executor anyway.
 
                 log.AppendFormat("Job {0} complete.", Id).AppendLine();
+
+                output.AppendLine(process.StandardOutput.ReadToEnd().ToString());
+                error.AppendLine(process.StandardError.ReadToEnd().ToString());
             }
             finally
             {
@@ -216,12 +219,19 @@ namespace Alchemi.Core.Owner
         #region Process Events
         void process_Exited(object sender, EventArgs e)
         {
-            if (process != null)
+            try
             {
-                log.AppendFormat("Process {0} has exited at {1} with exit code {2}.",
-                    process.Id,
-                    process.ExitTime.ToUniversalTime(),
-                    process.ExitCode).AppendLine();
+                if (process != null)
+                {
+                    log.AppendFormat("Process {0} has exited at {1} with exit code {2}.",
+                        process.Id,
+                        process.ExitTime.ToUniversalTime(),
+                        process.ExitCode).AppendLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                //ignore
             }
         }
 

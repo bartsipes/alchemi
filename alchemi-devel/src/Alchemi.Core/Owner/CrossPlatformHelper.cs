@@ -148,7 +148,10 @@ namespace Alchemi.Core
             {
                 GJob job = (GJob) Utils.DeserializeFromByteArray(FinishedThreads[i]);
                 xsw.Writer.WriteRaw("\n" + CrossPlatformHelper.XmlFromJob(job) + "\n");
-				logger.Debug("Writing thread:"+job.Id);
+				logger.Debug("Returning query result for thread:"+job.Id);
+                logger.Debug("Log output for GJob : \n " + job.Log);
+                logger.Debug("Std output for GJob : \n " + job.Stdout);
+                logger.Debug("Std errort for GJob : \n " + job.Stderr);
             }
             xsw.Writer.WriteEndElement(); // close job
       
@@ -236,7 +239,32 @@ namespace Alchemi.Core
                 xsw.Writer.WriteString(fileDep.Base64EncodedContents);
                 xsw.Writer.WriteFullEndElement(); // close embedded_file element
             }
-      
+
+            /*
+            //in the new API for GJob, the stderr, stdout are properties.
+            //put them into XML as output elements
+             */
+            //stdout
+            xsw.Writer.WriteStartElement("embedded_file");
+            xsw.Writer.WriteAttributeString("name", "stdout.txt");
+            xsw.Writer.WriteString(Utils.EncodeBase64(job.Stdout));
+            xsw.Writer.WriteFullEndElement(); // close embedded_file element
+            logger.Debug("Stdout " + job.Stdout);
+
+            //stderr
+            xsw.Writer.WriteStartElement("embedded_file");
+            xsw.Writer.WriteAttributeString("name", "stderr.txt");
+            xsw.Writer.WriteString(Utils.EncodeBase64(job.Stderr));
+            xsw.Writer.WriteFullEndElement(); // close embedded_file element
+            logger.Debug("Stderr " + job.Stderr);
+
+            //log
+            xsw.Writer.WriteStartElement("embedded_file");
+            xsw.Writer.WriteAttributeString("name", "log.txt");
+            xsw.Writer.WriteString(Utils.EncodeBase64(job.Log));
+            xsw.Writer.WriteFullEndElement(); // close embedded_file element
+            logger.Debug("Log " + job.Log);
+
             xsw.Writer.WriteEndElement(); // close output
             xsw.Writer.WriteEndElement(); // close task
       

@@ -238,6 +238,8 @@ namespace Alchemi.Core.Owner
             _StartAppThread.Start();
         }
 
+        //TODO blocking start
+
 		/// <summary>
 		/// Starts the grid application
 		/// </summary>
@@ -626,4 +628,3 @@ namespace Alchemi.Core.Owner
 		}
 	}
 }
-
