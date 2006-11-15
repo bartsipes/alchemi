@@ -21,7 +21,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\XPManagerSetup.msi"
+        "OutputFilename" = "8:..\\..\\..\\build\\Setup\\Manager\\WebService\\XPManager.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -31,6 +31,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.2.0"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 2.0"
+                    "ProductCode" = "8:Microsoft.Net.Framework.2.0"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -47,6 +63,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
     }
     "Deployable"
@@ -98,6 +125,24 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{4C6F2762-250E-4E7D-82DC-65B304135C98}:_2208DCFEB71E41218D4B855C6C5BB66F"
+                    {
+                    "AllowScriptSourceAccess" = "11:FALSE"
+                    "AllowReadAccess" = "11:FALSE"
+                    "AllowWriteAccess" = "11:FALSE"
+                    "AllowDirectoryBrowse" = "11:FALSE"
+                    "LogVisits" = "11:TRUE"
+                    "Index" = "11:FALSE"
+                    "ExecutePermissions" = "3:1"
+                    "Name" = "8:logs"
+                    "AlwaysCreate" = "11:TRUE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_FDEB9F41232F4D2CA384ADE47D556000"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{4C6F2762-250E-4E7D-82DC-65B304135C98}:_5BD9261692234A868F8889363837FC68"
                     {
                     "AllowScriptSourceAccess" = "11:FALSE"
@@ -105,7 +150,7 @@
                     "AllowWriteAccess" = "11:FALSE"
                     "AllowDirectoryBrowse" = "11:FALSE"
                     "LogVisits" = "11:TRUE"
-                    "Index" = "11:TRUE"
+                    "Index" = "11:FALSE"
                     "ExecutePermissions" = "3:2"
                     "Name" = "8:bin"
                     "AlwaysCreate" = "11:TRUE"
@@ -149,7 +194,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:XPManagerSetup"
         "ProductCode" = "8:{29895121-AE3F-41AB-830C-8C0BA6BD05C0}"
-        "PackageCode" = "8:{836FC9B4-AE38-4A96-A733-749A4E1A2B54}"
+        "PackageCode" = "8:{12DB7855-41BE-4D9E-BB38-DF033914AFD6}"
         "UpgradeCode" = "8:{26BE3DFE-1D1C-42EA-A04F-0D0AAA50521A}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"

@@ -41,7 +41,20 @@ namespace Alchemi.Console
 
 	public class ThreadItem : ListViewItem
 	{
-		public ThreadStorageView AlchemiThread;
+        private ThreadStorageView _AlchemiThread = null;
+
+		public ThreadStorageView AlchemiThread{
+            get
+            {
+                return _AlchemiThread;
+            }
+            set
+            {
+                _AlchemiThread = value;
+                //also set the listviewItems subitem
+                this.SubItems.Add(_AlchemiThread.State.ToString());
+            }
+        }
 
 		public ThreadItem(string text) : base(text)
 		{

@@ -230,6 +230,18 @@ namespace Alchemi.Core.Utility
             return Convert.ToBase64String(ReadByteArrayFromFile(fileLocation));
         }
 
+
+        public static string EncodeBase64(string stringToEncodeToBase64)
+        {
+            byte[] encbuff = System.Text.Encoding.UTF8.GetBytes(stringToEncodeToBase64);
+            return Convert.ToBase64String(encbuff);
+        }
+        public static string DecodeBase64(string base64EncodedString)
+        {
+            byte[] decbuff = Convert.FromBase64String(base64EncodedString);
+            return System.Text.Encoding.UTF8.GetString(decbuff);
+        }
+
         //-----------------------------------------------------------------------------------------------    
 
         /// <summary>

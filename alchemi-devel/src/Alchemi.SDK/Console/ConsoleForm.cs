@@ -1310,6 +1310,11 @@ namespace Alchemi.Console
 					int iterations = 0;
 					lv.Items.Clear();
 
+                    lv.Columns.Clear();
+                    lv.Columns.Add("Thread Id");
+                    lv.Columns.Add("State");
+                    lv.View = View.Details; //temp
+
 					foreach (ThreadStorageView thread in threads)
 					{
 						ThreadItem thrItem = new ThreadItem(thread.ThreadId.ToString());
