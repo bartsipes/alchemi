@@ -72,7 +72,6 @@ public class TestAlchemi extends TestCase implements IJobListener{
 			
 			//create a new job
 			GJob gj = new GJob();
-			gj.setJobID(1);
 			gj.setRunCommand("Reverse.exe abc.txt > abcRev.txt");
 			
 			FileDependencyCollection inputs = new FileDependencyCollection();

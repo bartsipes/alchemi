@@ -21,6 +21,8 @@ package org.gridbus.alchemi.client;
  * @author krishna
  */
 public class GJob {
+	//to assign Ids to jobs
+	private static long currentJob = 0;
 
     /** Unknown status */
     public static final int Unknown = -1;
@@ -46,18 +48,22 @@ public class GJob {
     private FileDependencyCollection outputfiles;
     private String runCommand;
     
-    private int jobID = 1; //default value
+    private long jobID;
     private AlchemiJobHandle jobHandle = null;
     
     private int status;
 
 	private Exception executionException;
-    
+	    
     /**
      * Represents a Job on the Alchemi Manager
      */
     public GJob() {
         super();
+        inputfiles = new FileDependencyCollection();
+        outputfiles = new FileDependencyCollection();
+        jobID = currentJob;
+        currentJob++;
     }
 
     /**
@@ -76,14 +82,8 @@ public class GJob {
     /**
 	 * @return Returns the jobID.
 	 */
-	public int getJobID() {
+	public long getJobID() {
 		return jobID;
-	}
-	/**
-	 * @param jobID The jobID to set.
-	 */
-	public void setJobID(int jobID) {
-		this.jobID = jobID;
 	}
 	/**
 	 * @return Returns the inputfiles.

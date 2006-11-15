@@ -57,7 +57,6 @@ public class TestAlchemiFull implements IJobListener{
 			
 			//create a new job
 			GJob gj = new GJob();
-			gj.setJobID(1);
 			gj.setRunCommand("calc.exe 0 0");
 			//gj.setRunCommand("Reverse.exe abc.txt > abcRev.txt");
 			

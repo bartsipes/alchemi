@@ -18,13 +18,13 @@
 
 package org.gridbus.alchemi.client;
 
-import org.apache.log4j.Logger;
-
+import java.io.File;
 import java.net.URL;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.gridbus.alchemi.client.stubs.CrossPlatformManager;
 import org.gridbus.alchemi.client.stubs.CrossPlatformManagerLocator;
 import org.gridbus.alchemi.client.stubs.CrossPlatformManagerSoap;
@@ -61,8 +61,9 @@ public class GApplication {
 	
 	private boolean finished = false;
 	
-	private String localWorkingDirectory = "";
+	private String localWorkingDirectory = ".";
 	
+	private static final String LOG4J = "log4j.properties";
 	/**
 	 * Creates a new instance of the Grid application on the given manager.
 	 * 
@@ -79,6 +80,18 @@ public class GApplication {
 		monitor = new JobMonitor();
 		jobListeners = new Vector();
 		jobs = new GJobCollection();
+		manifest = new FileDependencyCollection();
+		try{
+			//try to configure the logger using the log4j.props in the classpath .
+			URL logConfig = GApplication.class.getResource("/"+LOG4J);	
+			if (logConfig != null){
+				PropertyConfigurator.configure(logConfig);
+			} else if ((new File(LOG4J).exists())){
+				PropertyConfigurator.configure("log4j.properties"); //to enable logging from Alchemi
+			}
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
 	}
 	
 	private void getManagerClient(String managerURL) throws Exception{
@@ -111,7 +124,7 @@ public class GApplication {
 		logger.debug("Submitting application to Alchemi manager service at : "+managerURL);
 		this.taskID = manager.submitTask(securityCredentials.getUsername(),securityCredentials.getPassword(),taskXml);
 		if (taskID==null){
-			throw new Exception("Error submitting application...");
+			throw new Exception("Error submitting application : Could not get taskID from Manager!");
 		}
 		
 		logger.debug("Application submitted successfully. ApplicationID="+taskID);
@@ -345,6 +358,9 @@ public class GApplication {
 						//stop the monitor
 						running = false;
 						break;
+					}else{
+						logger.debug("Application running : DONE : " + 
+								doneJobs + ", FAILED : " + failedJobs + ". Total : " + totalJobs);
 					}
 					
 					Thread.sleep(POLLTIME);
@@ -459,6 +475,10 @@ public class GApplication {
 	 */
 	public void setLocalWorkingDirectory(String localWorkingDirectory) {
 		this.localWorkingDirectory = localWorkingDirectory;
+		File f = new File(localWorkingDirectory); 
+		if (!f.exists()){
+			f.mkdirs();
+		}
 	}
 
 	/**
