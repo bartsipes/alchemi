@@ -413,6 +413,7 @@ namespace Alchemi.Examples.Mandelbrot
 
                 try
                 {
+                    
                     ga.Start();
                 }
                 catch (Exception e)

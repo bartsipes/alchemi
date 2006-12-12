@@ -66,7 +66,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\todo.txt = ..\todo.txt
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "E:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager\", "{B4E6C9E0-9EEA-4327-ABD6-965CAF57A2DA}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "M:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager\", "{B4E6C9E0-9EEA-4327-ABD6-965CAF57A2DA}"
 	ProjectSection(WebsiteProperties) = preProject
 		ProjectReferences = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}|Alchemi.Core.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Alchemi.CrossPlatformManager"
@@ -191,7 +191,6 @@ Global
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|.NET.ActiveCfg = Release|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -200,7 +199,6 @@ Global
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Release|.NET.ActiveCfg = Release|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23CC92DA-8780-4A17-BF9A-E567CB0548C5}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -242,7 +240,6 @@ Global
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release|.NET.ActiveCfg = Release|Any CPU
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C11636CD-14B6-4526-80DA-AFF5DFA84298}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -271,7 +268,6 @@ Global
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Release|.NET.ActiveCfg = Release|Any CPU
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAD0562A-0E03-4351-A73F-CCD42535EE46}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -296,7 +292,6 @@ Global
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Release|.NET.ActiveCfg = Release|Any CPU
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BA151D4-C25B-47B7-B0A1-938BB13B78BE}.Release|Any CPU.Build.0 = Release|Any CPU

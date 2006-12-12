@@ -40,6 +40,6 @@ namespace Alchemi.Core.Owner
 		/// Creates an instance of the ModuleDependency class
 		/// </summary>
 		/// <param name="module"></param>
-        public ModuleDependency(Module module) : base(module.ScopeName, module.FullyQualifiedName) {}
+        public ModuleDependency(Module module) : base(module.Name, module.FullyQualifiedName) {}
     }
 }

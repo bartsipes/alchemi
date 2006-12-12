@@ -30,6 +30,10 @@ using System.Threading;
 
 namespace Alchemi.Core.Owner
 {
+    public struct JobVariables
+    {
+        public static string WorkingDirectory = "${WorkingDirectory}";
+    }
 	/// <summary>
 	/// Represents a coarse unit of work on the grid. This class extends the GThread to enable legacy applications to 
 	/// run on the grid. A GJob is associated with file dependencies which are the inputs and outputs of the job
@@ -114,6 +118,16 @@ namespace Alchemi.Core.Owner
             set { _RunCommand = value; }
         }
 
+        private string SubstituteVariables(string input)
+        {
+            string output = null;
+            if (!string.IsNullOrEmpty(input))
+            {
+                output = input.Replace(JobVariables.WorkingDirectory, WorkingDirectory);
+            }
+            return output;
+        }
+
         //-----------------------------------------------------------------------------------------------    
 
 		/// <summary>
@@ -149,7 +163,7 @@ namespace Alchemi.Core.Owner
                 process.StartInfo.RedirectStandardOutput = true;
 
                 process.StartInfo.FileName = "cmd"; //_RunCommand; //
-                process.StartInfo.Arguments = "/C " + _RunCommand;
+                process.StartInfo.Arguments = "/C " + SubstituteVariables(_RunCommand);
 
                 log.Append("Forking process: ").AppendLine(process.StartInfo.FileName);
                 log.Append("Arguments: ").AppendLine(process.StartInfo.Arguments);
