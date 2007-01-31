@@ -44,57 +44,57 @@ public class ManagerTemplateForm : Form
 
     private IContainer components;
 
-    protected Button btStart;
-    protected TextBox txOwnPort;
-    protected TextBox txManagerHost;
-    protected TextBox txManagerPort;
-    protected TextBox txId;
-    protected CheckBox cbIntermediate;
-    protected Button btStop;
-    protected Button btReset;
-    protected CheckBox cbDedicated;
+    protected Button uiStartButton;
+    protected TextBox uiOwnPortTextBox;
+    protected TextBox uiManagerHostTextBox;
+    protected TextBox uiManagerPortTextBox;
+    protected TextBox uiIdTextBox;
+    protected CheckBox uiIntermediateComboBox;
+    protected Button uiStopButton;
+    protected Button uiResetButton;
+    protected CheckBox uiDedicatedCheckBox;
 
     protected NotifyIcon TrayIcon;
 
     protected ContextMenu TrayMenu;
     protected MenuItem tmExit;
     protected MainMenu MainMenu;
-    protected MenuItem mmExit;
-    protected MenuItem mmAbout;
-    protected MenuItem miManager;
-    protected MenuItem miHelp;
+    protected MenuItem uiManagerExitMenuItem;
+    protected MenuItem uiHelpAboutMenuItem;
+    protected MenuItem uiManagerMenuItem;
+    protected MenuItem uiHelpMenuItem;
 
-    protected TabControl tabControl;
-    protected Label lbMgrHost;
-    protected Label lbOwnPort;
-    protected GroupBox gpBoxNodeConfig;
-    protected Label lbId;
-    protected Label lbMgrPort;
+    protected TabControl uiTabControl;
+    protected Label uiManagerHostLabel;
+    protected Label uiOwnPortLabel;
+    protected GroupBox uiNodeConfigurationGroupBox;
+    protected Label uiIdLabel;
+    protected Label uiManagerPortLabel;
 
-    protected TabPage tabPage2;
-    protected TextBox txLog;
-    protected Label lbLogMsg;
-    protected RadioButton radDb;
-    protected TextBox txDbPassword;
-    protected Label lbDBPassword;
-    protected TextBox txDbName;
-    protected TextBox txDbUsername;
-    protected Label lbDBName;
-    protected Label lbDBServer;
-    protected Label lbDBUsername;
-    protected TextBox txDbServer;
-    protected RadioButton radMem;
-    protected Label label1;
-    protected ComboBox cmbDbType;
-    protected GroupBox gpStorage;
-    protected Label label2;
-    protected ComboBox cmbScheduler;
-    protected LinkLabel lnkViewLog;
-    protected GroupBox gpBoxActions;
+    protected TabPage uiAdvancedTabPage;
+    protected TextBox uiLogMessagesTextBox;
+    protected Label uiLogMessagesLabel;
+    protected RadioButton uiDatabaseRadioButton;
+    protected TextBox uiDatabasePasswordTextBox;
+    protected Label uiDatabasePasswordLabel;
+    protected TextBox uiDatabaseNameTextBox;
+    protected TextBox uiDatabaseUserTextBox;
+    protected Label uiDatabaseNameLabel;
+    protected Label uiDatabaseServerLabel;
+    protected Label uiDatabaseUserLabel;
+    protected TextBox uiDatabaseServerTextBox;
+    protected RadioButton uiInMemoryRadioButton;
+    protected Label uiDatabaseTypeLabel;
+    protected ComboBox uiDatabaseTypeComboBox;
+    protected GroupBox uiStorageConfigurationGroupBox;
+    protected Label uiSchedulerLabel;
+    protected ComboBox uiSchedulerComboBox;
+    protected LinkLabel uiViewFullLogLinkLabel;
+    protected GroupBox uiActionsGroupBox;
 
-    protected StatusBar statusBar;
-    protected TabPage tabPage1;
-    protected ProgressBar pbar;
+    protected StatusBar uiStatusBar;
+    protected TabPage uiSetupConnectionTabPage;
+    protected ProgressBar uiProgressBar;
 
     #endregion
 
@@ -131,199 +131,199 @@ public class ManagerTemplateForm : Form
     {
         this.components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManagerTemplateForm));
-        this.lbMgrHost = new System.Windows.Forms.Label();
-        this.lbOwnPort = new System.Windows.Forms.Label();
-        this.txManagerHost = new System.Windows.Forms.TextBox();
-        this.txOwnPort = new System.Windows.Forms.TextBox();
-        this.btStart = new System.Windows.Forms.Button();
-        this.gpBoxNodeConfig = new System.Windows.Forms.GroupBox();
-        this.cbDedicated = new System.Windows.Forms.CheckBox();
-        this.lbId = new System.Windows.Forms.Label();
-        this.cbIntermediate = new System.Windows.Forms.CheckBox();
-        this.txId = new System.Windows.Forms.TextBox();
-        this.lbMgrPort = new System.Windows.Forms.Label();
-        this.txManagerPort = new System.Windows.Forms.TextBox();
-        this.btReset = new System.Windows.Forms.Button();
-        this.btStop = new System.Windows.Forms.Button();
+        this.uiManagerHostLabel = new System.Windows.Forms.Label();
+        this.uiOwnPortLabel = new System.Windows.Forms.Label();
+        this.uiManagerHostTextBox = new System.Windows.Forms.TextBox();
+        this.uiOwnPortTextBox = new System.Windows.Forms.TextBox();
+        this.uiStartButton = new System.Windows.Forms.Button();
+        this.uiNodeConfigurationGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiDedicatedCheckBox = new System.Windows.Forms.CheckBox();
+        this.uiIdLabel = new System.Windows.Forms.Label();
+        this.uiIntermediateComboBox = new System.Windows.Forms.CheckBox();
+        this.uiIdTextBox = new System.Windows.Forms.TextBox();
+        this.uiManagerPortLabel = new System.Windows.Forms.Label();
+        this.uiManagerPortTextBox = new System.Windows.Forms.TextBox();
+        this.uiResetButton = new System.Windows.Forms.Button();
+        this.uiStopButton = new System.Windows.Forms.Button();
         this.TrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
         this.TrayMenu = new System.Windows.Forms.ContextMenu();
         this.tmExit = new System.Windows.Forms.MenuItem();
         this.MainMenu = new System.Windows.Forms.MainMenu(this.components);
-        this.miManager = new System.Windows.Forms.MenuItem();
-        this.mmExit = new System.Windows.Forms.MenuItem();
-        this.miHelp = new System.Windows.Forms.MenuItem();
-        this.mmAbout = new System.Windows.Forms.MenuItem();
-        this.gpBoxActions = new System.Windows.Forms.GroupBox();
-        this.statusBar = new System.Windows.Forms.StatusBar();
-        this.tabControl = new System.Windows.Forms.TabControl();
-        this.tabPage1 = new System.Windows.Forms.TabPage();
-        this.tabPage2 = new System.Windows.Forms.TabPage();
-        this.cmbScheduler = new System.Windows.Forms.ComboBox();
-        this.gpStorage = new System.Windows.Forms.GroupBox();
-        this.radMem = new System.Windows.Forms.RadioButton();
-        this.radDb = new System.Windows.Forms.RadioButton();
-        this.label1 = new System.Windows.Forms.Label();
-        this.txDbPassword = new System.Windows.Forms.TextBox();
-        this.cmbDbType = new System.Windows.Forms.ComboBox();
-        this.txDbServer = new System.Windows.Forms.TextBox();
-        this.lbDBUsername = new System.Windows.Forms.Label();
-        this.lbDBPassword = new System.Windows.Forms.Label();
-        this.lbDBServer = new System.Windows.Forms.Label();
-        this.txDbName = new System.Windows.Forms.TextBox();
-        this.lbDBName = new System.Windows.Forms.Label();
-        this.txDbUsername = new System.Windows.Forms.TextBox();
-        this.label2 = new System.Windows.Forms.Label();
-        this.pbar = new System.Windows.Forms.ProgressBar();
-        this.txLog = new System.Windows.Forms.TextBox();
-        this.lbLogMsg = new System.Windows.Forms.Label();
-        this.lnkViewLog = new System.Windows.Forms.LinkLabel();
-        this.gpBoxNodeConfig.SuspendLayout();
-        this.gpBoxActions.SuspendLayout();
-        this.tabControl.SuspendLayout();
-        this.tabPage1.SuspendLayout();
-        this.tabPage2.SuspendLayout();
-        this.gpStorage.SuspendLayout();
+        this.uiManagerMenuItem = new System.Windows.Forms.MenuItem();
+        this.uiManagerExitMenuItem = new System.Windows.Forms.MenuItem();
+        this.uiHelpMenuItem = new System.Windows.Forms.MenuItem();
+        this.uiHelpAboutMenuItem = new System.Windows.Forms.MenuItem();
+        this.uiActionsGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiStatusBar = new System.Windows.Forms.StatusBar();
+        this.uiTabControl = new System.Windows.Forms.TabControl();
+        this.uiSetupConnectionTabPage = new System.Windows.Forms.TabPage();
+        this.uiAdvancedTabPage = new System.Windows.Forms.TabPage();
+        this.uiSchedulerComboBox = new System.Windows.Forms.ComboBox();
+        this.uiStorageConfigurationGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiInMemoryRadioButton = new System.Windows.Forms.RadioButton();
+        this.uiDatabaseRadioButton = new System.Windows.Forms.RadioButton();
+        this.uiDatabaseTypeLabel = new System.Windows.Forms.Label();
+        this.uiDatabasePasswordTextBox = new System.Windows.Forms.TextBox();
+        this.uiDatabaseTypeComboBox = new System.Windows.Forms.ComboBox();
+        this.uiDatabaseServerTextBox = new System.Windows.Forms.TextBox();
+        this.uiDatabaseUserLabel = new System.Windows.Forms.Label();
+        this.uiDatabasePasswordLabel = new System.Windows.Forms.Label();
+        this.uiDatabaseServerLabel = new System.Windows.Forms.Label();
+        this.uiDatabaseNameTextBox = new System.Windows.Forms.TextBox();
+        this.uiDatabaseNameLabel = new System.Windows.Forms.Label();
+        this.uiDatabaseUserTextBox = new System.Windows.Forms.TextBox();
+        this.uiSchedulerLabel = new System.Windows.Forms.Label();
+        this.uiProgressBar = new System.Windows.Forms.ProgressBar();
+        this.uiLogMessagesTextBox = new System.Windows.Forms.TextBox();
+        this.uiLogMessagesLabel = new System.Windows.Forms.Label();
+        this.uiViewFullLogLinkLabel = new System.Windows.Forms.LinkLabel();
+        this.uiNodeConfigurationGroupBox.SuspendLayout();
+        this.uiActionsGroupBox.SuspendLayout();
+        this.uiTabControl.SuspendLayout();
+        this.uiSetupConnectionTabPage.SuspendLayout();
+        this.uiAdvancedTabPage.SuspendLayout();
+        this.uiStorageConfigurationGroupBox.SuspendLayout();
         this.SuspendLayout();
         // 
-        // lbMgrHost
+        // uiManagerHostLabel
         // 
-        this.lbMgrHost.AutoSize = true;
-        this.lbMgrHost.Location = new System.Drawing.Point(38, 131);
-        this.lbMgrHost.Name = "lbMgrHost";
-        this.lbMgrHost.Size = new System.Drawing.Size(74, 13);
-        this.lbMgrHost.TabIndex = 1;
-        this.lbMgrHost.Text = "Manager Host";
-        this.lbMgrHost.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+        this.uiManagerHostLabel.AutoSize = true;
+        this.uiManagerHostLabel.Location = new System.Drawing.Point(38, 131);
+        this.uiManagerHostLabel.Name = "uiManagerHostLabel";
+        this.uiManagerHostLabel.Size = new System.Drawing.Size(74, 13);
+        this.uiManagerHostLabel.TabIndex = 1;
+        this.uiManagerHostLabel.Text = "Manager Host";
+        this.uiManagerHostLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
         // 
-        // lbOwnPort
+        // uiOwnPortLabel
         // 
-        this.lbOwnPort.AutoSize = true;
-        this.lbOwnPort.Location = new System.Drawing.Point(61, 27);
-        this.lbOwnPort.Name = "lbOwnPort";
-        this.lbOwnPort.Size = new System.Drawing.Size(51, 13);
-        this.lbOwnPort.TabIndex = 2;
-        this.lbOwnPort.Text = "Own Port";
-        this.lbOwnPort.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        this.uiOwnPortLabel.AutoSize = true;
+        this.uiOwnPortLabel.Location = new System.Drawing.Point(61, 27);
+        this.uiOwnPortLabel.Name = "uiOwnPortLabel";
+        this.uiOwnPortLabel.Size = new System.Drawing.Size(51, 13);
+        this.uiOwnPortLabel.TabIndex = 2;
+        this.uiOwnPortLabel.Text = "Own Port";
+        this.uiOwnPortLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
-        // txManagerHost
+        // uiManagerHostTextBox
         // 
-        this.txManagerHost.Location = new System.Drawing.Point(120, 128);
-        this.txManagerHost.Name = "txManagerHost";
-        this.txManagerHost.Size = new System.Drawing.Size(104, 20);
-        this.txManagerHost.TabIndex = 9;
+        this.uiManagerHostTextBox.Location = new System.Drawing.Point(120, 128);
+        this.uiManagerHostTextBox.Name = "uiManagerHostTextBox";
+        this.uiManagerHostTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiManagerHostTextBox.TabIndex = 9;
         // 
-        // txOwnPort
+        // uiOwnPortTextBox
         // 
-        this.txOwnPort.Location = new System.Drawing.Point(120, 24);
-        this.txOwnPort.Name = "txOwnPort";
-        this.txOwnPort.Size = new System.Drawing.Size(104, 20);
-        this.txOwnPort.TabIndex = 5;
+        this.uiOwnPortTextBox.Location = new System.Drawing.Point(120, 24);
+        this.uiOwnPortTextBox.Name = "uiOwnPortTextBox";
+        this.uiOwnPortTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiOwnPortTextBox.TabIndex = 5;
         // 
-        // btStart
+        // uiStartButton
         // 
-        this.btStart.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.btStart.Location = new System.Drawing.Point(88, 50);
-        this.btStart.Name = "btStart";
-        this.btStart.Size = new System.Drawing.Size(128, 23);
-        this.btStart.TabIndex = 12;
-        this.btStart.Text = "Start";
-        this.btStart.Click += new System.EventHandler(this.btStart_Click);
+        this.uiStartButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiStartButton.Location = new System.Drawing.Point(88, 50);
+        this.uiStartButton.Name = "uiStartButton";
+        this.uiStartButton.Size = new System.Drawing.Size(128, 23);
+        this.uiStartButton.TabIndex = 12;
+        this.uiStartButton.Text = "Start";
+        this.uiStartButton.Click += new System.EventHandler(this.uiStartButton_Click);
         // 
-        // gpBoxNodeConfig
+        // uiNodeConfigurationGroupBox
         // 
-        this.gpBoxNodeConfig.Controls.Add(this.cbDedicated);
-        this.gpBoxNodeConfig.Controls.Add(this.lbId);
-        this.gpBoxNodeConfig.Controls.Add(this.cbIntermediate);
-        this.gpBoxNodeConfig.Controls.Add(this.txId);
-        this.gpBoxNodeConfig.Controls.Add(this.lbMgrPort);
-        this.gpBoxNodeConfig.Controls.Add(this.txManagerPort);
-        this.gpBoxNodeConfig.Controls.Add(this.lbMgrHost);
-        this.gpBoxNodeConfig.Controls.Add(this.lbOwnPort);
-        this.gpBoxNodeConfig.Controls.Add(this.txOwnPort);
-        this.gpBoxNodeConfig.Controls.Add(this.txManagerHost);
-        this.gpBoxNodeConfig.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.gpBoxNodeConfig.Location = new System.Drawing.Point(8, 12);
-        this.gpBoxNodeConfig.Name = "gpBoxNodeConfig";
-        this.gpBoxNodeConfig.Size = new System.Drawing.Size(416, 192);
-        this.gpBoxNodeConfig.TabIndex = 6;
-        this.gpBoxNodeConfig.TabStop = false;
-        this.gpBoxNodeConfig.Text = "Node Configuration";
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiDedicatedCheckBox);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiIdLabel);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiIntermediateComboBox);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiIdTextBox);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerPortLabel);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerPortTextBox);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerHostLabel);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiOwnPortLabel);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiOwnPortTextBox);
+        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerHostTextBox);
+        this.uiNodeConfigurationGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiNodeConfigurationGroupBox.Location = new System.Drawing.Point(8, 12);
+        this.uiNodeConfigurationGroupBox.Name = "uiNodeConfigurationGroupBox";
+        this.uiNodeConfigurationGroupBox.Size = new System.Drawing.Size(416, 192);
+        this.uiNodeConfigurationGroupBox.TabIndex = 6;
+        this.uiNodeConfigurationGroupBox.TabStop = false;
+        this.uiNodeConfigurationGroupBox.Text = "Node Configuration";
         // 
-        // cbDedicated
+        // uiDedicatedCheckBox
         // 
-        this.cbDedicated.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.cbDedicated.Location = new System.Drawing.Point(120, 96);
-        this.cbDedicated.Name = "cbDedicated";
-        this.cbDedicated.Size = new System.Drawing.Size(88, 24);
-        this.cbDedicated.TabIndex = 8;
-        this.cbDedicated.Text = "Dedicated";
+        this.uiDedicatedCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiDedicatedCheckBox.Location = new System.Drawing.Point(120, 96);
+        this.uiDedicatedCheckBox.Name = "uiDedicatedCheckBox";
+        this.uiDedicatedCheckBox.Size = new System.Drawing.Size(88, 24);
+        this.uiDedicatedCheckBox.TabIndex = 8;
+        this.uiDedicatedCheckBox.Text = "Dedicated";
         // 
-        // lbId
+        // uiIdLabel
         // 
-        this.lbId.Location = new System.Drawing.Point(96, 72);
-        this.lbId.Name = "lbId";
-        this.lbId.Size = new System.Drawing.Size(16, 16);
-        this.lbId.TabIndex = 12;
-        this.lbId.Text = "Id";
-        this.lbId.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+        this.uiIdLabel.Location = new System.Drawing.Point(96, 72);
+        this.uiIdLabel.Name = "uiIdLabel";
+        this.uiIdLabel.Size = new System.Drawing.Size(16, 16);
+        this.uiIdLabel.TabIndex = 12;
+        this.uiIdLabel.Text = "Id";
+        this.uiIdLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
         // 
-        // cbIntermediate
+        // uiIntermediateComboBox
         // 
-        this.cbIntermediate.Enabled = false;
-        this.cbIntermediate.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.cbIntermediate.Location = new System.Drawing.Point(120, 48);
-        this.cbIntermediate.Name = "cbIntermediate";
-        this.cbIntermediate.Size = new System.Drawing.Size(88, 24);
-        this.cbIntermediate.TabIndex = 6;
-        this.cbIntermediate.TabStop = false;
-        this.cbIntermediate.Text = "Intermediate";
+        this.uiIntermediateComboBox.Enabled = false;
+        this.uiIntermediateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiIntermediateComboBox.Location = new System.Drawing.Point(120, 48);
+        this.uiIntermediateComboBox.Name = "uiIntermediateComboBox";
+        this.uiIntermediateComboBox.Size = new System.Drawing.Size(88, 24);
+        this.uiIntermediateComboBox.TabIndex = 6;
+        this.uiIntermediateComboBox.TabStop = false;
+        this.uiIntermediateComboBox.Text = "Intermediate";
         // 
-        // txId
+        // uiIdTextBox
         // 
-        this.txId.Enabled = false;
-        this.txId.Location = new System.Drawing.Point(120, 72);
-        this.txId.Name = "txId";
-        this.txId.Size = new System.Drawing.Size(240, 20);
-        this.txId.TabIndex = 7;
-        this.txId.TabStop = false;
+        this.uiIdTextBox.Enabled = false;
+        this.uiIdTextBox.Location = new System.Drawing.Point(120, 72);
+        this.uiIdTextBox.Name = "uiIdTextBox";
+        this.uiIdTextBox.Size = new System.Drawing.Size(240, 20);
+        this.uiIdTextBox.TabIndex = 7;
+        this.uiIdTextBox.TabStop = false;
         // 
-        // lbMgrPort
+        // uiManagerPortLabel
         // 
-        this.lbMgrPort.AutoSize = true;
-        this.lbMgrPort.Location = new System.Drawing.Point(41, 163);
-        this.lbMgrPort.Name = "lbMgrPort";
-        this.lbMgrPort.Size = new System.Drawing.Size(71, 13);
-        this.lbMgrPort.TabIndex = 6;
-        this.lbMgrPort.Text = "Manager Port";
-        this.lbMgrPort.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+        this.uiManagerPortLabel.AutoSize = true;
+        this.uiManagerPortLabel.Location = new System.Drawing.Point(41, 163);
+        this.uiManagerPortLabel.Name = "uiManagerPortLabel";
+        this.uiManagerPortLabel.Size = new System.Drawing.Size(71, 13);
+        this.uiManagerPortLabel.TabIndex = 6;
+        this.uiManagerPortLabel.Text = "Manager Port";
+        this.uiManagerPortLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
         // 
-        // txManagerPort
+        // uiManagerPortTextBox
         // 
-        this.txManagerPort.Location = new System.Drawing.Point(120, 160);
-        this.txManagerPort.Name = "txManagerPort";
-        this.txManagerPort.Size = new System.Drawing.Size(104, 20);
-        this.txManagerPort.TabIndex = 10;
+        this.uiManagerPortTextBox.Location = new System.Drawing.Point(120, 160);
+        this.uiManagerPortTextBox.Name = "uiManagerPortTextBox";
+        this.uiManagerPortTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiManagerPortTextBox.TabIndex = 10;
         // 
-        // btReset
+        // uiResetButton
         // 
-        this.btReset.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.btReset.Location = new System.Drawing.Point(88, 20);
-        this.btReset.Name = "btReset";
-        this.btReset.Size = new System.Drawing.Size(248, 23);
-        this.btReset.TabIndex = 11;
-        this.btReset.TabStop = false;
-        this.btReset.Text = "Reset";
-        this.btReset.Click += new System.EventHandler(this.btReset_Click);
+        this.uiResetButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiResetButton.Location = new System.Drawing.Point(88, 20);
+        this.uiResetButton.Name = "uiResetButton";
+        this.uiResetButton.Size = new System.Drawing.Size(248, 23);
+        this.uiResetButton.TabIndex = 11;
+        this.uiResetButton.TabStop = false;
+        this.uiResetButton.Text = "Reset";
+        this.uiResetButton.Click += new System.EventHandler(this.uiResetButton_Click);
         // 
-        // btStop
+        // uiStopButton
         // 
-        this.btStop.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.btStop.Location = new System.Drawing.Point(224, 50);
-        this.btStop.Name = "btStop";
-        this.btStop.Size = new System.Drawing.Size(112, 23);
-        this.btStop.TabIndex = 13;
-        this.btStop.Text = "Stop";
-        this.btStop.Click += new System.EventHandler(this.btStop_Click);
+        this.uiStopButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiStopButton.Location = new System.Drawing.Point(224, 50);
+        this.uiStopButton.Name = "uiStopButton";
+        this.uiStopButton.Size = new System.Drawing.Size(112, 23);
+        this.uiStopButton.TabIndex = 13;
+        this.uiStopButton.Text = "Stop";
+        this.uiStopButton.Click += new System.EventHandler(this.uiStopButton_Click);
         // 
         // TrayIcon
         // 
@@ -347,301 +347,301 @@ public class ManagerTemplateForm : Form
         // MainMenu
         // 
         this.MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.miManager,
-            this.miHelp});
+            this.uiManagerMenuItem,
+            this.uiHelpMenuItem});
         // 
-        // miManager
+        // uiManagerMenuItem
         // 
-        this.miManager.Index = 0;
-        this.miManager.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mmExit});
-        this.miManager.Text = "Manager";
+        this.uiManagerMenuItem.Index = 0;
+        this.uiManagerMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.uiManagerExitMenuItem});
+        this.uiManagerMenuItem.Text = "Manager";
         // 
-        // mmExit
+        // uiManagerExitMenuItem
         // 
-        this.mmExit.Index = 0;
-        this.mmExit.Text = "Exit";
-        this.mmExit.Click += new System.EventHandler(this.mmExit_Click);
+        this.uiManagerExitMenuItem.Index = 0;
+        this.uiManagerExitMenuItem.Text = "Exit";
+        this.uiManagerExitMenuItem.Click += new System.EventHandler(this.uiManagerExitMenuItem_Click);
         // 
-        // miHelp
+        // uiHelpMenuItem
         // 
-        this.miHelp.Index = 1;
-        this.miHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mmAbout});
-        this.miHelp.Text = "Help";
+        this.uiHelpMenuItem.Index = 1;
+        this.uiHelpMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.uiHelpAboutMenuItem});
+        this.uiHelpMenuItem.Text = "Help";
         // 
-        // mmAbout
+        // uiHelpAboutMenuItem
         // 
-        this.mmAbout.Index = 0;
-        this.mmAbout.Text = "About";
-        this.mmAbout.Click += new System.EventHandler(this.mmAbout_Click);
+        this.uiHelpAboutMenuItem.Index = 0;
+        this.uiHelpAboutMenuItem.Text = "About";
+        this.uiHelpAboutMenuItem.Click += new System.EventHandler(this.uiHelpAboutMenuItem_Click);
         // 
-        // gpBoxActions
+        // uiActionsGroupBox
         // 
-        this.gpBoxActions.Controls.Add(this.btReset);
-        this.gpBoxActions.Controls.Add(this.btStop);
-        this.gpBoxActions.Controls.Add(this.btStart);
-        this.gpBoxActions.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.gpBoxActions.Location = new System.Drawing.Point(22, 273);
-        this.gpBoxActions.Name = "gpBoxActions";
-        this.gpBoxActions.Size = new System.Drawing.Size(416, 89);
-        this.gpBoxActions.TabIndex = 9;
-        this.gpBoxActions.TabStop = false;
-        this.gpBoxActions.Text = "Actions";
+        this.uiActionsGroupBox.Controls.Add(this.uiResetButton);
+        this.uiActionsGroupBox.Controls.Add(this.uiStopButton);
+        this.uiActionsGroupBox.Controls.Add(this.uiStartButton);
+        this.uiActionsGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
+        this.uiActionsGroupBox.Location = new System.Drawing.Point(22, 273);
+        this.uiActionsGroupBox.Name = "uiActionsGroupBox";
+        this.uiActionsGroupBox.Size = new System.Drawing.Size(416, 89);
+        this.uiActionsGroupBox.TabIndex = 9;
+        this.uiActionsGroupBox.TabStop = false;
+        this.uiActionsGroupBox.Text = "Actions";
         // 
-        // statusBar
+        // uiStatusBar
         // 
-        this.statusBar.Location = new System.Drawing.Point(0, 557);
-        this.statusBar.Name = "statusBar";
-        this.statusBar.Size = new System.Drawing.Size(458, 22);
-        this.statusBar.TabIndex = 10;
+        this.uiStatusBar.Location = new System.Drawing.Point(0, 557);
+        this.uiStatusBar.Name = "uiStatusBar";
+        this.uiStatusBar.Size = new System.Drawing.Size(458, 22);
+        this.uiStatusBar.TabIndex = 10;
         // 
-        // tabControl
+        // uiTabControl
         // 
-        this.tabControl.Controls.Add(this.tabPage1);
-        this.tabControl.Controls.Add(this.tabPage2);
-        this.tabControl.Location = new System.Drawing.Point(10, 10);
-        this.tabControl.Name = "tabControl";
-        this.tabControl.SelectedIndex = 0;
-        this.tabControl.Size = new System.Drawing.Size(440, 246);
-        this.tabControl.TabIndex = 12;
+        this.uiTabControl.Controls.Add(this.uiSetupConnectionTabPage);
+        this.uiTabControl.Controls.Add(this.uiAdvancedTabPage);
+        this.uiTabControl.Location = new System.Drawing.Point(10, 10);
+        this.uiTabControl.Name = "uiTabControl";
+        this.uiTabControl.SelectedIndex = 0;
+        this.uiTabControl.Size = new System.Drawing.Size(440, 246);
+        this.uiTabControl.TabIndex = 12;
         // 
-        // tabPage1
+        // uiSetupConnectionTabPage
         // 
-        this.tabPage1.Controls.Add(this.gpBoxNodeConfig);
-        this.tabPage1.Location = new System.Drawing.Point(4, 22);
-        this.tabPage1.Name = "tabPage1";
-        this.tabPage1.Size = new System.Drawing.Size(432, 220);
-        this.tabPage1.TabIndex = 0;
-        this.tabPage1.Text = "Setup Connection";
-        this.tabPage1.UseVisualStyleBackColor = true;
+        this.uiSetupConnectionTabPage.Controls.Add(this.uiNodeConfigurationGroupBox);
+        this.uiSetupConnectionTabPage.Location = new System.Drawing.Point(4, 22);
+        this.uiSetupConnectionTabPage.Name = "uiSetupConnectionTabPage";
+        this.uiSetupConnectionTabPage.Size = new System.Drawing.Size(432, 220);
+        this.uiSetupConnectionTabPage.TabIndex = 0;
+        this.uiSetupConnectionTabPage.Text = "Setup Connection";
+        this.uiSetupConnectionTabPage.UseVisualStyleBackColor = true;
         // 
-        // tabPage2
+        // uiAdvancedTabPage
         // 
-        this.tabPage2.Controls.Add(this.cmbScheduler);
-        this.tabPage2.Controls.Add(this.gpStorage);
-        this.tabPage2.Controls.Add(this.label2);
-        this.tabPage2.Location = new System.Drawing.Point(4, 22);
-        this.tabPage2.Name = "tabPage2";
-        this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-        this.tabPage2.Size = new System.Drawing.Size(432, 220);
-        this.tabPage2.TabIndex = 1;
-        this.tabPage2.Text = "Advanced";
-        this.tabPage2.UseVisualStyleBackColor = true;
+        this.uiAdvancedTabPage.Controls.Add(this.uiSchedulerComboBox);
+        this.uiAdvancedTabPage.Controls.Add(this.uiStorageConfigurationGroupBox);
+        this.uiAdvancedTabPage.Controls.Add(this.uiSchedulerLabel);
+        this.uiAdvancedTabPage.Location = new System.Drawing.Point(4, 22);
+        this.uiAdvancedTabPage.Name = "uiAdvancedTabPage";
+        this.uiAdvancedTabPage.Padding = new System.Windows.Forms.Padding(3);
+        this.uiAdvancedTabPage.Size = new System.Drawing.Size(432, 220);
+        this.uiAdvancedTabPage.TabIndex = 1;
+        this.uiAdvancedTabPage.Text = "Advanced";
+        this.uiAdvancedTabPage.UseVisualStyleBackColor = true;
         // 
-        // cmbScheduler
+        // uiSchedulerComboBox
         // 
-        this.cmbScheduler.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-        this.cmbScheduler.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cmbScheduler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        this.cmbScheduler.FormattingEnabled = true;
-        this.cmbScheduler.Location = new System.Drawing.Point(116, 181);
-        this.cmbScheduler.Name = "cmbScheduler";
-        this.cmbScheduler.Size = new System.Drawing.Size(296, 21);
-        this.cmbScheduler.TabIndex = 34;
+        this.uiSchedulerComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+        this.uiSchedulerComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+        this.uiSchedulerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this.uiSchedulerComboBox.FormattingEnabled = true;
+        this.uiSchedulerComboBox.Location = new System.Drawing.Point(116, 181);
+        this.uiSchedulerComboBox.Name = "uiSchedulerComboBox";
+        this.uiSchedulerComboBox.Size = new System.Drawing.Size(296, 21);
+        this.uiSchedulerComboBox.TabIndex = 34;
         // 
-        // gpStorage
+        // uiStorageConfigurationGroupBox
         // 
-        this.gpStorage.Controls.Add(this.radMem);
-        this.gpStorage.Controls.Add(this.radDb);
-        this.gpStorage.Controls.Add(this.label1);
-        this.gpStorage.Controls.Add(this.txDbPassword);
-        this.gpStorage.Controls.Add(this.cmbDbType);
-        this.gpStorage.Controls.Add(this.txDbServer);
-        this.gpStorage.Controls.Add(this.lbDBUsername);
-        this.gpStorage.Controls.Add(this.lbDBPassword);
-        this.gpStorage.Controls.Add(this.lbDBServer);
-        this.gpStorage.Controls.Add(this.txDbName);
-        this.gpStorage.Controls.Add(this.lbDBName);
-        this.gpStorage.Controls.Add(this.txDbUsername);
-        this.gpStorage.Location = new System.Drawing.Point(9, 6);
-        this.gpStorage.Name = "gpStorage";
-        this.gpStorage.Size = new System.Drawing.Size(416, 154);
-        this.gpStorage.TabIndex = 33;
-        this.gpStorage.TabStop = false;
-        this.gpStorage.Text = "Storage Configuration";
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiInMemoryRadioButton);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseRadioButton);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseTypeLabel);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabasePasswordTextBox);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseTypeComboBox);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseServerTextBox);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseUserLabel);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabasePasswordLabel);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseServerLabel);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseNameTextBox);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseNameLabel);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseUserTextBox);
+        this.uiStorageConfigurationGroupBox.Location = new System.Drawing.Point(9, 6);
+        this.uiStorageConfigurationGroupBox.Name = "uiStorageConfigurationGroupBox";
+        this.uiStorageConfigurationGroupBox.Size = new System.Drawing.Size(416, 154);
+        this.uiStorageConfigurationGroupBox.TabIndex = 33;
+        this.uiStorageConfigurationGroupBox.TabStop = false;
+        this.uiStorageConfigurationGroupBox.Text = "Storage Configuration";
         // 
-        // radMem
+        // uiInMemoryRadioButton
         // 
-        this.radMem.AutoSize = true;
-        this.radMem.Checked = true;
-        this.radMem.Location = new System.Drawing.Point(9, 131);
-        this.radMem.Name = "radMem";
-        this.radMem.Size = new System.Drawing.Size(74, 17);
-        this.radMem.TabIndex = 29;
-        this.radMem.TabStop = true;
-        this.radMem.Text = "In-Memory";
-        this.radMem.UseVisualStyleBackColor = true;
-        this.radMem.CheckedChanged += new System.EventHandler(this.radMem_CheckedChanged);
+        this.uiInMemoryRadioButton.AutoSize = true;
+        this.uiInMemoryRadioButton.Checked = true;
+        this.uiInMemoryRadioButton.Location = new System.Drawing.Point(9, 131);
+        this.uiInMemoryRadioButton.Name = "uiInMemoryRadioButton";
+        this.uiInMemoryRadioButton.Size = new System.Drawing.Size(74, 17);
+        this.uiInMemoryRadioButton.TabIndex = 29;
+        this.uiInMemoryRadioButton.TabStop = true;
+        this.uiInMemoryRadioButton.Text = "In-Memory";
+        this.uiInMemoryRadioButton.UseVisualStyleBackColor = true;
+        this.uiInMemoryRadioButton.CheckedChanged += new System.EventHandler(this.uiInMemoryRadioButton_CheckedChanged);
         // 
-        // radDb
+        // uiDatabaseRadioButton
         // 
-        this.radDb.AutoSize = true;
-        this.radDb.Location = new System.Drawing.Point(9, 19);
-        this.radDb.Name = "radDb";
-        this.radDb.Size = new System.Drawing.Size(71, 17);
-        this.radDb.TabIndex = 28;
-        this.radDb.Text = "Database";
-        this.radDb.UseVisualStyleBackColor = true;
+        this.uiDatabaseRadioButton.AutoSize = true;
+        this.uiDatabaseRadioButton.Location = new System.Drawing.Point(9, 19);
+        this.uiDatabaseRadioButton.Name = "uiDatabaseRadioButton";
+        this.uiDatabaseRadioButton.Size = new System.Drawing.Size(71, 17);
+        this.uiDatabaseRadioButton.TabIndex = 28;
+        this.uiDatabaseRadioButton.Text = "Database";
+        this.uiDatabaseRadioButton.UseVisualStyleBackColor = true;
         // 
-        // label1
+        // uiDatabaseTypeLabel
         // 
-        this.label1.AutoSize = true;
-        this.label1.Location = new System.Drawing.Point(48, 42);
-        this.label1.Name = "label1";
-        this.label1.Size = new System.Drawing.Size(31, 13);
-        this.label1.TabIndex = 31;
-        this.label1.Text = "Type";
-        this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiDatabaseTypeLabel.AutoSize = true;
+        this.uiDatabaseTypeLabel.Location = new System.Drawing.Point(48, 42);
+        this.uiDatabaseTypeLabel.Name = "uiDatabaseTypeLabel";
+        this.uiDatabaseTypeLabel.Size = new System.Drawing.Size(31, 13);
+        this.uiDatabaseTypeLabel.TabIndex = 31;
+        this.uiDatabaseTypeLabel.Text = "Type";
+        this.uiDatabaseTypeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // txDbPassword
+        // uiDatabasePasswordTextBox
         // 
-        this.txDbPassword.Location = new System.Drawing.Point(299, 103);
-        this.txDbPassword.Name = "txDbPassword";
-        this.txDbPassword.PasswordChar = '*';
-        this.txDbPassword.Size = new System.Drawing.Size(104, 20);
-        this.txDbPassword.TabIndex = 23;
+        this.uiDatabasePasswordTextBox.Location = new System.Drawing.Point(299, 103);
+        this.uiDatabasePasswordTextBox.Name = "uiDatabasePasswordTextBox";
+        this.uiDatabasePasswordTextBox.PasswordChar = '*';
+        this.uiDatabasePasswordTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiDatabasePasswordTextBox.TabIndex = 23;
         // 
-        // cmbDbType
+        // uiDatabaseTypeComboBox
         // 
-        this.cmbDbType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-        this.cmbDbType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-        this.cmbDbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        this.cmbDbType.FormattingEnabled = true;
-        this.cmbDbType.Items.AddRange(new object[] {
+        this.uiDatabaseTypeComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+        this.uiDatabaseTypeComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+        this.uiDatabaseTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this.uiDatabaseTypeComboBox.FormattingEnabled = true;
+        this.uiDatabaseTypeComboBox.Items.AddRange(new object[] {
             "Microsoft SQL Server 2000",
             "MySQL 4.x / 5.x"});
-        this.cmbDbType.Location = new System.Drawing.Point(107, 39);
-        this.cmbDbType.Name = "cmbDbType";
-        this.cmbDbType.Size = new System.Drawing.Size(296, 21);
-        this.cmbDbType.TabIndex = 30;
+        this.uiDatabaseTypeComboBox.Location = new System.Drawing.Point(107, 39);
+        this.uiDatabaseTypeComboBox.Name = "uiDatabaseTypeComboBox";
+        this.uiDatabaseTypeComboBox.Size = new System.Drawing.Size(296, 21);
+        this.uiDatabaseTypeComboBox.TabIndex = 30;
         // 
-        // txDbServer
+        // uiDatabaseServerTextBox
         // 
-        this.txDbServer.Location = new System.Drawing.Point(107, 71);
-        this.txDbServer.Name = "txDbServer";
-        this.txDbServer.Size = new System.Drawing.Size(104, 20);
-        this.txDbServer.TabIndex = 20;
+        this.uiDatabaseServerTextBox.Location = new System.Drawing.Point(107, 71);
+        this.uiDatabaseServerTextBox.Name = "uiDatabaseServerTextBox";
+        this.uiDatabaseServerTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiDatabaseServerTextBox.TabIndex = 20;
         // 
-        // lbDBUsername
+        // uiDatabaseUserLabel
         // 
-        this.lbDBUsername.AutoSize = true;
-        this.lbDBUsername.Location = new System.Drawing.Point(226, 74);
-        this.lbDBUsername.Name = "lbDBUsername";
-        this.lbDBUsername.Size = new System.Drawing.Size(55, 13);
-        this.lbDBUsername.TabIndex = 25;
-        this.lbDBUsername.Text = "Username";
-        this.lbDBUsername.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiDatabaseUserLabel.AutoSize = true;
+        this.uiDatabaseUserLabel.Location = new System.Drawing.Point(226, 74);
+        this.uiDatabaseUserLabel.Name = "uiDatabaseUserLabel";
+        this.uiDatabaseUserLabel.Size = new System.Drawing.Size(55, 13);
+        this.uiDatabaseUserLabel.TabIndex = 25;
+        this.uiDatabaseUserLabel.Text = "Username";
+        this.uiDatabaseUserLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // lbDBPassword
+        // uiDatabasePasswordLabel
         // 
-        this.lbDBPassword.AutoSize = true;
-        this.lbDBPassword.Location = new System.Drawing.Point(226, 106);
-        this.lbDBPassword.Name = "lbDBPassword";
-        this.lbDBPassword.Size = new System.Drawing.Size(53, 13);
-        this.lbDBPassword.TabIndex = 24;
-        this.lbDBPassword.Text = "Password";
-        this.lbDBPassword.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiDatabasePasswordLabel.AutoSize = true;
+        this.uiDatabasePasswordLabel.Location = new System.Drawing.Point(226, 106);
+        this.uiDatabasePasswordLabel.Name = "uiDatabasePasswordLabel";
+        this.uiDatabasePasswordLabel.Size = new System.Drawing.Size(53, 13);
+        this.uiDatabasePasswordLabel.TabIndex = 24;
+        this.uiDatabasePasswordLabel.Text = "Password";
+        this.uiDatabasePasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // lbDBServer
+        // uiDatabaseServerLabel
         // 
-        this.lbDBServer.AutoSize = true;
-        this.lbDBServer.Location = new System.Drawing.Point(48, 74);
-        this.lbDBServer.Name = "lbDBServer";
-        this.lbDBServer.Size = new System.Drawing.Size(38, 13);
-        this.lbDBServer.TabIndex = 26;
-        this.lbDBServer.Text = "Server";
-        this.lbDBServer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiDatabaseServerLabel.AutoSize = true;
+        this.uiDatabaseServerLabel.Location = new System.Drawing.Point(48, 74);
+        this.uiDatabaseServerLabel.Name = "uiDatabaseServerLabel";
+        this.uiDatabaseServerLabel.Size = new System.Drawing.Size(38, 13);
+        this.uiDatabaseServerLabel.TabIndex = 26;
+        this.uiDatabaseServerLabel.Text = "Server";
+        this.uiDatabaseServerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // txDbName
+        // uiDatabaseNameTextBox
         // 
-        this.txDbName.Location = new System.Drawing.Point(107, 103);
-        this.txDbName.Name = "txDbName";
-        this.txDbName.Size = new System.Drawing.Size(104, 20);
-        this.txDbName.TabIndex = 21;
+        this.uiDatabaseNameTextBox.Location = new System.Drawing.Point(107, 103);
+        this.uiDatabaseNameTextBox.Name = "uiDatabaseNameTextBox";
+        this.uiDatabaseNameTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiDatabaseNameTextBox.TabIndex = 21;
         // 
-        // lbDBName
+        // uiDatabaseNameLabel
         // 
-        this.lbDBName.AutoSize = true;
-        this.lbDBName.Location = new System.Drawing.Point(48, 106);
-        this.lbDBName.Name = "lbDBName";
-        this.lbDBName.Size = new System.Drawing.Size(53, 13);
-        this.lbDBName.TabIndex = 27;
-        this.lbDBName.Text = "DB Name";
-        this.lbDBName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiDatabaseNameLabel.AutoSize = true;
+        this.uiDatabaseNameLabel.Location = new System.Drawing.Point(48, 106);
+        this.uiDatabaseNameLabel.Name = "uiDatabaseNameLabel";
+        this.uiDatabaseNameLabel.Size = new System.Drawing.Size(53, 13);
+        this.uiDatabaseNameLabel.TabIndex = 27;
+        this.uiDatabaseNameLabel.Text = "DB Name";
+        this.uiDatabaseNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // txDbUsername
+        // uiDatabaseUserTextBox
         // 
-        this.txDbUsername.Location = new System.Drawing.Point(299, 71);
-        this.txDbUsername.Name = "txDbUsername";
-        this.txDbUsername.Size = new System.Drawing.Size(104, 20);
-        this.txDbUsername.TabIndex = 22;
+        this.uiDatabaseUserTextBox.Location = new System.Drawing.Point(299, 71);
+        this.uiDatabaseUserTextBox.Name = "uiDatabaseUserTextBox";
+        this.uiDatabaseUserTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiDatabaseUserTextBox.TabIndex = 22;
         // 
-        // label2
+        // uiSchedulerLabel
         // 
-        this.label2.AutoSize = true;
-        this.label2.Location = new System.Drawing.Point(33, 184);
-        this.label2.Name = "label2";
-        this.label2.Size = new System.Drawing.Size(55, 13);
-        this.label2.TabIndex = 32;
-        this.label2.Text = "Scheduler";
-        this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiSchedulerLabel.AutoSize = true;
+        this.uiSchedulerLabel.Location = new System.Drawing.Point(33, 184);
+        this.uiSchedulerLabel.Name = "uiSchedulerLabel";
+        this.uiSchedulerLabel.Size = new System.Drawing.Size(55, 13);
+        this.uiSchedulerLabel.TabIndex = 32;
+        this.uiSchedulerLabel.Text = "Scheduler";
+        this.uiSchedulerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // pbar
+        // uiProgressBar
         // 
-        this.pbar.Location = new System.Drawing.Point(22, 543);
-        this.pbar.Name = "pbar";
-        this.pbar.Size = new System.Drawing.Size(414, 10);
-        this.pbar.Step = 1;
-        this.pbar.TabIndex = 13;
-        this.pbar.Visible = false;
+        this.uiProgressBar.Location = new System.Drawing.Point(22, 543);
+        this.uiProgressBar.Name = "uiProgressBar";
+        this.uiProgressBar.Size = new System.Drawing.Size(414, 10);
+        this.uiProgressBar.Step = 1;
+        this.uiProgressBar.TabIndex = 13;
+        this.uiProgressBar.Visible = false;
         // 
-        // txLog
+        // uiLogMessagesTextBox
         // 
-        this.txLog.BackColor = System.Drawing.SystemColors.Info;
-        this.txLog.Location = new System.Drawing.Point(21, 392);
-        this.txLog.Multiline = true;
-        this.txLog.Name = "txLog";
-        this.txLog.ReadOnly = true;
-        this.txLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-        this.txLog.Size = new System.Drawing.Size(416, 145);
-        this.txLog.TabIndex = 15;
-        this.txLog.TabStop = false;
+        this.uiLogMessagesTextBox.BackColor = System.Drawing.SystemColors.Info;
+        this.uiLogMessagesTextBox.Location = new System.Drawing.Point(21, 392);
+        this.uiLogMessagesTextBox.Multiline = true;
+        this.uiLogMessagesTextBox.Name = "uiLogMessagesTextBox";
+        this.uiLogMessagesTextBox.ReadOnly = true;
+        this.uiLogMessagesTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        this.uiLogMessagesTextBox.Size = new System.Drawing.Size(416, 145);
+        this.uiLogMessagesTextBox.TabIndex = 15;
+        this.uiLogMessagesTextBox.TabStop = false;
         // 
-        // lbLogMsg
+        // uiLogMessagesLabel
         // 
-        this.lbLogMsg.Location = new System.Drawing.Point(19, 374);
-        this.lbLogMsg.Name = "lbLogMsg";
-        this.lbLogMsg.Size = new System.Drawing.Size(88, 15);
-        this.lbLogMsg.TabIndex = 16;
-        this.lbLogMsg.Text = "Log Messages";
-        this.lbLogMsg.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        this.uiLogMessagesLabel.Location = new System.Drawing.Point(19, 374);
+        this.uiLogMessagesLabel.Name = "uiLogMessagesLabel";
+        this.uiLogMessagesLabel.Size = new System.Drawing.Size(88, 15);
+        this.uiLogMessagesLabel.TabIndex = 16;
+        this.uiLogMessagesLabel.Text = "Log Messages";
+        this.uiLogMessagesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         // 
-        // lnkViewLog
+        // uiViewFullLogLinkLabel
         // 
-        this.lnkViewLog.AutoSize = true;
-        this.lnkViewLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        this.lnkViewLog.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-        this.lnkViewLog.Location = new System.Drawing.Point(93, 372);
-        this.lnkViewLog.Name = "lnkViewLog";
-        this.lnkViewLog.Size = new System.Drawing.Size(98, 15);
-        this.lnkViewLog.TabIndex = 17;
-        this.lnkViewLog.TabStop = true;
-        this.lnkViewLog.Text = "( View full log ... )";
-        this.lnkViewLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        this.uiViewFullLogLinkLabel.AutoSize = true;
+        this.uiViewFullLogLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        this.uiViewFullLogLinkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+        this.uiViewFullLogLinkLabel.Location = new System.Drawing.Point(93, 372);
+        this.uiViewFullLogLinkLabel.Name = "uiViewFullLogLinkLabel";
+        this.uiViewFullLogLinkLabel.Size = new System.Drawing.Size(98, 15);
+        this.uiViewFullLogLinkLabel.TabIndex = 17;
+        this.uiViewFullLogLinkLabel.TabStop = true;
+        this.uiViewFullLogLinkLabel.Text = "( View full log ... )";
+        this.uiViewFullLogLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // ManagerTemplateForm
         // 
-        this.AcceptButton = this.btStart;
+        this.AcceptButton = this.uiStartButton;
         this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
         this.ClientSize = new System.Drawing.Size(458, 579);
-        this.Controls.Add(this.lnkViewLog);
-        this.Controls.Add(this.lbLogMsg);
-        this.Controls.Add(this.gpBoxActions);
-        this.Controls.Add(this.txLog);
-        this.Controls.Add(this.pbar);
-        this.Controls.Add(this.tabControl);
-        this.Controls.Add(this.statusBar);
+        this.Controls.Add(this.uiViewFullLogLinkLabel);
+        this.Controls.Add(this.uiLogMessagesLabel);
+        this.Controls.Add(this.uiActionsGroupBox);
+        this.Controls.Add(this.uiLogMessagesTextBox);
+        this.Controls.Add(this.uiProgressBar);
+        this.Controls.Add(this.uiTabControl);
+        this.Controls.Add(this.uiStatusBar);
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
         this.MaximizeBox = false;
@@ -651,15 +651,15 @@ public class ManagerTemplateForm : Form
         this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         this.Text = "Alchemi Manager";
         this.Load += new System.EventHandler(this.ManagerTemplateForm_Load);
-        this.gpBoxNodeConfig.ResumeLayout(false);
-        this.gpBoxNodeConfig.PerformLayout();
-        this.gpBoxActions.ResumeLayout(false);
-        this.tabControl.ResumeLayout(false);
-        this.tabPage1.ResumeLayout(false);
-        this.tabPage2.ResumeLayout(false);
-        this.tabPage2.PerformLayout();
-        this.gpStorage.ResumeLayout(false);
-        this.gpStorage.PerformLayout();
+        this.uiNodeConfigurationGroupBox.ResumeLayout(false);
+        this.uiNodeConfigurationGroupBox.PerformLayout();
+        this.uiActionsGroupBox.ResumeLayout(false);
+        this.uiTabControl.ResumeLayout(false);
+        this.uiSetupConnectionTabPage.ResumeLayout(false);
+        this.uiAdvancedTabPage.ResumeLayout(false);
+        this.uiAdvancedTabPage.PerformLayout();
+        this.uiStorageConfigurationGroupBox.ResumeLayout(false);
+        this.uiStorageConfigurationGroupBox.PerformLayout();
         this.ResumeLayout(false);
         this.PerformLayout();
 
@@ -704,7 +704,7 @@ public class ManagerTemplateForm : Form
 
             // avoid multiple instances
             bool isOnlyInstance = false;
-            Mutex mtx = new Mutex(true, "AlchemiManager_Mutex", out isOnlyInstance);
+            Mutex mtx = new Mutex(true, "AlcheuiManagerMenuItem_Mutex", out isOnlyInstance);
             if (!isOnlyInstance)
             {
                 MessageBox.Show(this, "An instance of this application is already running. The program will now exit.", "Alchemi Manager", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -716,22 +716,22 @@ public class ManagerTemplateForm : Form
             if (_container != null)
                 RefreshUIControls(_container.Config);
 
-            btStart.Focus();
+            uiStartButton.Focus();
         }
         catch { }
     }
 
-    private void btStop_Click(object sender, EventArgs e)
+    private void uiStopButton_Click(object sender, EventArgs e)
     {
         StopManager();
     }
 
-    private void btStart_Click(object sender, EventArgs e)
+    private void uiStartButton_Click(object sender, EventArgs e)
     {
         StartManager();
     }
 
-    private void btReset_Click(object sender, EventArgs e)
+    private void uiResetButton_Click(object sender, EventArgs e)
     {
         ResetManager();
     }
@@ -759,19 +759,19 @@ public class ManagerTemplateForm : Form
         Restore();
     }
 
-    private void mmExit_Click(object sender, EventArgs e)
+    private void uiManagerExitMenuItem_Click(object sender, EventArgs e)
     {
         Exit();
     }
 
-    private void mmAbout_Click(object sender, EventArgs e)
+    private void uiHelpAboutMenuItem_Click(object sender, EventArgs e)
     {
         new SplashScreen().ShowDialog();
     }
 
-    private void txLog_DoubleClick(object sender, EventArgs e)
+    private void uiLogMessagesTextBox_DoubleClick(object sender, EventArgs e)
     {
-        txLog.Clear();
+        uiLogMessagesTextBox.Clear();
     }
 
 
@@ -788,27 +788,27 @@ public class ManagerTemplateForm : Form
     public void Manager_StartStatusEvent(object sender, EventArgs e)
     {
         //TODO: Do we really need detailed messages such as this:
-        //statusBar.Text = msg;
+        //uiStatusBar.Text = msg;
         //Log(msg);
         //if (percentDone==0)
         //{
-        //    pbar.Value = 0;
-        //    pbar.Visible = true;
+        //    uiProgressBar.Value = 0;
+        //    uiProgressBar.Visible = true;
         //}
         //else if (percentDone >= 100)
         //{
-        //    pbar.Value = pbar.Maximum;
-        //    pbar.Visible = false;
+        //    uiProgressBar.Value = uiProgressBar.Maximum;
+        //    uiProgressBar.Visible = false;
         //}
         //else
         //{
-        //    if ((percentDone + pbar.Value) <= pbar.Maximum)
+        //    if ((percentDone + uiProgressBar.Value) <= uiProgressBar.Maximum)
         //    {
-        //        pbar.Value = percentDone;
+        //        uiProgressBar.Value = percentDone;
         //    }
         //    else
         //    {
-        //        pbar.Value = pbar.Maximum;
+        //        uiProgressBar.Value = uiProgressBar.Maximum;
         //    }
         //}    	
     }
@@ -831,13 +831,13 @@ public class ManagerTemplateForm : Form
         ArrayList data = new ArrayList();
         data.Add(new ManagerDbTypeItem("Microsoft SQL Server 2000", ManagerStorageEnum.SqlServer));
         data.Add(new ManagerDbTypeItem("MySQL Server 4.x / 5.x", ManagerStorageEnum.MySql));
-        cmbDbType.DataSource = data;
-        cmbDbType.DisplayMember = "Display";
-        cmbDbType.ValueMember = "Value";
-        cmbDbType.SelectedIndex = 0;
+        uiDatabaseTypeComboBox.DataSource = data;
+        uiDatabaseTypeComboBox.DisplayMember = "Display";
+        uiDatabaseTypeComboBox.ValueMember = "Value";
+        uiDatabaseTypeComboBox.SelectedIndex = 0;
 
-        cmbScheduler.Items.Add("Default");
-        cmbScheduler.SelectedIndex = 0;
+        uiSchedulerComboBox.Items.Add("Default");
+        uiSchedulerComboBox.SelectedIndex = 0;
     }
 
     protected string GetLogFilePath()
@@ -861,18 +861,18 @@ public class ManagerTemplateForm : Form
     {
         Alchemi.Manager.Configuration conf = new Configuration();
 
-        //conf.DbType = cmbDbType.SelectedValue;
-        conf.DbServer = txDbServer.Text;
-        conf.DbUsername = txDbUsername.Text;
-        conf.DbPassword = txDbPassword.Text;
-        conf.DbName = txDbName.Text;
+        //conf.DbType = uiDatabaseTypeComboBox.SelectedValue;
+        conf.DbServer = uiDatabaseServerTextBox.Text;
+        conf.DbUsername = uiDatabaseUserTextBox.Text;
+        conf.DbPassword = uiDatabasePasswordTextBox.Text;
+        conf.DbName = uiDatabaseNameTextBox.Text;
 
-        conf.OwnPort = int.Parse(txOwnPort.Text);
-        conf.ManagerHost = txManagerHost.Text;
-        conf.ManagerPort = int.Parse(txManagerPort.Text);
-        conf.Intermediate = cbIntermediate.Checked;
-        conf.Dedicated = cbDedicated.Checked;
-        conf.Id = txId.Text;
+        conf.OwnPort = int.Parse(uiOwnPortTextBox.Text);
+        conf.ManagerHost = uiManagerHostTextBox.Text;
+        conf.ManagerPort = int.Parse(uiManagerPortTextBox.Text);
+        conf.Intermediate = uiIntermediateComboBox.Checked;
+        conf.Dedicated = uiDedicatedCheckBox.Checked;
+        conf.Id = uiIdTextBox.Text;
 
         return conf;
     }
@@ -882,65 +882,65 @@ public class ManagerTemplateForm : Form
         if (Config == null)
             return;
 
-        txDbServer.Text = Config.DbServer;
-        txDbUsername.Text = Config.DbUsername;
-        txDbPassword.Text = Config.DbPassword;
-        txDbName.Text = Config.DbName;
+        uiDatabaseServerTextBox.Text = Config.DbServer;
+        uiDatabaseUserTextBox.Text = Config.DbUsername;
+        uiDatabasePasswordTextBox.Text = Config.DbPassword;
+        uiDatabaseNameTextBox.Text = Config.DbName;
         if (Config.DbType == ManagerStorageEnum.InMemory)
         {
-            radMem.Checked = true;
+            uiInMemoryRadioButton.Checked = true;
         }
         else
         {
-            radDb.Checked = true;
-            cmbDbType.SelectedValue = Config.DbType;
+            uiDatabaseRadioButton.Checked = true;
+            uiDatabaseTypeComboBox.SelectedValue = Config.DbType;
         }
         
-        txOwnPort.Text = Config.OwnPort.ToString();
-        cbDedicated.Checked = Config.Dedicated;
+        uiOwnPortTextBox.Text = Config.OwnPort.ToString();
+        uiDedicatedCheckBox.Checked = Config.Dedicated;
         
-        txManagerHost.Text = Config.ManagerHost;
-        txManagerPort.Text = Config.ManagerPort.ToString();
+        uiManagerHostTextBox.Text = Config.ManagerHost;
+        uiManagerPortTextBox.Text = Config.ManagerPort.ToString();
 
-        txId.Text = Config.Id;
-        cbIntermediate.Checked = Config.Intermediate;
+        uiIdTextBox.Text = Config.Id;
+        uiIntermediateComboBox.Checked = Config.Intermediate;
 
         //dont need to keep calling the property getter...
         //since it queries the status on each call.
         bool started = this.Started;
 
-        btStart.Enabled = !started;
-        btReset.Enabled = !started;
-        txOwnPort.Enabled = !started;
+        uiStartButton.Enabled = !started;
+        uiResetButton.Enabled = !started;
+        uiOwnPortTextBox.Enabled = !started;
 
-        cmbScheduler.Enabled = !started;
-        cmbDbType.Enabled = !started && !radMem.Checked;
+        uiSchedulerComboBox.Enabled = !started;
+        uiDatabaseTypeComboBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
 
-        radMem.Enabled = !started;
-        radDb.Enabled = !started;
+        uiInMemoryRadioButton.Enabled = !started;
+        uiDatabaseRadioButton.Enabled = !started;
 
-        txDbServer.Enabled = !started && !radMem.Checked;
-        txDbUsername.Enabled = !started && !radMem.Checked;
-        txDbPassword.Enabled = !started && !radMem.Checked;
-        txDbName.Enabled = !started && !radMem.Checked;
+        uiDatabaseServerTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
+        uiDatabaseUserTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
+        uiDatabasePasswordTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
+        uiDatabaseNameTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
 
-        cbIntermediate.Enabled = false /* !started */; // <-- hierarchical grid disabled for now
-        cbDedicated.Enabled = !started & cbIntermediate.Checked;
-        txManagerHost.Enabled = !started & cbIntermediate.Checked;
-        txManagerPort.Enabled = !started & cbIntermediate.Checked;
-        btStop.Enabled = started;
+        uiIntermediateComboBox.Enabled = false /* !started */; // <-- hierarchical grid disabled for now
+        uiDedicatedCheckBox.Enabled = !started & uiIntermediateComboBox.Checked;
+        uiManagerHostTextBox.Enabled = !started & uiIntermediateComboBox.Checked;
+        uiManagerPortTextBox.Enabled = !started & uiIntermediateComboBox.Checked;
+        uiStopButton.Enabled = started;
 
         if (started)
         {
-            statusBar.Text = "Manager Started.";
+            uiStatusBar.Text = "Manager Started.";
         }
         else
         {
-            statusBar.Text = "Manager Stopped.";
+            uiStatusBar.Text = "Manager Stopped.";
         }
 
-        pbar.Hide();
-        pbar.Value = 0;
+        uiProgressBar.Hide();
+        uiProgressBar.Value = 0;
     }
 
     private void Restore()
@@ -952,31 +952,31 @@ public class ManagerTemplateForm : Form
 
     protected void Log(string s)
     {
-        if (txLog != null)
+        if (uiLogMessagesTextBox != null)
         {
-            if (txLog.Text.Length + s.Length >= txLog.MaxLength)
+            if (uiLogMessagesTextBox.Text.Length + s.Length >= uiLogMessagesTextBox.MaxLength)
             {
                 //remove all old stuff except the last 10 lines.
                 string[] s1 = new string[10];
                 for (int i = 0; i < 10; i++)
                 {
-                    s1[9 - i] = txLog.Lines[txLog.Lines.Length - 1 - i];
+                    s1[9 - i] = uiLogMessagesTextBox.Lines[uiLogMessagesTextBox.Lines.Length - 1 - i];
                 }
-                txLog.Lines = s1;
+                uiLogMessagesTextBox.Lines = s1;
             }
-            txLog.AppendText(s + Environment.NewLine);
+            uiLogMessagesTextBox.AppendText(s + Environment.NewLine);
         }
         logger.Info(s);
     }
 
-    private void radMem_CheckedChanged(object sender, EventArgs e)
+    private void uiInMemoryRadioButton_CheckedChanged(object sender, EventArgs e)
     {
-        //set ui for db stuff based on where radMem is checked.
-        cmbDbType.Enabled = !radMem.Checked;
-        txDbName.Enabled = !radMem.Checked;
-        txDbServer.Enabled = !radMem.Checked;
-        txDbUsername.Enabled = !radMem.Checked;
-        txDbPassword.Enabled = !radMem.Checked;
+        //set ui for db stuff based on where uiInMemoryRadioButton is checked.
+        uiDatabaseTypeComboBox.Enabled = !uiInMemoryRadioButton.Checked;
+        uiDatabaseNameTextBox.Enabled = !uiInMemoryRadioButton.Checked;
+        uiDatabaseServerTextBox.Enabled = !uiInMemoryRadioButton.Checked;
+        uiDatabaseUserTextBox.Enabled = !uiInMemoryRadioButton.Checked;
+        uiDatabasePasswordTextBox.Enabled = !uiInMemoryRadioButton.Checked;
     }
 }
 

@@ -58,36 +58,39 @@ namespace Alchemi.ManagerExec
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.tabPage1.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.gpBoxNodeConfig.SuspendLayout();
-            this.gpBoxActions.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( ManagerMainForm ) );
+            this.uiTabControl.SuspendLayout();
+            this.uiNodeConfigurationGroupBox.SuspendLayout();
+            this.uiAdvancedTabPage.SuspendLayout();
+            this.uiStorageConfigurationGroupBox.SuspendLayout();
+            this.uiActionsGroupBox.SuspendLayout();
+            this.uiSetupConnectionTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
-            // cbIntermediate
+            // cmbDbType
             // 
-            this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
+            this.uiDatabaseTypeComboBox.DisplayMember = "Value";
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 537);
-            // 
-            // lnkViewLog
-            // 
-            this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
+            this.uiStatusBar.Location = new System.Drawing.Point( 0, 477 );
             // 
             // ManagerMainForm
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(458, 559);
+            this.AutoScaleBaseSize = new System.Drawing.Size( 5, 13 );
+            this.ClientSize = new System.Drawing.Size( 458, 499 );
             this.Name = "ManagerMainForm";
-            this.Load += new System.EventHandler(this.ManagerMainForm_Load);
-            this.tabPage1.ResumeLayout(false);
-            this.tabControl.ResumeLayout(false);
-            this.gpBoxNodeConfig.ResumeLayout(false);
-            this.gpBoxNodeConfig.PerformLayout();
-            this.gpBoxActions.ResumeLayout(false);
-            this.ResumeLayout(false);
+            this.Load += new System.EventHandler( this.ManagerMainForm_Load );
+            this.uiTabControl.ResumeLayout( false );
+            this.uiNodeConfigurationGroupBox.ResumeLayout( false );
+            this.uiNodeConfigurationGroupBox.PerformLayout();
+            this.uiAdvancedTabPage.ResumeLayout( false );
+            this.uiAdvancedTabPage.PerformLayout();
+            this.uiStorageConfigurationGroupBox.ResumeLayout( false );
+            this.uiStorageConfigurationGroupBox.PerformLayout();
+            this.uiActionsGroupBox.ResumeLayout( false );
+            this.uiSetupConnectionTabPage.ResumeLayout( false );
+            this.ResumeLayout( false );
             this.PerformLayout();
 
 		}
@@ -96,7 +99,7 @@ namespace Alchemi.ManagerExec
 
 		//-----------------------------------------------------------------------------------------------    
 
-        private void lnkViewLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void uiViewFullLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             //show the log .
             string logFile = null;
@@ -145,14 +148,14 @@ namespace Alchemi.ManagerExec
 			_container.ReadConfig();
 			
 			RefreshUIControls(_container.Config);
-			btStart.Focus();
+			uiStartButton.Focus();
 		}
 
 		//-----------------------------------------------------------------------------------------------    
 
-		private void cbIntermediate_CheckedChanged(object sender, EventArgs e)
+		private void uiIntermediateComboBox_CheckedChanged(object sender, EventArgs e)
 		{
-			_container.Config.Intermediate = cbIntermediate.Checked;
+			_container.Config.Intermediate = uiIntermediateComboBox.Checked;
             RefreshUIControls(_container.Config);
 		}
 
@@ -187,14 +190,14 @@ namespace Alchemi.ManagerExec
 		{
 			if (Started)
 			{
-				pbar.Value = 0;
-				pbar.Show();
-				pbar.Value = pbar.Maximum / 2;
+				uiProgressBar.Value = 0;
+				uiProgressBar.Show();
+				uiProgressBar.Value = uiProgressBar.Maximum / 2;
 				
-				statusBar.Text = "Stopping Manager...";
+				uiStatusBar.Text = "Stopping Manager...";
 				Log("Stopping Manager...");
-				btStop.Enabled = false;
-				btStart.Enabled = false;
+				uiStopButton.Enabled = false;
+				uiStartButton.Enabled = false;
 				try
 				{
 					_container.Stop();
@@ -205,7 +208,7 @@ namespace Alchemi.ManagerExec
 					logger.Error("Error stopping manager",ex);
 				}
 
-				pbar.Value = pbar.Maximum;
+				uiProgressBar.Value = uiProgressBar.Maximum;
 	
 				Log("Manager stopped.");
 
@@ -225,16 +228,16 @@ namespace Alchemi.ManagerExec
 			}
 
 			//to avoid people from clicking this again
-			btStart.Enabled = false;
-			btReset.Enabled = false;
-			btStop.Enabled = false;
+			uiStartButton.Enabled = false;
+			uiResetButton.Enabled = false;
+			uiStopButton.Enabled = false;
 
-			statusBar.Text = "Starting Manager...";
+			uiStatusBar.Text = "Starting Manager...";
 
 			Log("Attempting to start Manager...");
 
-			pbar.Value = 0;
-			pbar.Show();
+			uiProgressBar.Value = 0;
+			uiProgressBar.Show();
 
 			if (_container == null)
 				_container = new ManagerContainer();
