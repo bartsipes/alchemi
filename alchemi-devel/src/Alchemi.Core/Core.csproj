@@ -151,6 +151,7 @@
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Owner\AssemblyDependency.cs" />
     <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
       <SubType>Code</SubType>
@@ -267,12 +268,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GConnectionDialog.resx">
       <DependentUpon>GConnectionDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GConnectionDialogForm.resx">
       <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GNode.resx">
       <DependentUpon>GNode.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Owner\GApplication.resx">
       <DependentUpon>GApplication.cs</DependentUpon>

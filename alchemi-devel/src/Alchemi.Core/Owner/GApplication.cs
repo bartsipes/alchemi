@@ -232,10 +232,40 @@ namespace Alchemi.Core.Owner
 		//----------------------------------------------------------------------------------------------- 
         public void Start()
         {
+            this.AddModuleDependencies();
+
             //start the app on a new thread
             _StartAppThread = new Thread(new ThreadStart(StartApplication));
             _StartAppThread.Name = "GAppStarterThread";
             _StartAppThread.Start();
+        }
+
+        private void AddModuleDependencies()
+        {
+            // add the moduledependencies for the threads added to the application to the manifest
+            foreach( GThread gThread in this.Threads )
+            {
+                this.RecursivelyAddDependencies( gThread.GetType().Assembly );
+            }
+        }
+
+        private void RecursivelyAddDependencies( System.Reflection.Assembly assembly )
+        {
+            // if it's in the GAC, don't do anything with it
+            if( assembly.GlobalAssemblyCache ) return;
+
+            // if we've already added it, don't do anything with it
+            if( !this.Manifest.Contains( new AssemblyDependency( assembly ) ) ) return;
+
+            // otherwise add it to the manifest and add all referenced assemblies
+            this.Manifest.Add( new AssemblyDependency( assembly ) );
+
+            foreach( System.Reflection.AssemblyName assemblyName in assembly.GetReferencedAssemblies() )
+            {
+                System.Reflection.Assembly referencedAssembly = System.Reflection.Assembly.Load( assemblyName );
+
+                this.RecursivelyAddDependencies( referencedAssembly );
+            }
         }
 
         //TODO blocking start
