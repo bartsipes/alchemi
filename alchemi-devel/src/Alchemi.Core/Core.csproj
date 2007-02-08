@@ -151,7 +151,6 @@
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Owner\AssemblyDependency.cs" />
     <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
       <SubType>Code</SubType>

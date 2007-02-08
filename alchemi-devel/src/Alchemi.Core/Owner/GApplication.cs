@@ -242,29 +242,44 @@ namespace Alchemi.Core.Owner
 
         private void AddModuleDependencies()
         {
-            // add the moduledependencies for the threads added to the application to the manifest
+            List<System.Type> types = new List<Type>();
+
+            // add the moduledependencies for the threads to the manifest
             foreach( GThread gThread in this.Threads )
             {
-                this.RecursivelyAddDependencies( gThread.GetType().Assembly );
+                // if we've already processed this gThread type, then don't process it again
+                if( !types.Contains( gThread.GetType() ) )
+                {
+                    this.RecursivelyAddModuleDependencies( gThread.GetType().Module, new List<System.Reflection.Module>() );
+                    types.Add( gThread.GetType() );
+                }
             }
         }
 
-        private void RecursivelyAddDependencies( System.Reflection.Assembly assembly )
+        private void RecursivelyAddModuleDependencies( System.Reflection.Module module, List<System.Reflection.Module> addedModules )
         {
-            // if it's in the GAC, don't do anything with it
-            if( assembly.GlobalAssemblyCache ) return;
+            // if it's in the GAC, don't add it
+            if( module.Assembly.GlobalAssemblyCache ) return;
 
-            // if we've already added it, don't do anything with it
-            if( !this.Manifest.Contains( new AssemblyDependency( assembly ) ) ) return;
+            // if it's already been added, don't add it
+            if( addedModules.Contains( module ) ) return;
 
-            // otherwise add it to the manifest and add all referenced assemblies
-            this.Manifest.Add( new AssemblyDependency( assembly ) );
+            // if it was manually added, don't add it
+            if( this.Manifest.Contains( new ModuleDependency( module ) ) ) return;
 
-            foreach( System.Reflection.AssemblyName assemblyName in assembly.GetReferencedAssemblies() )
+            // otherwise, add it to the manifest and to the collection
+            this.Manifest.Add( new ModuleDependency( module ) );
+            addedModules.Add( module );
+
+            // and add all referenced modules
+            foreach( System.Reflection.AssemblyName assemblyName in module.Assembly.GetReferencedAssemblies() )
             {
                 System.Reflection.Assembly referencedAssembly = System.Reflection.Assembly.Load( assemblyName );
 
-                this.RecursivelyAddDependencies( referencedAssembly );
+                foreach( System.Reflection.Module referencedModule in referencedAssembly.GetModules() )
+                {
+                    this.RecursivelyAddModuleDependencies( referencedModule, addedModules );
+                }
             }
         }
 
