@@ -70,7 +70,7 @@ namespace CustomGThreadExample
                     // ReadBlock returns a char[] buffer so convert it to a string to pass to our custom GThread.
                     stringBuffer = new string( charBuffer );
 
-                    // Instantiate our custom GThread and pass the data we need to process throgh the constructor.
+                    // Instantiate our custom GThread and pass the data we need to process through the constructor.
                     // Note: other methods of passing data to GThreads are possible.
                     CustomGThread customGThread = new CustomGThread( currentBlock, stringBuffer );
 
@@ -83,7 +83,7 @@ namespace CustomGThreadExample
                 // Close the input file.
                 streamReader.Close();
 
-                // Resize the array that will hold our output so there is one entry per GThread.
+                // Resize the output array to hold one entry per GThread.
                 this._outputArray = new string[ currentBlock ];
 
                 // Bind the ThreadFinished and ApplicationFinished events to local event handlers.
