@@ -24,7 +24,12 @@
 #endregion
 
 using System;
+using System.Collections;
+
 using Alchemi.Core.Owner;
+
+// 2.8.06 MDV
+// TODO: Rewrite this using List<GThread>
 
 namespace Alchemi.Core.Owner
 {
@@ -32,7 +37,7 @@ namespace Alchemi.Core.Owner
 	/// Represents a collection of GThreads.
 	/// </summary>
     [Serializable]
-    public class ThreadCollection : System.Collections.CollectionBase
+    public class ThreadCollection : CollectionBase
     {
 		/// <summary>
 		/// Gets or sets the GThread at the given index

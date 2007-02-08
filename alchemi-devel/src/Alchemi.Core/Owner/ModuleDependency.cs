@@ -31,15 +31,15 @@ using Alchemi.Core.Owner;
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
-	/// Represents a dependency which is a .Net module
+	/// Represents a dependency which is a .NET module
 	/// </summary>
     [Serializable]
     public class ModuleDependency : EmbeddedFileDependency
     {
-		/// <summary>
-		/// Creates an instance of the ModuleDependency class
-		/// </summary>
-		/// <param name="module"></param>
+        /// <summary>
+        /// Creates an instance of the ModuleDependency class
+        /// </summary>
+        /// <param name="module">The module.</param>
         public ModuleDependency(Module module) : base(module.Name, module.FullyQualifiedName) {}
     }
 }

@@ -40,9 +40,12 @@ namespace Alchemi.Core.Owner
         
         int _Id = -1;
         bool _Failed = false;
-        [NonSerialized] GApplication _Application = null; // local
-        [NonSerialized] int _Priority = 5; // local
-        [NonSerialized] string _WorkingDirectory = ""; // remote
+        [NonSerialized]
+        GApplication _Application = null; // local
+        [NonSerialized]
+        int _Priority = 5; // local
+        [NonSerialized]
+        string _WorkingDirectory = ""; // remote
 
         //----------------------------------------------------------------------------------------------- 
         // properties

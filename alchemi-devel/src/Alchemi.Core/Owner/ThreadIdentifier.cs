@@ -37,7 +37,7 @@ namespace Alchemi.Core.Owner
         private int _ThreadId;
         private int _Priority;
 
-        public const Int32 DefaultPriority = -1;
+        public const int DefaultPriority = -1;
 
         //-----------------------------------------------------------------------------------------------        
     
@@ -92,6 +92,10 @@ namespace Alchemi.Core.Owner
             _Priority = priority;
         }
 
+        /// <summary>
+        /// Gets the unique id.
+        /// </summary>
+        /// <value>The unique id.</value>
         public string UniqueId
         {
             get

@@ -34,6 +34,7 @@ namespace Alchemi.Core.Owner
     {
         public static string WorkingDirectory = "${WorkingDirectory}";
     }
+
 	/// <summary>
 	/// Represents a coarse unit of work on the grid. This class extends the GThread to enable legacy applications to 
 	/// run on the grid. A GJob is associated with file dependencies which are the inputs and outputs of the job
@@ -137,7 +138,6 @@ namespace Alchemi.Core.Owner
         {
             try
             {
-
                 output = new StringBuilder();
                 error = new StringBuilder();
                 log = new StringBuilder();

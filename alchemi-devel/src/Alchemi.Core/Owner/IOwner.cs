@@ -26,7 +26,8 @@
 namespace Alchemi.Core
 {
 	/// <summary>
-	/// Defines the functions / services that should be provided by an "owner" node. (i.e the node which creates/starts an application).
+	/// Defines the functions/services that should be provided by an "owner" node.
+    /// (i.e the node which creates/starts an application).
 	/// </summary>
 	public interface IOwner
 	{

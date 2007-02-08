@@ -31,9 +31,12 @@ using Alchemi.Core.Utility;
 using System.Collections.Generic;
 
 // 2.8.07 MDV
-//TODO: Add blocking Start() method. 
-//That is, a call to Start() doesn't return until the entire GApplication is finished.
+// TODO: Add blocking Start() method. 
+// That is, a call to Start() doesn't return until the entire GApplication is finished.
 
+// TODO: Maybee we need not have a seperate "state" for the application.
+// If all threads are dead, app should have state=stopped as well isnt it?
+// How do we handle multi-use apps then?
 
 namespace Alchemi.Core.Owner
 {

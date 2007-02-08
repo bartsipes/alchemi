@@ -26,11 +26,18 @@
 
 using System;
 using System.Collections;
+using System.Runtime.Serialization;
+
+// 2.8.06 MDV
+// TODO: Can m_cThreads be moved from an ArrayList to a List<>?
+// TODO: Get rid of the Hungarian notation
 
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
-	/// GThreadBuffer class represents a thread buffer that holds many threads that can be executed by an executor as one thread. It is used primarily by GApplicationBuffered to improve performance when executing many threads with short execution times.
+	/// GThreadBuffer class represents a thread buffer that holds many threads that can be
+    /// executed by an executor as one thread. It is used primarily by GApplicationBuffered
+    /// to improve performance when executing many threads with short execution times.
 	/// </summary>
 	[Serializable]
 	public class GThreadBuffer : GThread, ICollection
@@ -41,7 +48,16 @@ namespace Alchemi.Core.Owner
 		private IList m_cThreads = new ArrayList();
 		private Hashtable m_cThreadIdException = new Hashtable();
 
-		public event FullEventHandler Full;
+
+        #region Event - Full
+        private event FullEventHandler _Full;
+        public event FullEventHandler Full
+        {
+            add { _Full += value; }
+            remove { _Full -= value; }
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Default constructor.
@@ -60,7 +76,6 @@ namespace Alchemi.Core.Owner
 			{
 				throw new ArgumentOutOfRangeException("nCapacity", nCapacity, "0 < nCapacity <= Int32.MaxValue");
 			}
-
 			m_nCapacity = nCapacity;
 		}
 
@@ -69,10 +84,7 @@ namespace Alchemi.Core.Owner
 		/// </summary>
 		public int Capacity
 		{
-			get
-			{
-				return m_nCapacity;
-			}
+            get { return m_nCapacity; }
 		}
 
 		/// <summary>
@@ -86,13 +98,14 @@ namespace Alchemi.Core.Owner
 			}
 		}
 
-		/// <summary>
-		/// Determines whether the thread buffer is full.
-		/// </summary>
-		/// <returns>whether it is full</returns>
-		public bool IsFull()
+        /// <summary>
+        /// Determines whether the thread buffer is full.
+        /// </summary>
+        /// <value><c>true</c> if the GThreadBuffer is full; otherwise, <c>false</c>.</value>
+        /// <returns>whether it is full</returns>
+		public bool IsFull
 		{
-			return (m_cThreads.Count == m_nCapacity);
+            get { return (m_cThreads.Count == m_nCapacity); }
 		}
 
 		/// <summary>
@@ -101,14 +114,14 @@ namespace Alchemi.Core.Owner
 		/// <param name="thread">thread</param>
 		public void Add(GThread oThread) 
 		{
-			if (IsFull()) 
+			if (this.IsFull) 
 			{
 				throw new ThreadBufferFullException("Attempting to add a thread to a full thread buffer.");
 			}
 			
 			m_cThreads.Add(oThread);
 
-			if (IsFull()) 
+			if (this.IsFull) 
 			{
 				OnFull();
 			}
@@ -117,11 +130,11 @@ namespace Alchemi.Core.Owner
 		/// <summary>
 		/// Fires the full event.
 		/// </summary>
-		private void OnFull()
+		protected virtual void OnFull()
 		{
-			if (Full != null) 
+			if (_Full != null) 
 			{
-				Full(this, new EventArgs());
+				_Full(this, new EventArgs());
 			}
 		}
 
@@ -208,10 +221,21 @@ namespace Alchemi.Core.Owner
 	/// </summary>
 	public delegate void FullEventHandler(object oSender, EventArgs oEventArgs);
 
+
+
+    // 2.8.06 MDV
+    // Changed this so that it derives directly from Exception, not ApplicationException
+    // ApplicationException is deprecated, see "Best Practices for Handling Exceptions"
+    // http://msdn2.microsoft.com/en-us/library/seyhszts.aspx
+    // Also made it serializable and added the protected constructor.
+
+
 	/// <summary>
-	/// ThreadBufferFullException class represents an exception thrown when attempting to add a thread to a full thread buffer.
+	/// ThreadBufferFullException class represents an exception thrown when attempting to
+    /// add a thread to a full thread buffer.
 	/// </summary>
-	public class ThreadBufferFullException : ApplicationException
+    [Serializable]
+	public class ThreadBufferFullException : Exception
 	{
 		/// <summary>
 		/// Default constructor.
@@ -236,5 +260,17 @@ namespace Alchemi.Core.Owner
 		public ThreadBufferFullException(string strMessage, Exception oException) : base(strMessage, oException) 
 		{
 		}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadBufferFullException"/> class.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+        /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
+        /// <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        protected ThreadBufferFullException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
 	}
 }
