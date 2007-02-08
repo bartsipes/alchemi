@@ -11,8 +11,8 @@ namespace CustomGThreadExample
     /// 
     /// The program reads an input file block by block and passes the string data
     /// to grid threads. The grid application is then run, and the output from each
-    /// thread is added to an array.  When the application has finished, the output of
-    /// that array is recombined and written to disk.
+    /// thread is added to an array.  When the application has finished, the output in
+    /// the array is combined and written to disk.
     /// 
     /// With minor modifications, this example can be adapted for any task that allows for
     /// parallel processing of an input file separated into blocks that can be later
