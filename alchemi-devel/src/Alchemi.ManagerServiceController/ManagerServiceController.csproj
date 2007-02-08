@@ -95,9 +95,9 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Alchemi.Core\Core.csproj">
+    <ProjectReference Include="..\Alchemi.Core\Alchemi.Core.csproj">
       <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
-      <Name>Core</Name>
+      <Name>Alchemi.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Alchemi.Manager\Manager.csproj">
       <Name>Manager</Name>

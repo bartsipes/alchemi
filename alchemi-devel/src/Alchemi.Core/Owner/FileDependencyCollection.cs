@@ -28,6 +28,10 @@ using System.Collections;
 
 using Alchemi.Core.Owner;
 
+// TODO: 2.8.07 MDV
+// Derive from the generic ReadOnlyCollection<FileDependency> to fully embrace .NET 2.0 generics
+// Can also take advantage of List.Contains()
+
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
@@ -42,7 +46,7 @@ namespace Alchemi.Core.Owner
         public FileDependency this[int index]
         {
             get 
-            { 
+            {
                 return (FileDependency) InnerList[index]; 
             }
         }

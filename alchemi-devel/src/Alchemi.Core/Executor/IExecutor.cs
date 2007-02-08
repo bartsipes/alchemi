@@ -28,34 +28,34 @@ using Alchemi.Core.Owner;
 namespace Alchemi.Core
 {
 	/// <summary>
-	/// Defines the functions / services that should be provided by an executor implementation
+	/// Defines the functions/services that should be provided by an executor implementation
 	/// </summary>
     public interface IExecutor
     {
 		/// <summary>
-		/// Ping the executor to check if it is alive
+		/// Ping the executor to check if it is alive.
 		/// </summary>
         void PingExecutor();
-        
-		/// <summary>
-		/// Executes the thread with the given identifier. 
-		/// <br/>(Generally meant to be called by a Manager)
-		/// </summary>
-		/// <param name="ti"></param>
+
+        /// <summary>
+        /// Executes the thread with the given identifier.
+        /// <br/>(Generally meant to be called by a Manager)
+        /// </summary>
+        /// <param name="ti">The thread identifier.</param>
         void Manager_ExecuteThread(ThreadIdentifier ti);
-        
-		/// <summary>
-		/// Aborts the thread with the given identifier
-		/// <br/>(Generally meant to be called by a Manager)
-		/// </summary>
-		/// <param name="ti"></param>
+
+        /// <summary>
+        /// Aborts the thread with the given identifier
+        /// <br/>(Generally meant to be called by a Manager)
+        /// </summary>
+        /// <param name="ti">The thread identifier.</param>
 		void Manager_AbortThread(ThreadIdentifier ti);
 
-		/// <summary>
-		/// Cleans up the files related to the application with the given id.
-		/// <br/>(Generally meant to be called by a Manager)
-		/// </summary>
-		/// <param name="appid"></param>
+        /// <summary>
+        /// Cleans up the files related to the application with the given id.
+        /// <br/>(Generally meant to be called by a Manager)
+        /// </summary>
+        /// <param name="appid">The appid.</param>
 		void Manager_CleanupApplication(string appid);
     }
 }

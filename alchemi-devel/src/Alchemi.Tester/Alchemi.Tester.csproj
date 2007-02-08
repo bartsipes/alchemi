@@ -88,8 +88,8 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Alchemi.Core\Core.csproj">
-      <Name>Core</Name>
+    <ProjectReference Include="..\Alchemi.Core\Alchemi.Core.csproj">
+      <Name>Alchemi.Core</Name>
       <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>

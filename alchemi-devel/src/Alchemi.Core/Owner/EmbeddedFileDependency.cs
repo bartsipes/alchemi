@@ -41,7 +41,7 @@ namespace Alchemi.Core.Owner
     public class EmbeddedFileDependency : FileDependency
     {
 		/// <summary>
-		/// contents of the file representing using base64 encoding.
+		/// Contents of the file representing using base64 encoding.
 		/// </summary>
         protected string _Base64EncodedContents = "";
 
@@ -117,8 +117,12 @@ namespace Alchemi.Core.Owner
             return (EmbeddedFileDependency[])list.ToArray(typeof(EmbeddedFileDependency));
         }
 
-        #region "GetEmbeddedFileDependencyFromFolder helpers"
-
+        /// <summary>
+        /// Adds the files in folderName to list.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <param name="folderName">Name of the folder.</param>
+        /// <param name="subFolderToAddToFileName">Name of the sub folder to add to file.</param>
         private static void AddFilesToList(ArrayList list, string folderName, string subFolderToAddToFileName)
         {
             foreach (string filePath in Directory.GetFiles(folderName))
@@ -138,8 +142,7 @@ namespace Alchemi.Core.Owner
                     folderPath, 
                     Path.Combine(subFolderToAddToFileName, Path.GetFileName(folderPath)));
             }
-
         }
-        #endregion
+
     }
 }

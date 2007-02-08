@@ -1,39 +1,91 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Core", "Alchemi.Core\Alchemi.Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorExec", "Alchemi.ExecutorExec\ExecutorExec.csproj", "{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Alchemi.SDK\Console\Console.csproj", "{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSubmitter", "Alchemi.SDK\JobSubmitter\JobSubmitter.csproj", "{B31B92E1-0CA5-4226-BDEF-C4DD5BC43E3D}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorService", "Alchemi.ExecutorService\ExecutorService.csproj", "{F196CA7C-D8B0-4031-9989-D43406AEB3B8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerService", "Alchemi.ManagerService\ManagerService.csproj", "{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerExec", "Alchemi.ManagerExec\ManagerExec.csproj", "{11F1CF0B-5526-4534-9784-0543E29D4292}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Tester", "Alchemi.Tester\Alchemi.Tester.csproj", "{C11636CD-14B6-4526-80DA-AFF5DFA84298}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Executor", "Alchemi.Executor\Executor.csproj", "{A71A830F-F3FA-47BD-956E-67CFB22F75E8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manager", "Alchemi.Manager\Manager.csproj", "{3122055C-044A-4C0C-80BB-82232FB333C5}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorServiceController", "Alchemi.ExecutorServiceController\ExecutorServiceController.csproj", "{23CC92DA-8780-4A17-BF9A-E567CB0548C5}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerServiceController", "Alchemi.ManagerServiceController\ManagerServiceController.csproj", "{85660E73-08EB-4927-9C77-4009B8533F01}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F520AA3-7252-4D9D-BDA6-EED249B0EEE2}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
 		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
 	EndProjectSection

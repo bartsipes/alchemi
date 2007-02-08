@@ -25,16 +25,21 @@
 
 using System;
 
+// 2.8.07 JMM MDV
+// TODO: Add "object sender" as the first parameter to all of these
+
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
 	/// Delegate for the Application Finished event
 	/// </summary>
     public delegate void GApplicationFinish();
+
 	/// <summary>
 	/// Delegare for the ThreadFinish event
 	/// </summary>
     public delegate void GThreadFinish(GThread thread);
+
 	/// <summary>
 	/// Delegate for the ThreadFailed event
 	/// </summary>

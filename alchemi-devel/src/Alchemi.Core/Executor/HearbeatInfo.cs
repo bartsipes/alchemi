@@ -39,23 +39,25 @@ namespace Alchemi.Core.Executor
         private int _PercentAvailCpuPower;
 
 		/// <summary>
-		/// Heartbeat interval
+		/// Heartbeat interval (in seconds)
 		/// </summary>
         public int Interval
         {
             get { return _Interval; }
             set { _Interval = value; }
         }
+
 		/// <summary>
-		/// PercentUsedCpuPower
+		/// Percent of CPU power currently being used.
 		/// </summary>
         public int PercentUsedCpuPower
         {
             get { return _PercentUsedCpuPower; }
             set { _PercentUsedCpuPower = value; }
         }
+
 		/// <summary>
-		/// PercentAvailCpuPower
+		/// Percent of CPU power that is currently available.
 		/// </summary>
         public int PercentAvailCpuPower
         {
@@ -63,12 +65,12 @@ namespace Alchemi.Core.Executor
             set { _PercentAvailCpuPower = value; }
         }
 
-		/// <summary>
-		/// Creates an instance of the HeartBeat object with the given interval, used, and available CPU power.
-		/// </summary>
-		/// <param name="interval"></param>
-		/// <param name="used"></param>
-		/// <param name="avail"></param>
+        /// <summary>
+        /// Creates an instance of the HeartBeat object with the given interval, used, and available CPU power.
+        /// </summary>
+        /// <param name="interval">The heartbeat interval (seconds).</param>
+        /// <param name="used">The CPU power currently being used.</param>
+        /// <param name="avail">The CPU power currently available.</param>
         public HeartbeatInfo(int interval, int used, int avail)
         {
             _Interval = interval;

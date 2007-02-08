@@ -30,6 +30,11 @@ using System.Threading;
 using Alchemi.Core.Utility;
 using System.Collections.Generic;
 
+// 2.8.07 MDV
+//TODO: Add blocking Start() method. 
+//That is, a call to Start() doesn't return until the entire GApplication is finished.
+
+
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
@@ -72,24 +77,51 @@ namespace Alchemi.Core.Owner
 		private bool _Initted = false;
 		private bool _MultiUse = false;
 
-		//to prevent starting of already started app. also to prevent re-suing single-use apps.
+		//to prevent starting of already started app. also to prevent re-using single-use apps.
 		private bool firstuse = true;
 
 		private bool _StopGetFinished = false;
 
-		/// <summary>
-		/// ThreadFinish event: is raised when the thread has completed execution successfully.
-		/// </summary>
-		public event GThreadFinish ThreadFinish;
-		/// <summary>
-		/// ThreadFailed event: is raised when the thread has completed execution and failed.
-		/// </summary>
-		public event GThreadFailed ThreadFailed;
-		/// <summary>
-		/// ApplicationFinish event: is raised when all the threads in the application have completed execution, i.e finished/failed.
-		/// This event is NOT raised when the GApplication is declared as "multi-use".
-		/// </summary>
-		public event GApplicationFinish ApplicationFinish;
+
+        #region Event - ThreadFinish
+        private event GThreadFinish _ThreadFinish;
+        /// <summary>
+        /// ThreadFinish event: is raised when the thread has completed execution successfully.
+        /// </summary>		
+        public event GThreadFinish ThreadFinish
+        {
+            add { _ThreadFinish += value; }
+            remove { _ThreadFinish -= value; }
+        }
+        #endregion
+
+
+        #region Event - ThreadFailed
+        private event GThreadFailed _ThreadFailed;
+        /// <summary>
+        /// ThreadFailed event: is raised when the thread has completed execution and failed.
+        /// </summary>		
+        public event GThreadFailed ThreadFailed
+        {
+            add { _ThreadFailed += value; }
+            remove { _ThreadFailed -= value; }
+        }
+        #endregion
+
+
+        #region Event - ApplicationFinish
+        private event GApplicationFinish _ApplicationFinish;
+        /// <summary>
+        /// ApplicationFinish event: is raised when all the threads in the application have completed execution, i.e finished/failed.
+        /// This event is NOT raised when the GApplication is declared as "multi-use".
+        /// </summary>
+        public event GApplicationFinish ApplicationFinish
+        {
+            add { _ApplicationFinish += value; }
+            remove { _ApplicationFinish -= value; }
+        } 
+        #endregion
+
 
 		//----------------------------------------------------------------------------------------------- 
 		// properties
@@ -125,14 +157,8 @@ namespace Alchemi.Core.Owner
         /// <param name="name"></param>
         public string ApplicationName
         {
-            get
-            {
-                return _ApplicationName;
-            }
-            set
-            {
-                _ApplicationName = value;
-            }
+            get { return _ApplicationName; }
+            set { _ApplicationName = value; }
         }
 
 		/// <summary>
@@ -242,7 +268,7 @@ namespace Alchemi.Core.Owner
 
         private void AddModuleDependencies()
         {
-            List<System.Type> types = new List<Type>();
+            List<Type> types = new List<Type>();
 
             // add the moduledependencies for the threads to the manifest
             foreach( GThread gThread in this.Threads )
@@ -283,7 +309,9 @@ namespace Alchemi.Core.Owner
             }
         }
 
-        //TODO blocking start
+
+        //TODO: Add blocking Start() method here
+
 
 		/// <summary>
 		/// Starts the grid application
@@ -559,7 +587,7 @@ namespace Alchemi.Core.Owner
 								Manager.Owner_CleanupApplication(Credentials,_Id);
 								appCleanedup = true;
 							}
-							if (ApplicationFinish != null)
+							if (_ApplicationFinish != null)
 							{
 								/// January 25, 2006 tb@tbiro.com: Fix for bug 1410797 
 								/// Mark the application as stopped in the database
@@ -571,7 +599,7 @@ namespace Alchemi.Core.Owner
 								_Running = false;
 								try
 								{
-									ApplicationFinish.BeginInvoke(null, null);
+									_ApplicationFinish.BeginInvoke(null, null);
 								}
 								catch (Exception ex)
 								{
@@ -618,38 +646,40 @@ namespace Alchemi.Core.Owner
         /// Fires the thread finish event.
         /// </summary>
         /// <param name="th">thread</param>
-        protected virtual void OnThreadFinish(GThread th)
+        protected virtual void OnThreadFinish(GThread thread)
         {
-            if (ThreadFinish != null)
+            if (_ThreadFinish != null)
             {
-                logger.Debug("Raising thread finish event...");
+                logger.Debug("Raising ThreadFinish event...");
                 try
                 {
-                    ThreadFinish(th); //TODO: Need to see the effect of calling it async. 
+                    _ThreadFinish(thread); //TODO: Need to see the effect of calling it async. 
                 }
                 catch (Exception eventhandlerEx)
                 {
-                    logger.Debug("Error in ThreadFinish Event handler: " + eventhandlerEx);
+                    // TODO: Figure out a way to not eat this exception!
+                    logger.Debug("Error in ThreadFinish event handler: " + eventhandlerEx);
                 }
             }
         }
 
         /// <summary>
-        /// Fires the thread failed event.
+        /// Fires the ThreadFailed event.
         /// </summary>
         /// <param name="th">thread</param>
         /// <param name="ex">ex</param>
-        protected virtual void OnThreadFailed(GThread th, Exception ex)
+        protected virtual void OnThreadFailed(GThread thread, Exception ex)
         {
-            if (ThreadFailed != null)
+            if (_ThreadFailed != null)
             {
-                logger.Debug("Raising thread failed event...");
+                logger.Debug("Raising ThreadFailed event...");
                 try
                 {
-                    ThreadFailed(th, ex); //TODO: Need to see the effect of calling it async. 
+                    _ThreadFailed(thread, ex); //TODO: Need to see the effect of calling it async. 
                 }
                 catch (Exception eventhandlerEx)
                 {
+                    // TODO: Figure out a way to not eat this exception!
                     logger.Debug("Error in ThreadFailed Event handler: " + eventhandlerEx);
                 }
             }

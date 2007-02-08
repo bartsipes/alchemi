@@ -60,6 +60,5 @@ namespace Alchemi.Core.Manager
 		/// Allowed to manage users.
 		/// </summary>
         ManageUsers = 4
-
     }
 }
