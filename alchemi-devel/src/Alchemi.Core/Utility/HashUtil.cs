@@ -4,7 +4,7 @@
 * Alchemi [.NET Grid Computing Framework]
 * http://www.alchemi.net
 *
-* Title			:	Utils.cs
+* Title			:	HashUtil.cs
 * Project		:	Alchemi Core
 * Created on	:	2003
 * Copyright		:	Copyright © 2006 The University of Melbourne
@@ -30,36 +30,39 @@ using System.Text;
 
 namespace Alchemi.Core.Utility
 {
+    // From the tutorial at http://www.developerfusion.co.uk/show/4601/
+    // Original author blog: http://weblogs.asp.net/CumpsD
+    // 2.9.07 MDV Refactored and removed redundant methods
 
-    // from the tutorial at http://www.developerfusion.co.uk/show/4601/
-    // original author blog: http://weblogs.asp.net/CumpsD
-
-    /// <summary>Class used to generate and check hashes.</summary>
+    /// <summary>
+    /// Class used to generate and check hashes.
+    /// </summary>
     public sealed class HashUtil
     {
-        /// <summary></summary>
+        /// <summary>
+        /// Private constructor to prevent instantiation of this class.
+        /// </summary>
         private HashUtil() { }
 
-        #region Hash Choices
-        /// <summary>The wanted hash function.</summary>
+        #region Enum - HashType
+        /// <summary>
+        /// The wanted hash function.
+        /// </summary>
         public enum HashType : int
         {
-            /// <summary>MD5 Hashing</summary>
             MD5,
-            /// <summary>SHA1 Hashing</summary>
             SHA1,
-            /// <summary>SHA256 Hashing</summary>
             SHA256,
-            /// <summary>SHA384 Hashing</summary>
             SHA384,
-            /// <summary>SHA512 Hashing</summary>
             SHA512
-        } /* HashType */
+        }
         #endregion
 
-        #region Public Methods
-        /// <summary>Generates the hash of a text.</summary>
-        /// <param name="input">The text of which to generate a hash of.</param>
+
+        /// <summary>
+        /// Generates the hash of a text.
+        /// </summary>
+        /// <param name="input">The text for which to generate the hash.</param>
         /// <param name="hashType">The hash function to use.</param>
         /// <returns>The hash as a hexadecimal string.</returns>
         public static string GetHash(string input, HashType hashType)
@@ -67,15 +70,15 @@ namespace Alchemi.Core.Utility
             string result;
             switch (hashType)
             {
-                case HashType.MD5: result = GetMD5(input); break;
-                case HashType.SHA1: result = GetSHA1(input); break;
-                case HashType.SHA256: result = GetSHA256(input); break;
-                case HashType.SHA384: result = GetSHA384(input); break;
-                case HashType.SHA512: result = GetSHA512(input); break;
-                default: result = "Invalid HashType"; break;
+                case HashType.MD5: result = DoHashingAlgorithm(input, new MD5CryptoServiceProvider()); break;
+                case HashType.SHA1: result = DoHashingAlgorithm(input, new SHA1Managed()); break;
+                case HashType.SHA256: result = DoHashingAlgorithm(input, new SHA256Managed()); break;
+                case HashType.SHA384: result = DoHashingAlgorithm(input, new SHA384Managed()); break;
+                case HashType.SHA512: result = DoHashingAlgorithm(input, new SHA512Managed()); break;
+                default: result = "Invalid HashType"; break;                   
             }
             return result;
-        } /* GetHash */
+        }
 
         /// <summary>Checks a text with a hash.</summary>
         /// <param name="original">The text to compare the hash against.</param>
@@ -86,85 +89,26 @@ namespace Alchemi.Core.Utility
         {
             string strOrigHash = GetHash(original, hashType);
             return (strOrigHash == hashed);
-        } /* CheckHash */
-        #endregion
+        }
 
-        #region Hashers
-        private static string GetMD5(string input)
+
+        /// <summary>
+        /// Performs the hashing operation on the inputs string using the specified HashAlgorithm.
+        /// </summary>
+        /// <param name="input">The input string to hash.</param>
+        /// <param name="algorithm">The hashing algorithm to use.</param>
+        /// <returns></returns>
+        private static string DoHashingAlgorithm(string input, HashAlgorithm algorithm)
         {
             UnicodeEncoding UE = new UnicodeEncoding();
             byte[] HashValue, MessageBytes = UE.GetBytes(input);
-            MD5 md5 = new MD5CryptoServiceProvider();
             StringBuilder hex = new StringBuilder();
-
-            HashValue = md5.ComputeHash(MessageBytes);
-            foreach (byte b in HashValue)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-
-            return hex.ToString();
-        } /* GetMD5 */
-
-        private static string GetSHA1(string input)
-        {
-            UnicodeEncoding UE = new UnicodeEncoding();
-            byte[] HashValue, MessageBytes = UE.GetBytes(input);
-            SHA1Managed SHhash = new SHA1Managed();
-            StringBuilder hex = new StringBuilder();
-
-            HashValue = SHhash.ComputeHash(MessageBytes);
+            HashValue = algorithm.ComputeHash(MessageBytes);
             foreach (byte b in HashValue)
             {
                 hex.AppendFormat("{0:x2}", b);
             }
             return hex.ToString();
-        } /* GetSHA1 */
-
-        private static string GetSHA256(string input)
-        {
-            UnicodeEncoding UE = new UnicodeEncoding();
-            byte[] HashValue, MessageBytes = UE.GetBytes(input);
-            SHA256Managed SHhash = new SHA256Managed();
-            StringBuilder hex = new StringBuilder();
-
-            HashValue = SHhash.ComputeHash(MessageBytes);
-            foreach (byte b in HashValue)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-            return hex.ToString();
-        } /* GetSHA256 */
-
-        private static string GetSHA384(string input)
-        {
-            UnicodeEncoding UE = new UnicodeEncoding();
-            byte[] HashValue, MessageBytes = UE.GetBytes(input);
-            SHA384Managed SHhash = new SHA384Managed();
-            StringBuilder hex = new StringBuilder();
-
-            HashValue = SHhash.ComputeHash(MessageBytes);
-            foreach (byte b in HashValue)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-            return hex.ToString();
-        } /* GetSHA384 */
-
-        private static string GetSHA512(string input)
-        {
-            UnicodeEncoding UE = new UnicodeEncoding();
-            byte[] HashValue, MessageBytes = UE.GetBytes(input);
-            SHA512Managed SHhash = new SHA512Managed();
-            StringBuilder hex = new StringBuilder();
-
-            HashValue = SHhash.ComputeHash(MessageBytes);
-            foreach (byte b in HashValue)
-            {
-                hex.AppendFormat("{0:x2}", b);
-            }
-            return hex.ToString();
-        } /* GetSHA512 */
-        #endregion
-    } /* Hash */
-} /* Hash */
+        }
+    }
+}

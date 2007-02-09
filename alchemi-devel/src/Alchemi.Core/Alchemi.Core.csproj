@@ -148,9 +148,12 @@
     <Compile Include="GConnectionDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GConnectionDialogFormConfig.cs" />
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="LogEventArgs.cs" />
+    <Compile Include="LogLevel.cs" />
     <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
       <SubType>Code</SubType>

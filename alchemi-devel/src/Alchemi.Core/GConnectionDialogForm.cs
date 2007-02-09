@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+
 using Alchemi.Core;
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
@@ -46,7 +47,7 @@ namespace Alchemi.Core.Owner
         private System.Windows.Forms.GroupBox groupBox2;
         private System.ComponentModel.Container components = null;
         private GConnection connection;
-        private Config config;
+        private GConnectionDialogFormConfig config;
 
         /// <summary>
         /// Creates an instance of the GConnectionDialogForm class
@@ -293,7 +294,7 @@ namespace Alchemi.Core.Owner
 
         public void ReadConfig()
         {
-            config = Config.Read(Config.Default_Config_File);
+            config = GConnectionDialogFormConfig.Read(GConnectionDialogFormConfig.Default_Config_File);
             txHost.Text = config.Host;
             txPort.Text = config.Port.ToString();
             txUsername.Text = config.Username;
@@ -303,87 +304,4 @@ namespace Alchemi.Core.Owner
     }
 }
 
-/// <summary>
-/// Represents the login configuration information, to connect to a manager.
-/// Used for GConnection Dialog
-/// </summary>
-[Serializable]
-class Config
-{
-    // Create a logger for use in this class
-    private static readonly Logger logger = new Logger();
 
-    public const string Default_Config_File = "GConnectionDialogForm.dat";
-
-    public string Host = "localhost";
-    public int Port = 9000;
-    public string Username = "user";
-    public string Password = "user";
-
-    private string _file;
-
-    /// <summary>
-    /// Reads the config from a file
-    /// </summary>
-    /// <param name="filename">file to read from</param>
-    /// <returns>Config object read</returns>
-    public static Config Read(string filename)
-    {
-        string file = Utils.GetFilePath(filename, AlchemiRole.Owner, false);
-        Config c;
-        //handle missing file exception / serialization exception etc... and create a default config.
-        try
-        {
-            //open for read-only
-            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read,  FileShare.Read))
-            {
-                if (fs.Length > 0)
-                {
-                    BinaryFormatter bf = new BinaryFormatter();
-                    c = (Config)bf.Deserialize(fs);
-                }
-                else
-                {
-                    c = new Config(file);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.Debug("Error reading config from " + file + ", getting default config.", ex);
-            c = new Config(file);
-        }
-        return c;
-    }
-
-    /// <summary>
-    /// Creates a new instance of the Config class
-    /// </summary>
-    /// <param name="file">file name to read from / write to</param>
-    public Config(string file)
-    {
-        _file = file;
-    }
-
-    /// <summary>
-    /// Write the config to file
-    /// </summary>
-    public void Write()
-    {
-        string file = Utils.GetFilePath(Default_Config_File, AlchemiRole.Owner, true);
-        try
-        {
-            using (Stream s = new FileStream(_file, FileMode.Create))
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                bf.Serialize(s, this);
-                s.Close();
-            }
-        }
-        catch
-        {
-            //ignore. if we have a call to "write" here again, we might end up in a 
-            //infinite loop!
-        }
-    }
-}

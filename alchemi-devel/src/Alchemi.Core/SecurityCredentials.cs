@@ -33,24 +33,35 @@ namespace Alchemi.Core
 	[Serializable]
     public class SecurityCredentials
 	{
+        private string _Username;
+        private string _Password;
+
 		/// <summary>
 		/// Username
-		/// </summary>
-		public readonly string Username;
+		/// </summary>        
+        public string Username
+        {
+            get { return _Username; }
+        }
+
 		/// <summary>
 		/// Password
-		/// </summary>
-        public string Password;
-        
-		/// <summary>
-		/// Creates an instance of the SecurityCredentials class
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
+		/// </summary>        
+        public string Password
+        {
+            get { return _Password; }
+            set { _Password = value; }                
+        }
+
+        /// <summary>
+        /// Creates an instance of the SecurityCredentials class
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
         public SecurityCredentials(string username, string password)
         {
-            Username = username;
-            Password = password;
+            _Username = username;
+            _Password = password;
         }
 	}
 }
