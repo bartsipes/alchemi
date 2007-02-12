@@ -1,26 +1,26 @@
-#region Alchemi copyright and license notice
-
+#region Alchemi Copyright and License Notice
 /*
-* Alchemi [.NET Grid Computing Framework]
-* http://www.alchemi.net
-*
-* Title			:	Logger.cs
-* Project		:	Alchemi Core
-* Created on	:	August 2005
-* Copyright		:	Copyright © 2006 The University of Melbourne
-*					This technology has been developed with the support of 
-*					the Australian Research Council and the University of Melbourne
-*					research grants as part of the Gridbus Project
-*					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Krishna Nadiminti (kna@csse.unimelb.edu.au) and Rajkumar Buyya (raj@csse.unimelb.edu.au) 
-* License        :  GPL
-*					This program is free software; you can redistribute it and/or 
-*					modify it under the terms of the GNU General Public
-*					License as published by the Free Software Foundation;
-*					See the GNU General Public License 
-*					(http://www.gnu.org/copyleft/gpl.html) for more details.
-*
-*/
+ * Alchemi [.NET Grid Computing Framework]
+ * http://www.alchemi.net
+ *
+ * Title        :   Logger.cs
+ * Project      :   Alchemi.Core
+ * Created on   :   August 2005
+ * Copyright    :   Copyright © 2006 The University of Melbourne
+ *                  This technology has been developed with the support of 
+ *                  the Australian Research Council and the University of Melbourne
+ *                  research grants as part of the Gridbus Project
+ *                  within GRIDS Laboratory at the University of Melbourne, Australia.
+ * Author       :   Krishna Nadiminti (kna@csse.unimelb.edu.au)
+ *                  Rajkumar Buyya (raj@csse.unimelb.edu.au)                  
+ * License      :   GPL
+ *                  This program is free software; you can redistribute it and/or 
+ *                  modify it under the terms of the GNU General Public
+ *                  License as published by the Free Software Foundation;
+ *                  See the GNU General Public License 
+ *                  (http://www.gnu.org/copyleft/gpl.html) for more details.
+ *
+ */
 #endregion
 
 using System;
@@ -148,9 +148,13 @@ namespace Alchemi.Core
         }
 
         /// <summary>
-        /// 
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"></see> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"></see> property.
+        /// </returns>
+        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. </exception>
+        /// <PermissionSet><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/></PermissionSet>
         public override object InitializeLifetimeService()
         {
             return null;

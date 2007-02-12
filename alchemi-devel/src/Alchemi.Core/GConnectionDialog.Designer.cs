@@ -3,8 +3,8 @@
  * Alchemi [.NET Grid Computing Framework]
  * http://www.alchemi.net
  *
- * Title        :   IExecutor.cs
- * Project      :   Alchemi.Core
+ * Title        :   GConnectionDialog.Designer.cs
+ * Project      :   Alchemi.Core.Owner
  * Created on   :   2003
  * Copyright    :   Copyright © 2006 The University of Melbourne
  *                  This technology has been developed with the support of 
@@ -13,7 +13,7 @@
  *                  within GRIDS Laboratory at the University of Melbourne, Australia.
  * Author       :   Akshay Luther (akshayl@csse.unimelb.edu.au)
  *                  Rajkumar Buyya (raj@csse.unimelb.edu.au)
- *                  Krishna Nadiminti (kna@csse.unimelb.edu.au)                 
+ *                  Krishna Nadiminti (kna@csse.unimelb.edu.au)
  * License      :   GPL
  *                  This program is free software; you can redistribute it and/or 
  *                  modify it under the terms of the GNU General Public
@@ -24,39 +24,39 @@
  */
 #endregion
 
-using Alchemi.Core.Owner;
-
-namespace Alchemi.Core
+namespace Alchemi.Core.Owner
 {
-	/// <summary>
-	/// Defines the functions/services that should be provided by an executor implementation
-	/// </summary>
-    public interface IExecutor
+    partial class GConnectionDialog
     {
-		/// <summary>
-		/// Ping the executor to check if it is alive.
-		/// </summary>
-        void PingExecutor();
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
 
         /// <summary>
-        /// Executes the thread with the given identifier.
-        /// <br/>(Generally meant to be called by a Manager)
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
-        /// <param name="ti">The thread identifier.</param>
-        void Manager_ExecuteThread(ThreadIdentifier ti);
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+        }
 
-        /// <summary>
-        /// Aborts the thread with the given identifier
-        /// <br/>(Generally meant to be called by a Manager)
-        /// </summary>
-        /// <param name="ti">The thread identifier.</param>
-		void Manager_AbortThread(ThreadIdentifier ti);
-
-        /// <summary>
-        /// Cleans up the files related to the application with the given id.
-        /// <br/>(Generally meant to be called by a Manager)
-        /// </summary>
-        /// <param name="appid">The appid.</param>
-		void Manager_CleanupApplication(string appid);
+        #endregion
     }
 }

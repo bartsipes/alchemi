@@ -142,15 +142,27 @@
     <Compile Include="GConnection.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="GConnection.Designer.cs">
+      <DependentUpon>GConnection.cs</DependentUpon>
+    </Compile>
     <Compile Include="GConnectionDialog.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GConnectionDialog.Designer.cs">
+      <DependentUpon>GConnectionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GConnectionDialogForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GConnectionDialogForm.Designer.cs">
+      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GConnectionDialogFormConfig.cs" />
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GNode.Designer.cs">
+      <DependentUpon>GNode.cs</DependentUpon>
     </Compile>
     <Compile Include="LogEventArgs.cs" />
     <Compile Include="LogLevel.cs" />
@@ -273,8 +285,8 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GConnectionDialogForm.resx">
-      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GNode.resx">
       <DependentUpon>GNode.cs</DependentUpon>
