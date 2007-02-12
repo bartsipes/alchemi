@@ -3,8 +3,8 @@
  * Alchemi [.NET Grid Computing Framework]
  * http://www.alchemi.net
  *
- * Title        :   Delegates.cs
- * Project      :   Alchemi.Core.Owner
+ * Title        :   IOwner.cs
+ * Project      :   Alchemi.Core
  * Created on   :   2003
  * Copyright    :   Copyright © 2006 The University of Melbourne
  *                  This technology has been developed with the support of 
@@ -13,7 +13,6 @@
  *                  within GRIDS Laboratory at the University of Melbourne, Australia.
  * Author       :   Akshay Luther (akshayl@csse.unimelb.edu.au)
  *                  Rajkumar Buyya (raj@csse.unimelb.edu.au)
- *                  Krishna Nadiminti (kna@csse.unimelb.edu.au)
  * License      :   GPL
  *                  This program is free software; you can redistribute it and/or 
  *                  modify it under the terms of the GNU General Public
@@ -24,25 +23,13 @@
  */
 #endregion
 
-using System;
-
-// 2.8.07 JMM MDV
-// TODO: Add "object sender" as the first parameter to all of these
-
-namespace Alchemi.Core.Owner
+namespace Alchemi.Core
 {
 	/// <summary>
-	/// Delegate for the Application Finished event
+	/// Defines the functions/services that should be provided by an "owner" node.
+    /// (i.e the node which creates/starts an application).
 	/// </summary>
-    public delegate void GApplicationFinish();
-
-	/// <summary>
-	/// Delegare for the ThreadFinish event
-	/// </summary>
-    public delegate void GThreadFinish(GThread thread);
-
-	/// <summary>
-	/// Delegate for the ThreadFailed event
-	/// </summary>
-    public delegate void GThreadFailed(GThread thread, Exception e);
+	public interface IOwner
+	{
+	}
 }

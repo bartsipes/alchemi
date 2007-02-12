@@ -124,6 +124,7 @@
     <Compile Include="CommonAssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CrossPlatformHelper.cs" />
     <Compile Include="Delegates.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,27 +137,6 @@
     <Compile Include="Executor\HearbeatInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Executor\IExecutor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GConnection.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GConnection.Designer.cs">
-      <DependentUpon>GConnection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GConnectionDialog.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="GConnectionDialog.Designer.cs">
-      <DependentUpon>GConnectionDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GConnectionDialogForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GConnectionDialogForm.Designer.cs">
-      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GConnectionDialogFormConfig.cs" />
     <Compile Include="GNode.cs">
       <SubType>Component</SubType>
@@ -164,16 +144,32 @@
     <Compile Include="GNode.Designer.cs">
       <DependentUpon>GNode.cs</DependentUpon>
     </Compile>
+    <Compile Include="ICrossPlatformManager.cs" />
+    <Compile Include="IExecutor.cs" />
+    <Compile Include="IManager.cs" />
+    <Compile Include="IOwner.cs" />
     <Compile Include="LogEventArgs.cs" />
     <Compile Include="LogLevel.cs" />
+    <Compile Include="Owner\GConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Owner\GConnection.designer.cs">
+      <DependentUpon>GConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Owner\GConnectionDialog.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Owner\GConnectionDialog.designer.cs">
+      <DependentUpon>GConnectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Owner\GConnectionDialogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Owner\GConnectionDialogForm.designer.cs">
+      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Owner\GThreadBuffer.cs" />
     <Compile Include="Logger.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Manager\ICrossPlatformManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Manager\IManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Manager\Permission.cs">
@@ -213,9 +209,6 @@
     <Compile Include="Owner\ApplicationState.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Owner\CrossPlatformHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Owner\Delegates.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -238,9 +231,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Owner\GThread.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Owner\IOwner.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Owner\ModuleDependency.cs">
@@ -276,24 +266,24 @@
     <Compile Include="Utility\XmlStringWriter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="GConnection.resx">
-      <DependentUpon>GConnection.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GConnectionDialog.resx">
-      <DependentUpon>GConnectionDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GConnectionDialogForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GNode.resx">
       <DependentUpon>GNode.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Owner\GApplication.resx">
       <DependentUpon>GApplication.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Owner\GConnection.resx">
+      <DependentUpon>GConnection.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Owner\GConnectionDialog.resx">
+      <DependentUpon>GConnectionDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Owner\GConnectionDialogForm.resx">
+      <DependentUpon>GConnectionDialogForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
