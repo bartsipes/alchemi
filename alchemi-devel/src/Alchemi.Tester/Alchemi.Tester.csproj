@@ -106,9 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Owner\CVS\Entries" />
-    <None Include="Owner\CVS\Repository" />
-    <None Include="Owner\CVS\Root" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
