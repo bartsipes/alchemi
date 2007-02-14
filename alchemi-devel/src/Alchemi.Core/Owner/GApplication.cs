@@ -274,6 +274,7 @@ namespace Alchemi.Core.Owner
         private void AddModuleDependencies()
         {
             List<Type> types = new List<Type>();
+            List<System.Reflection.Module> addedModules = new List<System.Reflection.Module>();
 
             // add the moduledependencies for the threads to the manifest
             foreach( GThread gThread in this.Threads )
@@ -281,7 +282,7 @@ namespace Alchemi.Core.Owner
                 // if we've already processed this gThread type, then don't process it again
                 if( !types.Contains( gThread.GetType() ) )
                 {
-                    this.RecursivelyAddModuleDependencies( gThread.GetType().Module, new List<System.Reflection.Module>() );
+                    this.RecursivelyAddModuleDependencies( gThread.GetType().Module, addedModules );
                     types.Add( gThread.GetType() );
                 }
             }
