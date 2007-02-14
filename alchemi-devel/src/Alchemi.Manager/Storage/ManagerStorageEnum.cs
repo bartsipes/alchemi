@@ -34,6 +34,7 @@ namespace Alchemi.Manager.Storage
 	{
 		InMemory,
 		SqlServer,
-		MySql
+		MySql,
+        Postgresql
 	}
 }

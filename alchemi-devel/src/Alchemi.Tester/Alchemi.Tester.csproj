@@ -89,9 +89,8 @@
       <Name>System.XML</Name>
     </Reference>
     <ProjectReference Include="..\Alchemi.Core\Alchemi.Core.csproj">
-      <Name>Alchemi.Core</Name>
       <Project>{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Alchemi.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Alchemi.Executor\Executor.csproj">
       <Name>Executor</Name>
@@ -132,6 +131,7 @@
     <Compile Include="Core\Manager\Storage\ApplicationStorageViewTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Manager\Storage\PostgresqlManagerDatabaseStorageTester.cs" />
     <Compile Include="Manager\Storage\InMemoryManagerStorageTester.cs">
       <SubType>Code</SubType>
     </Compile>

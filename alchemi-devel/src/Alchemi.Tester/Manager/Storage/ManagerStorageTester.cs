@@ -24,7 +24,7 @@ details.
 #endregion
 
 using System;
-
+using System.Globalization;
 using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
@@ -2773,8 +2773,8 @@ namespace Alchemi.Tester.Manager.Storage
 			SystemSummary result = ManagerStorage.GetSystemSummary();
 
 			Assert.IsNotNull(result);
-
-			Assert.AreEqual("3.333 GHz", result.MaxPower);
+            
+			Assert.AreEqual("3" + System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "333 GHz", result.MaxPower);
 		}
 
 		[Test]
@@ -2813,7 +2813,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.IsNotNull(result);
 
-			Assert.AreEqual("0.011158 GHz*Hr", result.PowerTotalUsage);
+			Assert.AreEqual("0" + System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "011158 GHz*Hr", result.PowerTotalUsage);
 		}
 
 		#endregion

@@ -729,6 +729,9 @@ namespace Alchemi.ManagerUtils.DbSetup
 					case ManagerStorageEnum.MySql:
 						managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("mySQL", storageType));
 						break;
+                    case ManagerStorageEnum.Postgresql:
+                        managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("Postgresql", storageType));
+                        break;
 					default:
 #if DEBUG
 						throw new Exception(String.Format("Undefined storage format found in installer: {0}", storageType));

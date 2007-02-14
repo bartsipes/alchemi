@@ -138,17 +138,17 @@ namespace Alchemi.Manager.Storage
 			//build the System_Summary SQLs
 						
 			string sqlQuery1 = String.Format(
-				"select count(*) as total_executors, "+
-				"{0}(sum(cpu_max), 0) as max_power,"+
-				"{0}(avg(cpu_usage), 0) as power_usage, {0}(avg(cpu_avail), 0) as power_avail,"+
+				"select cast(count(*) as int4) as total_executors, "+
+				"{0}(cast(sum(cpu_max) as int4), 0) as max_power,"+
+				"{0}(cast(avg(cpu_usage) as int4), 0) as power_usage, {0}(cast(avg(cpu_avail) as int4), 0) as power_avail,"+
 				"{0}(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0) as power_totalusage "+ 
 				"from executor where is_connected = 1 ", IsNullOperator);
 
 			string sqlQuery2 = 
-				"select count(*) as unfinished_threads from thread where state not in (3, 4)";
+				"select cast(count(*) as int4) as unfinished_threads from thread where state not in (3, 4)";
 
 			string sqlQuery3 = 
-				"select count(*) as unfinished_apps " +
+				"select cast(count(*) as int4) as unfinished_apps " +
 				"from application " +
 				"where state not in (2) ";
 			
@@ -170,6 +170,7 @@ namespace Alchemi.Manager.Storage
 					{
 						maxPower = String.Format("{0} GHz", 
 							(double)dataReader.GetInt32(dataReader.GetOrdinal("max_power")) / 1000);
+                        
 						totalExecutors = dataReader.GetInt32(dataReader.GetOrdinal("total_executors"));
 						powerUsage = dataReader.GetInt32(dataReader.GetOrdinal("power_usage"));
 						powerAvailable = dataReader.GetInt32(dataReader.GetOrdinal("power_avail"));
@@ -244,7 +245,7 @@ namespace Alchemi.Manager.Storage
 //					Utils.MakeSqlSafe(user.Password), 
 //					);
 
-				sqlQuery = String.Format("insert usr(usr_name, password, grp_id, is_system) values('{0}', '{1}', {2}, {3})",
+				sqlQuery = String.Format("insert into usr(usr_name, password, grp_id, is_system) values('{0}', '{1}', {2}, {3})",
 					Utils.MakeSqlSafe(user.Username), 
 					Utils.MakeSqlSafe(user.PasswordMd5Hash), 
 					user.GroupId,
@@ -354,7 +355,7 @@ namespace Alchemi.Manager.Storage
 				return false;
 			}
 
-			object userCount = RunSqlReturnScalar(String.Format("select count(*) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
+			object userCount = RunSqlReturnScalar(String.Format("select cast(count(*) as int4) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
 				Utils.MakeSqlSafe(sc.Username),
 				Utils.MakeSqlSafe(sc.Password))
 				);
@@ -373,7 +374,7 @@ namespace Alchemi.Manager.Storage
 			{
 				String sqlQuery;
 				
-				sqlQuery = String.Format("insert grp(grp_id, grp_name, is_system) values({0}, '{1}', {2})", 
+				sqlQuery = String.Format("insert into grp(grp_id, grp_name, is_system) values({0}, '{1}', {2})", 
 					group.GroupId,
 					Utils.MakeSqlSafe(group.GroupName),
 					Utils.BoolToSqlBit(group.IsSystem)
@@ -449,7 +450,7 @@ namespace Alchemi.Manager.Storage
 
 			RunSql(sqlQuery);
 
-			sqlQuery = String.Format("insert grp_prm(grp_id, prm_id) values({0}, {1})", 
+			sqlQuery = String.Format("insert into grp_prm(grp_id, prm_id) values({0}, {1})", 
 				groupId,
 				(Int32)permission);
 				
@@ -1570,6 +1571,8 @@ namespace Alchemi.Manager.Storage
 			connection.Open();
 
 			// the connection must remain open until the reader is closed
+            
+            
 			return command.ExecuteReader(CommandBehavior.CloseConnection);
 		}
 
