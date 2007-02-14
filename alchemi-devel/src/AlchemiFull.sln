@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Alchemi.Core\Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Alchemi.Core\Alchemi.Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorExec", "Alchemi.ExecutorExec\ExecutorExec.csproj", "{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}"
 	ProjectSection(ProjectDependencies) = postProject
