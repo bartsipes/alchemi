@@ -373,7 +373,7 @@ namespace Alchemi.ExecutorExec
 			catch (Exception ex)
 			{
 				logger.Error("Error connecting to manager.",ex);
-				Log("Error connecting to manager." + ex.Message);
+				Log( "Error connecting to manager. " + ex.Message + "\r\n" + ex.StackTrace );
 			}
 			RefreshUIControls();
 		}
