@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C# Express 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Core", "Alchemi.Core\Alchemi.Core.csproj", "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -7,21 +7,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Core", "Alchemi.Cor
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorExec", "Alchemi.ExecutorExec\ExecutorExec.csproj", "{8B9083D8-0313-4F68-B8F9-E8BD8DBE5F37}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console", "Alchemi.SDK\Console\Console.csproj", "{EACCFD1F-6FCC-43D0-97A8-D9AA39CFCAB8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSubmitter", "Alchemi.SDK\JobSubmitter\JobSubmitter.csproj", "{B31B92E1-0CA5-4226-BDEF-C4DD5BC43E3D}"
@@ -31,12 +31,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobSubmitter", "Alchemi.SDK
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutorService", "Alchemi.ExecutorService\ExecutorService.csproj", "{F196CA7C-D8B0-4031-9989-D43406AEB3B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
+	EndProjectSection
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-	ProjectSection(ProjectDependencies) = postProject
-		{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880} = {234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerService", "Alchemi.ManagerService\ManagerService.csproj", "{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}"
@@ -109,6 +109,10 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "E:\...\Alchemi.CrossPlatfor
 		VWDPort = "3154"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Windows.Forms", "Alchemi.Windows.Forms\Alchemi.Windows.Forms.csproj", "{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.ManagerRunner", "Alchemi.ManagerRunner\Alchemi.ManagerRunner.csproj", "{6419C006-1516-46BA-832D-4A06E7D49997}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|.NET = Debug|.NET
@@ -173,7 +177,6 @@ Global
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Release|.NET.ActiveCfg = Release|Any CPU
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B15DEC9-B15B-4614-9F70-FCB2E53C7289}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -231,7 +234,6 @@ Global
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{85660E73-08EB-4927-9C77-4009B8533F01}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|.NET.ActiveCfg = Release|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85660E73-08EB-4927-9C77-4009B8533F01}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -246,6 +248,26 @@ Global
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Any CPU.ActiveCfg = Debug|.NET
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.ActiveCfg = Debug|.NET
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.Build.0 = Debug|.NET
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|.NET.ActiveCfg = Release|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Release|.NET.ActiveCfg = Release|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6419C006-1516-46BA-832D-4A06E7D49997}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
