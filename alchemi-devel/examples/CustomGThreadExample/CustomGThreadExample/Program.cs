@@ -43,8 +43,12 @@ namespace CustomGThreadExample
             GConnection gridConnection = new GConnection( "localhost", 9000, "user", "user" );
             GApplication gridApplication = new GApplication( gridConnection );
 
-            Console.WriteLine( "Enter the input file name: " );
-            this._inputFileName = Console.ReadLine();
+            while( !File.Exists( this._inputFileName ) )
+            {
+                if( this._inputFileName != null ) Console.WriteLine( "\nFile does not exist.  Please try again.\n" );
+                Console.WriteLine( "Enter the input file name: " );
+                this._inputFileName = Console.ReadLine();
+            }
 
             Console.WriteLine( "Enter the output file name: " );
             this._outputFileName = Console.ReadLine();
