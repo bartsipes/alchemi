@@ -44,12 +44,12 @@ namespace Alchemi.Manager.Storage
 	/// </summary>
 	public class InMemoryManagerStorage : ManagerStorageBase, IManagerStorage, IManagerStorageSetup
 	{
-		private ArrayList m_users;
-		private ArrayList m_groups;
-		private Hashtable m_groupPermissions;
-		private ArrayList m_executors;
-		private ArrayList m_applications;
-		private ArrayList m_threads;
+		private ArrayList _users = new ArrayList();
+		private ArrayList _groups = new ArrayList();
+		private Hashtable _groupPermissions = new Hashtable();
+		private ArrayList _executors = new ArrayList();
+		private ArrayList _applications = new ArrayList();
+		private ArrayList _threads = new ArrayList();
 
 		public InMemoryManagerStorage()
 		{
@@ -62,74 +62,66 @@ namespace Alchemi.Manager.Storage
 			return true; //for a In-memory storage, the connection is always alive and valid.
 		}
 
-		public SystemSummary GetSystemSummary()
-		{
-			// calculate total number of executors
-			Int32 totalExecutors = m_executors != null ? m_executors.Count : 0;
+        public SystemSummary GetSystemSummary()
+        {
+            // calculate total number of executors
+            Int32 totalExecutors = _executors != null ? _executors.Count : 0;
 
-			// calculate number of unfinished applications
-			Int32 unfinishedApps = 0;
-			if (m_applications != null)
-			{
-				foreach(ApplicationStorageView application in m_applications)
-				{
-					if (application.State == ApplicationState.AwaitingManifest || application.State == ApplicationState.Ready)
-					{
-						unfinishedApps++;
-					}
-				}
-			}
-			
-			Int32 unfinishedThreads = 0;
-			if (m_threads != null)
-			{
-				foreach(ThreadStorageView thread in m_threads)
-				{
-					if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
-					{
-						unfinishedThreads++;
-					}
-				}
-			}			
+            // calculate number of unfinished applications
+            Int32 unfinishedApps = 0;
+            foreach( ApplicationStorageView application in _applications )
+            {
+                if( application.State == ApplicationState.AwaitingManifest || application.State == ApplicationState.Ready )
+                {
+                    unfinishedApps++;
+                }
+            }
 
-			float maxPowerValue = 0;
-			Int32 powerUsage = 0;
-			Int32 powerAvailable = 0;
-			float totalUsageValue = 0;
-			if (m_executors != null)
-			{
-				int connectedExecutorCount = 0;
+            Int32 unfinishedThreads = 0;
+            foreach( ThreadStorageView thread in _threads )
+            {
+                if( thread.State != ThreadState.Dead && thread.State != ThreadState.Finished )
+                {
+                    unfinishedThreads++;
+                }
+            }
 
-				foreach(ExecutorStorageView executor in m_executors)
-				{
-					if (executor.Connected)
-					{
-						connectedExecutorCount++;
-						maxPowerValue += executor.MaxCpu;
-						powerAvailable += executor.AvailableCpu;
-						powerUsage += executor.CpuUsage;
-						totalUsageValue += executor.TotalCpuUsage * executor.MaxCpu / (3600 * 1000);
-					}
-				}
+            float maxPowerValue = 0;
+            Int32 powerUsage = 0;
+            Int32 powerAvailable = 0;
+            float totalUsageValue = 0;
 
-				powerAvailable /= connectedExecutorCount;
-				powerUsage /= connectedExecutorCount;
-			}
+            int connectedExecutorCount = 0;
 
-			String powerTotalUsage = String.Format("{0} GHz*Hr", Math.Round(totalUsageValue, 6));
-			String maxPower = String.Format("{0} GHz", Math.Round(maxPowerValue / 1000, 6));
+            foreach( ExecutorStorageView executor in _executors )
+            {
+                if( executor.Connected )
+                {
+                    connectedExecutorCount++;
+                    maxPowerValue += executor.MaxCpu;
+                    powerAvailable += executor.AvailableCpu;
+                    powerUsage += executor.CpuUsage;
+                    totalUsageValue += executor.TotalCpuUsage * executor.MaxCpu / ( 3600 * 1000 );
+                }
+            }
 
-			SystemSummary summary = new SystemSummary(
-				maxPower, 
-				totalExecutors,
-				powerUsage,
-				powerAvailable,
-				powerTotalUsage,
-				unfinishedApps,
-				unfinishedThreads);
+            powerAvailable /= connectedExecutorCount;
+            powerUsage /= connectedExecutorCount;
 
-			return summary;
-		}
+            String powerTotalUsage = String.Format( "{0} GHz*Hr", Math.Round( totalUsageValue, 6 ) );
+            String maxPower = String.Format( "{0} GHz", Math.Round( maxPowerValue / 1000, 6 ) );
+
+            SystemSummary summary = new SystemSummary(
+                maxPower,
+                totalExecutors,
+                powerUsage,
+                powerAvailable,
+                powerTotalUsage,
+                unfinishedApps,
+                unfinishedThreads );
+
+            return summary;
+        }
 
 		public DataSet RunSqlReturnDataSet(string query)
 		{
@@ -143,29 +135,19 @@ namespace Alchemi.Manager.Storage
 
 		public void AddUsers(UserStorageView[] users)
 		{
-			if (users == null)
-			{
-				return;
-			}
-
-			if (m_users == null)
-			{
-				m_users = new ArrayList();
-			}
-
-			m_users.AddRange(users);
+			_users.AddRange(users);
 		}
 
 		public void UpdateUsers(UserStorageView[] updates)
 		{
-			if (m_users == null || updates == null)
+			if (updates == null)
 			{
 				return;
 			}
 
-			for(int indexInList=0; indexInList<m_users.Count; indexInList++)
+			for(int indexInList=0; indexInList<_users.Count; indexInList++)
 			{
-				UserStorageView userInList = (UserStorageView)m_users[indexInList];
+				UserStorageView userInList = (UserStorageView)_users[indexInList];
 
 				foreach(UserStorageView userInUpdates in updates)
 				{
@@ -180,16 +162,16 @@ namespace Alchemi.Manager.Storage
 
 		public void DeleteUser(UserStorageView userToDelete)
 		{
-			if (m_users == null || userToDelete == null)
+			if (userToDelete == null)
 			{
 				return;
 			}
 
 			ArrayList remainingUsers = new ArrayList();
 
-			for(int indexInList=0; indexInList<m_users.Count; indexInList++)
+			for(int indexInList=0; indexInList<_users.Count; indexInList++)
 			{
-				UserStorageView userInList = (UserStorageView)m_users[indexInList];
+				UserStorageView userInList = (UserStorageView)_users[indexInList];
 
 				if (userInList.Username != userToDelete.Username)
 				{
@@ -197,19 +179,19 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_users = remainingUsers;
+			_users = remainingUsers;
 		}
 
 		public bool AuthenticateUser(SecurityCredentials sc)
 		{
-			if (sc == null || m_users == null)
+			if (sc == null)
 			{
 				return false;
 			}
 
-			for(int index=0; index<m_users.Count; index++)
+			for(int index=0; index<_users.Count; index++)
 			{
-				UserStorageView user = (UserStorageView)m_users[index];
+				UserStorageView user = (UserStorageView)_users[index];
 
 				if (user.Username == sc.Username && user.PasswordMd5Hash == sc.Password)
 				{
@@ -220,53 +202,24 @@ namespace Alchemi.Manager.Storage
 			return false;
 		}
 
-		public UserStorageView[] GetUsers()
-		{
-			if (m_users == null)
-			{
-				return new UserStorageView[0];
-			}
-			else
-			{
-				return (UserStorageView[])m_users.ToArray(typeof(UserStorageView));
-			}
-		}
+        public UserStorageView[] GetUsers()
+        {
+            return (UserStorageView[]) _users.ToArray( typeof( UserStorageView ) );
+        }
 
 		public void AddGroups(GroupStorageView[] groups)
 		{
-			if (groups == null)
-			{
-				return;
-			}
-
-			if (m_groups == null)
-			{
-				m_groups = new ArrayList();
-			}
-
-			m_groups.AddRange(groups);
+			_groups.AddRange(groups);
 		}
 		
 		public GroupStorageView[] GetGroups()
 		{
-			if (m_groups == null)
-			{
-				return new GroupStorageView[0];
-			}
-			else
-			{
-				return (GroupStorageView[])m_groups.ToArray(typeof(GroupStorageView));
-			}
+			return (GroupStorageView[])_groups.ToArray(typeof(GroupStorageView));
 		}
 
 		public GroupStorageView GetGroup(Int32 groupId)
 		{
-			if (m_groups == null)
-			{
-				return null;
-			}
-
-			foreach (GroupStorageView group in m_groups)
+			foreach (GroupStorageView group in _groups)
 			{
 				if (group.GroupId == groupId)
 				{
@@ -279,22 +232,17 @@ namespace Alchemi.Manager.Storage
 
 		public void AddGroupPermission(Int32 groupId, Permission permission)
 		{
-			if (m_groupPermissions == null)
-			{
-				m_groupPermissions = new Hashtable();
-			}
-
 			ArrayList permissions = null;
 
-			if (m_groupPermissions[groupId] != null)
+			if (_groupPermissions[groupId] != null)
 			{
-				permissions = (ArrayList)m_groupPermissions[groupId];
+				permissions = (ArrayList)_groupPermissions[groupId];
 			}
 			else
 			{
 				permissions = new ArrayList();
 
-				m_groupPermissions.Add(groupId, permissions);
+				_groupPermissions.Add(groupId, permissions);
 			}
 
 			Int32 index = permissions.IndexOf(permission);
@@ -305,17 +253,17 @@ namespace Alchemi.Manager.Storage
 				permissions.Add(permission);
 			}
 
-			m_groupPermissions[groupId] = permissions;
+			_groupPermissions[groupId] = permissions;
 		}
 
 		public Permission[] GetGroupPermissions(Int32 groupId)
 		{
-			if (m_groupPermissions == null || m_groupPermissions[groupId] == null)
+			if (_groupPermissions[groupId] == null)
 			{
 				return new Permission[0];
 			}
 
-			ArrayList permissions = (ArrayList)m_groupPermissions[groupId];
+			ArrayList permissions = (ArrayList)_groupPermissions[groupId];
 
 			return (Permission[])permissions.ToArray(typeof(Permission));
 		}
@@ -327,7 +275,7 @@ namespace Alchemi.Manager.Storage
 
 		public void DeleteGroup(GroupStorageView groupToDelete)
 		{
-			if (m_groups == null || groupToDelete == null)
+			if( groupToDelete == null )
 			{
 				return;
 			}
@@ -335,18 +283,15 @@ namespace Alchemi.Manager.Storage
 			ArrayList remainingGroups = new ArrayList();
 			ArrayList remainingUsers = new ArrayList();
 
-			if (m_users != null)
+			foreach (UserStorageView user in _users)
 			{
-				foreach (UserStorageView user in m_users)
+				if (user.GroupId != groupToDelete.GroupId)
 				{
-					if (user.GroupId != groupToDelete.GroupId)
-					{
-						remainingUsers.Add(user);
-					}
+					remainingUsers.Add(user);
 				}
 			}
 
-			foreach (GroupStorageView group in m_groups)
+			foreach (GroupStorageView group in _groups)
 			{
 				if (group.GroupId != groupToDelete.GroupId)
 				{
@@ -354,20 +299,15 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_groups = remainingGroups;
-			m_users = remainingUsers;
+			_groups = remainingGroups;
+			_users = remainingUsers;
 		}
 
 		public UserStorageView[] GetGroupUsers(Int32 groupId)
 		{
-			if (m_users == null)
-			{
-				return new UserStorageView[0];
-			}
-
 			ArrayList result = new ArrayList();
 
-			foreach (UserStorageView user in m_users)
+			foreach (UserStorageView user in _users)
 			{
 				if (user.GroupId == groupId)
 				{
@@ -380,14 +320,9 @@ namespace Alchemi.Manager.Storage
 
 		public bool CheckPermission(SecurityCredentials sc, Permission perm)
 		{
-			if (m_users == null || m_groups == null || m_groupPermissions == null)
-			{
-				return false;
-			}
-
 			// get the user's groupId
 			Int32 groupId = -1;
-			foreach(UserStorageView user in m_users)
+			foreach(UserStorageView user in _users)
 			{
 				if(String.Compare(user.Username, sc.Username, true) == 0 && user.PasswordMd5Hash == sc.Password)
 				{
@@ -421,11 +356,6 @@ namespace Alchemi.Manager.Storage
 				return null;
 			}
 
-			if (m_executors == null)
-			{
-				m_executors = new ArrayList();
-			}
-
 			String executorId;
 			if (executor.ExecutorId == null)
 			{
@@ -438,21 +368,21 @@ namespace Alchemi.Manager.Storage
 
 			executor.ExecutorId = executorId;
 
-			m_executors.Add(executor);
+			_executors.Add(executor);
 
 			return executorId;
 		}
 
 		public void UpdateExecutor(ExecutorStorageView updatedExecutor)
 		{
-			if (m_executors == null || updatedExecutor == null)
-			{
-				return;
-			}
+            if( updatedExecutor == null )
+            {
+                return;
+            }
 
 			ArrayList newExecutorList = new ArrayList();
 
-			foreach(ExecutorStorageView executor in m_executors)
+			foreach(ExecutorStorageView executor in _executors)
 			{
 				if (executor.ExecutorId == updatedExecutor.ExecutorId)
 				{
@@ -464,19 +394,19 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_executors = newExecutorList;
+			_executors = newExecutorList;
 		}
 
         public void DeleteExecutor(ExecutorStorageView executorToDelete)
         {
-            if (m_executors == null || executorToDelete == null)
+            if (executorToDelete == null)
             {
                 return;
             }
 
             ArrayList newExecutorList = new ArrayList();
 
-            foreach (ExecutorStorageView executor in m_executors)
+            foreach (ExecutorStorageView executor in _executors)
             {
                 if (executor.ExecutorId != executorToDelete.ExecutorId)
                 {
@@ -484,19 +414,12 @@ namespace Alchemi.Manager.Storage
                 }
             }
 
-            m_executors = newExecutorList;
+            _executors = newExecutorList;
         }
 
 		public ExecutorStorageView[] GetExecutors()
 		{
-			if (m_executors == null)
-			{
-				return new ExecutorStorageView[0];
-			}
-			else
-			{
-				return (ExecutorStorageView[])m_executors.ToArray(typeof(ExecutorStorageView));
-			}
+			return (ExecutorStorageView[])_executors.ToArray(typeof(ExecutorStorageView));
 		}
 
 		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated)
@@ -506,14 +429,9 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView[] GetExecutors(TriStateBoolean dedicated, TriStateBoolean connected)
 		{
-			if (m_executors == null || m_executors.Count == 0)
-			{
-				return new ExecutorStorageView[0];
-			}
-
 			ArrayList executorList = new ArrayList();
 
-			foreach(ExecutorStorageView executor in m_executors)
+			foreach(ExecutorStorageView executor in _executors)
 			{
 				bool onlyLookingForDedicatedAndExecutorIsDedicated = (dedicated == TriStateBoolean.True && executor.Dedicated);
 				bool dedicatedTestPassed = (onlyLookingForDedicatedAndExecutorIsDedicated || dedicated == TriStateBoolean.Undefined);
@@ -532,12 +450,7 @@ namespace Alchemi.Manager.Storage
 
 		public ExecutorStorageView GetExecutor(String executorId)
 		{
-			if (m_executors == null)
-			{
-				return null;
-			}
-
-			foreach(ExecutorStorageView executor in m_executors)
+			foreach(ExecutorStorageView executor in _executors)
 			{
 				if (executor.ExecutorId == executorId)
 				{
@@ -556,30 +469,25 @@ namespace Alchemi.Manager.Storage
 				return null;
 			}
 
-			if (m_applications == null)
-			{
-				m_applications = new ArrayList();
-			}
-
 			String applicationId = Guid.NewGuid().ToString();
 
 			application.ApplicationId = applicationId;
 
-			m_applications.Add(application);
+			_applications.Add(application);
 
 			return applicationId;
 		}
 
 		public void UpdateApplication(ApplicationStorageView updatedApplication)
 		{
-			if (m_applications == null || updatedApplication == null)
+			if (updatedApplication == null)
 			{
 				return;
 			}
 
 			ArrayList newApplicationList = new ArrayList();
 
-			foreach(ApplicationStorageView application in m_applications)
+			foreach(ApplicationStorageView application in _applications)
 			{
 				if (application.ApplicationId == updatedApplication.ApplicationId)
 				{
@@ -591,7 +499,7 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_applications = newApplicationList;
+			_applications = newApplicationList;
 		}
 
 		public ApplicationStorageView[] GetApplications()
@@ -601,14 +509,9 @@ namespace Alchemi.Manager.Storage
 
 		public ApplicationStorageView[] GetApplications(bool populateThreadCount)
 		{
-			if (m_applications == null || m_applications.Count == 0)
-			{
-				return new ApplicationStorageView[0];
-			}
-
 			ArrayList applicationList = new ArrayList();
 
-			foreach(ApplicationStorageView application in m_applications)
+			foreach(ApplicationStorageView application in _applications)
 			{
 				if (populateThreadCount)
 				{
@@ -631,7 +534,7 @@ namespace Alchemi.Manager.Storage
 		{
 			ArrayList applicationList = new ArrayList();
 
-			foreach(ApplicationStorageView application in m_applications)
+			foreach(ApplicationStorageView application in _applications)
 			{
 				if (String.Compare(application.Username, userName, false) == 0)
 				{
@@ -655,12 +558,7 @@ namespace Alchemi.Manager.Storage
 
 		public ApplicationStorageView GetApplication(String applicationId)
 		{
-			if (m_applications == null)
-			{
-				return null;
-			}
-
-			IEnumerator enumerator = m_applications.GetEnumerator();
+			IEnumerator enumerator = _applications.GetEnumerator();
 
 			while(enumerator.MoveNext())
 			{
@@ -677,40 +575,36 @@ namespace Alchemi.Manager.Storage
 
 		}
 
-		public void DeleteApplication(ApplicationStorageView applicationToDelete)
-		{
-			if (m_applications == null || applicationToDelete == null)
-			{
-				return;
-			}
+        public void DeleteApplication( ApplicationStorageView applicationToDelete )
+        {
+            if( applicationToDelete == null )
+            {
+                return;
+            }
 
-			ArrayList remainingApplications = new ArrayList();
-			ArrayList remainingThreads = new ArrayList();
+            ArrayList remainingApplications = new ArrayList();
+            ArrayList remainingThreads = new ArrayList();
 
-			if (m_threads != null)
-			{
-				foreach (ThreadStorageView thread in m_threads)
-				{
-					if (thread.ApplicationId != applicationToDelete.ApplicationId)
-					{
-						remainingThreads.Add(thread);
-					}
-				}
-			}
+            foreach( ThreadStorageView thread in _threads )
+            {
+                if( thread.ApplicationId != applicationToDelete.ApplicationId )
+                {
+                    remainingThreads.Add( thread );
+                }
+            }
 
-			foreach (ApplicationStorageView application in m_applications)
-			{
-				if (application.ApplicationId != applicationToDelete.ApplicationId)
-				{
-					remainingApplications.Add(application);
-				}
-			}
+            foreach( ApplicationStorageView application in _applications )
+            {
+                if( application.ApplicationId != applicationToDelete.ApplicationId )
+                {
+                    remainingApplications.Add( application );
+                }
+            }
 
-			m_threads= remainingThreads;
-			m_applications= remainingApplications;
-		}
-
-
+            _threads = remainingThreads;
+            _applications = remainingApplications;
+        }
+        
 		public Int32 AddThread(ThreadStorageView thread)
 		{
 			if (thread == null)
@@ -718,18 +612,13 @@ namespace Alchemi.Manager.Storage
 				return -1;
 			}
 
-			if (m_threads == null)
-			{
-				m_threads = new ArrayList();
-			}
-
-			lock(m_threads)
+			lock(_threads)
 			{
 				// generate the next threadID from the length, this will make sure the thread ID is unique
 				// generating from the length also requires thread synchronization code here
-				thread.InternalThreadId = m_threads.Count;
+				thread.InternalThreadId = _threads.Count;
 
-				m_threads.Add(thread);
+				_threads.Add(thread);
 			}
 
 			return thread.InternalThreadId;
@@ -737,14 +626,14 @@ namespace Alchemi.Manager.Storage
 
 		public void UpdateThread(ThreadStorageView updatedThread)
 		{
-			if (m_threads == null || updatedThread == null)
+			if (updatedThread == null)
 			{
 				return;
 			}
 
 			ArrayList newThreadList = new ArrayList();
 
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.InternalThreadId == updatedThread.InternalThreadId)
 				{
@@ -756,17 +645,12 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_threads = newThreadList;
+			_threads = newThreadList;
 		}
 
 		public ThreadStorageView GetThread(String applicationId, Int32 threadId)
 		{
-			if (m_threads == null)
-			{
-				return null;
-			}
-
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ApplicationId == applicationId && thread.ThreadId == threadId)
 				{
@@ -779,14 +663,9 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetThreads(ApplicationState appState, params ThreadState[] threadStates)
 		{
-			if (m_threads == null || m_applications == null || m_threads.Count == 0 || m_applications.Count == 0)
-			{
-				return new ThreadStorageView[0];
-			}
-
 			ArrayList threadList = new ArrayList();
 
-			foreach(ApplicationStorageView application in m_applications)
+			foreach(ApplicationStorageView application in _applications)
 			{
 				if (application.State == appState)
 				{
@@ -807,14 +686,9 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] threadStates)
 		{
-			if (m_threads == null)
-			{
-				return new ThreadStorageView[0];
-			}
-
 			ArrayList threadList = new ArrayList();
 
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ApplicationId == applicationId || applicationId == null)
 				{
@@ -848,14 +722,9 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] threadStates)
 		{
-			if (m_threads == null)
-			{
-				return new ThreadStorageView[0];
-			}
-
 			ArrayList threadList = new ArrayList();
 
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ExecutorId == executorId)
 				{
@@ -889,14 +758,9 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, params ThreadState[] state)
 		{
-			if (m_threads == null || m_executors == null)
-			{
-				return new ThreadStorageView[0];
-			}
-
 			ArrayList threadList = new ArrayList();
 
-			foreach(ExecutorStorageView executor in m_executors)
+			foreach(ExecutorStorageView executor in _executors)
 			{
 				if (executor.Dedicated == dedicatedExecutor)
 				{
@@ -909,14 +773,9 @@ namespace Alchemi.Manager.Storage
 
 		public ThreadStorageView[] GetExecutorThreads(bool dedicatedExecutor, bool connectedExecutor, params ThreadState[] state)
 		{
-			if (m_threads == null || m_executors == null)
-			{
-				return new ThreadStorageView[0];
-			}
+            ArrayList threadList = new ArrayList();
 
-			ArrayList threadList = new ArrayList();
-
-			foreach(ExecutorStorageView executor in m_executors)
+			foreach(ExecutorStorageView executor in _executors)
 			{
 				if (executor.Dedicated == dedicatedExecutor && executor.Connected == connectedExecutor)
 				{
@@ -926,18 +785,12 @@ namespace Alchemi.Manager.Storage
 
 			return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
 		}
-
-
+        
 		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
 		{
 			totalThreads = unfinishedThreads = 0;
 
-			if (m_threads == null || m_threads.Count == 0)
-			{
-				return;
-			}
-
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ApplicationId == applicationId)
 				{
@@ -955,12 +808,7 @@ namespace Alchemi.Manager.Storage
 		{
 			Int32 threadCount = 0;
 
-			if (m_threads == null || m_threads.Count == 0)
-			{
-				return threadCount;
-			}
-
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ApplicationId == applicationId && thread.State == threadState)
 				{
@@ -975,12 +823,12 @@ namespace Alchemi.Manager.Storage
 		{
 			Int32 threadCount = 0;
 
-			if (m_threads == null || m_threads.Count == 0 || threadState == null && threadState.Length == 0)
+			if (threadState == null && threadState.Length == 0)
 			{
 				return threadCount;
 			}
 
-			foreach(ThreadStorageView thread in m_threads)
+			foreach(ThreadStorageView thread in _threads)
 			{
 				if (thread.ExecutorId != null && thread.ExecutorId == executorId)
 				{
@@ -1000,14 +848,14 @@ namespace Alchemi.Manager.Storage
 
 		public void DeleteThread(ThreadStorageView threadToDelete)
 		{
-			if (m_threads == null || threadToDelete == null)
+			if (threadToDelete == null)
 			{
 				return;
 			}
 
 			ArrayList remainingThreads = new ArrayList();
 
-			foreach (ThreadStorageView thread in m_threads)
+			foreach (ThreadStorageView thread in _threads)
 			{
 				if (thread.ApplicationId != threadToDelete.ApplicationId || thread.ThreadId != threadToDelete.ThreadId)
 				{
@@ -1015,7 +863,7 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			m_threads = remainingThreads;
+			_threads = remainingThreads;
 		}
 
 
@@ -1048,9 +896,9 @@ namespace Alchemi.Manager.Storage
 			XmlNode applicationsNode = storageDocument.SelectSingleNode("/storage/applications");
 			XmlNode threadsNode = storageDocument.SelectSingleNode("/storage/threads");
 
-			if (m_users != null)
+			if (_users != null)
 			{
-				IEnumerator usersEnumerator = m_users.GetEnumerator();
+				IEnumerator usersEnumerator = _users.GetEnumerator();
 
 				while(usersEnumerator.MoveNext())
 				{
@@ -1066,9 +914,9 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			if (m_groups != null)
+			if (_groups != null)
 			{
-				IEnumerator groupsEnumerator = m_groups.GetEnumerator();
+				IEnumerator groupsEnumerator = _groups.GetEnumerator();
 
 				while(groupsEnumerator.MoveNext())
 				{
@@ -1102,9 +950,9 @@ namespace Alchemi.Manager.Storage
 //			}
 
 
-			if (m_executors != null)
+			if (_executors != null)
 			{
-				IEnumerator executorsEnumerator = m_executors.GetEnumerator();
+				IEnumerator executorsEnumerator = _executors.GetEnumerator();
 
 				while(executorsEnumerator.MoveNext())
 				{
@@ -1133,9 +981,9 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			if (m_applications != null)
+			if (_applications != null)
 			{
-				IEnumerator applicationsEnumerator = m_applications.GetEnumerator();
+				IEnumerator applicationsEnumerator = _applications.GetEnumerator();
 
 				while(applicationsEnumerator.MoveNext())
 				{
@@ -1155,9 +1003,9 @@ namespace Alchemi.Manager.Storage
 				}
 			}
 
-			if (m_threads != null)
+			if (_threads != null)
 			{
-				IEnumerator threadsEnumerator = m_threads.GetEnumerator();
+				IEnumerator threadsEnumerator = _threads.GetEnumerator();
 
 				while(threadsEnumerator.MoveNext())
 				{
