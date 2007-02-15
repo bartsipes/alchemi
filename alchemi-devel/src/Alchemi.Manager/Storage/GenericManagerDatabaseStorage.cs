@@ -116,7 +116,8 @@ namespace Alchemi.Manager.Storage
 		public bool VerifyConnection()
 		{
 			bool isValid = false;
-			try
+			
+            try
 			{
 				RunSql("SELECT 1;");
 				isValid = true;
@@ -124,10 +125,41 @@ namespace Alchemi.Manager.Storage
 			catch (Exception ex)
 			{
 				logger.Warn("VerifyConnection error: ", ex);
-				isValid = false; //just to confirm
 			}
+
 			return isValid;
 		}
+
+        protected virtual string GetPowerUsageSqlQuery()
+        {
+            return String.Format(
+                "select count(*) as total_executors, " +
+                "{0}(sum(cpu_max), 0) as max_power," +
+                "{0}(avg(cpu_usage), 0) as power_usage, {0}(avg(cpu_avail), 0) as power_avail," +
+                "{0}(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0) as power_totalusage " +
+                "from executor where is_connected = 1 ", IsNullOperator );
+        }
+
+        protected virtual string GetUnfinishedThreadCountSqlQuery()
+        {
+            return "select count(*) as unfinished_threads from thread where state not in (3, 4)"; ;
+        }
+
+        protected virtual string GetUnfinishedApplicationCountSqlQuery()
+        {
+            return  "select count(*) as unfinished_apps " +
+                    "from application " +
+                    "where state not in (2) ";
+        }
+
+        protected virtual string GetUserCountSqlQuery( SecurityCredentials sc )
+        {
+            return String.Format(
+                "select count(*) as authenticated from usr where usr_name = '{0}' and password = '{1}'"
+				, Utils.MakeSqlSafe(sc.Username)
+				, Utils.MakeSqlSafe(sc.Password) 
+                );
+        }
 
 		/// <summary>
 		/// GetSystemSummary implementation for RDBMS.
@@ -136,21 +168,10 @@ namespace Alchemi.Manager.Storage
 		public SystemSummary  GetSystemSummary()
 		{
 			//build the System_Summary SQLs
-						
-			string sqlQuery1 = String.Format(
-				"select cast(count(*) as int4) as total_executors, "+
-				"{0}(cast(sum(cpu_max) as int4), 0) as max_power,"+
-				"{0}(cast(avg(cpu_usage) as int4), 0) as power_usage, {0}(cast(avg(cpu_avail) as int4), 0) as power_avail,"+
-				"{0}(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0) as power_totalusage "+ 
-				"from executor where is_connected = 1 ", IsNullOperator);
 
-			string sqlQuery2 = 
-				"select cast(count(*) as int4) as unfinished_threads from thread where state not in (3, 4)";
-
-			string sqlQuery3 = 
-				"select cast(count(*) as int4) as unfinished_apps " +
-				"from application " +
-				"where state not in (2) ";
+            string powerUsageSqlQuery = this.GetPowerUsageSqlQuery();
+            string unfinishedThreadCountSqlQuery = this.GetUnfinishedThreadCountSqlQuery();
+            string unfinishedApplicationCountSqlQuery = this.GetUnfinishedThreadCountSqlQuery();
 			
 			SystemSummary summary = null;
 			String maxPower= null;
@@ -163,8 +184,7 @@ namespace Alchemi.Manager.Storage
 			
 			try
 			{
-				//query1, to get power usage and other details
-				using (IDataReader dataReader = RunSqlReturnDataReader(sqlQuery1))
+				using (IDataReader dataReader = RunSqlReturnDataReader(powerUsageSqlQuery))
 				{
 					if (dataReader.Read())
 					{
@@ -181,12 +201,9 @@ namespace Alchemi.Manager.Storage
 					dataReader.Close();
 				}
 			
-				//query2 to get thread count
-				unfinishedThreads = Convert.ToInt32(RunSqlReturnScalar(sqlQuery2));
+				unfinishedThreads = Convert.ToInt32(RunSqlReturnScalar(unfinishedThreadCountSqlQuery));
 
-				//query3 to get app count
-				unfinishedApps = Convert.ToInt32(RunSqlReturnScalar(sqlQuery3));
-				
+				unfinishedApps = Convert.ToInt32(RunSqlReturnScalar(unfinishedApplicationCountSqlQuery));
 			}
 			catch (Exception ex)
 			{
@@ -355,10 +372,7 @@ namespace Alchemi.Manager.Storage
 				return false;
 			}
 
-			object userCount = RunSqlReturnScalar(String.Format("select cast(count(*) as int4) as authenticated from usr where usr_name = '{0}' and password = '{1}'",
-				Utils.MakeSqlSafe(sc.Username),
-				Utils.MakeSqlSafe(sc.Password))
-				);
+			object userCount = RunSqlReturnScalar( this.GetUserCountSqlQuery( sc ) );
 
 			return Convert.ToBoolean(userCount);
 		}

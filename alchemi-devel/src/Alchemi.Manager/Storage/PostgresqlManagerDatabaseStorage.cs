@@ -25,7 +25,9 @@ details.
 
 using System;
 using System.Data;
+using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Utility;
 using Npgsql;
 
 namespace Alchemi.Manager.Storage
@@ -103,6 +105,35 @@ namespace Alchemi.Manager.Storage
             }
         }
 
+        protected override string GetPowerUsageSqlQuery()
+        {
+            return String.Format(
+                "select cast(count(*) as int4) as total_executors, " +
+                "{0}(cast(sum(cpu_max) as int4), 0) as max_power," +
+                "{0}(cast(avg(cpu_usage) as int4), 0) as power_usage, {0}(cast(avg(cpu_avail) as int4), 0) as power_avail," +
+                "{0}(sum(cpu_totalusage * cpu_max / (3600 * 1000)), 0) as power_totalusage " +
+                "from executor where is_connected = 1 ", IsNullOperator );
+        }
 
+        protected override string GetUnfinishedThreadCountSqlQuery()
+        {
+            return "select cast(count(*) as int4) as unfinished_threads from thread where state not in (3, 4)";
+        }
+
+        protected override string GetUnfinishedApplicationCountSqlQuery()
+        {
+            return "select cast(count(*) as int4) as unfinished_apps " +
+                "from application " +
+                "where state not in (2) ";
+        }
+
+        protected override string GetUserCountSqlQuery( SecurityCredentials sc )
+        {
+            return String.Format(
+                "select cast(count(*) as int4) as authenticated from usr where usr_name = '{0}' and password = '{1}'"
+                , Utils.MakeSqlSafe( sc.Username )
+                , Utils.MakeSqlSafe( sc.Password )
+                );
+        }
     }
 }
