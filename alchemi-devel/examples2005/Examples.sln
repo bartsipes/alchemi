@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiCalculatorThread", "PiCalculatorThread\PiCalculatorThread.csproj", "{A224AD91-CA10-401F-84B6-96CDAFF16F86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiCalculator", "PiCalculator\PiCalculator.csproj", "{661F72A7-EE32-42D4-861B-C943BA952FC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial", "Tutorial\Tutorial.csproj", "{19F03CDB-6D91-4C7C-B59B-17832A074AA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A224AD91-CA10-401F-84B6-96CDAFF16F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A224AD91-CA10-401F-84B6-96CDAFF16F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A224AD91-CA10-401F-84B6-96CDAFF16F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A224AD91-CA10-401F-84B6-96CDAFF16F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661F72A7-EE32-42D4-861B-C943BA952FC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661F72A7-EE32-42D4-861B-C943BA952FC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661F72A7-EE32-42D4-861B-C943BA952FC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661F72A7-EE32-42D4-861B-C943BA952FC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F03CDB-6D91-4C7C-B59B-17832A074AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F03CDB-6D91-4C7C-B59B-17832A074AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F03CDB-6D91-4C7C-B59B-17832A074AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F03CDB-6D91-4C7C-B59B-17832A074AA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
