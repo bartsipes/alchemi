@@ -74,6 +74,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Db4objects.Db4o, Version=6.0.200.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Db4objects.Db4o.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data">
       <Name>MySql.Data</Name>
       <HintPath>..\..\lib\MySql.Data.dll</HintPath>
@@ -139,6 +143,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SchedulerFactory.cs" />
+    <Compile Include="Storage\db4oManagerStorage.cs" />
     <Compile Include="Storage\PostgresqlManagerDatabaseStorage.cs" />
     <Compile Include="Storage\GenericManagerDatabaseStorage.cs">
       <SubType>Code</SubType>

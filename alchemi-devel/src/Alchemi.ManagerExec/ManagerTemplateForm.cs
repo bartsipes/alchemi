@@ -508,9 +508,6 @@ public class ManagerTemplateForm : Form
         this.uiDatabaseTypeComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
         this.uiDatabaseTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.uiDatabaseTypeComboBox.FormattingEnabled = true;
-        this.uiDatabaseTypeComboBox.Items.AddRange(new object[] {
-            "Microsoft SQL Server 2000",
-            "MySQL 4.x / 5.x"});
         this.uiDatabaseTypeComboBox.Location = new System.Drawing.Point(107, 39);
         this.uiDatabaseTypeComboBox.Name = "uiDatabaseTypeComboBox";
         this.uiDatabaseTypeComboBox.Size = new System.Drawing.Size(296, 21);
@@ -697,8 +694,8 @@ public class ManagerTemplateForm : Form
     {
         //this should normally not create any problems, but then during design time it doesnt work, so we need to catch any exceptions
         //that may occur during design time.
-        try
-        {
+        //try
+        //{
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(DefaultErrorHandler);
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
 
@@ -717,8 +714,8 @@ public class ManagerTemplateForm : Form
                 RefreshUIControls(_container.Config);
 
             uiStartButton.Focus();
-        }
-        catch { }
+        //}
+        //catch { }
     }
 
     private void uiStopButton_Click(object sender, EventArgs e)
@@ -831,6 +828,9 @@ public class ManagerTemplateForm : Form
         ArrayList data = new ArrayList();
         data.Add(new ManagerDbTypeItem("Microsoft SQL Server 2000", ManagerStorageEnum.SqlServer));
         data.Add(new ManagerDbTypeItem("MySQL Server 4.x / 5.x", ManagerStorageEnum.MySql));
+        data.Add(new ManagerDbTypeItem("Postgresql 8.2.x", ManagerStorageEnum.Postgresql));
+        data.Add(new ManagerDbTypeItem("db4o 6.1.x", ManagerStorageEnum.db4o));
+        
         uiDatabaseTypeComboBox.DataSource = data;
         uiDatabaseTypeComboBox.DisplayMember = "Display";
         uiDatabaseTypeComboBox.ValueMember = "Value";
@@ -861,7 +861,7 @@ public class ManagerTemplateForm : Form
     {
         Alchemi.Manager.Configuration conf = new Configuration();
 
-        //conf.DbType = uiDatabaseTypeComboBox.SelectedValue;
+        conf.DbType = (ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue;
         conf.DbServer = uiDatabaseServerTextBox.Text;
         conf.DbUsername = uiDatabaseUserTextBox.Text;
         conf.DbPassword = uiDatabasePasswordTextBox.Text;
@@ -893,6 +893,7 @@ public class ManagerTemplateForm : Form
         else
         {
             uiDatabaseRadioButton.Checked = true;
+            //uiDatabaseTypeComboBox.set
             uiDatabaseTypeComboBox.SelectedValue = Config.DbType;
         }
         
@@ -983,13 +984,22 @@ public class ManagerTemplateForm : Form
 //Class to hold values for the db-type combo-box
 public class ManagerDbTypeItem
 {
-    public string Display;
-    public ManagerStorageEnum Value;
+    private string _Display;
+    private ManagerStorageEnum _Value;
+
+    public string Display
+    {
+        get { return _Display; }
+    }
+    public ManagerStorageEnum Value
+    {
+        get { return _Value; }
+    }
 
     public ManagerDbTypeItem(string display, ManagerStorageEnum value)
     {
-        Display = display;
-        Value = value;
+        _Display = display;
+        _Value = value;
     }
 
     public override string ToString()

@@ -156,33 +156,6 @@ namespace Alchemi.Manager.Storage
 					m_managerStorage = new MySqlManagerDatabaseStorage(sqlConnStr);
 					break;
                 case ManagerStorageEnum.Postgresql:
-
-                    /// Valid values are:
-        /// Server:                     Address/Name of Postgresql Server;
-        /// Port:                       Port to connect to;
-        /// Protocol:                   Protocol version to use, instead of automatic; Integer 2 or 3;
-        /// Database:                   Database name. Defaults to user name if not specified;
-        /// User Id:                    User name;
-        /// Password:                   Password for clear text authentication;
-        /// SSL:                        True or False. Controls whether to attempt a secure connection. Default = False;
-        /// Pooling:                    True or False. Controls whether connection pooling is used. Default = True;
-        /// MinPoolSize:                Min size of connection pool. Default: 1;
-        /// MaxPoolSize:                Max size of connection pool. Default: 20;
-        /// Encoding:                   Encoding to be used; Can be ASCII or UNICODE. Default is ASCII. Use UNICODE if you are having problems with accents.
-        /// Timeout:                    Time to wait for connection open in seconds. Default is 15.
-        /// CommandTimeout:             Time to wait for command to finish execution before throw an exception. In seconds. Default is 20.
-        /// Sslmode:                    Mode for ssl connection control. 
-        /// ConnectionLifeTime:         Time to wait before closing unused connections in the pool in seconds. Default is 15.
-        /// SyncNotification:           Specifies if Npgsql should use synchronous notifications
-        //Encoding can be ASCII or UNICODE. If your application uses characters with accents and with default settings it doesn't work, try changing that.
-        //Min pool size when specified will make NpgsqlConnection pre allocates this number of connections with the server.
-        //Sslmode can be one of the following values: 
-        //    Prefer - If it is possible to connect using ssl, it will be used.
-        //    Require - If an ssl connection cannot be made, an exception is thrown.
-        //    Allow - Not supported yet, just connects without ssl.
-        //    Disable - No ssl connection is done.
-        //    Default is Disable.
-
                     if (overwriteDefaultDatabase)
                     {
                         // build configuration string
@@ -211,6 +184,25 @@ namespace Alchemi.Manager.Storage
                     }
 
                     m_managerStorage = new PostgresqlManagerDatabaseStorage(sqlConnStr);
+                    break;
+                case ManagerStorageEnum.db4o:
+                    if (m_managerStorage == null)
+                    {
+                        lock (m_inMemoryManagerStorageLock)
+                        {
+                            // make sure that when we got the lock we are still uninitialized
+                            if (m_managerStorage == null)
+                            {
+                                db4oManagerStorage db4oStorage = new db4oManagerStorage(configuration.DbName);
+
+                                // volatile storage, we must initialize the data here
+                                db4oStorage.InitializeStorageData();
+
+                                m_managerStorage = db4oStorage;
+                            }
+                        }
+                    }
+
                     break;
 				case ManagerStorageEnum.InMemory:
 					/// in memory storage is volatile so we always return the same object

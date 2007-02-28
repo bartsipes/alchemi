@@ -213,7 +213,10 @@ namespace Alchemi.ManagerExec
 				Log("Manager stopped.");
 
 			}
-			
+            if (_container == null)
+                _container = new ManagerContainer();
+
+            _container.Config = GetConfigFromUI();
 			RefreshUIControls(_container.Config);
 
 		}

@@ -105,8 +105,11 @@ namespace Alchemi.Manager.Storage
                 }
             }
 
-            powerAvailable /= connectedExecutorCount;
-            powerUsage /= connectedExecutorCount;
+            if (connectedExecutorCount != 0)
+            {
+                powerAvailable /= connectedExecutorCount;
+                powerUsage /= connectedExecutorCount;
+            }
 
             String powerTotalUsage = String.Format( "{0} GHz*Hr", Math.Round( totalUsageValue, 6 ) );
             String maxPower = String.Format( "{0} GHz", Math.Round( maxPowerValue / 1000, 6 ) );
@@ -135,6 +138,9 @@ namespace Alchemi.Manager.Storage
 
 		public void AddUsers(UserStorageView[] users)
 		{
+            if (users == null)
+                return;
+
 			_users.AddRange(users);
 		}
 
@@ -209,6 +215,8 @@ namespace Alchemi.Manager.Storage
 
 		public void AddGroups(GroupStorageView[] groups)
 		{
+            if (groups == null)
+                return;
 			_groups.AddRange(groups);
 		}
 		

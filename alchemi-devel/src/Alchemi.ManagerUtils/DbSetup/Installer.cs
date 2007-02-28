@@ -78,6 +78,9 @@ namespace Alchemi.ManagerUtils.DbSetup
 		private bool configurationFileChanged;
 		private bool databaseInstalled;
 		private System.Windows.Forms.Button closeButton;
+        private TabPage databaseFileLocationTab;
+        private TextBox tbDatabasePath;
+        private Label label1;
 
 
 		/// <summary>
@@ -105,6 +108,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 			databaseName.TextChanged += new EventHandler(DataChanged);
 			databasePassword.TextChanged += new EventHandler(DataChanged);
 			databaseUsername.TextChanged += new EventHandler(DataChanged);
+            tbDatabasePath.TextChanged += new EventHandler(DataChanged);
 			managerStorageTypes.SelectedIndexChanged += new EventHandler(DataChanged);
 		}
 
@@ -149,16 +153,20 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.label5 = new System.Windows.Forms.Label();
             this.databasePassword = new System.Windows.Forms.TextBox();
             this.databaseUsername = new System.Windows.Forms.TextBox();
+            this.databaseFileLocationTab = new System.Windows.Forms.TabPage();
             this.saveButton = new System.Windows.Forms.Button();
             this.installButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.closeButton = new System.Windows.Forms.Button();
+            this.tbDatabasePath = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabs.SuspendLayout();
             this.storageTypeTab.SuspendLayout();
             this.databaseLocationTab.SuspendLayout();
             this.databaseUserTab.SuspendLayout();
+            this.databaseFileLocationTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -170,6 +178,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.tabs.Controls.Add(this.storageTypeTab);
             this.tabs.Controls.Add(this.databaseLocationTab);
             this.tabs.Controls.Add(this.databaseUserTab);
+            this.tabs.Controls.Add(this.databaseFileLocationTab);
             this.tabs.Location = new System.Drawing.Point(16, 88);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -187,6 +196,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.storageTypeTab.Size = new System.Drawing.Size(456, 198);
             this.storageTypeTab.TabIndex = 1;
             this.storageTypeTab.Text = "Storage Type";
+            this.storageTypeTab.UseVisualStyleBackColor = true;
             // 
             // managerStorageTypes
             // 
@@ -228,6 +238,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databaseLocationTab.Size = new System.Drawing.Size(456, 198);
             this.databaseLocationTab.TabIndex = 2;
             this.databaseLocationTab.Text = "Database location";
+            this.databaseLocationTab.UseVisualStyleBackColor = true;
             // 
             // databaseLocationPrevious
             // 
@@ -291,6 +302,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databaseUserTab.Size = new System.Drawing.Size(456, 198);
             this.databaseUserTab.TabIndex = 3;
             this.databaseUserTab.Text = "Database user";
+            this.databaseUserTab.UseVisualStyleBackColor = true;
             // 
             // databaseUserPrevious
             // 
@@ -331,6 +343,18 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databaseUsername.Name = "databaseUsername";
             this.databaseUsername.Size = new System.Drawing.Size(100, 20);
             this.databaseUsername.TabIndex = 0;
+            // 
+            // databaseFileLocationTab
+            // 
+            this.databaseFileLocationTab.Controls.Add(this.tbDatabasePath);
+            this.databaseFileLocationTab.Controls.Add(this.label1);
+            this.databaseFileLocationTab.Location = new System.Drawing.Point(4, 22);
+            this.databaseFileLocationTab.Name = "databaseFileLocationTab";
+            this.databaseFileLocationTab.Padding = new System.Windows.Forms.Padding(3);
+            this.databaseFileLocationTab.Size = new System.Drawing.Size(456, 198);
+            this.databaseFileLocationTab.TabIndex = 4;
+            this.databaseFileLocationTab.Text = "Database File Location";
+            this.databaseFileLocationTab.UseVisualStyleBackColor = true;
             // 
             // saveButton
             // 
@@ -380,6 +404,21 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.closeButton.Text = "Close";
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
+            // tbDatabasePath
+            // 
+            this.tbDatabasePath.Location = new System.Drawing.Point(161, 45);
+            this.tbDatabasePath.Name = "tbDatabasePath";
+            this.tbDatabasePath.Size = new System.Drawing.Size(100, 20);
+            this.tbDatabasePath.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(33, 45);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 23);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Database name";
+            // 
             // Installer
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -400,6 +439,8 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databaseLocationTab.PerformLayout();
             this.databaseUserTab.ResumeLayout(false);
             this.databaseUserTab.PerformLayout();
+            this.databaseFileLocationTab.ResumeLayout(false);
+            this.databaseFileLocationTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -445,8 +486,16 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 		private void storageTypeNext_Click(object sender, EventArgs e)
 		{
-			MakeTabVisible(databaseLocationTab);
+            ManagerStorageTypeDropdownItem item = (ManagerStorageTypeDropdownItem)managerStorageTypes.SelectedItem;
 
+            if (item.StorageType == ManagerStorageEnum.db4o)
+            {
+                MakeTabVisible(databaseFileLocationTab);
+            }
+            else
+            {
+                MakeTabVisible(databaseLocationTab);
+            }
 			SetControlStatus();
 		}
 
@@ -513,10 +562,40 @@ namespace Alchemi.ManagerUtils.DbSetup
 					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseUserTab));
 				}
 
+                databaseFileLocationTab.Visible = false;
+                if (tabs.TabPages.IndexOf(databaseFileLocationTab) != -1)
+                {
+                    tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseFileLocationTab));
+                }
+
 				storageTypeNext.Visible = false;
+			}
+            else if(item.StorageType == ManagerStorageEnum.db4o)
+			{
+				// remove the last two tabs if there
+				databaseLocationTab.Visible = false;
+				if (tabs.TabPages.IndexOf(databaseLocationTab) != -1)
+				{
+					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseLocationTab));
+				}
+
+				databaseUserTab.Visible = false;
+				if (tabs.TabPages.IndexOf(databaseUserTab) != -1)
+				{
+					tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseUserTab));
+				}
+
+                databaseFileLocationTab.Visible = true;
+
+                storageTypeNext.Visible = true;
 			}
 			else
 			{
+                databaseFileLocationTab.Visible = false;
+                if (tabs.TabPages.IndexOf(databaseFileLocationTab) != -1)
+                {
+                    tabs.TabPages.RemoveAt(tabs.TabPages.IndexOf(databaseFileLocationTab));
+                }
 				databaseLocationTab.Visible = true;
 				databaseUserTab.Visible = true;
 
@@ -668,6 +747,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 			databaseServer.Text = configuration.DbServer;
 			databaseName.Text = configuration.DbName;
+            tbDatabasePath.Text = configuration.DbName;
 			databaseUsername.Text = configuration.DbUsername;
 			databasePassword.Text = configuration.DbPassword;
 		}
@@ -682,7 +762,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 			configuration.DbType = item.StorageType;
 			configuration.DbServer = databaseServer.Text;
-			configuration.DbName = databaseName.Text;
+            configuration.DbName = item.StorageType != ManagerStorageEnum.db4o ? databaseName.Text : tbDatabasePath.Text;
 			configuration.DbUsername = databaseUsername.Text;
 			configuration.DbPassword = databasePassword.Text;
 		}
@@ -731,6 +811,9 @@ namespace Alchemi.ManagerUtils.DbSetup
 						break;
                     case ManagerStorageEnum.Postgresql:
                         managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("Postgresql", storageType));
+                        break;
+                    case ManagerStorageEnum.db4o:
+                        managerStorageTypes.Items.Add(new ManagerStorageTypeDropdownItem("db4o", storageType));
                         break;
 					default:
 #if DEBUG
@@ -781,11 +864,15 @@ namespace Alchemi.ManagerUtils.DbSetup
 				// only 1 tab is needed
 				installButton.Enabled = (storageTypeTab.Enabled);
 			}
-			else
-			{
-				// enable it once all tabs are displayed
-				installButton.Enabled = (tabs.TabPages.Count == allTabs.Length);
-			}
+            else if (((ManagerStorageTypeDropdownItem)managerStorageTypes.SelectedItem).StorageType == ManagerStorageEnum.db4o)
+            {
+                installButton.Enabled = true;
+            }
+            else
+            {
+                // enable it once all tabs are displayed
+                installButton.Enabled = (tabs.TabPages.Count == allTabs.Length);
+            }
 
 			saveButton.Enabled = configurationFileChanged;
 		}

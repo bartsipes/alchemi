@@ -42,7 +42,7 @@ namespace Alchemi.Manager.Storage
         {
         }
 
-        #region Database objects (SQL server specific version)
+        #region Database objects (Postgresql specific version)
 
         protected override IDbConnection GetConnection(string connectionString)
         {

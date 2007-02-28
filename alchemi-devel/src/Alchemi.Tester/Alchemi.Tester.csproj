@@ -131,6 +131,7 @@
     <Compile Include="Core\Manager\Storage\ApplicationStorageViewTester.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Manager\Storage\db4oManagerStorageTester.cs" />
     <Compile Include="Manager\Storage\PostgresqlManagerDatabaseStorageTester.cs" />
     <Compile Include="Manager\Storage\InMemoryManagerStorageTester.cs">
       <SubType>Code</SubType>

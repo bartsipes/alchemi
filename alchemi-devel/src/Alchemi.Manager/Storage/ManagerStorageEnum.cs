@@ -35,6 +35,7 @@ namespace Alchemi.Manager.Storage
 		InMemory,
 		SqlServer,
 		MySql,
-        Postgresql
+        Postgresql,
+        db4o
 	}
 }
