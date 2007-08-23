@@ -861,7 +861,14 @@ public class ManagerTemplateForm : Form
     {
         Alchemi.Manager.Configuration conf = new Configuration();
 
-        conf.DbType = (ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue;
+        if (uiInMemoryRadioButton.Checked)
+        {
+            conf.DbType = ManagerStorageEnum.InMemory;
+        }
+        else
+        {
+            conf.DbType = (ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue;
+        }
         conf.DbServer = uiDatabaseServerTextBox.Text;
         conf.DbUsername = uiDatabaseUserTextBox.Text;
         conf.DbPassword = uiDatabasePasswordTextBox.Text;
