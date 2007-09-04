@@ -69,7 +69,6 @@ namespace Alchemi.Core
         /// Creates a new instance of the GNode class
         /// </summary>
         protected GNode()
-        //public GNode()
         {
             InitializeComponent();
         }

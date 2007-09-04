@@ -131,7 +131,7 @@ namespace Alchemi.Executor
 				//info.Dedicated = this._Dedicated;
 				info.Hostname = this.OwnEP.Host;
 				info.OS = Environment.OSVersion.ToString();
-				info.Number_of_CPUs = 1; //default for now
+                info.NumberOfCpus = 1; //default for now
 				info.MaxDiskSpace = 0; //need to fix
 				info.MaxMemory = 0; //need to fix
 

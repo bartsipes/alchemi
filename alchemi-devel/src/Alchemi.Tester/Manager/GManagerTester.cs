@@ -66,7 +66,7 @@ namespace Alchemi.Tester.Manager
 
 			m_managerStorage.AddGroupPermission(groupId, permission);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			// add applications, only one assigned to this user
 
@@ -108,7 +108,7 @@ namespace Alchemi.Tester.Manager
 
 			String applicationId = m_managerStorage.AddApplication(application);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 			
 			bool result = IsApplicationCreator(sc, applicationId);
 			
@@ -127,7 +127,7 @@ namespace Alchemi.Tester.Manager
 
 			String applicationId = m_managerStorage.AddApplication(application);
 
-			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password1", HashType.MD5));
 			
 			bool result = IsApplicationCreator(sc, applicationId);
 			
@@ -147,7 +147,7 @@ namespace Alchemi.Tester.Manager
 			String applicationId = m_managerStorage.AddApplication(application);
 			String invalidApplicationId = Guid.NewGuid().ToString();
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 			
 			bool result = IsApplicationCreator(sc, invalidApplicationId);
 			
@@ -177,7 +177,7 @@ namespace Alchemi.Tester.Manager
 
 			m_managerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			EnsurePermission(sc, Permission.ExecuteThread);
 
@@ -193,7 +193,7 @@ namespace Alchemi.Tester.Manager
 		[Test]
 		public void EnsurePermissionTestNoPermission()
 		{
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			try
 			{
@@ -223,7 +223,7 @@ namespace Alchemi.Tester.Manager
 
 			m_managerStorage.AddUsers(users);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			AuthenticateUser(sc);
 
@@ -239,7 +239,7 @@ namespace Alchemi.Tester.Manager
 		[Test]
 		public void AuthenticateUserTestNoUsers()
 		{
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			try
 			{
@@ -262,7 +262,7 @@ namespace Alchemi.Tester.Manager
 		{
 			SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			ApplicationStorageView[] result = Admon_GetUserApplicationList(sc);
 
@@ -274,7 +274,7 @@ namespace Alchemi.Tester.Manager
 		{
 			SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			ApplicationStorageView[] result = Admon_GetLiveApplicationList(sc);
 
@@ -290,7 +290,7 @@ namespace Alchemi.Tester.Manager
 		{
 			SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			ApplicationStorageView[] result = Admon_GetLiveApplicationList(sc);
 
@@ -300,7 +300,7 @@ namespace Alchemi.Tester.Manager
         [Test]
         public void Admon_PerformStorageMaintenanceTestNoAuthentication()
         {
-            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
             StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
 
@@ -323,7 +323,7 @@ namespace Alchemi.Tester.Manager
         {
             SetupApplicationsGroupsAndUsers(Permission.ManageOwnApp);
 
-            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
             StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
 
@@ -346,7 +346,7 @@ namespace Alchemi.Tester.Manager
         {
             SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
             
-            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
             StorageMaintenanceParameters maintenanceParameters = null;
 
@@ -372,7 +372,7 @@ namespace Alchemi.Tester.Manager
         {
             SetupApplicationsGroupsAndUsers(Permission.ManageAllApps);
 
-            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+            SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
             m_managerStorage.AddApplication(new ApplicationStorageView("username1"));
             m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "test", 1, "test", 1, 1, 1, 1));

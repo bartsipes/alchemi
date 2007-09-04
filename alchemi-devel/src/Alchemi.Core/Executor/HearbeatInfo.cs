@@ -34,39 +34,48 @@ namespace Alchemi.Core.Executor
     [Serializable]
     public struct HeartbeatInfo
     {
+        #region Property - Interval
         private int _Interval;
-        private int _PercentUsedCpuPower;
-        private int _PercentAvailCpuPower;
-
-		/// <summary>
-		/// Heartbeat interval (in seconds)
-		/// </summary>
+        /// <summary>
+        /// Heartbeat interval (in seconds)
+        /// </summary>
         public int Interval
         {
             get { return _Interval; }
             set { _Interval = value; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Percent of CPU power currently being used.
-		/// </summary>
+
+        #region Property - PercentUsedCpuPower
+        private int _PercentUsedCpuPower;
+        /// <summary>
+        /// Percent of CPU power currently being used.
+        /// </summary>
         public int PercentUsedCpuPower
         {
             get { return _PercentUsedCpuPower; }
             set { _PercentUsedCpuPower = value; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Percent of CPU power that is currently available.
-		/// </summary>
+
+        #region Property - PercentAvailCpuPower
+        private int _PercentAvailCpuPower;
+        /// <summary>
+        /// Percent of CPU power that is currently available.
+        /// </summary>
         public int PercentAvailCpuPower
         {
             get { return _PercentAvailCpuPower; }
             set { _PercentAvailCpuPower = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Constructor
         /// <summary>
-        /// Creates an instance of the HeartBeat object with the given interval, used, and available CPU power.
+        /// Creates an instance of the HeartBeatInfo object with the given interval, used, and available CPU power.
         /// </summary>
         /// <param name="interval">The heartbeat interval (seconds).</param>
         /// <param name="used">The CPU power currently being used.</param>
@@ -76,6 +85,7 @@ namespace Alchemi.Core.Executor
             _Interval = interval;
             _PercentUsedCpuPower = used;
             _PercentAvailCpuPower = avail;
-        }
+        } 
+        #endregion
     }
 }

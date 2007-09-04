@@ -193,7 +193,7 @@ namespace Alchemi.Tester.Manager.Storage
 			
 			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
 			Assert.AreEqual("username1", user.Username);
-			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+			Assert.AreEqual(HashUtil.GetHash("password2", HashType.MD5), user.PasswordMd5Hash);
 			Assert.AreEqual(1, user.GroupId);
 		}
 
@@ -233,7 +233,7 @@ namespace Alchemi.Tester.Manager.Storage
 
             Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
             Assert.AreEqual("username1", user.Username);
-            Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+            Assert.AreEqual(HashUtil.GetHash("password1", HashType.MD5), user.PasswordMd5Hash);
             Assert.AreEqual(0, user.GroupId);
 
 		}
@@ -293,7 +293,7 @@ namespace Alchemi.Tester.Manager.Storage
 
             Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
             Assert.AreEqual("username1", user.Username);
-            Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+            Assert.AreEqual(HashUtil.GetHash("password1", HashType.MD5), user.PasswordMd5Hash);
 			Assert.AreEqual(0, user.GroupId);
 		}
 
@@ -310,7 +310,7 @@ namespace Alchemi.Tester.Manager.Storage
 		public void AuthenticateUserTest1()
 		{
 			AddUser("username1", "password1");
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			bool result = ManagerStorage.AuthenticateUser(sc);
 
@@ -326,7 +326,7 @@ namespace Alchemi.Tester.Manager.Storage
 		public void AuthenticateUserTest2()
 		{
 			AddUser("username1", "password1");
-			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password2", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password2", HashType.MD5));
 
 			bool result = ManagerStorage.AuthenticateUser(sc);
 
@@ -341,7 +341,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AuthenticateUserTest3()
 		{
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			bool result = ManagerStorage.AuthenticateUser(sc);
 
@@ -398,7 +398,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
             Assert.AreEqual("username1", user.Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+			Assert.AreEqual(HashUtil.GetHash("password1", HashType.MD5), user.PasswordMd5Hash);
 		}
 
 		/// <summary>
@@ -840,7 +840,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.AddGroupPermission(groupId, Permission.ManageUsers);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			bool result = ManagerStorage.CheckPermission(sc, Permission.ManageUsers);
 
@@ -854,7 +854,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void CheckPermissionTestNoGroupsOrUsers()
 		{
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			bool result = ManagerStorage.CheckPermission(sc, Permission.ManageUsers);
 
@@ -878,7 +878,7 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.AddGroupPermission(groupId, Permission.ManageUsers);
 
-			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashUtil.HashType.MD5));
+			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			bool result = ManagerStorage.CheckPermission(sc, Permission.ExecuteThread);
 
@@ -1811,7 +1811,7 @@ namespace Alchemi.Tester.Manager.Storage
 			Assert.AreEqual(2, executor.MaxMemory);
 			Assert.AreEqual(3, executor.MaxDisk);
 			Assert.AreEqual(4, executor.NumberOfCpu);
-			Assert.AreEqual("Microsoft Windows NT 5.0.2195.0", executor.Os);
+			Assert.AreEqual("Microsoft Windows NT 5.0.2195.0", executor.OS);
 			Assert.AreEqual("x86 Family 6 Model 13 Stepping 6", executor.Architecture);
 		}
 

@@ -32,6 +32,12 @@ using System.Runtime.Serialization;
 
 namespace Alchemi.Core.Owner
 {
+    /// <summary>
+    /// FullEventHandler delegate represents the Full event handler.
+    /// </summary>
+    public delegate void FullEventHandler(object sender, EventArgs args);
+
+
 	/// <summary>
 	/// GThreadBuffer class represents a thread buffer that holds many threads that can be
     /// executed by an executor as one thread. It is used primarily by GApplicationBuffered
@@ -41,7 +47,6 @@ namespace Alchemi.Core.Owner
 	public class GThreadBuffer : GThread, ICollection
 	{
 		private const int DefaultCapacity = 8;
-		private int m_nCapacity = DefaultCapacity;
 
 		private IList m_cThreads = new ArrayList();
 		private Hashtable m_cThreadIdException = new Hashtable();
@@ -53,58 +58,83 @@ namespace Alchemi.Core.Owner
         {
             add { _Full += value; }
             remove { _Full -= value; }
+        }
+
+        /// <summary>
+        /// Fires the full event.
+        /// </summary>
+        protected virtual void OnFull()
+        {
+            if (_Full != null)
+            {
+                _Full(this, new EventArgs());
+            }
+        }
+        #endregion
+
+
+
+        #region Constructors
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public GThreadBuffer()
+            : base()
+        {
+        }
+
+        /// <summary>
+        /// Constructor that takes the capacity.
+        /// </summary>
+        /// <param name="nCapacity">capacity</param>
+        public GThreadBuffer(int nCapacity)
+            : base()
+        {
+            if (nCapacity < 1)
+            {
+                throw new ArgumentOutOfRangeException("nCapacity", nCapacity, "0 < nCapacity <= Int32.MaxValue");
+            }
+            m_nCapacity = nCapacity;
         } 
         #endregion
 
 
-		/// <summary>
-		/// Default constructor.
-		/// </summary>
-		public GThreadBuffer()
-		{
-		}
 
-		/// <summary>
-		/// Constructor that takes the capacity.
-		/// </summary>
-		/// <param name="nCapacity">capacity</param>
-		public GThreadBuffer(int nCapacity) 
-		{
-			if (nCapacity < 1) 
-			{
-				throw new ArgumentOutOfRangeException("nCapacity", nCapacity, "0 < nCapacity <= Int32.MaxValue");
-			}
-			m_nCapacity = nCapacity;
-		}
-
-		/// <summary>
-		/// Capacity property represents the maximum the number of threads that can be held in the buffer.
-		/// </summary>
-		public int Capacity
-		{
+        #region Property - Capacity
+        private int m_nCapacity = DefaultCapacity;
+        /// <summary>
+        /// Capacity property represents the maximum the number of threads that can be held in the buffer.
+        /// </summary>
+        public int Capacity
+        {
             get { return m_nCapacity; }
-		}
+        } 
+        #endregion
 
-		/// <summary>
-		/// Count property represents the number of threads in the buffer.
-		/// </summary>
-		public int Count
-		{
-			get
-			{
-				return m_cThreads.Count;
-			}
-		}
 
+        #region Property - Count
+        /// <summary>
+        /// Count property represents the number of threads in the buffer.
+        /// </summary>
+        public int Count
+        {
+            get { return m_cThreads.Count; }
+        } 
+        #endregion
+
+
+        #region Property - IsFull
         /// <summary>
         /// Determines whether the thread buffer is full.
         /// </summary>
         /// <value><c>true</c> if the GThreadBuffer is full; otherwise, <c>false</c>.</value>
         /// <returns>whether it is full</returns>
-		public bool IsFull
-		{
+        public bool IsFull
+        {
             get { return (m_cThreads.Count == m_nCapacity); }
-		}
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Adds a thread to the buffer.
@@ -125,16 +155,6 @@ namespace Alchemi.Core.Owner
 			}
 		}
 
-		/// <summary>
-		/// Fires the full event.
-		/// </summary>
-		protected virtual void OnFull()
-		{
-			if (_Full != null) 
-			{
-				_Full(this, new EventArgs());
-			}
-		}
 
 		/// <summary>
 		/// Starts the thread buffer by starting each thread in the buffer.
@@ -154,6 +174,7 @@ namespace Alchemi.Core.Owner
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the thread exception for the given thread id.
 		/// </summary>
@@ -163,6 +184,7 @@ namespace Alchemi.Core.Owner
 		{
 			return (Exception) m_cThreadIdException[nThreadId];
 		}
+
 
 		#region ICollection Members
 
@@ -200,6 +222,7 @@ namespace Alchemi.Core.Owner
 
 		#endregion
 
+
 		#region IEnumerable Members
 
 		/// <summary>
@@ -214,61 +237,5 @@ namespace Alchemi.Core.Owner
 		#endregion
 	}
 
-	/// <summary>
-	/// FullEventHandler delegate represents the Full event handler.
-	/// </summary>
-	public delegate void FullEventHandler(object oSender, EventArgs oEventArgs);
 
-
-
-    // 2.8.06 MDV
-    // Changed this so that it derives directly from Exception, not ApplicationException
-    // ApplicationException is deprecated, see "Best Practices for Handling Exceptions"
-    // http://msdn2.microsoft.com/en-us/library/seyhszts.aspx
-    // Also made it serializable and added the protected constructor.
-
-
-	/// <summary>
-	/// ThreadBufferFullException class represents an exception thrown when attempting to
-    /// add a thread to a full thread buffer.
-	/// </summary>
-    [Serializable]
-	public class ThreadBufferFullException : Exception
-	{
-		/// <summary>
-		/// Default constructor.
-		/// </summary>
-		public ThreadBufferFullException() 
-		{
-		}
-
-		/// <summary>
-		/// Constructor that takes the given message.
-		/// </summary>
-		/// <param name="strMessage">message</param>
-		public ThreadBufferFullException(string strMessage) : base(strMessage) 
-		{
-		}
-
-		/// <summary>
-		/// Constructor that takes the given message and exception.
-		/// </summary>
-		/// <param name="strMessage">message</param>
-		/// <param name="ex">exception</param>
-		public ThreadBufferFullException(string strMessage, Exception oException) : base(strMessage, oException) 
-		{
-		}
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThreadBufferFullException"/> class.
-        /// </summary>
-        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
-        /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
-        /// <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
-        protected ThreadBufferFullException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-	}
 }

@@ -41,11 +41,7 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public partial class GConnection : Component
     {
-        private string _Host     = "localhost";
-        private int    _Port     = 9000;
-        private string _Username = "";
-        private string _Password = "";
-
+        #region Constructors
         public GConnection()
         {
             InitializeComponent();
@@ -71,8 +67,13 @@ namespace Alchemi.Core.Owner
             _Port = port;
             _Username = username;
             _Password = password;
-        }
+        } 
+        #endregion
 
+
+
+        #region Property - Host
+        private string _Host = "localhost";
         /// <summary>
         /// Gets or sets the host name of the Alchemi manager
         /// </summary>
@@ -80,8 +81,12 @@ namespace Alchemi.Core.Owner
         {
             get { return _Host; }
             set { _Host = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Port
+        private int _Port = 9000;
         /// <summary>
         /// Gets or sets the port number of the Alchemi manager
         /// </summary>
@@ -89,8 +94,12 @@ namespace Alchemi.Core.Owner
         {
             get { return _Port; }
             set { _Port = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Username
+        private string _Username = "";
         /// <summary>
         /// Gets or sets the username used to connect to the manager
         /// </summary>
@@ -98,9 +107,12 @@ namespace Alchemi.Core.Owner
         {
             get { return _Username; }
             set { _Username = value; }
-        }
+        } 
+        #endregion
 
 
+        #region Property - Password
+        private string _Password = "";
         /// <summary>
         /// Gets or sets the password used to connect to the manager
         /// </summary>
@@ -108,10 +120,13 @@ namespace Alchemi.Core.Owner
         {
             get { return _Password; }
             set { _Password = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - RemoteEP
         /// <summary>
-        /// Gets the "remoteEndPoint" object associated with the manager.
+        /// Gets the EndPoint object associated with this GConnection.
         /// </summary>
         public EndPoint RemoteEP
         {
@@ -119,10 +134,13 @@ namespace Alchemi.Core.Owner
             {
                 return new EndPoint(_Host, _Port, RemotingMechanism.TcpBinary);
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Credentials
         /// <summary>
-        /// Gets the SecurityCredentials object associated with this manager.
+        /// Gets the SecurityCredentials object associated with this GConnection.
         /// </summary>
         public SecurityCredentials Credentials
         {
@@ -130,7 +148,10 @@ namespace Alchemi.Core.Owner
             {
                 return new SecurityCredentials(_Username, _Password);
             }
-        }
+        } 
+        #endregion
+
+
 
         /// <summary>
         /// Gets an instance of the GConnection class, from values input through the console.

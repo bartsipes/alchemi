@@ -35,139 +35,124 @@ namespace Alchemi.Core.Manager.Storage
 	[Serializable]
 	public class UserStorageView
 	{
-		#region "Private variables"
-		
-		//private Int32 m_userId; 
-		private String m_username;
 
-		private String m_password = null;
+        #region Property - IsSystem
+        private bool m_is_system;
+        /// <summary>
+        /// Gets or sets a name indicating whether this user is a system user.
+        /// </summary>
+        public bool IsSystem
+        {
+            get { return m_is_system; }
+            set { m_is_system = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// use this sto store a hash if the plain password is unknown
-		/// </summary>
-		private String m_passwordMd5Hash = null;
 
-		private Int32 m_groupId; 
+        #region Property - Username
+        private string m_username;
+        /// <summary>
+        /// The username.
+        /// </summary>
+        public string Username
+        {
+            get { return m_username; }
+            set { m_username = value; }
+        } 
+        #endregion
 
-		private bool m_is_system;
 
-		#endregion
+        #region Property - Password
+        private string m_password = null;
+        /// <summary>
+        /// The password. This name is never stored in the database.
+        /// This is used to calculate the MD5 hash stored in the database. 
+        /// <seealso cref="PasswordMd5Hash"/>
+        /// </summary>
+        public string Password
+        {
+            get
+            {
+                return m_password;
+            }
+            set
+            {
+                m_password = value;
 
-		#region "Properties"
+                // clean the password hash once the clear-text password was set
+                m_passwordMd5Hash = null;
+            }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets or sets a name indicating whether this user is a system user.
-		/// </summary>
-		public bool IsSystem
-		{
-			get
-			{
-				return m_is_system;
-			}
-			set
-			{
-				m_is_system = value;
-			}
-		}
 
-		/// <summary>
-		/// The username.
-		/// </summary>
-		public String Username
-		{
-			get
-			{
-				return m_username;
-			}
-			set
-			{
-				m_username = value;
-			}
-		}
-		
-		/// <summary>
-		/// The password. This name is never stored in the database.
-		/// This is used to calculate the MD5 hash stored in the database. 
-		/// <seealso cref="PasswordMd5Hash"/>
-		/// </summary>
-		public String Password
-		{
-			get
-			{
-				return m_password;
-			}
-			set
-			{
-				m_password = value;
+        #region Property - PasswordMd5Hash
+        private string m_passwordMd5Hash = null;
+        /// <summary>
+        /// The password's MD5 hash. When validating the user's password only this hash is required.
+        /// <seealso cref="Password"/>
+        /// </summary>
+        public string PasswordMd5Hash
+        {
+            get
+            {
+                if (m_passwordMd5Hash != null)
+                {
+                    return m_passwordMd5Hash;
+                }
+                else
+                {
+                    return HashUtil.GetHash(m_password, HashType.MD5);
+                }
+            }
+            set
+            {
+                m_passwordMd5Hash = value;
 
-				// clean the password hash once the clear-text password was set
-				m_passwordMd5Hash = null;
-			}
-		}
+                // remove the clear-text password
+                m_password = null;
+            }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The password's MD5 hash. When validating the user's password only this hash is required.
-		/// <seealso cref="Password"/>
-		/// </summary>
-		public String PasswordMd5Hash
-		{
-			get
-			{
-				if (m_passwordMd5Hash != null)
-				{
-					return m_passwordMd5Hash;
-				}
-				else
-				{
-					return HashUtil.GetHash(m_password, HashUtil.HashType.MD5);
-				}
-			}
-			set
-			{
-				m_passwordMd5Hash = value;
 
-				// remove the clear-text password
-				m_password = null;
-			}
-		}
+        #region Property - GroupId
+        private int m_groupId;
+        /// <summary>
+        /// The group id this user belongs to.
+        /// </summary>
+        public int GroupId
+        {
+            get { return m_groupId; }
+            set { m_groupId = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The group id this user belongs to.
-		/// </summary>
-		public Int32 GroupId
-		{
-			get
-			{
-				return m_groupId;
-			}
-			set
-			{
-				m_groupId = value;
-			}
-		}
 
-		#endregion
 
-		/// <summary>
-		/// UserStorageView constructor.
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <param name="groupId"></param>
-		public UserStorageView(String username, String password, Int32 groupId)
-		{
-			m_username = username;
-			m_password = password;
-			m_groupId = groupId; 
-		}
+        #region Constructors
+        /// <summary>
+        /// UserStorageView constructor.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="groupId"></param>
+        public UserStorageView(string username, string password, int groupId)
+        {
+            m_username = username;
+            m_password = password;
+            m_groupId = groupId;
+        }
 
-		/// <summary>
-		/// UserStorageView constructor.
-		/// </summary>
-		/// <param name="username"></param>
-		public UserStorageView(String username) : this(username, "", -1)
-		{
-		}
+        /// <summary>
+        /// UserStorageView constructor.
+        /// </summary>
+        /// <param name="username"></param>
+        public UserStorageView(string username)
+            : this(username, "", -1)
+        {
+        } 
+        #endregion
 
 	}
 }

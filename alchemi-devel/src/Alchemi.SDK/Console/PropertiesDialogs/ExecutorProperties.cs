@@ -634,7 +634,7 @@ namespace Alchemi.Console.PropertiesDialogs
 			chkDedicated.Checked = ex.Dedicated;
 
 			txArch.Text = ex.Architecture;
-			txOS.Text = ex.Os;
+			txOS.Text = ex.OS;
 
 			txMaxCPU.Text = ex.MaxCpu.ToString();
 			txMaxDisk.Text = ex.MaxDisk.ToString();

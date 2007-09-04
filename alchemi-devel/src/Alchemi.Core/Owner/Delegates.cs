@@ -26,9 +26,6 @@
 
 using System;
 
-// 2.8.07 JMM MDV
-// TODO: Add "object sender" as the first parameter to all of these
-
 namespace Alchemi.Core.Owner
 {
 	/// <summary>

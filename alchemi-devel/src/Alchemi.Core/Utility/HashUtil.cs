@@ -41,21 +41,10 @@ namespace Alchemi.Core.Utility
         /// <summary>
         /// Private constructor to prevent instantiation of this class.
         /// </summary>
-        private HashUtil() { }
-
-        #region Enum - HashType
-        /// <summary>
-        /// The wanted hash function.
-        /// </summary>
-        public enum HashType : int
+        private HashUtil()
         {
-            MD5,
-            SHA1,
-            SHA256,
-            SHA384,
-            SHA512
         }
-        #endregion
+
 
 
         /// <summary>

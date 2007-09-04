@@ -37,305 +37,287 @@ namespace Alchemi.Core.Manager.Storage
 	{
 		private static DateTime c_noTimeSet = DateTime.MinValue;
 
-		#region "Private variables"
-		
-		private Int32 m_internalThreadId; // the database identity
-		private String m_applicationId;
-		private String m_executorId;
-		private Int32 m_threadId;
-		private ThreadState m_state;
-		private DateTime m_timeStarted;
-		private DateTime m_timeFinished;
-		private Int32 m_priority;
-		private bool m_failed;
 
-		#endregion
+        #region Property - InternalThreadId
+        private int m_internalThreadId;
+        /// <summary>
+        /// Internal thread Id.
+        /// </summary>
+        public int InternalThreadId
+        {
+            get { return m_internalThreadId; }
+            set { m_internalThreadId = value; }
+        } 
+        #endregion
 
-		#region "Properties"
 
-		/// <summary>
-		/// Internal thread Id.
-		/// </summary>
-		public Int32 InternalThreadId
-		{
-			get
-			{
-				return m_internalThreadId;
-			}
-			set
-			{
-				m_internalThreadId = value;
-			}
-		}
+        #region Property - ApplicationId
+        private string m_applicationId;
+        /// <summary>
+        /// The application Id to which this thread belongs to.
+        /// </summary>
+        public string ApplicationId
+        {
+            get { return m_applicationId; }
+            set { m_applicationId = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The application Id to which this thread belongs to.
-		/// </summary>
-		public String ApplicationId
-		{
-			get
-			{
-				return m_applicationId;
-			}
-			set
-			{
-				m_applicationId = value;
-			}
-		}
 
-		/// <summary>
-		/// The executor Id of the Executor on which this thread was executed.
-		/// </summary>
-		public String ExecutorId
-		{
-			get
-			{
-				return m_executorId;
-			}
-			set
-			{
-				m_executorId = value;
-			}
-		}
+        #region Property - ExecutorId
+        private string m_executorId;
+        /// <summary>
+        /// The executor Id of the Executor on which this thread was executed.
+        /// </summary>
+        public string ExecutorId
+        {
+            get { return m_executorId; }
+            set { m_executorId = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The thread Id.
-		/// </summary>
-		public Int32 ThreadId
-		{
-			get
-			{
-				return m_threadId;
-			}
-			set
-			{
-				m_threadId = value;
-			}
-		}
 
-		/// <summary>
-		/// The thread state.
-		/// <seealso cref="ThreadState"/>
-		/// </summary>
-		public ThreadState State
-		{
-			get
-			{
-				return m_state;
-			}
-			set
-			{
-				m_state = value;
-			}
-		}
+        #region Property - ThreadId
+        private int m_threadId;
+        /// <summary>
+        /// The thread Id.
+        /// </summary>
+        public int ThreadId
+        {
+            get { return m_threadId; }
+            set { m_threadId = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The time this thread was started.
-		/// <seealso cref="TimeStartedSet"/>
-		/// </summary>
-		public DateTime TimeStarted
-		{
-			get
-			{
-				return m_timeStarted;
-			}
-			set
-			{
-				m_timeStarted = value;
-			}
-		}
 
-		/// <summary>
-		/// The time this thread was finished.
-		/// <seealso cref="TimeFinishedSet"/>
-		/// </summary>
-		public DateTime TimeFinished
-		{
-			get
-			{
-				return m_timeFinished;
-			}
-			set
-			{
-				m_timeFinished = value;
-			}
-		}
+        #region Property - State
+        private ThreadState m_state;
+        /// <summary>
+        /// The thread state.
+        /// <seealso cref="ThreadState"/>
+        /// </summary>
+        public ThreadState State
+        {
+            get { return m_state; }
+            set { m_state = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets a name indicating whether the TimeStarted property is set.
-		/// <seealso cref="TimeStarted"/>
-		/// </summary>
-		public bool TimeStartedSet
-		{
-			get
-			{
-				return m_timeStarted != c_noTimeSet;
-			}
-		}
 
-		/// <summary>
-		/// Gets a name indicating whether the TimeFinished property is set.
-		/// </summary>
-		public bool TimeFinishedSet
-		{
-			get
-			{
-				return m_timeFinished != c_noTimeSet;
-			}
-		}
+        #region Property - TimeStarted
+        private DateTime m_timeStarted;
+        /// <summary>
+        /// The time this thread was started.
+        /// <seealso cref="TimeStartedSet"/>
+        /// </summary>
+        public DateTime TimeStarted
+        {
+            get { return m_timeStarted; }
+            set { m_timeStarted = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The thread priority.
-		/// </summary>
-		public Int32 Priority
-		{
-			get
-			{
-				return m_priority;
-			}
-			set
-			{
-				m_priority = value;
-			}
-		}
 
-		/// <summary>
-		/// Gets a name indicating whether this thread failed running.
-		/// </summary>
-		public bool Failed
-		{
-			get
-			{
-				return m_failed;
-			}
-		}
+        #region Property - TimeStartedSet
+        /// <summary>
+        /// Gets a name indicating whether the TimeStarted property is set.
+        /// <seealso cref="TimeStarted"/>
+        /// </summary>
+        public bool TimeStartedSet
+        {
+            get { return (m_timeStarted != c_noTimeSet); }
+        }
+        #endregion
 
-		#endregion
 
-		/// <summary>
-		/// Reset the TimeStarted property to the default name.
-		/// </summary>
-		public void ResetTimeStarted()
-		{
-			m_timeStarted = c_noTimeSet;
-		}
+        #region Property - TimeFinished
+        private DateTime m_timeFinished;
+        /// <summary>
+        /// The time this thread was finished.
+        /// <seealso cref="TimeFinishedSet"/>
+        /// </summary>
+        public DateTime TimeFinished
+        {
+            get { return m_timeFinished; }
+            set { m_timeFinished = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Reset the TimeFinished property to the default name.
-		/// </summary>
-		public void ResetTimeFinished()
-		{
-			m_timeFinished = c_noTimeSet;
-		}
 
-		/// <summary>
-		/// ThreadStorageView constructor.
-		/// </summary>
-		/// <param name="applicationId"></param>
-		/// <param name="threadId"></param>
-		public ThreadStorageView(
-			String applicationId,
-			Int32 threadId
-			) : this (
-			applicationId,
-			threadId,
-			ThreadState.Unknown
-			)
-		{
-		}
+        #region Property - TimeFinishedSet
+        /// <summary>
+        /// Gets a name indicating whether the TimeFinished property is set.
+        /// </summary>
+        public bool TimeFinishedSet
+        {
+            get { return (m_timeFinished != c_noTimeSet); }
+        } 
+        #endregion
 
-		/// <summary>
-		/// ThreadStorageView constructor.
-		/// </summary>
-		/// <param name="applicationId"></param>
-		/// <param name="threadId"></param>
-		/// <param name="state"></param>
-		public ThreadStorageView(
-			String applicationId,
-			Int32 threadId,
-			ThreadState state
-			) : this (
-			-1,
-			applicationId,
-			null,
-			threadId,
-			state,
-			c_noTimeSet,
-			c_noTimeSet,
-			0,
-			false
-			)
-		{
-		}
 
-		/// <summary>
-		/// ThreadStorageView constructor.
-		/// </summary>
-		/// <param name="applicationId"></param>
-		/// <param name="executorId"></param>
-		/// <param name="threadId"></param>
-		/// <param name="state"></param>
-		/// <param name="timeStarted"></param>
-		/// <param name="timeFinished"></param>
-		/// <param name="priority"></param>
-		/// <param name="failed"></param>
-		public ThreadStorageView(
-				String applicationId,
-				String executorId,
-				Int32 threadId,
-				ThreadState state,
-				DateTime timeStarted,
-				DateTime timeFinished,
-				Int32 priority,
-				bool failed
-			) : this (
-				-1,
-				applicationId,
-				executorId,
-				threadId,
-				state,
-				timeStarted,
-				timeFinished,
-				priority,
-				failed
-			)
-		{
-		}
+        #region Property - Priority
+        private int m_priority;
+        /// <summary>
+        /// The thread priority.
+        /// </summary>
+        public int Priority
+        {
+            get { return m_priority; }
+            set { m_priority = value; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// ThreadStorageView constructor.
-		/// </summary>
-		/// <param name="internalThreadId"></param>
-		/// <param name="applicationId"></param>
-		/// <param name="executorId"></param>
-		/// <param name="threadId"></param>
-		/// <param name="state"></param>
-		/// <param name="timeStarted"></param>
-		/// <param name="timeFinished"></param>
-		/// <param name="priority"></param>
-		/// <param name="failed"></param>
-		public ThreadStorageView(
-				Int32 internalThreadId,
-				String applicationId,
-				String executorId,
-				Int32 threadId,
-				ThreadState state,
-				DateTime timeStarted,
-				DateTime timeFinished,
-				Int32 priority,
-				bool failed
-			)
-		{
-			m_internalThreadId = internalThreadId;
-			m_applicationId = applicationId;
-			m_executorId = executorId;
-			m_threadId = threadId;
-			m_state = state;
-			m_timeStarted = timeStarted;
-			m_timeFinished = timeFinished;
-			m_priority = priority;
-			m_failed = failed;
-		}
+
+        #region Property - Failed
+        private bool m_failed;
+        /// <summary>
+        /// Gets a name indicating whether this thread failed running.
+        /// </summary>
+        public bool Failed
+        {
+            get { return m_failed; }
+        } 
+        #endregion
+
+
+
+        #region Method - ResetTimeStarted
+        /// <summary>
+        /// Reset the TimeStarted property to the default name.
+        /// </summary>
+        public void ResetTimeStarted()
+        {
+            m_timeStarted = c_noTimeSet;
+        } 
+        #endregion
+
+
+        #region Method - ResetTimeFinished
+        /// <summary>
+        /// Reset the TimeFinished property to the default name.
+        /// </summary>
+        public void ResetTimeFinished()
+        {
+            m_timeFinished = c_noTimeSet;
+        } 
+        #endregion
+
+
+
+        #region Constructors
+        /// <summary>
+        /// ThreadStorageView constructor.
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="threadId"></param>
+        public ThreadStorageView(
+            string applicationId,
+            int threadId
+            )
+            : this(
+            applicationId,
+            threadId,
+            ThreadState.Unknown
+            )
+        {
+        }
+
+        /// <summary>
+        /// ThreadStorageView constructor.
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="threadId"></param>
+        /// <param name="state"></param>
+        public ThreadStorageView(
+            string applicationId,
+            int threadId,
+            ThreadState state
+            )
+            : this(
+            -1,
+            applicationId,
+            null,
+            threadId,
+            state,
+            c_noTimeSet,
+            c_noTimeSet,
+            0,
+            false
+            )
+        {
+        }
+
+        /// <summary>
+        /// ThreadStorageView constructor.
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="executorId"></param>
+        /// <param name="threadId"></param>
+        /// <param name="state"></param>
+        /// <param name="timeStarted"></param>
+        /// <param name="timeFinished"></param>
+        /// <param name="priority"></param>
+        /// <param name="failed"></param>
+        public ThreadStorageView(
+                string applicationId,
+                string executorId,
+                int threadId,
+                ThreadState state,
+                DateTime timeStarted,
+                DateTime timeFinished,
+                int priority,
+                bool failed
+            )
+            : this(
+                -1,
+                applicationId,
+                executorId,
+                threadId,
+                state,
+                timeStarted,
+                timeFinished,
+                priority,
+                failed
+            )
+        {
+        }
+
+        /// <summary>
+        /// ThreadStorageView constructor.
+        /// </summary>
+        /// <param name="internalThreadId"></param>
+        /// <param name="applicationId"></param>
+        /// <param name="executorId"></param>
+        /// <param name="threadId"></param>
+        /// <param name="state"></param>
+        /// <param name="timeStarted"></param>
+        /// <param name="timeFinished"></param>
+        /// <param name="priority"></param>
+        /// <param name="failed"></param>
+        public ThreadStorageView(
+                int internalThreadId,
+                string applicationId,
+                string executorId,
+                int threadId,
+                ThreadState state,
+                DateTime timeStarted,
+                DateTime timeFinished,
+                int priority,
+                bool failed
+            )
+        {
+            m_internalThreadId = internalThreadId;
+            m_applicationId = applicationId;
+            m_executorId = executorId;
+            m_threadId = threadId;
+            m_state = state;
+            m_timeStarted = timeStarted;
+            m_timeFinished = timeFinished;
+            m_priority = priority;
+            m_failed = failed;
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Gets a hunam readable description of the State property.

@@ -28,10 +28,6 @@ using System.Collections;
 
 using Alchemi.Core.Owner;
 
-// TODO: 2.8.07 MDV
-// Derive from the generic ReadOnlyCollection<FileDependency> to fully embrace .NET 2.0 generics
-// Can also take advantage of List.Contains()
-
 namespace Alchemi.Core.Owner
 {
 	/// <summary>
@@ -84,17 +80,18 @@ namespace Alchemi.Core.Owner
 
             foreach (FileDependency fileDep in dependencyList)
             {
-                if (fileDep == null)
-                {
-                    throw new InvalidOperationException("The FileDependency Collection does not accept null values.", null);
-                }
+                //if (fileDep == null)
+                //{
+                //    throw new InvalidOperationException("The FileDependency Collection does not accept null values.", null);
+                //}
 
-                if (Contains(fileDep))
-                {
-                    throw new InvalidOperationException("A file dependency with the same name already exists.", null);
-                }
+                //if (Contains(fileDep))
+                //{
+                //    throw new InvalidOperationException("A file dependency with the same name already exists.", null);
+                //}
 
-                InnerList.Add(fileDep);
+                //InnerList.Add(fileDep);
+                Add(fileDep);
             }
         }
 

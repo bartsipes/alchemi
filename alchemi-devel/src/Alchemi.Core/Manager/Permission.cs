@@ -30,7 +30,7 @@ namespace Alchemi.Core.Manager
 	/// Possible values are:
 	/// ExecuteThread ,
 	/// ManageOwnApp ,
-	/// ManageAllApps3,
+	/// ManageAllApps,
 	/// ManageUsers 
 	/// </summary>
     public enum Permission

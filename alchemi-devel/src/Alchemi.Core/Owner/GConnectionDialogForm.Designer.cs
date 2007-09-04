@@ -179,7 +179,7 @@ namespace Alchemi.Core.Owner
             this.btnOK.Size = new System.Drawing.Size(88, 23);
             this.btnOK.TabIndex = 12;
             this.btnOK.Text = "OK";
-            this.btnOK.Click += new System.EventHandler(this.btOk_Click);
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // GConnectionDialogForm2
             // 

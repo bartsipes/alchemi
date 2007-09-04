@@ -40,59 +40,68 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public class EmbeddedFileDependency : FileDependency
     {
-		/// <summary>
-		/// Contents of the file representing using base64 encoding.
-		/// </summary>
-        protected string _Base64EncodedContents = "";
 
-		/// <summary>
-		/// Gets or sets the file contents in base64-encoded format
-		/// </summary>
+        #region Property - Base64EncodedContents
+        protected string _Base64EncodedContents = "";
+        /// <summary>
+        /// Gets or sets the file contents in base64-encoded format
+        /// </summary>
         public string Base64EncodedContents
         {
             get { return _Base64EncodedContents; }
             set { _Base64EncodedContents = value; }
-        }
+        } 
+        #endregion
     
-        //-----------------------------------------------------------------------------------------------        
-    
-		/// <summary>
-		/// Creates an instance of an EmbeddedFileDependency
-		/// </summary>
-		/// <param name="name">file name</param>
-        public EmbeddedFileDependency(string name) : base(name) {}
 
-		/// <summary>
-		/// Creates an instance of an EmbeddedFileDependency
-		/// </summary>
-		/// <param name="name">file name</param>
-		/// <param name="fileLocation">file location</param>
-        public EmbeddedFileDependency(string name, string fileLocation) : base(name)
+
+        #region Constructors
+        /// <summary>
+        /// Creates an instance of an EmbeddedFileDependency
+        /// </summary>
+        /// <param name="name">file name</param>
+        public EmbeddedFileDependency(string name)
+            : base(name)
+        {
+        }
+
+        /// <summary>
+        /// Creates an instance of an EmbeddedFileDependency
+        /// </summary>
+        /// <param name="name">file name</param>
+        /// <param name="fileLocation">file location</param>
+        public EmbeddedFileDependency(string name, string fileLocation)
+            : base(name)
         {
             Pack(fileLocation);
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------        
 
-		/// <summary>
-		/// Reads the file and converts its contents to base64 format
-		/// </summary>
-		/// <param name="fileLocation">location of the file</param>
+
+        #region Method - Pack
+        /// <summary>
+        /// Reads the file and converts its contents to base64 format
+        /// </summary>
+        /// <param name="fileLocation">location of the file</param>
         public void Pack(string fileLocation)
         {
             _Base64EncodedContents = Utils.ReadBase64EncodedFromFile(fileLocation);
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Unpacks (writes out) the file to the specified location
-		/// </summary>
-		/// <param name="fileLocation">file location</param>
+        #region Method - Unpack
+        /// <summary>
+        /// Unpacks (writes out) the file to the specified location
+        /// </summary>
+        /// <param name="fileLocation">file location</param>
         public override void Unpack(string fileLocation)
         {
             Utils.WriteBase64EncodedToFile(fileLocation, _Base64EncodedContents);
-        }
+        } 
+        #endregion
+
 
         /// <summary>
         /// Create an array of dependencies from the given folder. 
@@ -116,6 +125,7 @@ namespace Alchemi.Core.Owner
 
             return (EmbeddedFileDependency[])list.ToArray(typeof(EmbeddedFileDependency));
         }
+
 
         /// <summary>
         /// Adds the files in folderName to list.

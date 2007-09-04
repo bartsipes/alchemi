@@ -35,15 +35,22 @@ using System.Windows.Forms;
 namespace Alchemi.Core.Owner
 {
     public partial class GConnectionDialogForm : Form
-    {
-        private GConnection connection;
+    {        
         private GConnectionDialogFormConfig config;
 
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GConnectionDialogForm"/> class.
+        /// </summary>
         public GConnectionDialogForm()
         {
             InitializeComponent();
-        }
+        } 
+        #endregion
 
+
+        #region Property - Connection
+        private GConnection connection;
         /// <summary>
         /// Gets the GConnection object
         /// </summary>
@@ -53,9 +60,17 @@ namespace Alchemi.Core.Owner
             {
                 return connection;
             }
+        } 
+        #endregion
+
+
+        private void GConnectionDialogForm2_Load(object sender, EventArgs e)
+        {
+            ReadConfig();
         }
 
-        private void btOk_Click(object sender, EventArgs e)
+
+        private void btnOK_Click(object sender, EventArgs e)
         {
             int port;
             try
@@ -100,10 +115,6 @@ namespace Alchemi.Core.Owner
             DialogResult = DialogResult.OK;
         }
 
-        private void GConnectionDialogForm2_Load(object sender, EventArgs e)
-        {
-            ReadConfig();
-        }
 
         public void ReadConfig()
         {

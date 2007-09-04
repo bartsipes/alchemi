@@ -991,7 +991,7 @@ namespace Alchemi.Manager.Storage
 					executorElement.SetAttribute("maxmemory", executor.MaxMemory.ToString());
 					executorElement.SetAttribute("maxdisk", executor.MaxDisk.ToString());
 					executorElement.SetAttribute("numberofcpu", executor.NumberOfCpu.ToString());
-					executorElement.SetAttribute("os", executor.Os);
+					executorElement.SetAttribute("os", executor.OS);
 					executorElement.SetAttribute("architecture", executor.Architecture);
 
 					executorsNode.AppendChild(executorElement);

@@ -34,67 +34,58 @@ namespace Alchemi.Core.Manager.Storage
 	[Serializable]
 	public class PermissionStorageView
 	{
-		#region "Private variables"
-		
-		private String m_prmname;
-		private Int32 m_prmId; 
 
-		#endregion
+        #region Property - PermissionName
+        private string m_prmname;
+        /// <summary>
+        /// A human readable permission name.
+        /// </summary>
+        public string PermissionName
+        {
+            get { return m_prmname; }
+            set { m_prmname = value; }
+        } 
+        #endregion
 
-		#region "Properties"
 
-		/// <summary>
-		/// A human readable permission name.
-		/// </summary>
-		public String PermissionName
-		{
-			get
-			{
-				return m_prmname;
-			}
-			set
-			{
-				m_prmname = value;
-			}
-		}
-		
-		/// <summary>
-		/// Permission Id.
-		/// </summary>
-		public Int32 PermissionId
-		{
-			get
-			{
-				return m_prmId;
-			}
-			set
-			{
-				m_prmId = value;
-			}
-		}
+        #region Property - PermissionId
+        private int m_prmId;
+        /// <summary>
+        /// Permission Id.
+        /// </summary>
+        public int PermissionId
+        {
+            get { return m_prmId; }
+            set { m_prmId = value; }
+        } 
+        #endregion
 
-		#endregion
 
-		/// <summary>
-		/// PermissionStorageView constructor.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="name"></param>
-		public PermissionStorageView(Int32 id, String name)
-		{
-			m_prmId = id;
-			m_prmname = name;
-		}
 
-		/// <summary>
-		/// PermissionStorageView constructor.
-		/// </summary>
-		/// <param name="perm"></param>
-		public PermissionStorageView(Permission perm)
-		{
-			m_prmId = (Int32)perm;
-			m_prmname = perm.ToString();
-		}
+        #region Constructors
+        /// <summary>
+        /// PermissionStorageView constructor.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        public PermissionStorageView(int id, string name)
+        {
+            m_prmId = id;
+            m_prmname = name;
+        }
+
+        /// <summary>
+        /// PermissionStorageView constructor.
+        /// </summary>
+        /// <param name="perm"></param>
+        public PermissionStorageView(Permission perm)
+        {
+            m_prmId = (int)perm;
+            m_prmname = perm.ToString();
+        } 
+        #endregion
+
+
 
 		/// <summary>
 		/// Convert a Permission array into a PermissionStorageView array.
@@ -109,12 +100,10 @@ namespace Alchemi.Core.Manager.Storage
 			foreach(Permission permission in permissions)
 			{
 				PermissionStorageView storageView = new PermissionStorageView(permission);
-
 				result.Add(storageView);
 			}
 
-			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));
-			
+			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));			
 		}
 	}
 }

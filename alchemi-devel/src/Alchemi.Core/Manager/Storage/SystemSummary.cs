@@ -33,125 +33,120 @@ namespace Alchemi.Core.Manager.Storage
 	[Serializable]
 	public class SystemSummary
 	{
-		#region "Private variables"
-		
-		private String m_maxPower;
-		private Int32 m_totalExecutors;
-		private Int32 m_powerUsage;
-		private Int32 m_powerAvailable;
-		private String m_powerTotalUsage;
-		private Int32 m_unfinishedThreads;
-		private Int32 m_unfinishedApps;
 
-		#endregion
+        #region Property - MaxPower
+        private string m_maxPower;
+        /// <summary>
+        /// Maximum power.
+        /// </summary>
+        public string MaxPower
+        {
+            get { return m_maxPower; }
+        } 
+        #endregion
 
-		#region "Properties"
 
-		/// <summary>
-		/// Maximum power.
-		/// </summary>
-		public String MaxPower
-		{
-			get
-			{
-				return m_maxPower;
-			}
-		}
+        #region Property - TotalExecutors
+        private int m_totalExecutors;
+        /// <summary>
+        /// The total number of Executors.
+        /// </summary>
+        public int TotalExecutors
+        {
+            get { return m_totalExecutors; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The total number of Executors.
-		/// </summary>
-		public Int32 TotalExecutors
-		{
-			get
-			{
-				return m_totalExecutors;
-			}
-		}
 
-		/// <summary>
-		/// The power usage.
-		/// </summary>
-		public Int32 PowerUsage
-		{
-			get
-			{
-				return m_powerUsage;
-			}
-		}
+        #region Property - PowerUsage
+        private int m_powerUsage;
+        /// <summary>
+        /// The power usage.
+        /// </summary>
+        public int PowerUsage
+        {
+            get { return m_powerUsage; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The available power.
-		/// </summary>
-		public Int32 PowerAvailable
-		{
-			get
-			{
-				return m_powerAvailable;
-			}
-		}
 
-		/// <summary>
-		/// The total power usage.
-		/// </summary>
-		public String PowerTotalUsage
-		{
-			get
-			{
-				return m_powerTotalUsage;
-			}
-		}
+        #region Property - PowerAvailable
+        private Int32 m_powerAvailable;
+        /// <summary>
+        /// The available power.
+        /// </summary>
+        public int PowerAvailable
+        {
+            get { return m_powerAvailable; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The number of unfinished threads.
-		/// </summary>
-		public Int32 UnfinishedThreads
-		{
-			get
-			{
-				return m_unfinishedThreads;
-			}
-		}
 
-		/// <summary>
-		/// The number of unfinished applications.
-		/// </summary>
-		public Int32 UnfinishedApps
-		{
-			get
-			{
-				return m_unfinishedApps;
-			}
-		}
+        #region Property - PowerTotalUsage
+        private string m_powerTotalUsage;
+        /// <summary>
+        /// The total power usage.
+        /// </summary>
+        public string PowerTotalUsage
+        {
+            get { return m_powerTotalUsage; }
+        } 
+        #endregion
 
-		#endregion
 
-		/// <summary>
-		/// Create the SystemSummary structure
-		/// </summary>
-		/// <param name="maxPower"></param>
-		/// <param name="totalExecutors"></param>
-		/// <param name="powerUsage"></param>
-		/// <param name="powerAvailable"></param>
-		/// <param name="powerTotalUsage"></param>
-		/// <param name="unfinishedApps"></param>
-		/// <param name="unfinishedThreads"></param>
-		public SystemSummary(
-			String maxPower, 
-			Int32 totalExecutors, 
-			Int32 powerUsage,
-			Int32 powerAvailable,
-			String powerTotalUsage,
-			Int32 unfinishedApps,
-			Int32 unfinishedThreads)
-		{
-			m_maxPower = maxPower;
-			m_totalExecutors = totalExecutors;
-			m_powerUsage = powerUsage;
-			m_powerAvailable = powerAvailable;
-			m_powerTotalUsage = powerTotalUsage;
-			m_unfinishedApps = unfinishedApps;
-			m_unfinishedThreads = unfinishedThreads;
-		}
+        #region Property - UnfinishedThreads
+        private int m_unfinishedThreads;
+        /// <summary>
+        /// The number of unfinished threads.
+        /// </summary>
+        public int UnfinishedThreads
+        {
+            get { return m_unfinishedThreads; }
+        } 
+        #endregion
+
+
+        #region Property - UnfinishedApps
+        private int m_unfinishedApps;
+        /// <summary>
+        /// The number of unfinished applications.
+        /// </summary>
+        public int UnfinishedApps
+        {
+            get { return m_unfinishedApps; }
+        } 
+        #endregion
+
+
+
+        #region Constructor
+        /// <summary>
+        /// Create the SystemSummary structure
+        /// </summary>
+        /// <param name="maxPower"></param>
+        /// <param name="totalExecutors"></param>
+        /// <param name="powerUsage"></param>
+        /// <param name="powerAvailable"></param>
+        /// <param name="powerTotalUsage"></param>
+        /// <param name="unfinishedApps"></param>
+        /// <param name="unfinishedThreads"></param>
+        public SystemSummary(
+            string maxPower,
+            int totalExecutors,
+            int powerUsage,
+            int powerAvailable,
+            string powerTotalUsage,
+            int unfinishedApps,
+            int unfinishedThreads)
+        {
+            m_maxPower = maxPower;
+            m_totalExecutors = totalExecutors;
+            m_powerUsage = powerUsage;
+            m_powerAvailable = powerAvailable;
+            m_powerTotalUsage = powerTotalUsage;
+            m_unfinishedApps = unfinishedApps;
+            m_unfinishedThreads = unfinishedThreads;
+        } 
+        #endregion
 	}
 }

@@ -28,9 +28,6 @@ using System.Collections;
 
 using Alchemi.Core.Owner;
 
-// 2.8.06 MDV
-// TODO: Rewrite this using List<GThread>
-
 namespace Alchemi.Core.Owner
 {
 	/// <summary>

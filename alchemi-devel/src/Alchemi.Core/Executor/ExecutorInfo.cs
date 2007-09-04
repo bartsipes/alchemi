@@ -34,20 +34,9 @@ namespace Alchemi.Core.Executor
     [Serializable]
     public struct ExecutorInfo
     {
-        private string _Hostname;
-        private int    _MaxCpuPower;
-        private float  _MaxMemory;      //in MB
-        private float  _MaxDiskSpace;   // in MB
-        private int    _Number_of_CPUs;
-        private string _OS;
-        private string _Architecture;
-        private int    _CPULimit;       //in GHz*Hr
-        private float  _MemLimit;       //in MB
-        private float  _DiskLimit;      //in MB
-        private float  _CostPerCPUSec;
-        private float  _CostPerThread;
-        private float  _CostPerDiskMB;
 
+        #region Property - Hostname
+        private string _Hostname;
         /// <summary>
         /// Gets or sets the Hostname of the Executor.
         /// </summary>
@@ -55,8 +44,12 @@ namespace Alchemi.Core.Executor
         {
             get { return _Hostname; }
             set { _Hostname = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - MaxCpuPower
+        private int _MaxCpuPower;
         /// <summary>
         /// Gets or sets the maximum CPU power in the Executor hardware. (in Mhz)
         /// </summary>
@@ -64,8 +57,12 @@ namespace Alchemi.Core.Executor
         {
             get { return _MaxCpuPower; }
             set { _MaxCpuPower = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - MaxMemory
+        private float _MaxMemory;
         /// <summary>
         /// Gets or sets the maximum memory (RAM) in the Executor hardware. (in MB)
         /// </summary>
@@ -73,8 +70,12 @@ namespace Alchemi.Core.Executor
         {
             get { return _MaxMemory; }
             set { _MaxMemory = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - MaxDiskSpace
+        private float _MaxDiskSpace;
         /// <summary>
         /// Gets or sets the maximum disk space in the Executor hardware. (in MB)
         /// </summary>
@@ -82,26 +83,38 @@ namespace Alchemi.Core.Executor
         {
             get { return _MaxDiskSpace; }
             set { _MaxDiskSpace = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - NumberOfCpus
+        private int _NumberOfCpus;
         /// <summary>
         /// Gets or sets the total number of CPUs in the Executor hardware.
         /// </summary>
-        public int Number_of_CPUs
+        public int NumberOfCpus
         {
-            get { return _Number_of_CPUs; }
-            set { _Number_of_CPUs = value; }
-        }
+            get { return _NumberOfCpus; }
+            set { _NumberOfCpus = value; }
+        } 
+        #endregion
 
+
+        #region Property - OS
+        private string _OS;
         /// <summary>
-        /// Gets or sets the name of Operating system running on the Executor
+        /// Gets or sets the name of operating system running on the Executor
         /// </summary>
         public string OS
         {
             get { return _OS; }
             set { _OS = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Architecture
+        private string _Architecture;
         /// <summary>
         /// Gets or sets the architecture of the processor/machine of the Executor (eg: x86, RISC etc)
         /// </summary>
@@ -109,17 +122,26 @@ namespace Alchemi.Core.Executor
         {
             get { return _Architecture; }
             set { _Architecture = value; }
-        }
-        
+        } 
+        #endregion
+
+
+        #region Property - CpuLimit
+        private int _CpuLimit;
         /// <summary>
-        /// The maximum amount of CPU that the Executor can provide.
+        /// The maximum amount of CPU that the Executor can provide (in GHz*Hr).
         /// This attribute is set by the owner/administrator of the Executor.
         /// </summary>
-        public int CPULimit
+        public int CpuLimit
         {
-            get { return _CPULimit; }
-            set { _CPULimit = value; }
-        }
+            get { return _CpuLimit; }
+            set { _CpuLimit = value; }
+        } 
+        #endregion
+
+
+        #region Property - MemLimit
+        private float _MemLimit;
         /// <summary>
         /// The maximum amount of memory (RAM) that the Executor can provide (in MB).
         /// This attribute is set by the owner/administrator of the Executor.
@@ -128,8 +150,12 @@ namespace Alchemi.Core.Executor
         {
             get { return _MemLimit; }
             set { _MemLimit = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - DiskLimit
+        private float _DiskLimit;
         /// <summary>
         /// The maximum amount of disk space that the Executor can provide (in MB).
         /// This attribute is set by the owner/administrator of the Executor.
@@ -138,18 +164,28 @@ namespace Alchemi.Core.Executor
         {
             get { return _DiskLimit; }
             set { _DiskLimit = value; }
-        }
+        } 
+        #endregion
+
 
         //Qos stuff
+
+        #region Property - CostPerCpuSec
+        private float _CostPerCpuSec;
         /// <summary>
         /// The cost per CPU-seconds.
         /// TODO:
         /// </summary>
-        public float CostPerCPUSec
+        public float CostPerCpuSec
         {
-            get { return _CostPerCPUSec; }
-            set { _CostPerCPUSec = value; }
-        }
+            get { return _CostPerCpuSec; }
+            set { _CostPerCpuSec = value; }
+        } 
+        #endregion
+
+
+        #region Property - CostPerThread
+        private float _CostPerThread;
         /// <summary>
         /// The cost per thread.
         /// TODO:
@@ -158,8 +194,12 @@ namespace Alchemi.Core.Executor
         {
             get { return _CostPerThread; }
             set { _CostPerThread = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - CostPerDiskMB
+        private float _CostPerDiskMB;
         /// <summary>
         /// The cost per MB of disk storage space.
         /// TODO:
@@ -168,7 +208,8 @@ namespace Alchemi.Core.Executor
         {
             get { return _CostPerDiskMB; }
             set { _CostPerDiskMB = value; }
-        }
+        } 
+        #endregion
 
     }
 }

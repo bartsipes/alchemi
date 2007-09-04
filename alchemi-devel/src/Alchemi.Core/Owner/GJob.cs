@@ -45,13 +45,13 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public class GJob : GThread
     {
-		private FileDependencyCollection _InputFiles = new FileDependencyCollection();
-        private FileDependencyCollection _OutputFiles = new FileDependencyCollection();
-        private string _RunCommand;
-
-        private string _Stdout;
-        private string _Stderr;
-        private string _Log;
+        #region Constructor
+        public GJob()
+            : base()
+        {
+        } 
+        #endregion
+		
 
         [NonSerialized]
         private StringBuilder output;
@@ -62,64 +62,80 @@ namespace Alchemi.Core.Owner
         [NonSerialized]
         private Process process = null;
 
+
+        #region Property - Log
+        private string _Log;
         /// <summary>
         /// Gets the alchemi log messages, that were output during the job execution.
         /// </summary>
         public string Log
         {
-            get
-            {
-                return _Log;
-            }
-        }
+            get { return _Log; }
+        } 
+        #endregion
 
+
+        #region Property - Stdout
+        private string _Stdout;
         /// <summary>
         /// Gets the entire standard output text of the job.
         /// </summary>
         public string Stdout
         {
-            get
-            {
-                return _Stdout;
-            }
-        }
+            get { return _Stdout; }
+        } 
+        #endregion
+
+
+        #region Property - Stderr
+        private string _Stderr;
         /// <summary>
         /// Gets the entire standard error text of the job.
         /// </summary>
         public string Stderr
         {
-            get
-            {
-                return _Stderr;
-            }
-        }
+            get { return _Stderr; }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
-
-		/// <summary>
-		/// Gets the collection of input files for this job
-		/// </summary>
+  
+        #region Property - InputFiles
+        private FileDependencyCollection _InputFiles = new FileDependencyCollection();
+        /// <summary>
+        /// Gets the collection of input files for this job
+        /// </summary>
         public FileDependencyCollection InputFiles
         {
             get { return _InputFiles; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets the collection of output files for this job
-		/// </summary>
+
+        #region Property - OutputFiles
+        private FileDependencyCollection _OutputFiles = new FileDependencyCollection();
+        /// <summary>
+        /// Gets the collection of output files for this job
+        /// </summary>
         public FileDependencyCollection OutputFiles
         {
             get { return _OutputFiles; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets or sets the work unit, or the command that is to be executed when this job runs on the executor
-		/// </summary>
+
+        #region Property - RunCommand
+        private string _RunCommand;
+        /// <summary>
+        /// Gets or sets the work unit, or the command that is to be executed when this job runs on the executor
+        /// </summary>
         public string RunCommand
         {
             get { return _RunCommand; }
             set { _RunCommand = value; }
-        }
+        } 
+        #endregion
+
+
 
         private string SubstituteVariables(string input)
         {
@@ -131,7 +147,6 @@ namespace Alchemi.Core.Owner
             return output;
         }
 
-        //-----------------------------------------------------------------------------------------------    
 
 		/// <summary>
 		/// Runs the executable specified in the RunCommand of the GJob. This happens on the executor node.
@@ -231,6 +246,7 @@ namespace Alchemi.Core.Owner
                     .AppendLine(ex.ToString()); 
             }
         }
+
 
         #region Process Events
         void process_Exited(object sender, EventArgs e)

@@ -236,6 +236,7 @@
     <Compile Include="Owner\ModuleDependency.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Owner\ThreadBufferFullException.cs" />
     <Compile Include="Owner\ThreadCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -251,6 +252,7 @@
     <Compile Include="SecurityCredentials.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utility\HashType.cs" />
     <Compile Include="Utility\HashUtil.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -292,6 +294,9 @@
       </SubType>
     </None>
     <None Include="GAppClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

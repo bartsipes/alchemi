@@ -93,7 +93,7 @@ namespace Alchemi.Manager
 			string temp = sc.Password;
 
 			//first try non-hashed version.i.e assume we dont have hashed password, MD5Hash it and check
-			sc.Password = HashUtil.GetHash(sc.Password, HashUtil.HashType.MD5);
+			sc.Password = HashUtil.GetHash(sc.Password, HashType.MD5);
 			bool result = ManagerStorageFactory.ManagerStorage().AuthenticateUser(sc);
 
 			if (!result)

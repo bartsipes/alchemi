@@ -77,7 +77,7 @@ namespace Alchemi.Manager
 				info.MaxCpuPower,
 				info.MaxMemory,
 				info.MaxDiskSpace,
-				info.Number_of_CPUs,
+                info.NumberOfCpus,
 				info.OS,
 				info.Architecture
 				);

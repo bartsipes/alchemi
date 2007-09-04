@@ -33,65 +33,74 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public class ThreadIdentifier
     {
-        private string _ApplicationId;
-        private int _ThreadId;
-        private int _Priority;
-
         public const int DefaultPriority = -1;
 
-        //-----------------------------------------------------------------------------------------------        
-    
-		/// <summary>
-		/// Gets the id of the application to which this thread belongs
-		/// </summary>
-        public string ApplicationId
-        {
-            get { return _ApplicationId; }
-        }
-    
-		/// <summary>
-		/// Gets the thread id
-		/// </summary>
-        public int ThreadId
-        {
-            get { return _ThreadId; }
-        }
 
-		/// <summary>
-		/// Gets the priority of the thread
-		/// </summary>
-        public int Priority
-        {
-            get { return _Priority; }
-        }
-    
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Creates an instance of the ThreadIdentifier
-		/// </summary>
-		/// <param name="applicationId"></param>
-		/// <param name="threadId"></param>
+        #region Constructors
+        /// <summary>
+        /// Creates an instance of the ThreadIdentifier
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="threadId"></param>
         public ThreadIdentifier(string applicationId, int threadId)
+            : this(applicationId, threadId, DefaultPriority)
         {
-            _ApplicationId = applicationId;
-            _ThreadId = threadId;
-            _Priority = DefaultPriority;
         }
 
-		/// <summary>
-		/// Creates an instance of the ThreadIdentifier
-		/// </summary>
-		/// <param name="applicationId"></param>
-		/// <param name="threadId"></param>
-		/// <param name="priority"></param>
+        /// <summary>
+        /// Creates an instance of the ThreadIdentifier
+        /// </summary>
+        /// <param name="applicationId"></param>
+        /// <param name="threadId"></param>
+        /// <param name="priority"></param>
         public ThreadIdentifier(string applicationId, int threadId, int priority)
         {
             _ApplicationId = applicationId;
             _ThreadId = threadId;
             _Priority = priority;
         }
+        #endregion
 
+        
+
+        #region Property - ApplicationId
+        private string _ApplicationId;
+        /// <summary>
+        /// Gets the id of the application to which this thread belongs
+        /// </summary>
+        public string ApplicationId
+        {
+            get { return _ApplicationId; }
+        } 
+        #endregion
+
+
+        #region Property - ThreadId
+        private int _ThreadId;
+        /// <summary>
+        /// Gets the thread id
+        /// </summary>
+        public int ThreadId
+        {
+            get { return _ThreadId; }
+        } 
+        #endregion
+
+
+        #region Property - Priority
+        private int _Priority;
+        /// <summary>
+        /// Gets the priority of the thread
+        /// </summary>
+        public int Priority
+        {
+            get { return _Priority; }
+        } 
+        #endregion
+
+
+        #region Property - UniqueId
         /// <summary>
         /// Gets the unique id.
         /// </summary>
@@ -102,6 +111,7 @@ namespace Alchemi.Core.Owner
             {
                 return string.Format("{0}.{1}", _ApplicationId, _ThreadId);
             }
-        }
+        } 
+        #endregion
     }
 }

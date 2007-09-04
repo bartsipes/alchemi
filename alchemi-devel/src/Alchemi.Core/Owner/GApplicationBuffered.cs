@@ -39,15 +39,17 @@ namespace Alchemi.Core.Owner
     {
         private const int DefaultThreadBufferCapacity = 8;
 
-        private int m_nThreadBufferCapacity;
+        
         private GThreadBuffer m_oThreadBuffer;
-
         private int m_nInternalThreadId;
 
+
+        #region Constructors
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public GApplicationBuffered() : this(DefaultThreadBufferCapacity)
+        public GApplicationBuffered()
+            : this(DefaultThreadBufferCapacity)
         {
         }
 
@@ -55,11 +57,12 @@ namespace Alchemi.Core.Owner
         /// Constructor that takes the given connection.
         /// </summary>
         /// <param name="connection">connection to alchemi manager</param>
-        public GApplicationBuffered(GConnection connection) : this(DefaultThreadBufferCapacity)
+        public GApplicationBuffered(GConnection connection)
+            : this(DefaultThreadBufferCapacity)
         {
             if (connection == null)
             {
-                throw new ArgumentNullException("connection");
+                throw new ArgumentNullException("connection may not be null");
             }
 
             Connection = connection;
@@ -70,7 +73,8 @@ namespace Alchemi.Core.Owner
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="threadBufferCapacity"></param>
-        public GApplicationBuffered(GConnection connection, int threadBufferCapacity) : this(threadBufferCapacity)
+        public GApplicationBuffered(GConnection connection, int threadBufferCapacity)
+            : this(threadBufferCapacity)
         {
             if (connection == null)
             {
@@ -84,7 +88,8 @@ namespace Alchemi.Core.Owner
         /// Constructor that takes the thread buffer capacity.
         /// </summary>
         /// <param name="threadBufferCapacity">thread buffer capacity</param>
-        public GApplicationBuffered(int threadBufferCapacity) : base(true)
+        public GApplicationBuffered(int threadBufferCapacity)
+            : base(true)
         {
             if (threadBufferCapacity < 1)
             {
@@ -93,18 +98,21 @@ namespace Alchemi.Core.Owner
 
             m_nThreadBufferCapacity = threadBufferCapacity;
             m_oThreadBuffer = CreateThreadBuffer();
-        }
+        } 
+        #endregion
 
+
+        #region Property - ThreadBufferCapacity
+        private int m_nThreadBufferCapacity;
         /// <summary>
         /// ThreadBufferCapacity property represents the thread buffer capacity. 
         /// </summary>
         public int ThreadBufferCapacity
         {
-            get
-            {
-                return m_nThreadBufferCapacity;
-            }
-        }
+            get { return m_nThreadBufferCapacity; }
+        } 
+        #endregion
+
 
         /// <summary>
         /// Starts the given thread indirectly by adding it to the thread buffer. When the thread buffer count reaches the thread buffer capacity then that thread buffer is sent to the manager as one thread.

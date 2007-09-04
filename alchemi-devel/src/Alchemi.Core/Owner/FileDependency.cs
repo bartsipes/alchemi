@@ -37,39 +37,37 @@ namespace Alchemi.Core.Owner
     [Serializable]
     public abstract class FileDependency
     {
-		/// <summary>
-		/// File name
-		/// </summary>
+
+        #region Property - FileName
         private readonly string _FileName;
-  
-        //-----------------------------------------------------------------------------------------------    
-    
-		/// <summary>
-		/// Creates an instance of the FileDependency
-		/// </summary>
+        /// <summary>
+        /// The filename of the FileDependency
+        /// </summary>
         public string FileName
         {
             get { return _FileName; }
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Creates an instance of the FileDependency
-		/// </summary>
-		/// <param name="fileName">name of the file</param>
+        #region Constructor
+        /// <summary>
+        /// Creates an instance of the FileDependency
+        /// </summary>
+        /// <param name="fileName">name of the file</param>
         protected FileDependency(string fileName)
         {
             _FileName = fileName;
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
-    
+
 		/// <summary>
 		/// Unpacks the file to the specified location
 		/// </summary>
 		/// <param name="fileLocation">location and file name to unpack the file</param>
         public abstract void Unpack(string fileLocation);
+
 
         /// <summary>
         /// Unpacks the file to the specified folder.
@@ -82,9 +80,9 @@ namespace Alchemi.Core.Owner
         /// <param name="targetFolder">Folder where the current file will be unpacked</param>
         public void UnpackToFolder(string targetFolder)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(targetFolder, FileName)));
-
-            Unpack(Path.Combine(targetFolder, FileName));
+            string targetFileName = Path.Combine(targetFolder, FileName);
+            Directory.CreateDirectory(Path.GetDirectoryName(targetFileName));
+            Unpack(targetFileName);
         }
 
     }

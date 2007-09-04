@@ -34,89 +34,77 @@ namespace Alchemi.Core.Manager.Storage
 	public class GroupStorageView
 	{
 
-		#region "Private variables"
-		
-		private Int32 m_groupId; 
-		private String m_groupName;
-		private String m_description; 
-		private bool m_is_system;
+        #region Property - IsSystem
+        private bool m_is_system;
+        /// <summary>
+        /// Gets or sets a name indicating whether this Group is a system group.
+        /// </summary>
+        public bool IsSystem
+        {
+            get { return m_is_system; }
+            set { m_is_system = value; }
+        } 
+        #endregion
 
-		#endregion
 
-		#region "Properties"
+        #region Property - GroupName
+        private string m_groupName;
+        /// <summary>
+        /// The group name.
+        /// </summary>
+        public string GroupName
+        {
+            get { return m_groupName; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets or sets a name indicating whether this Group is a system group.
-		/// </summary>
-		public bool IsSystem
-		{
-			get
-			{
-				return m_is_system;
-			}
-			set
-			{
-				m_is_system = value;
-			}
-		}
 
-		/// <summary>
-		/// The group name.
-		/// </summary>
-		public String GroupName
-		{
-			get
-			{
-				return m_groupName;
-			}
-		}
+        #region Property - GroupId
+        private int m_groupId;
+        /// <summary>
+        /// The group Id.
+        /// </summary>
+        public int GroupId
+        {
+            get { return m_groupId; }
+        } 
+        #endregion
 
-		/// <summary>
-		/// The group Id.
-		/// </summary>
-		public Int32 GroupId
-		{
-			get
-			{
-				return m_groupId;
-			}
-		}
 
-		/// <summary>
-		/// A human readable description for this group.
-		/// </summary>
-		public String Description
-		{
-			get
-			{
-				return m_description;
-			}
-			set
-			{
-				m_description = value;
-			}
-		}
+        #region Property - Description
+        private string m_description;
+        /// <summary>
+        /// A human readable description for this group.
+        /// </summary>
+        public string Description
+        {
+            get { return m_description; }
+            set { m_description = value; }
+        } 
+        #endregion
 
-		#endregion
 
-		/// <summary>
-		/// GroupStorageView constructor.
-		/// </summary>
-		/// <param name="groupId"></param>
-		/// <param name="groupName"></param>
-		public GroupStorageView(Int32 groupId, String groupName)
-		{
-			m_groupId = groupId;
-			m_groupName = groupName;
-		}
+        #region Constructors
+        /// <summary>
+        /// GroupStorageView constructor.
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="groupName"></param>
+        public GroupStorageView(int groupId, string groupName)
+        {
+            m_groupId = groupId;
+            m_groupName = groupName;
+        }
 
-		/// <summary>
-		/// GroupStorageView constructor.
-		/// Initializes an empty object.
-		/// </summary>
-		/// <param name="groupId"></param>
-		public GroupStorageView(Int32 groupId) : this(groupId, null)
-		{
-		}
+        /// <summary>
+        /// GroupStorageView constructor.
+        /// Initializes an empty object.
+        /// </summary>
+        /// <param name="groupId"></param>
+        public GroupStorageView(int groupId)
+            : this(groupId, null)
+        {
+        } 
+        #endregion
 	}
 }

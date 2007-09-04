@@ -37,43 +37,50 @@ namespace Alchemi.Core.Owner
         // member variables
         //----------------------------------------------------------------------------------------------- 
         
-        int _Id = -1;
+        
         bool _Failed = false;
-        [NonSerialized]
-        GApplication _Application = null; // local
-        [NonSerialized]
-        int _Priority = 5; // local
-        [NonSerialized]
-        string _WorkingDirectory = ""; // remote
+
+
+        
 
         //----------------------------------------------------------------------------------------------- 
         // properties
         //----------------------------------------------------------------------------------------------- 
 
-		/// <summary>
-		/// Gets the id of the grid thread
-		/// </summary>
+        #region Property - Id
+        private int _Id = -1;
+        /// <summary>
+        /// Gets the id of the grid thread
+        /// </summary>
         public int Id
         {
             get { return _Id; }
-        }
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Sets the id of the grid thread
 		/// </summary>
 		/// <param name="id"></param>
-        protected internal void SetId (int id)
+        protected internal void SetId(int id)
         {
             _Id = id;
         }
 
-		/// <summary>
-		/// Gets the working directory of the grid thread
-		/// </summary>
+
+        #region Property - WorkingDirectory
+        [NonSerialized]
+        string _WorkingDirectory = ""; // remote
+        /// <summary>
+        /// Gets the working directory of the grid thread
+        /// </summary>
         protected string WorkingDirectory
         {
             get { return _WorkingDirectory; }
-        }
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Sets the working directory of the grid thread
@@ -93,13 +100,19 @@ namespace Alchemi.Core.Owner
             _Failed = failed;
         }
 
-		/// <summary>
-		/// Gets the application to which this grid thread belongs
-		/// </summary>
+
+        #region Property - Application
+        [NonSerialized]
+        GApplication _Application = null; // local
+        /// <summary>
+        /// Gets the application to which this grid thread belongs
+        /// </summary>
         public GApplication Application
         {
             get { return _Application; }
-        }
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Sets the application to which this grid thread belongs
@@ -110,14 +123,20 @@ namespace Alchemi.Core.Owner
             _Application = application;
         }
 
-		/// <summary>
-		/// Gets or sets the grid thread priority
-		/// </summary>
+
+        #region Property - Priority
+        [NonSerialized]
+        int _Priority = 5; // local
+        /// <summary>
+        /// Gets or sets the grid thread priority
+        /// </summary>
         public int Priority
         {
             get { return _Priority; }
             set { _Priority = value; }
-        }
+        } 
+        #endregion
+
 
 		/// <summary>
 		/// Gets the state of the grid thread
@@ -126,6 +145,7 @@ namespace Alchemi.Core.Owner
         {
             get { return _Application.GetThreadState(this); }
         }
+
 
         /*
         public Exception RemoteExecutionException

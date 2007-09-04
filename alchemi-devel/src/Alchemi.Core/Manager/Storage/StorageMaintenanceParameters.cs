@@ -35,60 +35,72 @@ namespace Alchemi.Core.Manager.Storage
     {
         // Application maintenance parameters
 
+        #region Property - ApplicationTimeCreatedCutOff
         private TimeSpan m_applicationTimeCreatedCutOff;
-        private bool m_applicationTimeCreatedCutOffSet = false;
-
-        private TimeSpan m_applicationTimeCompletedCutOff;
-        private bool m_applicationTimeCompletedCutOffSet = false;
-
-        private ArrayList m_applicationStatesToRemove;
-
-        private bool m_removeAllApplications = false;
-
-        // Executor maintenance parameters
-
-        private TimeSpan m_executorPingTimeCutOff;
-
-        private bool m_executorPingTimeCutOffSet = false;
-
-        private bool m_removeAllExecutors = false;
-
-        #region Field encapsulations into properties
-
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public TimeSpan ApplicationTimeCreatedCutOff
         {
             get { return m_applicationTimeCreatedCutOff; }
-            
-            set 
-            { 
+            set
+            {
                 m_applicationTimeCreatedCutOff = value;
                 m_applicationTimeCreatedCutOffSet = true;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ApplicationTimeCreatedCutOffSet
+        private bool m_applicationTimeCreatedCutOffSet = false;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public bool ApplicationTimeCreatedCutOffSet
         {
             get { return m_applicationTimeCreatedCutOffSet; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ApplicationTimeCompletedCutOff
+        private TimeSpan m_applicationTimeCompletedCutOff;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public TimeSpan ApplicationTimeCompletedCutOff
         {
             get { return m_applicationTimeCompletedCutOff; }
-            set 
-            { 
+            set
+            {
                 m_applicationTimeCompletedCutOff = value;
                 m_applicationTimeCompletedCutOffSet = true;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ApplicationTimeCompletedCutOffSet
+        private bool m_applicationTimeCompletedCutOffSet = false;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public bool ApplicationTimeCompletedCutOffSet
         {
             get { return m_applicationTimeCompletedCutOffSet; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ApplicationStatesToRemove
+        private ArrayList m_applicationStatesToRemove;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public ApplicationState[] ApplicationStatesToRemove
         {
-            get 
+            get
             {
                 if (m_applicationStatesToRemove == null)
                 {
@@ -97,36 +109,78 @@ namespace Alchemi.Core.Manager.Storage
 
                 return (ApplicationState[])m_applicationStatesToRemove.ToArray(typeof(ApplicationState));
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - RemoveAllApplications
+        private bool m_removeAllApplications = false;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public bool RemoveAllApplications
         {
             get { return m_removeAllApplications; }
             set { m_removeAllApplications = value; }
-        }
+        } 
+        #endregion
 
+
+        // Executor maintenance parameters
+
+        #region Property - ExecutorPingTimeCutOff
+        private TimeSpan m_executorPingTimeCutOff;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public TimeSpan ExecutorPingTimeCutOff
         {
             get { return m_executorPingTimeCutOff; }
-            set 
-            { 
+            set
+            {
                 m_executorPingTimeCutOff = value;
                 m_executorPingTimeCutOffSet = true;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ExecutorPingTimeCutOffSet
+        private bool m_executorPingTimeCutOffSet = false;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public bool ExecutorPingTimeCutOffSet
         {
             get { return m_executorPingTimeCutOffSet; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - RemoveAllExecutors
+        private bool m_removeAllExecutors = false;
+        /// <summary>
+        /// TODO:
+        /// </summary>
         public bool RemoveAllExecutors
         {
             get { return m_removeAllExecutors; }
             set { m_removeAllExecutors = value; }
-        }
-
+        } 
         #endregion
+
+
+
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageMaintenanceParameters"/> class.
+        /// </summary>
+        public StorageMaintenanceParameters()
+        {
+        } 
+        #endregion
+
+
 
         public void AddApplicationStateToRemove(ApplicationState stateToAdd)
         {
