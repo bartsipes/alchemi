@@ -193,10 +193,10 @@ namespace Alchemi.Manager.Storage
                             // make sure that when we got the lock we are still uninitialized
                             if (m_managerStorage == null)
                             {
-                                db4oManagerStorage db4oStorage = new db4oManagerStorage(configuration.DbName);
+                                db4oManagerStorage db4oStorage = new db4oManagerStorage(configuration.DbFilePath);
 
                                 // volatile storage, we must initialize the data here
-                                db4oStorage.InitializeStorageData();
+                                //db4oStorage.InitializeStorageData();
 
                                 m_managerStorage = db4oStorage;
                             }

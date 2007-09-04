@@ -80,6 +80,12 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns></returns>
 		UserStorageView[] GetUsers();
 
+        /// <summary>
+        /// Get a UserStorageView with the username.
+        /// </summary>
+        /// <returns>UserStorageView or null if the user does not exist</returns>
+        UserStorageView GetUser(string username);
+
 		/// <summary>
 		/// Delete the given user.
 		/// Only the username has to be set in the UserStorageView structure, all other data is ignored.

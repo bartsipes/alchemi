@@ -179,6 +179,29 @@ namespace Alchemi.Manager.Storage
             return allUsers;
         }
 
+        public UserStorageView GetUser(string username)
+        {
+            UserStorageView user = null;
+
+            IObjectContainer container = GetStorage();
+            try
+            {
+                IList<UserStorageView> users =
+                    container.Query<UserStorageView>(delegate(UserStorageView userFinder)
+                    {
+                        return userFinder.Username == username;
+                    });
+
+                if (users.Count > 0)
+                    user = users[0];
+            }
+            finally
+            {
+                container.Close();
+            }
+            return user;
+        }
+
         public void DeleteUser(UserStorageView userToDelete)
         {
             if (userToDelete == null)

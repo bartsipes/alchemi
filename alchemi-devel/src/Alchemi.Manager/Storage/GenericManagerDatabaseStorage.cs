@@ -171,7 +171,7 @@ namespace Alchemi.Manager.Storage
 
             string powerUsageSqlQuery = this.GetPowerUsageSqlQuery();
             string unfinishedThreadCountSqlQuery = this.GetUnfinishedThreadCountSqlQuery();
-            string unfinishedApplicationCountSqlQuery = this.GetUnfinishedThreadCountSqlQuery();
+            string unfinishedApplicationCountSqlQuery = this.GetUnfinishedApplicationCountSqlQuery();
 			
 			SystemSummary summary = null;
 			String maxPower= null;
@@ -341,6 +341,38 @@ namespace Alchemi.Manager.Storage
 
 			return (UserStorageView[])userList.ToArray(typeof(UserStorageView));
 		}
+        public UserStorageView GetUser(string username)
+        {
+            ArrayList userList = new ArrayList();
+            UserStorageView user = null;
+
+            string sqlQuery = String.Format("select usr_name, password, grp_id, is_system from usr where usr_name = '{0}'",
+                        Utils.MakeSqlSafe(username));
+
+            using (IDataReader dataReader = RunSqlReturnDataReader(sqlQuery))
+            {
+                if (dataReader.Read())
+                {
+                    String password = dataReader.GetString(dataReader.GetOrdinal("password"));
+                    Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
+                    bool isSystem = false;
+
+                    if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
+                    {
+                        isSystem = dataReader.GetBoolean(dataReader.GetOrdinal("is_system"));
+                    }
+
+                    user = new UserStorageView(username);
+                    user.PasswordMd5Hash = password;
+                    user.GroupId = groupId;
+                    user.IsSystem = isSystem;
+                }
+
+                dataReader.Close();
+            }
+
+            return (user);
+        }
 
 		public void DeleteUser(UserStorageView userToDelete)
 		{

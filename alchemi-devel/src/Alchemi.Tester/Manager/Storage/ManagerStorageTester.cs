@@ -189,11 +189,12 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.UpdateUsers(userUpdates);
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
+            UserStorageView user = ManagerStorage.GetUser("username1");
 			
 			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
-			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
-			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
-			Assert.AreEqual(1, users[c_DefaultUserCount].GroupId);
+			Assert.AreEqual("username1", user.Username);
+			Assert.AreEqual(HashUtil.GetHash("password2", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+			Assert.AreEqual(1, user.GroupId);
 		}
 
 		/// <summary>
@@ -228,11 +229,13 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.UpdateUsers(null);
 
 			UserStorageView[] users = ManagerStorage.GetUsers();
-			
-			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
-			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
-			Assert.AreEqual(0, users[c_DefaultUserCount].GroupId);
+            UserStorageView user = ManagerStorage.GetUser("username1");
+
+            Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+            Assert.AreEqual("username1", user.Username);
+            Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+            Assert.AreEqual(0, user.GroupId);
+
 		}
 
 		#endregion
@@ -285,12 +288,13 @@ namespace Alchemi.Tester.Manager.Storage
 
 			ManagerStorage.DeleteUser(null);
 
-			UserStorageView[] users = ManagerStorage.GetUsers();
-			
-			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
-			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
-			Assert.AreEqual(0, users[c_DefaultUserCount].GroupId);
+            UserStorageView[] users = ManagerStorage.GetUsers();
+            UserStorageView user = ManagerStorage.GetUser("username1");
+
+            Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
+            Assert.AreEqual("username1", user.Username);
+            Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
+			Assert.AreEqual(0, user.GroupId);
 		}
 
 		#endregion
@@ -387,16 +391,14 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetUserListTest1()
 		{
-			AddUser("username1", "password1");
+			AddUser("username1", "password1", 0);
 			
-			UserStorageView[] users;
-
-			users = ManagerStorage.GetUsers();
+			UserStorageView[] users = ManagerStorage.GetUsers();
+            UserStorageView user = ManagerStorage.GetUser("username1");
 
 			Assert.AreEqual(c_DefaultUserCount + 1, users.Length);
-			Assert.AreEqual("username1", users[c_DefaultUserCount].Username);
-			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), users[c_DefaultUserCount].PasswordMd5Hash);
-
+            Assert.AreEqual("username1", user.Username);
+			Assert.AreEqual(HashUtil.GetHash("password1", HashUtil.HashType.MD5), user.PasswordMd5Hash);
 		}
 
 		/// <summary>

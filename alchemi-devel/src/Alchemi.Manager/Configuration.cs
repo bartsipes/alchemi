@@ -72,6 +72,11 @@ namespace Alchemi.Manager
         /// </summary>
         public int DbMinPoolSize = 5;
 
+        /// <summary>
+        /// Default filename for file-based db storage
+        /// </summary>
+        public string DbFilePath = "Alchemi.db";
+
 		/// <summary>
 		/// The storage used by this Manager.
 		/// Defaults to In-memory.

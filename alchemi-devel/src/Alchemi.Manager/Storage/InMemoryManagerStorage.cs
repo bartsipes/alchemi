@@ -212,6 +212,15 @@ namespace Alchemi.Manager.Storage
         {
             return (UserStorageView[]) _users.ToArray( typeof( UserStorageView ) );
         }
+        public UserStorageView GetUser(string username)
+        {
+            foreach (UserStorageView user in _users)
+            {
+                if (username == user.Username)
+                    return user;
+            }
+            return null;
+        }
 
 		public void AddGroups(GroupStorageView[] groups)
 		{

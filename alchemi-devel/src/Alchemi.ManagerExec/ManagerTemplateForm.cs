@@ -37,6 +37,7 @@ using log4net.Appender;
 using log4net;
 using Alchemi.Manager.Storage;
 using System.Collections;
+using Alchemi.Core.Utility;
 
 public class ManagerTemplateForm : Form
 {
@@ -74,18 +75,6 @@ public class ManagerTemplateForm : Form
     protected TabPage uiAdvancedTabPage;
     protected TextBox uiLogMessagesTextBox;
     protected Label uiLogMessagesLabel;
-    protected RadioButton uiDatabaseRadioButton;
-    protected TextBox uiDatabasePasswordTextBox;
-    protected Label uiDatabasePasswordLabel;
-    protected TextBox uiDatabaseNameTextBox;
-    protected TextBox uiDatabaseUserTextBox;
-    protected Label uiDatabaseNameLabel;
-    protected Label uiDatabaseServerLabel;
-    protected Label uiDatabaseUserLabel;
-    protected TextBox uiDatabaseServerTextBox;
-    protected RadioButton uiInMemoryRadioButton;
-    protected Label uiDatabaseTypeLabel;
-    protected ComboBox uiDatabaseTypeComboBox;
     protected GroupBox uiStorageConfigurationGroupBox;
     protected Label uiSchedulerLabel;
     protected ComboBox uiSchedulerComboBox;
@@ -99,6 +88,21 @@ public class ManagerTemplateForm : Form
     #endregion
 
     protected ManagerContainer _container = null;
+    private GroupBox uiDatabaseServerGroupBox;
+    protected TextBox uiDatabasePasswordTextBox;
+    protected TextBox uiDatabaseServerTextBox;
+    protected Label uiDatabaseUserLabel;
+    protected Label uiDatabasePasswordLabel;
+    protected Label uiDatabaseServerLabel;
+    protected TextBox uiDatabaseNameTextBox;
+    protected Label uiDatabaseNameLabel;
+    protected TextBox uiDatabaseUserTextBox;
+    private OpenFileDialog openFileDialog;
+    protected Label uiDatabaseTypeLabel;
+    protected ComboBox uiDatabaseTypeComboBox;
+    protected GroupBox uiDatabaseFileGroupBox;
+    private Button uiDatabaseFileButton;
+    private TextBox uiDatabaseFileTextBox;
     protected static readonly Logger logger = new Logger();
 
     public ManagerTemplateForm()
@@ -160,11 +164,10 @@ public class ManagerTemplateForm : Form
         this.uiAdvancedTabPage = new System.Windows.Forms.TabPage();
         this.uiSchedulerComboBox = new System.Windows.Forms.ComboBox();
         this.uiStorageConfigurationGroupBox = new System.Windows.Forms.GroupBox();
-        this.uiInMemoryRadioButton = new System.Windows.Forms.RadioButton();
-        this.uiDatabaseRadioButton = new System.Windows.Forms.RadioButton();
         this.uiDatabaseTypeLabel = new System.Windows.Forms.Label();
-        this.uiDatabasePasswordTextBox = new System.Windows.Forms.TextBox();
         this.uiDatabaseTypeComboBox = new System.Windows.Forms.ComboBox();
+        this.uiDatabaseServerGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiDatabasePasswordTextBox = new System.Windows.Forms.TextBox();
         this.uiDatabaseServerTextBox = new System.Windows.Forms.TextBox();
         this.uiDatabaseUserLabel = new System.Windows.Forms.Label();
         this.uiDatabasePasswordLabel = new System.Windows.Forms.Label();
@@ -177,12 +180,18 @@ public class ManagerTemplateForm : Form
         this.uiLogMessagesTextBox = new System.Windows.Forms.TextBox();
         this.uiLogMessagesLabel = new System.Windows.Forms.Label();
         this.uiViewFullLogLinkLabel = new System.Windows.Forms.LinkLabel();
+        this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+        this.uiDatabaseFileGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiDatabaseFileButton = new System.Windows.Forms.Button();
+        this.uiDatabaseFileTextBox = new System.Windows.Forms.TextBox();
         this.uiNodeConfigurationGroupBox.SuspendLayout();
         this.uiActionsGroupBox.SuspendLayout();
         this.uiTabControl.SuspendLayout();
         this.uiSetupConnectionTabPage.SuspendLayout();
         this.uiAdvancedTabPage.SuspendLayout();
         this.uiStorageConfigurationGroupBox.SuspendLayout();
+        this.uiDatabaseServerGroupBox.SuspendLayout();
+        this.uiDatabaseFileGroupBox.SuspendLayout();
         this.SuspendLayout();
         // 
         // uiManagerHostLabel
@@ -382,7 +391,7 @@ public class ManagerTemplateForm : Form
         this.uiActionsGroupBox.Controls.Add(this.uiStopButton);
         this.uiActionsGroupBox.Controls.Add(this.uiStartButton);
         this.uiActionsGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.uiActionsGroupBox.Location = new System.Drawing.Point(22, 273);
+        this.uiActionsGroupBox.Location = new System.Drawing.Point(23, 305);
         this.uiActionsGroupBox.Name = "uiActionsGroupBox";
         this.uiActionsGroupBox.Size = new System.Drawing.Size(416, 89);
         this.uiActionsGroupBox.TabIndex = 9;
@@ -391,9 +400,9 @@ public class ManagerTemplateForm : Form
         // 
         // uiStatusBar
         // 
-        this.uiStatusBar.Location = new System.Drawing.Point(0, 557);
+        this.uiStatusBar.Location = new System.Drawing.Point(0, 614);
         this.uiStatusBar.Name = "uiStatusBar";
-        this.uiStatusBar.Size = new System.Drawing.Size(458, 22);
+        this.uiStatusBar.Size = new System.Drawing.Size(461, 22);
         this.uiStatusBar.TabIndex = 10;
         // 
         // uiTabControl
@@ -403,7 +412,7 @@ public class ManagerTemplateForm : Form
         this.uiTabControl.Location = new System.Drawing.Point(10, 10);
         this.uiTabControl.Name = "uiTabControl";
         this.uiTabControl.SelectedIndex = 0;
-        this.uiTabControl.Size = new System.Drawing.Size(440, 246);
+        this.uiTabControl.Size = new System.Drawing.Size(440, 289);
         this.uiTabControl.TabIndex = 12;
         // 
         // uiSetupConnectionTabPage
@@ -411,7 +420,7 @@ public class ManagerTemplateForm : Form
         this.uiSetupConnectionTabPage.Controls.Add(this.uiNodeConfigurationGroupBox);
         this.uiSetupConnectionTabPage.Location = new System.Drawing.Point(4, 22);
         this.uiSetupConnectionTabPage.Name = "uiSetupConnectionTabPage";
-        this.uiSetupConnectionTabPage.Size = new System.Drawing.Size(432, 220);
+        this.uiSetupConnectionTabPage.Size = new System.Drawing.Size(432, 263);
         this.uiSetupConnectionTabPage.TabIndex = 0;
         this.uiSetupConnectionTabPage.Text = "Setup Connection";
         this.uiSetupConnectionTabPage.UseVisualStyleBackColor = true;
@@ -424,7 +433,7 @@ public class ManagerTemplateForm : Form
         this.uiAdvancedTabPage.Location = new System.Drawing.Point(4, 22);
         this.uiAdvancedTabPage.Name = "uiAdvancedTabPage";
         this.uiAdvancedTabPage.Padding = new System.Windows.Forms.Padding(3);
-        this.uiAdvancedTabPage.Size = new System.Drawing.Size(432, 220);
+        this.uiAdvancedTabPage.Size = new System.Drawing.Size(432, 263);
         this.uiAdvancedTabPage.TabIndex = 1;
         this.uiAdvancedTabPage.Text = "Advanced";
         this.uiAdvancedTabPage.UseVisualStyleBackColor = true;
@@ -435,72 +444,33 @@ public class ManagerTemplateForm : Form
         this.uiSchedulerComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
         this.uiSchedulerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.uiSchedulerComboBox.FormattingEnabled = true;
-        this.uiSchedulerComboBox.Location = new System.Drawing.Point(116, 181);
+        this.uiSchedulerComboBox.Location = new System.Drawing.Point(118, 210);
         this.uiSchedulerComboBox.Name = "uiSchedulerComboBox";
         this.uiSchedulerComboBox.Size = new System.Drawing.Size(296, 21);
         this.uiSchedulerComboBox.TabIndex = 34;
         // 
         // uiStorageConfigurationGroupBox
         // 
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiInMemoryRadioButton);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseRadioButton);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseFileGroupBox);
         this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseTypeLabel);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabasePasswordTextBox);
         this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseTypeComboBox);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseServerTextBox);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseUserLabel);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabasePasswordLabel);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseServerLabel);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseNameTextBox);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseNameLabel);
-        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseUserTextBox);
+        this.uiStorageConfigurationGroupBox.Controls.Add(this.uiDatabaseServerGroupBox);
         this.uiStorageConfigurationGroupBox.Location = new System.Drawing.Point(9, 6);
         this.uiStorageConfigurationGroupBox.Name = "uiStorageConfigurationGroupBox";
-        this.uiStorageConfigurationGroupBox.Size = new System.Drawing.Size(416, 154);
+        this.uiStorageConfigurationGroupBox.Size = new System.Drawing.Size(416, 155);
         this.uiStorageConfigurationGroupBox.TabIndex = 33;
         this.uiStorageConfigurationGroupBox.TabStop = false;
         this.uiStorageConfigurationGroupBox.Text = "Storage Configuration";
         // 
-        // uiInMemoryRadioButton
-        // 
-        this.uiInMemoryRadioButton.AutoSize = true;
-        this.uiInMemoryRadioButton.Checked = true;
-        this.uiInMemoryRadioButton.Location = new System.Drawing.Point(9, 131);
-        this.uiInMemoryRadioButton.Name = "uiInMemoryRadioButton";
-        this.uiInMemoryRadioButton.Size = new System.Drawing.Size(74, 17);
-        this.uiInMemoryRadioButton.TabIndex = 29;
-        this.uiInMemoryRadioButton.TabStop = true;
-        this.uiInMemoryRadioButton.Text = "In-Memory";
-        this.uiInMemoryRadioButton.UseVisualStyleBackColor = true;
-        this.uiInMemoryRadioButton.CheckedChanged += new System.EventHandler(this.uiInMemoryRadioButton_CheckedChanged);
-        // 
-        // uiDatabaseRadioButton
-        // 
-        this.uiDatabaseRadioButton.AutoSize = true;
-        this.uiDatabaseRadioButton.Location = new System.Drawing.Point(9, 19);
-        this.uiDatabaseRadioButton.Name = "uiDatabaseRadioButton";
-        this.uiDatabaseRadioButton.Size = new System.Drawing.Size(71, 17);
-        this.uiDatabaseRadioButton.TabIndex = 28;
-        this.uiDatabaseRadioButton.Text = "Database";
-        this.uiDatabaseRadioButton.UseVisualStyleBackColor = true;
-        // 
         // uiDatabaseTypeLabel
         // 
         this.uiDatabaseTypeLabel.AutoSize = true;
-        this.uiDatabaseTypeLabel.Location = new System.Drawing.Point(48, 42);
+        this.uiDatabaseTypeLabel.Location = new System.Drawing.Point(6, 22);
         this.uiDatabaseTypeLabel.Name = "uiDatabaseTypeLabel";
         this.uiDatabaseTypeLabel.Size = new System.Drawing.Size(31, 13);
-        this.uiDatabaseTypeLabel.TabIndex = 31;
+        this.uiDatabaseTypeLabel.TabIndex = 42;
         this.uiDatabaseTypeLabel.Text = "Type";
         this.uiDatabaseTypeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-        // 
-        // uiDatabasePasswordTextBox
-        // 
-        this.uiDatabasePasswordTextBox.Location = new System.Drawing.Point(299, 103);
-        this.uiDatabasePasswordTextBox.Name = "uiDatabasePasswordTextBox";
-        this.uiDatabasePasswordTextBox.PasswordChar = '*';
-        this.uiDatabasePasswordTextBox.Size = new System.Drawing.Size(104, 20);
-        this.uiDatabasePasswordTextBox.TabIndex = 23;
         // 
         // uiDatabaseTypeComboBox
         // 
@@ -508,76 +478,102 @@ public class ManagerTemplateForm : Form
         this.uiDatabaseTypeComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
         this.uiDatabaseTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         this.uiDatabaseTypeComboBox.FormattingEnabled = true;
-        this.uiDatabaseTypeComboBox.Location = new System.Drawing.Point(107, 39);
+        this.uiDatabaseTypeComboBox.Location = new System.Drawing.Point(43, 19);
         this.uiDatabaseTypeComboBox.Name = "uiDatabaseTypeComboBox";
         this.uiDatabaseTypeComboBox.Size = new System.Drawing.Size(296, 21);
-        this.uiDatabaseTypeComboBox.TabIndex = 30;
+        this.uiDatabaseTypeComboBox.TabIndex = 41;
+        this.uiDatabaseTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.uiDatabaseTypeComboBox_SelectedIndexChanged);
+        // 
+        // uiDatabaseServerGroupBox
+        // 
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabasePasswordTextBox);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseServerTextBox);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseUserLabel);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabasePasswordLabel);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseServerLabel);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseNameTextBox);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseNameLabel);
+        this.uiDatabaseServerGroupBox.Controls.Add(this.uiDatabaseUserTextBox);
+        this.uiDatabaseServerGroupBox.Location = new System.Drawing.Point(6, 49);
+        this.uiDatabaseServerGroupBox.Name = "uiDatabaseServerGroupBox";
+        this.uiDatabaseServerGroupBox.Size = new System.Drawing.Size(378, 86);
+        this.uiDatabaseServerGroupBox.TabIndex = 33;
+        this.uiDatabaseServerGroupBox.TabStop = false;
+        this.uiDatabaseServerGroupBox.Text = "Database Server Configuration";
+        // 
+        // uiDatabasePasswordTextBox
+        // 
+        this.uiDatabasePasswordTextBox.Location = new System.Drawing.Point(260, 54);
+        this.uiDatabasePasswordTextBox.Name = "uiDatabasePasswordTextBox";
+        this.uiDatabasePasswordTextBox.PasswordChar = '*';
+        this.uiDatabasePasswordTextBox.Size = new System.Drawing.Size(104, 20);
+        this.uiDatabasePasswordTextBox.TabIndex = 35;
         // 
         // uiDatabaseServerTextBox
         // 
-        this.uiDatabaseServerTextBox.Location = new System.Drawing.Point(107, 71);
+        this.uiDatabaseServerTextBox.Location = new System.Drawing.Point(68, 22);
         this.uiDatabaseServerTextBox.Name = "uiDatabaseServerTextBox";
         this.uiDatabaseServerTextBox.Size = new System.Drawing.Size(104, 20);
-        this.uiDatabaseServerTextBox.TabIndex = 20;
+        this.uiDatabaseServerTextBox.TabIndex = 32;
         // 
         // uiDatabaseUserLabel
         // 
         this.uiDatabaseUserLabel.AutoSize = true;
-        this.uiDatabaseUserLabel.Location = new System.Drawing.Point(226, 74);
+        this.uiDatabaseUserLabel.Location = new System.Drawing.Point(187, 25);
         this.uiDatabaseUserLabel.Name = "uiDatabaseUserLabel";
         this.uiDatabaseUserLabel.Size = new System.Drawing.Size(55, 13);
-        this.uiDatabaseUserLabel.TabIndex = 25;
+        this.uiDatabaseUserLabel.TabIndex = 37;
         this.uiDatabaseUserLabel.Text = "Username";
         this.uiDatabaseUserLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // uiDatabasePasswordLabel
         // 
         this.uiDatabasePasswordLabel.AutoSize = true;
-        this.uiDatabasePasswordLabel.Location = new System.Drawing.Point(226, 106);
+        this.uiDatabasePasswordLabel.Location = new System.Drawing.Point(187, 57);
         this.uiDatabasePasswordLabel.Name = "uiDatabasePasswordLabel";
         this.uiDatabasePasswordLabel.Size = new System.Drawing.Size(53, 13);
-        this.uiDatabasePasswordLabel.TabIndex = 24;
+        this.uiDatabasePasswordLabel.TabIndex = 36;
         this.uiDatabasePasswordLabel.Text = "Password";
         this.uiDatabasePasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // uiDatabaseServerLabel
         // 
         this.uiDatabaseServerLabel.AutoSize = true;
-        this.uiDatabaseServerLabel.Location = new System.Drawing.Point(48, 74);
+        this.uiDatabaseServerLabel.Location = new System.Drawing.Point(9, 25);
         this.uiDatabaseServerLabel.Name = "uiDatabaseServerLabel";
         this.uiDatabaseServerLabel.Size = new System.Drawing.Size(38, 13);
-        this.uiDatabaseServerLabel.TabIndex = 26;
+        this.uiDatabaseServerLabel.TabIndex = 38;
         this.uiDatabaseServerLabel.Text = "Server";
         this.uiDatabaseServerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // uiDatabaseNameTextBox
         // 
-        this.uiDatabaseNameTextBox.Location = new System.Drawing.Point(107, 103);
+        this.uiDatabaseNameTextBox.Location = new System.Drawing.Point(68, 54);
         this.uiDatabaseNameTextBox.Name = "uiDatabaseNameTextBox";
         this.uiDatabaseNameTextBox.Size = new System.Drawing.Size(104, 20);
-        this.uiDatabaseNameTextBox.TabIndex = 21;
+        this.uiDatabaseNameTextBox.TabIndex = 33;
         // 
         // uiDatabaseNameLabel
         // 
         this.uiDatabaseNameLabel.AutoSize = true;
-        this.uiDatabaseNameLabel.Location = new System.Drawing.Point(48, 106);
+        this.uiDatabaseNameLabel.Location = new System.Drawing.Point(9, 57);
         this.uiDatabaseNameLabel.Name = "uiDatabaseNameLabel";
         this.uiDatabaseNameLabel.Size = new System.Drawing.Size(53, 13);
-        this.uiDatabaseNameLabel.TabIndex = 27;
+        this.uiDatabaseNameLabel.TabIndex = 39;
         this.uiDatabaseNameLabel.Text = "DB Name";
         this.uiDatabaseNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // uiDatabaseUserTextBox
         // 
-        this.uiDatabaseUserTextBox.Location = new System.Drawing.Point(299, 71);
+        this.uiDatabaseUserTextBox.Location = new System.Drawing.Point(260, 22);
         this.uiDatabaseUserTextBox.Name = "uiDatabaseUserTextBox";
         this.uiDatabaseUserTextBox.Size = new System.Drawing.Size(104, 20);
-        this.uiDatabaseUserTextBox.TabIndex = 22;
+        this.uiDatabaseUserTextBox.TabIndex = 34;
         // 
         // uiSchedulerLabel
         // 
         this.uiSchedulerLabel.AutoSize = true;
-        this.uiSchedulerLabel.Location = new System.Drawing.Point(33, 184);
+        this.uiSchedulerLabel.Location = new System.Drawing.Point(33, 213);
         this.uiSchedulerLabel.Name = "uiSchedulerLabel";
         this.uiSchedulerLabel.Size = new System.Drawing.Size(55, 13);
         this.uiSchedulerLabel.TabIndex = 32;
@@ -586,7 +582,7 @@ public class ManagerTemplateForm : Form
         // 
         // uiProgressBar
         // 
-        this.uiProgressBar.Location = new System.Drawing.Point(22, 543);
+        this.uiProgressBar.Location = new System.Drawing.Point(23, 575);
         this.uiProgressBar.Name = "uiProgressBar";
         this.uiProgressBar.Size = new System.Drawing.Size(414, 10);
         this.uiProgressBar.Step = 1;
@@ -596,7 +592,7 @@ public class ManagerTemplateForm : Form
         // uiLogMessagesTextBox
         // 
         this.uiLogMessagesTextBox.BackColor = System.Drawing.SystemColors.Info;
-        this.uiLogMessagesTextBox.Location = new System.Drawing.Point(21, 392);
+        this.uiLogMessagesTextBox.Location = new System.Drawing.Point(22, 424);
         this.uiLogMessagesTextBox.Multiline = true;
         this.uiLogMessagesTextBox.Name = "uiLogMessagesTextBox";
         this.uiLogMessagesTextBox.ReadOnly = true;
@@ -607,7 +603,7 @@ public class ManagerTemplateForm : Form
         // 
         // uiLogMessagesLabel
         // 
-        this.uiLogMessagesLabel.Location = new System.Drawing.Point(19, 374);
+        this.uiLogMessagesLabel.Location = new System.Drawing.Point(20, 406);
         this.uiLogMessagesLabel.Name = "uiLogMessagesLabel";
         this.uiLogMessagesLabel.Size = new System.Drawing.Size(88, 15);
         this.uiLogMessagesLabel.TabIndex = 16;
@@ -619,7 +615,7 @@ public class ManagerTemplateForm : Form
         this.uiViewFullLogLinkLabel.AutoSize = true;
         this.uiViewFullLogLinkLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
         this.uiViewFullLogLinkLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
-        this.uiViewFullLogLinkLabel.Location = new System.Drawing.Point(93, 372);
+        this.uiViewFullLogLinkLabel.Location = new System.Drawing.Point(94, 404);
         this.uiViewFullLogLinkLabel.Name = "uiViewFullLogLinkLabel";
         this.uiViewFullLogLinkLabel.Size = new System.Drawing.Size(98, 15);
         this.uiViewFullLogLinkLabel.TabIndex = 17;
@@ -627,11 +623,44 @@ public class ManagerTemplateForm : Form
         this.uiViewFullLogLinkLabel.Text = "( View full log ... )";
         this.uiViewFullLogLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
+        // openFileDialog
+        // 
+        this.openFileDialog.DefaultExt = "db";
+        // 
+        // uiDatabaseFileGroupBox
+        // 
+        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileButton);
+        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileTextBox);
+        this.uiDatabaseFileGroupBox.Location = new System.Drawing.Point(9, 40);
+        this.uiDatabaseFileGroupBox.Name = "uiDatabaseFileGroupBox";
+        this.uiDatabaseFileGroupBox.Size = new System.Drawing.Size(378, 63);
+        this.uiDatabaseFileGroupBox.TabIndex = 43;
+        this.uiDatabaseFileGroupBox.TabStop = false;
+        this.uiDatabaseFileGroupBox.Text = "Database File";
+        // 
+        // uiDatabaseFileButton
+        // 
+        this.uiDatabaseFileButton.Location = new System.Drawing.Point(330, 21);
+        this.uiDatabaseFileButton.Name = "uiDatabaseFileButton";
+        this.uiDatabaseFileButton.Size = new System.Drawing.Size(31, 23);
+        this.uiDatabaseFileButton.TabIndex = 3;
+        this.uiDatabaseFileButton.Text = "...";
+        this.uiDatabaseFileButton.UseVisualStyleBackColor = true;
+        this.uiDatabaseFileButton.Click += new System.EventHandler(this.uiDatabaseFileButton_Click);
+        // 
+        // uiDatabaseFileTextBox
+        // 
+        this.uiDatabaseFileTextBox.Enabled = false;
+        this.uiDatabaseFileTextBox.Location = new System.Drawing.Point(12, 21);
+        this.uiDatabaseFileTextBox.Name = "uiDatabaseFileTextBox";
+        this.uiDatabaseFileTextBox.Size = new System.Drawing.Size(312, 20);
+        this.uiDatabaseFileTextBox.TabIndex = 2;
+        // 
         // ManagerTemplateForm
         // 
         this.AcceptButton = this.uiStartButton;
         this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(458, 579);
+        this.ClientSize = new System.Drawing.Size(461, 636);
         this.Controls.Add(this.uiViewFullLogLinkLabel);
         this.Controls.Add(this.uiLogMessagesLabel);
         this.Controls.Add(this.uiActionsGroupBox);
@@ -657,6 +686,10 @@ public class ManagerTemplateForm : Form
         this.uiAdvancedTabPage.PerformLayout();
         this.uiStorageConfigurationGroupBox.ResumeLayout(false);
         this.uiStorageConfigurationGroupBox.PerformLayout();
+        this.uiDatabaseServerGroupBox.ResumeLayout(false);
+        this.uiDatabaseServerGroupBox.PerformLayout();
+        this.uiDatabaseFileGroupBox.ResumeLayout(false);
+        this.uiDatabaseFileGroupBox.PerformLayout();
         this.ResumeLayout(false);
         this.PerformLayout();
 
@@ -826,10 +859,11 @@ public class ManagerTemplateForm : Form
     {
         //fill in the combo's and set default values
         ArrayList data = new ArrayList();
+        data.Add(new ManagerDbTypeItem("In Memory", ManagerStorageEnum.InMemory));
         data.Add(new ManagerDbTypeItem("Microsoft SQL Server 2000", ManagerStorageEnum.SqlServer));
         data.Add(new ManagerDbTypeItem("MySQL Server 4.x / 5.x", ManagerStorageEnum.MySql));
         data.Add(new ManagerDbTypeItem("Postgresql 8.2.x", ManagerStorageEnum.Postgresql));
-        data.Add(new ManagerDbTypeItem("db4o 6.1.x", ManagerStorageEnum.db4o));
+        data.Add(new ManagerDbTypeItem("db4o 6.3.x", ManagerStorageEnum.db4o));
         
         uiDatabaseTypeComboBox.DataSource = data;
         uiDatabaseTypeComboBox.DisplayMember = "Display";
@@ -861,14 +895,8 @@ public class ManagerTemplateForm : Form
     {
         Alchemi.Manager.Configuration conf = new Configuration();
 
-        if (uiInMemoryRadioButton.Checked)
-        {
-            conf.DbType = ManagerStorageEnum.InMemory;
-        }
-        else
-        {
-            conf.DbType = (ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue;
-        }
+        conf.DbType = (ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue;
+
         conf.DbServer = uiDatabaseServerTextBox.Text;
         conf.DbUsername = uiDatabaseUserTextBox.Text;
         conf.DbPassword = uiDatabasePasswordTextBox.Text;
@@ -893,16 +921,10 @@ public class ManagerTemplateForm : Form
         uiDatabaseUserTextBox.Text = Config.DbUsername;
         uiDatabasePasswordTextBox.Text = Config.DbPassword;
         uiDatabaseNameTextBox.Text = Config.DbName;
-        if (Config.DbType == ManagerStorageEnum.InMemory)
-        {
-            uiInMemoryRadioButton.Checked = true;
-        }
-        else
-        {
-            uiDatabaseRadioButton.Checked = true;
-            //uiDatabaseTypeComboBox.set
-            uiDatabaseTypeComboBox.SelectedValue = Config.DbType;
-        }
+
+        uiDatabaseFileTextBox.Text = Config.DbFilePath;
+        
+        uiDatabaseTypeComboBox.SelectedValue = Config.DbType;
         
         uiOwnPortTextBox.Text = Config.OwnPort.ToString();
         uiDedicatedCheckBox.Checked = Config.Dedicated;
@@ -922,15 +944,7 @@ public class ManagerTemplateForm : Form
         uiOwnPortTextBox.Enabled = !started;
 
         uiSchedulerComboBox.Enabled = !started;
-        uiDatabaseTypeComboBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
-
-        uiInMemoryRadioButton.Enabled = !started;
-        uiDatabaseRadioButton.Enabled = !started;
-
-        uiDatabaseServerTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
-        uiDatabaseUserTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
-        uiDatabasePasswordTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
-        uiDatabaseNameTextBox.Enabled = !started && !uiInMemoryRadioButton.Checked;
+        uiDatabaseTypeComboBox.Enabled = !started;
 
         uiIntermediateComboBox.Enabled = false /* !started */; // <-- hierarchical grid disabled for now
         uiDedicatedCheckBox.Enabled = !started & uiIntermediateComboBox.Checked;
@@ -977,15 +991,48 @@ public class ManagerTemplateForm : Form
         logger.Info(s);
     }
 
-    private void uiInMemoryRadioButton_CheckedChanged(object sender, EventArgs e)
+    private void uiDatabaseFileButton_Click(object sender, EventArgs e)
     {
-        //set ui for db stuff based on where uiInMemoryRadioButton is checked.
-        uiDatabaseTypeComboBox.Enabled = !uiInMemoryRadioButton.Checked;
-        uiDatabaseNameTextBox.Enabled = !uiInMemoryRadioButton.Checked;
-        uiDatabaseServerTextBox.Enabled = !uiInMemoryRadioButton.Checked;
-        uiDatabaseUserTextBox.Enabled = !uiInMemoryRadioButton.Checked;
-        uiDatabasePasswordTextBox.Enabled = !uiInMemoryRadioButton.Checked;
+        OpenFileDialog dialog = new OpenFileDialog();
+        dialog.Filter =
+           "db files (*.db)|*.db|All files (*.*)|*.*";
+        //dialog.InitialDirectory = initialDirectory;
+        dialog.InitialDirectory = Utils.GetFilePath("",AlchemiRole.Manager,true);
+        dialog.Title = "Select a database file";
+        uiDatabaseFileTextBox.Text = (dialog.ShowDialog() == DialogResult.OK)
+           ? dialog.FileName : null;
     }
+
+    private void uiDatabaseTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateUIStorage();
+    }
+    protected void UpdateUIStorage()
+    {
+        switch ((ManagerStorageEnum)uiDatabaseTypeComboBox.SelectedValue)
+        {
+            case ManagerStorageEnum.InMemory:
+                uiDatabaseFileGroupBox.Visible = false;
+                uiDatabaseServerGroupBox.Visible = false;
+                break;
+            case ManagerStorageEnum.db4o:
+                uiDatabaseFileGroupBox.Visible = true;
+                uiDatabaseFileGroupBox.Show();
+                uiDatabaseServerGroupBox.Visible = false;
+                uiDatabaseServerGroupBox.Hide();
+                break;
+            default:
+                uiDatabaseFileGroupBox.Visible = false;
+                uiDatabaseServerGroupBox.Visible = true;
+                break;
+        }
+    }
+
+    private void uiDatabaseFileButton_Click_1(object sender, EventArgs e)
+    {
+
+    }
+
 }
 
 //Class to hold values for the db-type combo-box
@@ -1014,3 +1061,4 @@ public class ManagerDbTypeItem
         return Display;
     }
 }
+

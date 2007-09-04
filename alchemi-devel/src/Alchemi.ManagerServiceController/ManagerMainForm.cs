@@ -59,10 +59,10 @@ namespace Alchemi.ManagerService
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.tabPage1.SuspendLayout();
-            this.tabControl.SuspendLayout();
-            this.gpBoxNodeConfig.SuspendLayout();
-            this.gpBoxActions.SuspendLayout();
+            //this.tabPage1.SuspendLayout();
+            this.uiTabControl.SuspendLayout();
+            this.uiNodeConfigurationGroupBox.SuspendLayout();
+            this.uiActionsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbIntermediate

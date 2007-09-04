@@ -79,8 +79,11 @@ namespace Alchemi.ManagerUtils.DbSetup
 		private bool databaseInstalled;
 		private System.Windows.Forms.Button closeButton;
         private TabPage databaseFileLocationTab;
-        private TextBox tbDatabasePath;
+        private TextBox tbDatabaseName;
         private Label label1;
+        private Button btnDatabaseDirectoryChooser;
+        private TextBox tbDatabaseDirectory;
+        private Label label8;
 
 
 		/// <summary>
@@ -108,7 +111,8 @@ namespace Alchemi.ManagerUtils.DbSetup
 			databaseName.TextChanged += new EventHandler(DataChanged);
 			databasePassword.TextChanged += new EventHandler(DataChanged);
 			databaseUsername.TextChanged += new EventHandler(DataChanged);
-            tbDatabasePath.TextChanged += new EventHandler(DataChanged);
+            tbDatabaseName.TextChanged += new EventHandler(DataChanged);
+            btnDatabaseDirectoryChooser.Click += new EventHandler(DataChanged);
 			managerStorageTypes.SelectedIndexChanged += new EventHandler(DataChanged);
 		}
 
@@ -154,14 +158,17 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databasePassword = new System.Windows.Forms.TextBox();
             this.databaseUsername = new System.Windows.Forms.TextBox();
             this.databaseFileLocationTab = new System.Windows.Forms.TabPage();
+            this.tbDatabaseName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.saveButton = new System.Windows.Forms.Button();
             this.installButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label7 = new System.Windows.Forms.Label();
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.closeButton = new System.Windows.Forms.Button();
-            this.tbDatabasePath = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.btnDatabaseDirectoryChooser = new System.Windows.Forms.Button();
+            this.tbDatabaseDirectory = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.tabs.SuspendLayout();
             this.storageTypeTab.SuspendLayout();
             this.databaseLocationTab.SuspendLayout();
@@ -346,7 +353,10 @@ namespace Alchemi.ManagerUtils.DbSetup
             // 
             // databaseFileLocationTab
             // 
-            this.databaseFileLocationTab.Controls.Add(this.tbDatabasePath);
+            this.databaseFileLocationTab.Controls.Add(this.label8);
+            this.databaseFileLocationTab.Controls.Add(this.btnDatabaseDirectoryChooser);
+            this.databaseFileLocationTab.Controls.Add(this.tbDatabaseDirectory);
+            this.databaseFileLocationTab.Controls.Add(this.tbDatabaseName);
             this.databaseFileLocationTab.Controls.Add(this.label1);
             this.databaseFileLocationTab.Location = new System.Drawing.Point(4, 22);
             this.databaseFileLocationTab.Name = "databaseFileLocationTab";
@@ -355,6 +365,21 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.databaseFileLocationTab.TabIndex = 4;
             this.databaseFileLocationTab.Text = "Database File Location";
             this.databaseFileLocationTab.UseVisualStyleBackColor = true;
+            // 
+            // tbDatabaseName
+            // 
+            this.tbDatabaseName.Location = new System.Drawing.Point(128, 45);
+            this.tbDatabaseName.Name = "tbDatabaseName";
+            this.tbDatabaseName.Size = new System.Drawing.Size(123, 20);
+            this.tbDatabaseName.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(9, 48);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 23);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Database name";
             // 
             // saveButton
             // 
@@ -404,20 +429,32 @@ namespace Alchemi.ManagerUtils.DbSetup
             this.closeButton.Text = "Close";
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
-            // tbDatabasePath
+            // btnDatabaseDirectoryChooser
             // 
-            this.tbDatabasePath.Location = new System.Drawing.Point(161, 45);
-            this.tbDatabasePath.Name = "tbDatabasePath";
-            this.tbDatabasePath.Size = new System.Drawing.Size(100, 20);
-            this.tbDatabasePath.TabIndex = 6;
+            this.btnDatabaseDirectoryChooser.Location = new System.Drawing.Point(409, 19);
+            this.btnDatabaseDirectoryChooser.Name = "btnDatabaseDirectoryChooser";
+            this.btnDatabaseDirectoryChooser.Size = new System.Drawing.Size(31, 23);
+            this.btnDatabaseDirectoryChooser.TabIndex = 8;
+            this.btnDatabaseDirectoryChooser.Text = "...";
+            this.btnDatabaseDirectoryChooser.UseVisualStyleBackColor = true;
+            this.btnDatabaseDirectoryChooser.Click += new System.EventHandler(this.btnDatabaseDirectoryChooser_Click);
             // 
-            // label1
+            // tbDatabaseDirectory
             // 
-            this.label1.Location = new System.Drawing.Point(33, 45);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(100, 23);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Database name";
+            this.tbDatabaseDirectory.Enabled = false;
+            this.tbDatabaseDirectory.Location = new System.Drawing.Point(128, 19);
+            this.tbDatabaseDirectory.Name = "tbDatabaseDirectory";
+            this.tbDatabaseDirectory.Size = new System.Drawing.Size(275, 20);
+            this.tbDatabaseDirectory.TabIndex = 7;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 22);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(98, 13);
+            this.label8.TabIndex = 9;
+            this.label8.Text = "Database Directory";
             // 
             // Installer
             // 
@@ -624,15 +661,22 @@ namespace Alchemi.ManagerUtils.DbSetup
 		{
 			if (configurationFileChanged)
 			{
-				// configuration data changed but not saved
-				DialogResult dialogResult = MessageBox.Show(
-					String.Format("The Manager configuration  has changed.{1}{1}Do you want to save the changes?", 
-					Environment.NewLine
-					),
-					"DbSetup",
-					MessageBoxButtons.YesNoCancel,
-					MessageBoxIcon.Exclamation,
-					MessageBoxDefaultButton.Button1);
+				// configuration data changed but not saved - this should work but raises an error!
+                //DialogResult dialogResult = MessageBox.Show(
+                //    String.Format("The Manager configuration  has changed.{1}{1}Do you want to save the changes?", 
+                //    Environment.NewLine
+                //    ),
+                //    "DbSetup",
+                //    MessageBoxButtons.YesNoCancel,
+                //    MessageBoxIcon.Exclamation,
+                //    MessageBoxDefaultButton.Button1);
+
+                DialogResult dialogResult = MessageBox.Show(
+                    "The Manager configuration  has changed.\n\nDo you want to save the changes?",
+                    "DbSetup",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxDefaultButton.Button1);
 
 				switch (dialogResult)
 				{
@@ -747,7 +791,8 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 			databaseServer.Text = configuration.DbServer;
 			databaseName.Text = configuration.DbName;
-            tbDatabasePath.Text = configuration.DbName;
+            tbDatabaseDirectory.Text = Path.GetDirectoryName(configuration.DbFilePath);
+            tbDatabaseName.Text = Path.GetFileName(configuration.DbFilePath);
 			databaseUsername.Text = configuration.DbUsername;
 			databasePassword.Text = configuration.DbPassword;
 		}
@@ -762,7 +807,8 @@ namespace Alchemi.ManagerUtils.DbSetup
 
 			configuration.DbType = item.StorageType;
 			configuration.DbServer = databaseServer.Text;
-            configuration.DbName = item.StorageType != ManagerStorageEnum.db4o ? databaseName.Text : tbDatabasePath.Text;
+            configuration.DbName = databaseName.Text;
+            configuration.DbFilePath = Path.Combine(tbDatabaseDirectory.Text, tbDatabaseName.Text); 
 			configuration.DbUsername = databaseUsername.Text;
 			configuration.DbPassword = databasePassword.Text;
 		}
@@ -908,6 +954,16 @@ namespace Alchemi.ManagerUtils.DbSetup
 			configurationFileChanged = true;
 			saveButton.Enabled = true;
 		}
+
+        private void btnDatabaseDirectoryChooser_Click(object sender, EventArgs e)
+        {
+            folderBrowser.RootFolder = Environment.SpecialFolder.ApplicationData;
+            folderBrowser.SelectedPath = Alchemi.Core.Utility.AlchemiRole.Manager.ToString();
+            folderBrowser.Description = "Select a database directory";
+            folderBrowser.ShowNewFolderButton = true;
+            tbDatabaseDirectory.Text = (folderBrowser.ShowDialog() == DialogResult.OK)
+               ? folderBrowser.SelectedPath : tbDatabaseDirectory.Text;
+        }
 
 	}
 }
