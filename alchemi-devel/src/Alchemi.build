@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Alchemi" default="build" basedir="." xmlns="http://tempuri.org/nant-donotuse.xsd">
+	<description>Alchemi Solution Build.</description>
+
+	<property name="msbuildexe.path" value="C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\msbuild.exe"></property>
+	<property name="root" value="${project::get-base-directory()}\" overwrite="false"/>
+	
+	<property name="debug" value="false" overwrite="false"/>
+	<property name="test" value="true" overwrite="false"/>
+	<property name="clean" value="false" overwrite="false"/>
+	<property name="fxcop" value="false" overwrite="false"/>
+	
+	<property name="build.Configuration" value="Debug" overwrite="true" if="${debug}"/>
+	<property name="build.Configuration" value="Release" overwrite="true" unless="${debug}"/>
+	<property name="build.DebugSymbols" value="true" overwrite="true"/>
+	<property name="build.OutDir" value="${root}output\" />
+	<property name="build.DefineConstants" value="TRACE" />
+	<property name="build.DefineConstants" value="${build.DefineConstants};DEBUG" if="${debug}" />
+	<property name="build.DefineConstants" value="${build.DefineConstants};TEST" if="${test}" />
+
+	<property name="test.OutDir" value="${root}output\testresults\"/>
+
+	<target name="build" depends="_clean,_build,_test,_fxcop">
+	</target>
+
+	<target name="_clean" if="${clean}">
+		<delete dir="${build.OutDir}" failonerror="true" if="${directory::exists(build.OutDir)}"></delete>
+	</target>
+
+	<target name="_build">	
+		<call target="__callmsbuild"/>
+	</target>
+
+	<target name="_test" if="${test}" depends="__scripts">
+		<delete dir="${test.OutDir}"/>
+
+		<nunit2 failonerror="false" haltonfailure="false" verbose="true">
+			<formatter type="Xml" usefile="true" extension=".xml" outputdir="${test.OutDir}" />
+			<test haltonfailure="false">
+				<assemblies refid="output.assemblies"></assemblies>
+			</test>
+		</nunit2>
+		
+		<property name="error.count" value="0"/>
+		<foreach item="File" property="file">
+			<in>
+				<items basedir="${test.OutDir}">
+					<include name="*.xml"/>
+				</items>
+			</in>
+			<do>
+				<property name="error.count" value="${int::parse(error.count) + script::select-node-count(file, '//test-case[@success=''False'']')}"/>
+			</do>
+		</foreach>
+		
+		<if test="${int::parse(error.count) > 0}">
+			<echo message="TEST FAILURES: ${error.count}"/>
+			
+			<nunit2report todir="${test.OutDir}">
+				<fileset basedir="${test.OutDir}">
+					<include name="*.xml"/>
+				</fileset>
+			</nunit2report>
+
+			<echo message="REPORT: ${test.OutDir}index.html" />
+		</if>
+	</target>
+
+	<target name="_fxcop" if="${fxcop}">
+		<fxcop analysisReportFilename="${test.OutDir}fxcop.report.xml" includeSummaryReport="true">
+			<targets refid="output.assemblies"/>
+		</fxcop>
+	</target>
+
+	<target name="__callmsbuild">
+		<exec program="${msbuildexe.path}">
+			<arg value="AlchemiFull.sln"/>
+			<arg value="/p:Configuration=${build.Configuration}"/>
+			<!-- pdbonly default release: arg value="/p:DebugSymbols=${build.DebugSymbols}"/ -->
+			<arg value="/P:DefineConstants=&quot;${build.DefineConstants}&quot;"/>
+			<arg value="/P:OutDir=${build.OutDir}"/>
+			<arg value="/nologo"/>
+		</exec>
+	</target>
+
+	<target name="__scripts">
+		<script language="C#">
+			<imports>
+				<import namespace="System.Xml " />
+			</imports>
+			<code>
+				<![CDATA[
+						[Function("select-node-count")]
+						public static int SelectNodeCount(string fileName, string xPath) {
+						XmlDocument doc = new XmlDocument();
+						doc.Load(fileName);
+						return doc.SelectNodes(xPath).Count;						
+					}
+			]]>
+			</code>
+		</script>
+	</target>
+	
+	<fileset id="output.assemblies"  basedir="${build.OutDir}">
+		<include name="Alchemi.Console.exe" />
+		<include name="Alchemi.Core.dll" />
+		<include name="Alchemi.Tester.dll" />
+		<include name="Alchemi.DbSetup.exe" />
+		<include name="Alchemi.Executor.dll" />
+		<include name="Alchemi.ExecutorExec.exe" />
+		<include name="Alchemi.ExecutorService.exe" />
+		<include name="Alchemi.Manager.dll" />
+		<include name="Alchemi.ManagerExec.exe" />
+		<include name="Alchemi.ManagerService.exe" />
+		<include name="alchemi_jsub.exe" />
+	</fileset>
+</project>
