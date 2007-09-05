@@ -280,6 +280,17 @@ namespace Alchemi.Core.Owner
 		}
 
 		/// <summary>
+		/// Creates an instance of the GApplication
+		/// </summary>
+		/// <param name="connection"></param>
+		/// <param name="multiUse">specifies if the GApplication instance is re-usable</param>
+		public GApplication(GConnection connection, bool multiUse) : this(connection)
+		{
+			InitializeComponent();
+			_MultiUse = multiUse;
+		}
+
+		/// <summary>
 		/// Disposes the GApplication object and performs clean up operations.
 		/// </summary>
 		/// <param name="disposing"></param>

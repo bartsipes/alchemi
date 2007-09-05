@@ -113,10 +113,8 @@ namespace Alchemi.Manager
                     ThreadState.Ready, 
                     ThreadState.Scheduled,
                     ThreadState.Started);
-                if (threadsOnExecutor == 0)
-                {
-                    return executor;
-                }
+				if (threadsOnExecutor < executors[nextExecutorIndex].NumberOfCpu)
+					return executor;
             }
 
             return null;

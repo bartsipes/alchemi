@@ -145,25 +145,22 @@ namespace Alchemi.Executor.Sandbox
             }
             catch (Exception e)
             {
-                logger.Warn(string.Format("grid thread # {0} failed ({1})", _CurTi.UniqueId, e.GetType()), e);
-                try
-                {
-                    //some exceptions such as Win32Exception caused problems when passed directly into this method.
-                    //so better create another new exception object and send it over.
-                    Exception eNew = new Exception(e.ToString());
-                    _Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, eNew);
-                }
-                catch (Exception ex1)
-                {
-                    if (_CurTi != null)
-                    {
-                        logger.Warn("Error trying to set failed thread for App: " + _CurTi.ApplicationId + ", thread=" + _CurTi.ThreadId + ". Original Exception = \n" + e.ToString(), ex1);
-                    }
-                    else
-                    {
-                        logger.Warn("Error trying to set failed thread: Original exception = " + e.ToString(), ex1);
-                    }
-                }
+				logger.Warn(string.Format("grid thread # {0} failed ({1})", _CurTi.UniqueId, e.GetType()), e);
+				try
+				{
+					_Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, e);
+				}
+				catch (Exception ex1)
+				{
+					if (_CurTi != null)
+					{
+						logger.Warn("Error trying to set failed thread for App: " + _CurTi.ApplicationId + ", thread=" + _CurTi.ThreadId + ". Original Exception = \n" + e, ex1);
+					}
+					else
+					{
+						logger.Warn("Error trying to set failed thread: Original exception = " + e, ex1);
+					}
+				}
             }
             finally
             {
@@ -217,6 +214,11 @@ namespace Alchemi.Executor.Sandbox
 
             string readOnlyDir = Path.GetDirectoryName(appDomainExecutorType.Assembly.Location);
             PermissionSet grantSet = GetPermissionSetForApp(readOnlyDir, appDir);
+
+			// need to load config file here
+        	string appConfigFile = Path.Combine(appDir, "App.config");
+			if (File.Exists(appConfigFile))
+				info.ConfigurationFile = "App.config";
 
             //we could have some assemblies run with higher trust here if needed.
             AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info, grantSet, null);

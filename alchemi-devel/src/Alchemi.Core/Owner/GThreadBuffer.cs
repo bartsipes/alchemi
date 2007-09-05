@@ -165,7 +165,7 @@ namespace Alchemi.Core.Owner
 			{
 				try
 				{
-					oThread.Start();
+					oThread.StartThread();
 				}
 				catch (Exception oException) 
 				{

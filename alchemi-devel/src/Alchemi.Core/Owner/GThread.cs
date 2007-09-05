@@ -155,6 +155,20 @@ namespace Alchemi.Core.Owner
         }
         */
 
+		public void StartThread()
+		{
+			try
+			{
+				Start();
+			}
+			catch(Exception e)
+			{
+				// can't de-serialize custom exceptions on another app domain, 
+				// so catch wrap and re-thorw exceptions.
+				throw new GThreadException(e);
+			}
+		}
+
         //----------------------------------------------------------------------------------------------- 
         // public methods
         //----------------------------------------------------------------------------------------------- 

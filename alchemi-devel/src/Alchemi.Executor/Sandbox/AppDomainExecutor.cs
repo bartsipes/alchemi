@@ -70,13 +70,13 @@ namespace Alchemi.Executor.Sandbox
                 workingDir));
             
             gridThread.SetWorkingDirectory(workingDir);
-            gridThread.Start();
-
-            logger.Debug("GThread " + gridThread.Id + " done. Serializing it to send back to the manager...");
+			gridThread.StartThread();
+			
+			logger.Debug("GThread " + gridThread.Id + " done. Serializing it to send back to the manager...");
 
             return Utils.SerializeToByteArray(gridThread);
         }
-        
+
         //----------------------------------------------------------------------------------------------- 
         
 		/// <summary>

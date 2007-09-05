@@ -233,6 +233,7 @@
     <Compile Include="Owner\GThread.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Owner\GThreadException.cs" />
     <Compile Include="Owner\ModuleDependency.cs">
       <SubType>Code</SubType>
     </Compile>

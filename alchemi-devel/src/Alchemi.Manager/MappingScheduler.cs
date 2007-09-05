@@ -136,7 +136,7 @@ namespace Alchemi.Manager
         /// <returns>thread identifier</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
-            lock (this)
+            lock (m_oMapping)
             {
                 m_oMapping.Update();
 
@@ -194,7 +194,7 @@ namespace Alchemi.Manager
             foreach (string strExecutorId in cExecutorIds)
             {
                 int nThreadCount = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(strExecutorId, ThreadState.Ready, ThreadState.Scheduled, ThreadState.Started);
-                if (nThreadCount == 0)
+				if (nThreadCount == 0)
                 {
                     return strExecutorId;
                 }

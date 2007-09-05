@@ -129,9 +129,9 @@ namespace Alchemi.Executor
 				//TODO need to discover/report these properly
                 ExecutorInfo info = new ExecutorInfo();
 				//info.Dedicated = this._Dedicated;
-				info.Hostname = this.OwnEP.Host;
+				info.Hostname = OwnEP.Host;
 				info.OS = Environment.OSVersion.ToString();
-                info.NumberOfCpus = 1; //default for now
+				info.NumberOfCpus = Environment.ProcessorCount;
 				info.MaxDiskSpace = 0; //need to fix
 				info.MaxMemory = 0; //need to fix
 
@@ -141,7 +141,8 @@ namespace Alchemi.Executor
 					//need to find a better way to do these things.
 					RegistryKey hklm = Registry.LocalMachine;
 					hklm = hklm.OpenSubKey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0");
-					info.MaxCpuPower = int.Parse(hklm.GetValue("~MHz").ToString());
+					int cpuPower = int.Parse(hklm.GetValue("~MHz").ToString());
+					info.MaxCpuPower = cpuPower * info.NumberOfCpus;
 					info.Architecture = hklm.GetValue("Identifier","x86").ToString(); //CPU arch.
 					hklm.Close();
 				}catch (Exception e)
