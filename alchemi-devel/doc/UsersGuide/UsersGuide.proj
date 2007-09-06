@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{862A2009-7486-49D5-ABE9-8911B364B7F2}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <UsingTask AssemblyFile="..\..\msbuild\lib\Alchemi.Tasks.dll" TaskName="Alchemi.Tasks.InjectFile" />
+
+  <ItemGroup>
+    <TemplateFile Include="html\template.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <XmlFiles Include="html\Intro\intro.xml" />
+    <XmlFiles Include="html\Intro\network_is_computer.xml" />
+  </ItemGroup>
+  <Target Name="Build">
+    <Message Importance="high" Text="Merging XML files into HTML template..." />
+    <InjectFile TemplateFile="@(TemplateFile)"
+                Placeholder="$content$"
+                DataFiles="@(XmlFiles)"
+                OutputFiles="@(XmlFiles->'%(RelativeDir)%(Filename).html')"/>
+  </Target>
+  <Target Name="Clean">
+    <Message Importance="high" Text="Removing compiled HTML files..." />
+    <Delete Files="@(XmlFiles->'%(RelativeDir)%(Filename).html')"/>
+  </Target>
+</Project>

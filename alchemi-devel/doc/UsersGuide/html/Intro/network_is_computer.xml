@@ -1,0 +1,24 @@
+<h1>
+  The Network is the Computer
+</h1>
+<p>
+  The idea of meta-computing - the use of a network of many independent computers
+  as if they were one large parallel machine, or virtual supercomputer - is very compelling
+  since it enables supercomputer-scale processing power to be had at a fraction of
+  the cost of traditional supercomputers.
+</p>
+<p>
+  While traditional virtual machines (e.g. clusters) have been designed for a small
+  number of tightly coupled homogeneous resources, the exponential growth in Internet
+  connectivity allows this concept to be applied on a much larger scale. This, coupled
+  with the fact that desktop PCs in corporate and home environments are heavily underutilized
+  – typically only one-tenth of processing power is used – has given rise to interest
+  in harnessing the vast amounts of processing power that is available in the form
+  of spare CPU cycles on Internet- or intranet-connected desktops. This new paradigm
+  has been dubbed Grid Computing.
+</p>
+<p>
+  Popular distributed computing projects that proved the feasibility of the concept
+  are distributed.net and Seti @ Home.
+</p>
+

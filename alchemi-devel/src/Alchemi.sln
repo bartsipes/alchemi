@@ -110,12 +110,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "F:\...\Alchemi.CrossPlatfor
 		VWDPort = "3154"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.Windows.Forms", "Alchemi.Windows.Forms\Alchemi.Windows.Forms.csproj", "{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alchemi.ManagerRunner", "Alchemi.ManagerRunner\Alchemi.ManagerRunner.csproj", "{6419C006-1516-46BA-832D-4A06E7D49997}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -257,16 +251,6 @@ Global
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Any CPU.ActiveCfg = Debug|.NET
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.ActiveCfg = Debug|.NET
 		{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}.Release|Mixed Platforms.Build.0 = Debug|.NET
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|.NET.ActiveCfg = Debug|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|.NET.ActiveCfg = Release|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B0CA81C9-A1B6-4841-BD9E-343A7D1DD342}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|.NET.ActiveCfg = Debug|Any CPU
 		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6419C006-1516-46BA-832D-4A06E7D49997}.Debug|Any CPU.Build.0 = Debug|Any CPU
