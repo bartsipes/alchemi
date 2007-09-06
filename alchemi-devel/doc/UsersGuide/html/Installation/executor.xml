@@ -1,0 +1,19 @@
+<h2>Executor</h2>
+
+<p>
+  The Alchemi Executor can be installed in two modes
+  <ul>
+    <li>
+      As a normal Windows desktop application
+    </li>
+    <li>
+      As a windows service. (supported only on Windows NT/2000/XP/2003)
+    </li>
+  </ul>
+</p>
+<p>
+  To install the executor as a windows application, use the Executor Setup installer. For service-mode installation use the Executor Service Setup. The configuration steps are the same for both modes. In case of the service-mode, the "Alchemi Executor Service" installed and configured to run automatically on Windows start-up. After installation, the standard Windows service control manager can be used to control the service. Alternatively the Alchemi ExecutorServiceController program can be used. The Executor service controller is a graphical interface, which looks very similar to the normal Executor application.
+</p>
+<p>
+  Install the Executor via the Executor installer and follow the on-screen instructions.
+</p>

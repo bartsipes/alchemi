@@ -5,23 +5,35 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <UsingTask AssemblyFile="..\..\msbuild\lib\Alchemi.Tasks.dll" TaskName="Alchemi.Tasks.InjectFile" />
-
+  <ItemGroup>
+    <Content Include="html\alchemi.css" />
+    <Content Include="README.txt" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
   <ItemGroup>
     <TemplateFile Include="html\template.html" />
   </ItemGroup>
   <ItemGroup>
+    <XmlFiles Include="html\Title\title.xml" />
     <XmlFiles Include="html\Intro\intro.xml" />
     <XmlFiles Include="html\Intro\network_is_computer.xml" />
+    <XmlFiles Include="html\Intro\how_alchemi_works.xml" />
+    <XmlFiles Include="html\Installation\installation.xml" />
+    <XmlFiles Include="html\Installation\manager.xml" />
+    <XmlFiles Include="html\Installation\executor.xml" />
+    <XmlFiles Include="html\Configuration\configuration.xml" />
+    <XmlFiles Include="html\Configuration\manager.xml" />
+    <XmlFiles Include="html\Configuration\executor.xml" />
+    <XmlFiles Include="html\Operation\operation.xml" />
+    <XmlFiles Include="html\Operation\manager.xml" />
+    <XmlFiles Include="html\Operation\executor.xml" />
   </ItemGroup>
   <Target Name="Build">
     <Message Importance="high" Text="Merging XML files into HTML template..." />
-    <InjectFile TemplateFile="@(TemplateFile)"
-                Placeholder="$content$"
-                DataFiles="@(XmlFiles)"
-                OutputFiles="@(XmlFiles->'%(RelativeDir)%(Filename).html')"/>
+    <InjectFile TemplateFile="@(TemplateFile)" Placeholder="$content$" DataFiles="@(XmlFiles)" OutputFiles="@(XmlFiles->'%(RelativeDir)%(Filename).html')" />
   </Target>
   <Target Name="Clean">
     <Message Importance="high" Text="Removing compiled HTML files..." />
-    <Delete Files="@(XmlFiles->'%(RelativeDir)%(Filename).html')"/>
+    <Delete Files="@(XmlFiles->'%(RelativeDir)%(Filename).html')" />
   </Target>
 </Project>

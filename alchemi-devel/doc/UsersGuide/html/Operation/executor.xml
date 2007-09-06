@@ -1,0 +1,48 @@
+<h2>Executor Operation</h2>
+
+<p>
+  The Executor can be run from the desktop or Start -> Programs -> Alchemi -> Executor -> Alchemi Executor.
+</p>
+<p>
+  Click the "Connect" button to connect the Executor to the Manager.
+</p>
+
+<div class="figure">
+  <img alt="Executor Manager Connected" src="images\ex1.gif" />
+</div>
+<div class="caption">
+  Executor connected to a Manager
+</div>
+
+<p>
+  If the Executor is configured for non-dedicated execution, you can start executing by clicking the "Start Executing" button in the "Manage Execution" tab.
+</p>
+
+<div class="figure">
+  <img alt="Non-dedicated Execution" src="images\ex3.gif" />
+</div>
+<div class="caption">
+  Non-dedicated execution
+</div>
+
+<p>
+  The Executor only utilises idle CPU cycles on the machine and does not impact on the CPU usage of running program. When closed, the Executor sits in the system tray. Other options such a interval of executor heartbeat (i.e time between pinging the Manager) can be configured via the options tab.
+</p>
+
+<div class="figure">
+  <img alt="Additional Executor Options" src="images\opta_1.gif" />
+</div>
+<div class="caption">
+  Additional Executor Options
+</div>
+
+<p>
+  Under service-mode operation, the GUI shown in fig. 8 is used to start / stop the Executor service. The service will continue to operate even after the service controller application exits.
+</p>
+
+<h3>Executor Logging</h3>
+
+<p>
+  The executor logs its output and errors to a log file called "alchemi-executor.log". This can be used to debug the executor / report errors / verify the executor operation. The log file is placed in the "dat" directory under the installation directory.
+</p>
+

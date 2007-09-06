@@ -1,0 +1,37 @@
+<h2>
+  How Alchemi Works
+</h2>
+<p>
+  There are four types of distributed components (nodes) involved in the construction of Alchemi
+  grids and execution of grid applications: Manager, Executor, User & Cross-Platform Manager.
+</p>
+
+<div class="figure">
+  <img alt="Alchemi Grid" src="images\grid.jpg" />
+</div>
+<div class="caption">
+  An Alchemi Grid
+</div>
+
+<p>
+  A grid is created by installing Executors on each machine that is to be part of the grid and
+  linking them to a central Manager component. The Windows installer setup that comes with the
+  Alchemi distribution and minimal configuration makes it very easy to set up a grid.
+</p>
+<p>
+  An Executor can be configured to be dedicated (meaning the Manager initiates thread execution
+  directly) or non-dedicated (meaning that thread execution is initiated by the Executor.)
+  Non-dedicated Executors can work through firewalls and NAT servers since there is only
+  one-way communication between the Executor and Manager. Dedicated Executors are more suited
+  to an intranet environment and non-dedicated Executors are more suited to the Internet environment.
+</p>
+<p>
+  Users can develop, execute and monitor grid applications using the .NET API and tools which
+  are part of the Alchemi SDK. Alchemi offers a powerful grid thread programming model which
+  makes it very easy to develop grid applications and a grid job model for grid-enabling
+  legacy or non-.NET applications.
+</p>
+<p>
+  An optional component (not shown) is the Cross Platform Manager web service which offers
+  interoperability with custom non-.NET grid middleware.
+</p>

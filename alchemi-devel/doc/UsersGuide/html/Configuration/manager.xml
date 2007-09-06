@@ -1,0 +1,30 @@
+<h2>Manager Configuration</h2>
+
+<h3>Role-based Security</h3>
+
+<p>
+  Every program connecting to the Manager must supply a valid username and password. Three default accounts are created during installation: executor (password: executor), user (password: user) and admin (password: admin) belonging to the 'Executors', 'Users' and 'Administrators' groups respectively.
+</p>
+<p>
+Users are administered via the 'Users' tab of the Alchemi Console (located in the Alchemi SDK). Only Administrators have permissions to manage users; you must therefore initially log in with the default admin account.
+</p>
+
+<div class="figure">
+  <img alt="Alchemi Console Security" src="images\con1.gif" />
+</div>
+<div class="caption">
+  User administration via the Alchemi Console (showing default accounts)
+</div>
+
+<p>
+  The Console lets you add users, modify their group membership and change passwords.
+</p>
+<p>
+The Users group (grp_id = 3) is meant for users executing grid applications.
+</p>
+<p>
+  The Executors group (grp_id = 2) is meant for Alchemi Executors. By default, Executors attempting to connect to the Manager will use the executor account. If you do not wish Executors to connect anonymously, you can change the password for this account.
+</p>
+<p>
+You should change the default admin password for production use.
+</p>

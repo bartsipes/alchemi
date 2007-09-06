@@ -1,0 +1,33 @@
+<h2>Manager</h2>
+<p>
+  The Manager should be installed on a stable and reasonably capable machine. The Manager requires:
+  <ul>
+    <li>
+      SQL Server 2000 or MSDE 2000
+    </li>
+  </ul>
+</p>
+<p>
+  If using SQL Server, ensure that SQL Server authentication is enabled. Otherwise, follow these instructions to install and prepare MSDE 2000 for Alchemi. Make a note of the system administrator (sa) password in either case. [Note: SQL Server / MSDE do not necessarily need to be installed on the same machine as the Manager.]
+</p>
+
+<h3>Installation</h3>
+<p>The Alchemi Manager can be installed in two modes
+<ul>
+  <li>As a normal Windows desktop application</li>
+  <li>As a windows service. (supported only on Windows NT/2000/XP/2003)</li>
+</ul>
+</p>
+<p>
+  To install the manager as a windows application, use the Manager Setup installer. For service-mode installation use the Manager Service Setup. The configuration steps are the same for both modes. In case of the service-mode, the "Alchemi Manager Service" installed and configured to run automatically on Windows start-up. After installation, the standard Windows service control manager can be used to control the service. Alternatively the Alchemi ManagerServiceController program can be used. The Manager service controller is a graphical interface, which is exactly similar to the normal Manager application.
+</p>
+<p>
+Install the Manager via the Manager installer. Use the sa password noted previously to install the database during the installation.
+</p>
+
+<div class="figure">
+  <img alt="Manager Database Installation" src="images\mgr0.gif" />
+</div>
+<div class="caption">
+  Alchemi Database Installation
+</div>

@@ -6,6 +6,10 @@
 </HEAD><BODY>
 <UL>
 	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Title">
+		<param name="Local" value="html\Title\title.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Introduction and Concepts">
 		<param name="Local" value="html\Intro\intro.html">
 		</OBJECT>
@@ -13,6 +17,52 @@
 		<LI> <OBJECT type="text/sitemap">
 			<param name="Name" value="The Network is the Computer">
 			<param name="Local" value="html\Intro\network_is_computer.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="How Alchemi Works">
+			<param name="Local" value="html\Intro\how_alchemi_works.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Installation">
+		<param name="Local" value="html\Installation\installation.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Manager">
+			<param name="Local" value="html\Installation\manager.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Executor">
+			<param name="Local" value="html\Installation\executor.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Configuration">
+		<param name="Local" value="html\Configuration\configuration.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Manager">
+			<param name="Local" value="html\Configuration\manager.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Executor">
+			<param name="Local" value="html\Configuration\executor.html">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Operation">
+		<param name="Local" value="html\Operation\operation.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Manager">
+			<param name="Local" value="html\Operation\manager.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Executor">
+			<param name="Local" value="html\Operation\executor.html">
 			</OBJECT>
 	</UL>
 </UL>

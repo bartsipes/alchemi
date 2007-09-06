@@ -1,0 +1,23 @@
+<h1>
+  Installation, Configuration and Operation
+</h1>
+<p>
+  This section documents the installation, configuration and operation of the various
+  parts of the framework for setting up Alchemi grids. The various components can
+  be downloaded from:
+</p>
+<p>
+  <a href="http://sourceforge.net/project/showfiles.php?group_id=66729">http://sourceforge.net/project/showfiles.php?group_id=66729</a>
+</p>
+
+<h2>
+  Common Requirements
+</h2>
+<p>
+  <ul>
+    <li>
+      Microsoft .NET Framework 1.1
+    </li>
+  </ul>
+</p>
+

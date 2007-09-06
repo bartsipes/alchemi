@@ -3,6 +3,38 @@ body
 	background-color: #ffffff;
 }
 
+#title
+{
+	text-align: center;
+	font-size: 140%;
+	font-weight: bold;
+	padding-top: 30px;
+}
+
+#subtitle
+{
+	text-align: center;
+	font-size: 130%;
+	font-weight: bold;
+	padding-top: 50px;
+}
+
+#date
+{
+	text-align: center;
+	font-size: 100%;
+	padding-top: 50px;
+	
+}
+
+#authors
+{
+	text-align: center;
+	font-size: 100%;
+	font-style: italic;
+	padding-top: 50px;
+}
+
 #header table
 {
 	width: 100%;
@@ -41,15 +73,15 @@ img
 
 #content h2
 {
-    font-size: 130%;
+    font-size: 120%;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 #content h3
 {
-	font-size: 120%;
-    font-weight:bold;    
+	font-size: 100%;
+    font-weight: bold;    
     margin-bottom: 0px;
 }
 
@@ -57,5 +89,16 @@ img
 {
   margin-top: 0px;
   margin-bottom: 0px;
+}
+
+div.figure
+{
+	text-align: center;
+}
+
+div.caption
+{
+	font-weight: bold;
+	text-align: center;
 }
 

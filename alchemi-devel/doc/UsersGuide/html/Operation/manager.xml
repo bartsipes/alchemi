@@ -1,0 +1,34 @@
+<h2>Manager</h2>
+
+<p>
+  The Manager can be run from the desktop or Start -> Programs -> Alchemi -> Manager -> Alchemi Manager. The database configuration settings used during installation automatically appear when the Manager is first started.
+</p>
+<p>
+  Click the "Start" button to start the Manager.
+</p>
+<p>
+  When closed, the Manager is minimised to the system tray.
+</p>
+
+<div class="figure">
+  <img alt="Manager Operation" src="images\mgr1.gif" />
+</div>
+<div class="caption">
+  Manager Operation
+</div>
+
+<div class="figure">
+  <img alt="Manager Minimized" src="images\mgr2.png" />
+</div>
+<div class="caption">
+  Manager minimised to system tray
+</div>
+
+<p>
+  Under service-mode operation, the GUI shown in fig. 3 is used to start / stop the Manager service. The service will continue to operate even after the service controller application exits.
+</p>
+
+<h3>Logging</h3>
+<p>
+  The manager logs its output and errors to a log file called “alchemi-manager.log”. This can be used to debug the manager / report errors / verify the manager operation. The log file is placed in the “dat” directory under the installation directory.
+</p>

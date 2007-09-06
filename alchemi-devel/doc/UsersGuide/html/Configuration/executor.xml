@@ -1,0 +1,17 @@
+<h2>Executor Configuration</h2>
+
+<p>
+  The Executor is configured from the application itself.
+</p>
+<p>
+You need to configure 2 aspects of the Executor:
+<ul>
+  <li>
+    The host and port of the Manager to connect to.
+  </li>
+  <li>
+    Dedicated / non-dedicated execution. A non-dedicated Executor executes grid threads on a voluntary basis (it requests threads to execute from the Manager), while a dedicated Executor is always executing grid threads (it is directly provided grid threads to execute by the Manager). A non-dedicated Executor works behind firewalls.
+  </li>
+</ul>
+</p>
+
