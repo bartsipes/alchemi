@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VisualStudioProject>
+    <WindowsInstallerXML
+        ProductVersion="2.0.5325.0"
+        ProjectGuid="{03A2A35E-8163-4EDD-A84D-5E969CE25EA0}"
+        SchemaVersion="1.0"
+    >
+        <BuildSettings
+            OutputName="AlchemiSetup"
+            OutputType="MSI"
+        />
+        <Configurations>
+            <Configuration
+                Name="Debug"
+                RelativeOutputDirectory="..\..\bin\Setup"
+                RelativeIntermediateDirectory="obj\Debug"
+            />
+            <Configuration
+                Name="Release"
+                RelativeOutputDirectory="..\..\build\Setup"
+                RelativeIntermediateDirectory="obj\Release"
+            />
+        </Configurations>
+        <WixlibReferences>
+            <WixlibReference
+                RelativePath="WixUI.wixlib"
+            />
+        </WixlibReferences>
+        <Files>
+            <File
+                RelativePath="Product.wxs"
+            />
+            <File
+                RelativePath="WixUI_en-us.wxl"
+            />
+        </Files>
+    </WindowsInstallerXML>
+</VisualStudioProject>

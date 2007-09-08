@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Alchemi [.NET Grid Computing Framework]
+ * http://www.alchemi.net
+ *
+ * Title        :   Product.wxs
+ * Project      :   Alchemi.Setup
+ * Created on   :   2007
+ * Copyright    :   Copyright © 2007 The University of Melbourne
+ * License      :   GPL
+ *                  This program is free software; you can redistribute it and/or 
+ *                  modify it under the terms of the GNU General Public
+ *                  License as published by the Free Software Foundation;
+ *                  See the GNU General Public License 
+ *                  (http://www.gnu.org/copyleft/gpl.html) for more details.
+ */
+
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+  <Product Id="442AEA92-A188-42c5-AD53-E6D7D75948CC" 
+           Name="Alchemi" 
+           Language="1033" 
+           Version="1.0.7.0" 
+           Manufacturer="Alchemi"
+           UpgradeCode="67E30C9F-0B46-4595-8917-01BD567079AD">    
+    <Package Id="????????-????-????-????-????????????" 
+             Description="Description of your product" 
+             Comments="This will appear in the file summary stream." 
+             InstallerVersion="200" 
+             Compressed="yes" />
+
+    <Media Id="1" Cabinet="Alchemi.cab" EmbedCab="yes" />
+
+    <Condition Message='This setup requires .NET Framework 2.0 or higher.'>
+      <![CDATA[MsiNetAssemblySupport >= "2.0.50727"]]>
+    </Condition>
+    
+    <Property Id='ARPCOMMENTS'>any comments</Property>
+    <!-- <Property Id='ARPCONTACT'>contact info</Property> -->
+    <Property Id='ARPHELPLINK'>https://sourceforge.net/projects/alchemi/</Property>
+    <Property Id='ARPURLINFOABOUT'>http://www.alchemi.net/</Property>
+    <Property Id='ARPURLUPDATEINFO'>https://sourceforge.net/projects/alchemi/</Property>
+    <!-- <Property Id='ARPREADME'>path</Property> -->
+    <Property Id='ARPPRODUCTICON'>Alchemi.ExecutorExec.exe</Property>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs">
+        <Directory Id="ProgramMenuDir" Name='Alchemi' LongName="Alchemi">
+          <Component Id="ProgramMenuDirComponent" Guid="180D9CC9-5FD0-49d2-A004-4EB6B0564076">
+            <Registry Id="ProgramMenuDirRegistry"
+                      Root="HKCU"
+                      Key="Software\Alchemi\Deployment\180D9CC9-5FD0-49d2-A004-4EB6B0564076"
+                      KeyPath="yes" />
+            <RemoveFolder Id="RemoveFolderProgramMenuDir" On="uninstall"/>
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="Alchemi" LongName="Alchemi">
+          <Directory Id="AlchemiBin" Name="bin" LongName="bin">
+
+            <Component Id="Log4net" Guid="6C55E831-18B7-4140-84B0-4C72FB3F0250">
+              <File Id="Log4net.dll"
+                    Name="log4net.dll"
+                    LongName="log4net.dll"
+                    DiskId="1"
+                    Source="$(var.SolutionDir)\..\lib\log4net.dll"
+                    Vital="yes" />
+            </Component>
+
+            <Component Id="NPlot" Guid="73A80680-214E-4a9c-880F-ECC026781535">
+              <File Id="Nplot.dll"
+                    Name="nplot.dll"
+                    LongName="nplot.dll"
+                    DiskId="1"
+                    Source="$(var.SolutionDir)\..\lib\nplot.dll"
+                    Vital="yes" />
+            </Component>
+
+            <Component Id="Alchemi.Core" Guid="B4ED7AAE-243A-4c4d-BF85-05EA18A6E1D7">
+              <File Id="Alchemi.Core.dll"
+                    Name="AlchC.dll"
+                    LongName="$(var.Alchemi_Core.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.Alchemi_Core.TargetPath)"
+                    Vital="yes" />
+            </Component>
+
+            <Component Id="Alchemi.Executor" Guid="EE290037-8396-4b97-A1F0-E12C9A2E4763">
+              <File Id="Alchemi.Executor.dll"
+                    Name="AlchE.dll"
+                    LongName="$(var.Executor.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.Executor.TargetPath)"
+                    Vital="yes" />
+            </Component>
+
+            <Component Id="Alchemi.ExecutorExec" Guid="3902F3CF-E2A2-4284-BBC6-2B0BF13083FD">
+              <File Id="Alchemi.ExecutorExec.exe"
+                    Name="AlchEE.exe"
+                    LongName="$(var.ExecutorExec.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ExecutorExec.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.ExecutorExec"
+                          Directory="ProgramMenuDir"
+                          Name="AEESc"
+                          LongName="Alchemi Executor"
+                          Icon="Alchemi.ExecutorExec.exe"
+                          IconIndex="0" 
+                          Advertise="yes"
+                          />
+              </File>
+              <File Id="Alchemi.ExecutorExec.exe.config"
+                    Name="AEEexe.cfg"
+                    LongName="Alchemi.ExecutorExec.exe.config"
+                    DiskId="1"
+                    Source="$(var.ExecutorExec.ProjectDir)\app.config" />
+            </Component>
+
+            <Component Id="Alchemi.ExecutorService" Guid="75E50E2A-9485-4e3f-A8AE-056B144496BD">
+              <File Id="Alchemi.ExecutorService.exe"
+                    Name="AlchES.exe"
+                    LongName="$(var.ExecutorService.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ExecutorService.TargetPath)"
+                    Vital="yes" />
+              <File Id="Alchemi.ExecutorService.exe.config"
+                    Name="AESexe.cfg"
+                    LongName="Alchemi.ExecutorService.exe.config"
+                    DiskId="1"
+                    Source="$(var.ExecutorService.ProjectDir)\app.config" />
+              <ServiceInstall Id="AlchemiExecutorInstall"
+                              Name="Alchemi.Executor.exe"
+                              DisplayName="Alchemi Executor"
+                              Description="Executor service for the Alchemi project"
+                              ErrorControl="normal"
+                              Start="auto"
+                              Type="ownProcess"
+                              Vital="yes" />
+              <ServiceControl Id="AlchemiExecutorControl"
+                              Name="Alchemi.Executor.exe"
+                              Start="install"
+                              Stop="uninstall"
+                              Remove="uninstall" />
+            </Component>
+
+            <Component Id="Alchemi.ExecutorServiceController" Guid="DEDA75F7-03E1-459c-8474-B49543094ADC">
+              <File Id="Alchemi.ExecutorServiceController.exe"
+                    Name="AlchESC.exe"
+                    LongName="$(var.ExecutorServiceController.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ExecutorServiceController.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.ExecutorServiceController"
+                         Directory="ProgramMenuDir"
+                         Name="AESC"
+                         LongName="Alchemi Executor Service Controller"
+                         Icon="Alchemi.ExecutorExec.exe"
+                         IconIndex="0"
+                         Advertise="yes"/>
+              </File>
+
+              <File Id="Alchemi.ExecutorServiceController.exe.config"
+                    Name="AESCexe.cfg"
+                    LongName="Alchemi.ExecutorServiceController.exe.config"
+                    DiskId="1"
+                    Source="$(var.ExecutorServiceController.ProjectDir)\app.config" />
+            </Component>
+
+            <Component Id="Alchemi.Manager" Guid="00DFA874-B130-40ca-9E63-972ADD2A4C6A">
+              <File Id="Alchemi.Manager.dll"
+                    Name="AlchMan.dll"
+                    LongName="$(var.Manager.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.Manager.TargetPath)"
+                    Vital="yes" />
+            </Component>
+
+            <Component Id="Alchemi.ManagerExec" Guid="D7124319-CD9B-4236-BBCA-44C1086C5084">
+              <File Id="Alchemi.ManagerExec.exe"
+                    Name="AlchME.exe"
+                    LongName="$(var.ManagerExec.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ManagerExec.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.ManagerExec"
+                          Directory="ProgramMenuDir"
+                          Name="AMESc"
+                          LongName="Alchemi Manager"
+                          Icon="Alchemi.ManagerExec.exe"
+                          IconIndex="0"
+                          Advertise="yes"/>
+              </File>
+              <File Id="Alchemi.ManagerExec.exe.config"
+                    Name="AMEexe.cfg"
+                    LongName="Alchemi.ManagerExec.exe.config"
+                    DiskId="1"
+                    Source="$(var.ManagerExec.ProjectDir)\app.config" />
+            </Component>
+
+            <Component Id="Alchemi.ManagerService" Guid="B5E9ACAB-DFD5-4530-BDD1-C815F4EADF9B">
+              <File Id="Alchemi.ManagerService.exe"
+                    Name="AlchMS.exe"
+                    LongName="$(var.ManagerService.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ManagerService.TargetPath)"
+                    Vital="yes" />
+              <File Id="Alchemi.ManagerService.exe.config"
+                    Name="AMSexe.cfg"
+                    LongName="Alchemi.ManagerService.exe.config"
+                    DiskId="1"
+                    Source="$(var.ManagerService.ProjectDir)\app.config" />
+              <ServiceInstall Id="AlchemiManagerInstall"
+                              Name="Alchemi.Manager.exe"
+                              DisplayName="Alchemi Manager"
+                              Description="Manager service for the Alchemi project"
+                              ErrorControl="normal"
+                              Start="auto"
+                              Type="ownProcess"
+                              Vital="yes" />
+              <ServiceControl Id="AlchemiManagerControl"
+                              Name="Alchemi.Manager.exe"
+                              Start="install"
+                              Stop="uninstall"
+                              Remove="uninstall" />
+            </Component>
+
+<!--            <Component Id="Alchemi.ManagerServiceController" Guid="81887254-2DC4-4143-9911-96FBD3AABC6E">
+              <File Id="Alchemi.ManagerServiceController.exe"
+                    Name="$(var.ManagerServiceController.TargetDosFileName)"
+                    LongName="$(var.ManagerServiceController.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.ManagerServiceController.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.ManagerServiceController"
+                         Directory="ProgramMenuDir"
+                         Name="AESC"
+                         LongName="Alchemi Manager Service Controller"
+                         Icon="Alchemi.ManagerExec.exe"
+                         IconIndex="0" 
+                         Advertise="yes"/>
+              </File>
+
+              <File Id="Alchemi.ManagerServiceController.exe.config"
+                    Name="AESCexe.cfg"
+                    LongName="Alchemi.ManagerServiceController.exe.config"
+                    DiskId="1"
+                    Source="$(var.ManagerServiceController.ProjectDir)\app.config" />
+            </Component>-->
+
+            <Component Id="Alchemi.DbSetup" Guid="28265BD7-2D58-4616-9FB6-F8D2D9F469CC">
+              <Registry Id="DbSetupRegistry"
+                        Root="HKCU"
+                        Key="Software\Alchemi\Deployment\28265BD7-2D58-4616-9FB6-F8D2D9F469CC"
+                        KeyPath="yes" />
+              <File Id="Alchemi.DbSetup.exe"
+                    Name="AlcheDb.exe"
+                    LongName="$(var.DbSetup.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.DbSetup.TargetPath)"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.DbSetup"
+                         Directory="ProgramMenuDir"
+                         Name="ADbSC"
+                         LongName="Alchemi Database Setup"
+                         Icon="Alchemi.ExecutorExec.exe"
+                         IconIndex="0" />
+              </File>
+            </Component>
+
+            <Component Id="Alchemi.Console" Guid="0B60B3EA-A286-4289-B18D-0CE18AE9BFDB">
+              <File Id="Alchemi.Console.exe"
+                    Name="AlcheCon.exe"
+                    LongName="$(var.Console.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.Console.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.Console"
+                         Directory="ProgramMenuDir"
+                         Name="ACSC"
+                         LongName="Alchemi Console"
+                         Icon="Alchemi.ExecutorExec.exe"
+                         IconIndex="0"
+                         Advertise="yes"/>
+              </File>
+
+              <File Id="Alchemi.Console.exe.config"
+                    Name="ACCexe.cfg"
+                    LongName="Alchemi.Console.exe.config"
+                    DiskId="1"
+                    Source="$(var.Console.ProjectDir)\app.config" />
+            </Component>
+
+            <Component Id="Alchemi.JobSubmitter" Guid="69E49B29-1BAB-4fdd-A0CD-D40E9517D910">
+              <File Id="alchemi_jsub.exe"
+                    Name="$(var.JobSubmitter.TargetDosFileName)"
+                    LongName="$(var.JobSubmitter.TargetFileName)"
+                    DiskId="1"
+                    Source="$(var.JobSubmitter.TargetPath)"
+                    KeyPath="yes"
+                    Vital="yes">
+                <Shortcut Id="Startmenu.Alchemi.JobSubmitter"
+                         Directory="ProgramMenuDir"
+                         Name="AJSSC"
+                         LongName="Alchemi Job Submitter"
+                         Icon="Alchemi.ExecutorExec.exe"
+                         IconIndex="0"
+                         Advertise="yes"/>
+              </File>
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete"
+             Title="Alchemi"
+             Description="The complete Alchemi package"
+             Display="expand"
+             Level="1"
+             ConfigurableDirectory="INSTALLDIR">
+      <Feature Id="ExecutorExec"
+               Title="Executor (Standalone)"
+               Level="1"
+               Description="Installs the standalone executor."
+               AllowAdvertise="no"
+               InstallDefault="local">
+        <ComponentRef Id="Log4net" />
+        <ComponentRef Id="Alchemi.Core" />
+        <ComponentRef Id="Alchemi.Executor" />
+        <ComponentRef Id="Alchemi.ExecutorExec" />
+        <ComponentRef Id="ProgramMenuDirComponent" />        
+      </Feature>
+      <Feature Id ="ExecutorService"
+               Title="Executor (Service)" 
+               Level="1000"
+               Description="Installs the Executor service."
+               AllowAdvertise="no"
+               InstallDefault="local">        
+        <ComponentRef Id="Log4net" />
+        <ComponentRef Id="Alchemi.Core" />
+        <ComponentRef Id="Alchemi.Executor" />
+        <ComponentRef Id="Alchemi.ExecutorService" />
+        <ComponentRef Id="Alchemi.ExecutorServiceController" />
+        <ComponentRef Id="ProgramMenuDirComponent" />
+      </Feature>
+      <Feature Id ="ManagerExec" 
+               Title="Manager (Standalone)"
+               Level="1000"
+               Description="Installs the standalone manager."
+               AllowAdvertise="no"
+               InstallDefault="local">
+        <ComponentRef Id="Log4net" />
+        <ComponentRef Id="Alchemi.Core" />
+        <ComponentRef Id="Alchemi.Manager" />
+        <ComponentRef Id="Alchemi.ManagerExec" />
+        <ComponentRef Id="Alchemi.DbSetup"/>
+        <ComponentRef Id="ProgramMenuDirComponent" />
+      </Feature>
+      <Feature Id ="ManagerService" 
+               Title="Manager (Service)" 
+               Level="1000"
+               Description="Installs the service manager."
+               AllowAdvertise="no"
+               InstallDefault="local">
+        <ComponentRef Id="Log4net" />
+        <ComponentRef Id="Alchemi.Core" />
+        <ComponentRef Id="Alchemi.Manager" />
+        <ComponentRef Id="Alchemi.ManagerService" />
+        <ComponentRef Id="Alchemi.DbSetup"/>
+        <ComponentRef Id="ProgramMenuDirComponent" />
+      </Feature>
+      <Feature Id="SDK"
+               Title="SDK"
+               Level="1000"
+               Description="Installs the Alchemi SDK."
+               AllowAdvertise="no"
+               InstallDefault="local">
+        <Feature Id="Console"
+                 Title="Console"
+                 Level="1000"
+                 Description="Installs the Alchemi Console"
+                 AllowAdvertise="no"
+                 InstallDefault="local">
+          <ComponentRef Id="Log4net" />
+          <ComponentRef Id="Alchemi.Core" />
+          <ComponentRef Id="Alchemi.Console" />
+          <ComponentRef Id="NPlot"/>
+          <ComponentRef Id="ProgramMenuDirComponent" />
+        </Feature>
+        <Feature Id="JobSubmitter"
+                 Title="Job Submitter"
+                 Level="1000"
+                 Description="Installs the Alchemi Job Submitter"
+                 AllowAdvertise="no"
+                 InstallDefault="local">
+          <ComponentRef Id="Log4net" />
+          <ComponentRef Id="Alchemi.Core" />
+          <ComponentRef Id="Alchemi.JobSubmitter" />
+          <ComponentRef Id="ProgramMenuDirComponent" />
+        </Feature>
+
+      </Feature>
+    </Feature>
+
+    <Icon Id="Alchemi.ExecutorExec.exe" SourceFile="$(var.SolutionDir)\..\graphics\Executor (multiformat).ico"/>
+    <Icon Id="Alchemi.ManagerExec.exe" SourceFile ="$(var.SolutionDir)\..\graphics\Manager (multiformat).ico"/>
+
+    <UIRef Id="WixUI_FeatureTree"/>
+  </Product>
+</Wix>
