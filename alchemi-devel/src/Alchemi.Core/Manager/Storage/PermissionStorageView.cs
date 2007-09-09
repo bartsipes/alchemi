@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Alchemi.Core.Manager.Storage
 {
@@ -95,7 +96,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <returns>A new array of PermissionStorageView values.</returns>
 		public static PermissionStorageView[] GetPermissionStorageView(Permission[] permissions)
 		{
-			ArrayList result = new ArrayList();
+            List<PermissionStorageView> result = new List<PermissionStorageView>();
 
 			foreach(Permission permission in permissions)
 			{
@@ -103,7 +104,7 @@ namespace Alchemi.Core.Manager.Storage
 				result.Add(storageView);
 			}
 
-			return (PermissionStorageView[])result.ToArray(typeof(PermissionStorageView));			
+			return result.ToArray();			
 		}
 	}
 }

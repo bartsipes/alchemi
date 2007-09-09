@@ -30,6 +30,7 @@ using System.Collections;
 
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
+using System.Collections.Generic;
 
 namespace Alchemi.Core.Owner
 {
@@ -119,11 +120,11 @@ namespace Alchemi.Core.Owner
                 return null;
             }
 
-            ArrayList list = new ArrayList();
+            List<EmbeddedFileDependency> list = new List<EmbeddedFileDependency>();
 
             AddFilesToList(list, rootFolderName, "");
+            return list.ToArray();
 
-            return (EmbeddedFileDependency[])list.ToArray(typeof(EmbeddedFileDependency));
         }
 
 
@@ -133,23 +134,23 @@ namespace Alchemi.Core.Owner
         /// <param name="list">The list.</param>
         /// <param name="folderName">Name of the folder.</param>
         /// <param name="subFolderToAddToFileName">Name of the sub folder to add to file.</param>
-        private static void AddFilesToList(ArrayList list, string folderName, string subFolderToAddToFileName)
+        private static void AddFilesToList(List<EmbeddedFileDependency> list, string folderName, string subFolderToAddToFileName)
         {
             foreach (string filePath in Directory.GetFiles(folderName))
             {
-                EmbeddedFileDependency fileDep = 
+                EmbeddedFileDependency fileDep =
                     new EmbeddedFileDependency(
-                        Path.Combine(subFolderToAddToFileName, Path.GetFileName(filePath)), 
+                        Path.Combine(subFolderToAddToFileName, Path.GetFileName(filePath)),
                         filePath);
 
                 list.Add(fileDep);
             }
-
+            
             foreach (string folderPath in Directory.GetDirectories(folderName))
             {
                 AddFilesToList(
-                    list, 
-                    folderPath, 
+                    list,
+                    folderPath,
                     Path.Combine(subFolderToAddToFileName, Path.GetFileName(folderPath)));
             }
         }

@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 // 2.8.06 MDV
 // TODO: Can m_cThreads be moved from an ArrayList to a List<>?
@@ -48,7 +49,8 @@ namespace Alchemi.Core.Owner
 	{
 		private const int DefaultCapacity = 8;
 
-		private IList m_cThreads = new ArrayList();
+		//private IList m_cThreads = new ArrayList();
+        IList m_cThreads = new List<GThread>();
 		private Hashtable m_cThreadIdException = new Hashtable();
 
 

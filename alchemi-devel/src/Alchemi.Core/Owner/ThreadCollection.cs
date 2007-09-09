@@ -27,60 +27,33 @@ using System;
 using System.Collections;
 
 using Alchemi.Core.Owner;
+using System.Collections.Generic;
 
 namespace Alchemi.Core.Owner
 {
-	/// <summary>
-	/// Represents a collection of GThreads.
-	/// </summary>
+    /// <summary>
+    /// Represents a collection of GThreads.
+    /// </summary>
     [Serializable]
-    public class ThreadCollection : CollectionBase
+    public class ThreadCollection : List<GThread>
     {
-		/// <summary>
-		/// Gets or sets the GThread at the given index
-		/// </summary>
-        public GThread this[int index]
+        //this gives more freedom to the app developer to remove the threads no longer wanted, for whatever reason
+        /// <summary>
+        /// Removes a GThread object from this collection IF it is in a dead / finished state.
+        /// </summary>
+        /// <param name="thread"></param>
+        public new void Remove(GThread thread)
         {
-            get 
-            { 
-                return (GThread) InnerList[index]; 
-            }
-
-            set 
-            {
-                InnerList[index] = value;
-            }
-        }
-
-        //-----------------------------------------------------------------------------------------------    
-
-		/// <summary>
-		/// Adds a GThread object to this collection
-		/// </summary>
-		/// <param name="thread">the grid thread to add</param>
-        public void Add(GThread thread)
-        {
-            InnerList.Add(thread);
-        }
-
-		//krishna added - 23May05
-		//this gives more freedom to the app developer to remove the threads no longer wanted, for whatever reason
-		/// <summary>
-		/// Removes a GThread object from this collection IF it is in a dead / finished state.
-		/// </summary>
-		/// <param name="thread"></param>
-		public void Remove(GThread thread)
-		{
             if (thread == null)
             {
                 return;
             }
 
-			lock (InnerList)
-			{
-				if (thread.State == ThreadState.Dead || thread.State == ThreadState.Finished)
-					InnerList.Remove(thread);
-			}
-		}
+            lock (this)
+            {
+                if (thread.State == ThreadState.Dead || thread.State == ThreadState.Finished)
+                    base.Remove(thread);
+            }
+        }
     }
 }

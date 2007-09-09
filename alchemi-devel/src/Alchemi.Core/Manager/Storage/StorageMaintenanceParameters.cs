@@ -94,7 +94,7 @@ namespace Alchemi.Core.Manager.Storage
 
 
         #region Property - ApplicationStatesToRemove
-        private ArrayList m_applicationStatesToRemove;
+        private List<ApplicationState> m_applicationStatesToRemove;
         /// <summary>
         /// TODO:
         /// </summary>
@@ -104,10 +104,10 @@ namespace Alchemi.Core.Manager.Storage
             {
                 if (m_applicationStatesToRemove == null)
                 {
-                    m_applicationStatesToRemove = new ArrayList();
+                    m_applicationStatesToRemove = new List<ApplicationState>();
                 }
 
-                return (ApplicationState[])m_applicationStatesToRemove.ToArray(typeof(ApplicationState));
+                return m_applicationStatesToRemove.ToArray();
             }
         } 
         #endregion
@@ -186,7 +186,7 @@ namespace Alchemi.Core.Manager.Storage
         {
             if (m_applicationStatesToRemove == null)
             {
-                m_applicationStatesToRemove = new ArrayList();
+                m_applicationStatesToRemove = new List<ApplicationState>();
             }
 
             m_applicationStatesToRemove.Add(stateToAdd);
