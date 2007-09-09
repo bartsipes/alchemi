@@ -43,7 +43,7 @@ namespace Alchemi.ManagerService
 {
 	public class ManagerMainForm : ManagerTemplateForm
 	{
-		private const string serviceName = "Alchemi Manager Service";
+        private const string serviceName = "Alchemi Manager Service";
 
 		public ManagerMainForm():base()
 		{
@@ -59,7 +59,7 @@ namespace Alchemi.ManagerService
 		/// </summary>
 		private void InitializeComponent()
 		{
-            //this.tabPage1.SuspendLayout();
+            this.uiSetupConnectionTabPage.SuspendLayout();
             this.uiTabControl.SuspendLayout();
             this.uiNodeConfigurationGroupBox.SuspendLayout();
             this.uiActionsGroupBox.SuspendLayout();
@@ -67,32 +67,32 @@ namespace Alchemi.ManagerService
             // 
             // cbIntermediate
             // 
-            this.cbIntermediate.CheckedChanged += new System.EventHandler(this.cbIntermediate_CheckedChanged);
+            this.uiIntermediateComboBox.CheckedChanged += new System.EventHandler(this.uiIntermediateComboBox_CheckedChanged);
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 556);
+            this.uiProgressBar.Location = new System.Drawing.Point(0, 556);
             // 
             // lnkViewLog
             // 
-            this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
+            this.uiViewFullLogLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.uiViewFullLogLinkLabel_LinkClicked);
             // 
             // ManagerMainForm
             // 
             this.ClientSize = new System.Drawing.Size(458, 578);
             this.Name = "ManagerMainForm";
             this.Load += new System.EventHandler(this.ManagerMainForm_Load);
-            this.tabPage1.ResumeLayout(false);
-            this.tabControl.ResumeLayout(false);
-            this.gpBoxNodeConfig.ResumeLayout(false);
-            this.gpBoxNodeConfig.PerformLayout();
-            this.gpBoxActions.ResumeLayout(false);
+            this.uiSetupConnectionTabPage.ResumeLayout(false);
+            this.uiTabControl.ResumeLayout(false);
+            this.uiNodeConfigurationGroupBox.ResumeLayout(false);
+            this.uiNodeConfigurationGroupBox.PerformLayout();
+            this.uiActionsGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
 		}
 
-        private void lnkViewLog_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void uiViewFullLogLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             //show the log .
             string logFile = null;
@@ -142,7 +142,7 @@ namespace Alchemi.ManagerService
 
 			//this is a service. just read the config.			
 			RefreshUIControls(ReadManagerConfig(false));
-			btStart.Focus();
+			uiStartButton.Focus();
 		}
 
 		private Configuration ReadManagerConfig(bool useDefault)
@@ -156,11 +156,12 @@ namespace Alchemi.ManagerService
 
 		//-----------------------------------------------------------------------------------------------    
 
-		private void cbIntermediate_CheckedChanged(object sender, EventArgs e)
+        private void uiIntermediateComboBox_CheckedChanged(object sender, EventArgs e)
 		{
-			//Config.Intermediate = cbIntermediate.Checked;
+            Configuration config = ReadManagerConfig(true);
+            config.Intermediate = uiIntermediateComboBox.Checked;
 			//_container.Config = Config;
-			//RefreshUIControls();
+            RefreshUIControls(config);
 		}
 
 		#region Implementation of methods from ManagerTemplateForm
@@ -209,10 +210,10 @@ namespace Alchemi.ManagerService
 
 			try
 			{
-				statusBar.Text = "Stopping Manager Service...";
+				uiProgressBar.Text = "Stopping Manager Service...";
 				Log("Stopping Manager Service...");
 
-				btStop.Enabled = false; //to avoid clicking on this again.
+				uiStopButton.Enabled = false; //to avoid clicking on this again.
 				ServiceController sc = new ServiceController(serviceName);
 				if (sc.CanStop)
 				{
@@ -222,7 +223,7 @@ namespace Alchemi.ManagerService
 				}
 				else
 				{
-					logger.Debug("Couldnot stop service: CanStop = false");	
+					logger.Debug("Could not stop service: CanStop = false");	
 				}
 			}
             catch (System.ServiceProcess.TimeoutException)
@@ -249,11 +250,11 @@ namespace Alchemi.ManagerService
 			try
 			{
 				//to avoid people from clicking this again during the start process!
-				btStart.Enabled = false;
-				btReset.Enabled = false;
-				btStop.Enabled = false;
+                uiStartButton.Enabled = false;
+                uiResetButton.Enabled = false;
+                uiStopButton.Enabled = false;
 
-				statusBar.Text = "Starting Manager Service...";
+                uiProgressBar.Text = "Starting Manager Service...";
 
 				Log("Attempting to start Manager Service...");
 
