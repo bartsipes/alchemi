@@ -231,7 +231,7 @@
                               Remove="uninstall" />
             </Component>
 
-<!--            <Component Id="Alchemi.ManagerServiceController" Guid="81887254-2DC4-4143-9911-96FBD3AABC6E">
+            <Component Id="Alchemi.ManagerServiceController" Guid="81887254-2DC4-4143-9911-96FBD3AABC6E">
               <File Id="Alchemi.ManagerServiceController.exe"
                     Name="$(var.ManagerServiceController.TargetDosFileName)"
                     LongName="$(var.ManagerServiceController.TargetFileName)"
@@ -253,7 +253,7 @@
                     LongName="Alchemi.ManagerServiceController.exe.config"
                     DiskId="1"
                     Source="$(var.ManagerServiceController.ProjectDir)\app.config" />
-            </Component>-->
+            </Component>
 
             <Component Id="Alchemi.DbSetup" Guid="28265BD7-2D58-4616-9FB6-F8D2D9F469CC">
               <Registry Id="DbSetupRegistry"
@@ -378,6 +378,7 @@
         <ComponentRef Id="Alchemi.ManagerService" />
         <ComponentRef Id="Alchemi.DbSetup"/>
         <ComponentRef Id="ProgramMenuDirComponent" />
+        <ComponentRef Id="Alchemi.ManagerServiceController" />
       </Feature>
       <Feature Id="SDK"
                Title="SDK"
