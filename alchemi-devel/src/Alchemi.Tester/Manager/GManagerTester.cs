@@ -25,13 +25,12 @@ details.
 
 using System;
 
-using Alchemi.Core.Utility;
-
 using NUnit.Framework;
 
 using Alchemi.Core;
 using Alchemi.Core.Manager;
 using Alchemi.Core.Manager.Storage;
+using Alchemi.Core.Utility;
 using Alchemi.Manager;
 using Alchemi.Manager.Storage;
 
@@ -50,7 +49,7 @@ namespace Alchemi.Tester.Manager
 		private void SetupApplicationsGroupsAndUsers(Permission permission)
 		{
 			// add permissions
-			Int32 groupId = 12;
+			int groupId = 12;
 
 			GroupStorageView[] groups = new GroupStorageView[1];
 
@@ -106,7 +105,7 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			String applicationId = m_managerStorage.AddApplication(application);
+			string applicationId = m_managerStorage.AddApplication(application);
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 			
@@ -125,7 +124,7 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			String applicationId = m_managerStorage.AddApplication(application);
+			string applicationId = m_managerStorage.AddApplication(application);
 
 			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password1", HashType.MD5));
 			
@@ -144,8 +143,8 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			String applicationId = m_managerStorage.AddApplication(application);
-			String invalidApplicationId = Guid.NewGuid().ToString();
+			string applicationId = m_managerStorage.AddApplication(application);
+			string invalidApplicationId = Guid.NewGuid().ToString();
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 			
@@ -161,7 +160,7 @@ namespace Alchemi.Tester.Manager
 		[Test]
 		public void EnsurePermissionTestSimpleScenario()
 		{
-			Int32 groupId = 12;
+			int groupId = 12;
 
 			GroupStorageView[] groups = new GroupStorageView[1];
 
@@ -215,7 +214,7 @@ namespace Alchemi.Tester.Manager
 		[Test]
 		public void AuthenticateUserTestSimpleScenario()
 		{
-			Int32 groupId = 12;
+			int groupId = 12;
 
 			UserStorageView[] users = new UserStorageView[1];
 

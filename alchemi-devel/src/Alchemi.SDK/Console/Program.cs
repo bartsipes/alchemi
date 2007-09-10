@@ -36,7 +36,7 @@ namespace Alchemi.Console
 	/// <summary>
 	///This is the entry point for the Alchemi Console.
 	/// </summary>
-	public class Console
+	public class Program
 	{
 		// Create a logger for use in this class
 		private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -55,7 +55,7 @@ namespace Alchemi.Console
 			
 			logger.Debug(Application.ExecutablePath+".config");
 
-			//Application.EnableVisualStyles();
+			Application.EnableVisualStyles();
 			Application.Run(new ConsoleParentForm());
 		}
 
@@ -79,7 +79,7 @@ namespace Alchemi.Console
 			}
 		}
 
-		public Console()
+		public Program()
 		{
 		}
 

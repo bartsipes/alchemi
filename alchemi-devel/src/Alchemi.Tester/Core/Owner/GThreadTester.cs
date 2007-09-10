@@ -39,7 +39,7 @@ namespace Alchemi.Tester.Core.Owner
         [Test]
         public void SetIdTestSimpleScenario()
         {
-            Int32 threadId = 324;
+            int threadId = 324;
 
             GThread thread = new GThreadMock();
 
@@ -56,7 +56,7 @@ namespace Alchemi.Tester.Core.Owner
         [Test]
         public void SetWorkingDirectoryTestSimpleScenario()
         {
-            String workingDirectory = @"C:\";
+            string workingDirectory = @"C:\";
 
             GThreadMock threadFiller = new GThreadMock();
             GThread thread = threadFiller;
@@ -90,7 +90,7 @@ namespace Alchemi.Tester.Core.Owner
         [Test]
         public void SetPriorityTestSimpleScenario()
         {
-            Int32 priority = 123;
+            int priority = 123;
 
             GThread thread = new GThreadMock();
 

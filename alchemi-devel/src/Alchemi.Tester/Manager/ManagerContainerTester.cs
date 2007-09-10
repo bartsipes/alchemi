@@ -71,9 +71,9 @@ namespace Alchemi.Tester.Manager
 			// add one that is not connected
 			ExecutorStorageView executor3 = new ExecutorStorageView(false, false, DateTime.Now, "hostname", 10, "username", 1, 1, 1, 1);
 
-			String executorId1 = m_managerStorage.AddExecutor(executor1);
-			String executorId2 = m_managerStorage.AddExecutor(executor2);
-			String executorId3 = m_managerStorage.AddExecutor(executor3);
+			string executorId1 = m_managerStorage.AddExecutor(executor1);
+			string executorId2 = m_managerStorage.AddExecutor(executor2);
+			string executorId3 = m_managerStorage.AddExecutor(executor3);
 
 			// whatever was not responsive in the last 60 seconds should get lost
 			TimeSpan timeSpan = new TimeSpan(0, 0, 60);

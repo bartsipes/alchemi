@@ -44,7 +44,7 @@ namespace Alchemi.Tester.Core.Owner
             return;
         }
 
-        public String GetWorkingDirectory()
+        public string GetWorkingDirectory()
         {
             return WorkingDirectory;
         }

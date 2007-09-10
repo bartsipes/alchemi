@@ -56,7 +56,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[SetUp]
 		public void TestStartUp()
 		{
-			String connectionString = ConfigurationManager.AppSettings["PostgresqlTesterConnectionString"];
+			string connectionString = ConfigurationManager.AppSettings["PostgresqlTesterConnectionString"];
 
 			if (connectionString == null)
 			{

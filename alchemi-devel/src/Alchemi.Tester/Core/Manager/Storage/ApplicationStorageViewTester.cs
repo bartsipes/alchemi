@@ -49,7 +49,7 @@ namespace Alchemi.Tester.Core.Manager.Storage
 
 			try
 			{
-				Int32 result = application.TotalThreads;
+				int result = application.TotalThreads;
 			}
 			catch
 			{
@@ -71,7 +71,7 @@ namespace Alchemi.Tester.Core.Manager.Storage
 
 			try
 			{
-				Int32 result = application.UnfinishedThreads;
+				int result = application.UnfinishedThreads;
 			}
 			catch
 			{

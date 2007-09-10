@@ -163,6 +163,9 @@
     <Compile Include="Owner\FileDependencyTester.cs" />
     <Compile Include="Owner\FileDependencyTestFiller.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TODO.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

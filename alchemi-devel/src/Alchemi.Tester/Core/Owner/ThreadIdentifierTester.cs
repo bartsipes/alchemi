@@ -36,8 +36,8 @@ namespace Alchemi.Tester.Core.Owner
         [Test]
         public void ConstructorTestDefaultPriority()
         { 
-            String applicationId = Guid.NewGuid().ToString();
-            Int32 threadId = 1234;
+            string applicationId = Guid.NewGuid().ToString();
+            int threadId = 1234;
 
             ThreadIdentifier ti = new ThreadIdentifier(applicationId, threadId);
 
@@ -49,9 +49,9 @@ namespace Alchemi.Tester.Core.Owner
         [Test]
         public void ConstructorTestSimepleConstructor()
         {
-            String applicationId = Guid.NewGuid().ToString();
-            Int32 threadId = 1234;
-            Int32 priority = 100;
+            string applicationId = Guid.NewGuid().ToString();
+            int threadId = 1234;
+            int priority = 100;
 
             ThreadIdentifier ti = new ThreadIdentifier(applicationId, threadId, priority);
 

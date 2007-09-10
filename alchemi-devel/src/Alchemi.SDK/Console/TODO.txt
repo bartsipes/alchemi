@@ -1,0 +1,9 @@
+Global
+===
+[ ] Update all of the forms so that the UI code is in a .designer.cs file
+[ ] String->string, Int32->int
+
+CustomListItems
+===
+[ ] Get rid of public fields (should be properties)
+[ ] Separate classes into distinct files

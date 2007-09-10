@@ -43,20 +43,20 @@ namespace Alchemi.Tester.Manager.Storage
 	/// </summary>
 	public abstract class ManagerStorageTester
 	{
-		private const Int32 c_DefaultGroupCount = 3;
-		private const Int32 c_DefaultUserCount = 3;
+		private const int c_DefaultGroupCount = 3;
+		private const int c_DefaultUserCount = 3;
 
 		public abstract IManagerStorage ManagerStorage
 		{
 			get;
 		}
 
-		private void AddUser(String username, String password)
+		private void AddUser(string username, string password)
 		{
 			AddUser(username, password, 0);
 		}
 
-		private void AddUser(String username, String password, Int32 groupId)
+		private void AddUser(string username, string password, int groupId)
 		{
 			UserStorageView[] users = new UserStorageView[1];
 
@@ -65,7 +65,7 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.AddUsers(users);
 		}
 
-		private void AddGroup(Int32 groupId, String groupName)
+		private void AddGroup(int groupId, string groupName)
 		{
 			GroupStorageView[] groups = new GroupStorageView[1];
 
@@ -74,16 +74,16 @@ namespace Alchemi.Tester.Manager.Storage
 			ManagerStorage.AddGroups(groups);
 		}
 
-		private String AddExecutor(
+		private string AddExecutor(
 			bool dedicated,
 			bool connected,
 			DateTime pingTime,
-			String hostname,
-			Int32 port,
-			String username,
-			Int32 maxCpu,
-			Int32 cpuUsage,
-			Int32 availableCpu,
+			string hostname,
+			int port,
+			string username,
+			int maxCpu,
+			int cpuUsage,
+			int availableCpu,
 			float totalCpuUsage
 		)
 		{
@@ -103,11 +103,11 @@ namespace Alchemi.Tester.Manager.Storage
 			return ManagerStorage.AddExecutor(executor);
 		}
 
-		private String AddApplication(
+		private string AddApplication(
 			ApplicationState state,
 			DateTime timeCreated,
 			bool primary,
-			String username
+			string username
 			)
 		{
 			ApplicationStorageView application = new ApplicationStorageView(
@@ -121,13 +121,13 @@ namespace Alchemi.Tester.Manager.Storage
 		}
 
 		private void AddThread(
-			String applicationId,
-			String executorId,
-			Int32 threadId,
+			string applicationId,
+			string executorId,
+			int threadId,
 			ThreadState state,
 			DateTime timeStarted,
 			DateTime timeFinished,
-			Int32 priority,
+			int priority,
 			bool failed
 			)
 		{
@@ -561,7 +561,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddGroupPermissionTestSimpleScenario()
 		{
-			Int32 groupId = 1;
+			int groupId = 1;
 
 			AddGroup(groupId, "test");
 
@@ -578,7 +578,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestSimpleScenario()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -597,7 +597,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestNoPermissions()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -613,7 +613,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionsTestDuplicates()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -638,7 +638,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestSimpleScenario()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -657,7 +657,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestNoPermissions()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -673,7 +673,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupPermissionStorageViewTestDuplicates()
 		{
-			Int32 groupId = 55;
+			int groupId = 55;
 
 			AddGroup(groupId, "test");
 
@@ -698,7 +698,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTest1()
 		{
-			Int32 groupId = 54;
+			int groupId = 54;
 			AddGroup(groupId, "group1");
 
 			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
@@ -734,7 +734,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTest3()
 		{
-			Int32 groupId = 54;
+			int groupId = 54;
 			AddGroup(groupId, "group1");
 
 			GroupStorageView[] groupsBefore = ManagerStorage.GetGroups();
@@ -753,8 +753,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteGroupTestDeleteGroupWithUsers()
 		{
-			Int32 groupId1 = 54;
-			Int32 groupId2 = 55;
+			int groupId1 = 54;
+			int groupId2 = 55;
 			AddGroup(groupId1, "group1");
 			AddGroup(groupId2, "group2");
 			AddUser("username1", "password1", groupId1);
@@ -782,8 +782,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupUsersTestSimpleScenario()
 		{
-			Int32 groupId1 = 54;
-			Int32 groupId2 = 55;
+			int groupId1 = 54;
+			int groupId2 = 55;
 			AddGroup(groupId1, "group1");
 			AddGroup(groupId2, "group2");
 			AddUser("username1", "password1", groupId1);
@@ -800,8 +800,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetGroupUsersTestNoUsers()
 		{
-			Int32 groupId1 = 54;
-			Int32 groupId2 = 55;
+			int groupId1 = 54;
+			int groupId2 = 55;
 
 			AddGroup(groupId1, "group1");
 			AddGroup(groupId2, "group2");
@@ -832,7 +832,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void CheckPermissionTestSimpleScenario()
 		{
-			Int32 groupId = 56;
+			int groupId = 56;
 
 			AddGroup(groupId, "test");
 
@@ -870,7 +870,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void CheckPermissionTestHigherLevelPermission()
 		{
-			Int32 groupId = 56;
+			int groupId = 56;
 
 			AddGroup(groupId, "test");
 
@@ -897,7 +897,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddApplicationTest1()
 		{
-			String applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
+			string applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
 
 			Assert.IsNotNull(applicationId);
 			Assert.AreNotEqual("", applicationId);
@@ -926,7 +926,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username3");
             
-			String applicationId = ManagerStorage.AddApplication(application);
+			string applicationId = ManagerStorage.AddApplication(application);
 
 			Assert.AreEqual(ApplicationState.Stopped, application.State);
 			Assert.AreEqual(true, application.Primary);			
@@ -946,7 +946,7 @@ namespace Alchemi.Tester.Manager.Storage
 
             application.TimeCompleted = timeCompleted;
 
-            String applicationId = ManagerStorage.AddApplication(application);
+            string applicationId = ManagerStorage.AddApplication(application);
 
             ApplicationStorageView resultApplication = ManagerStorage.GetApplication(applicationId);
 
@@ -957,13 +957,13 @@ namespace Alchemi.Tester.Manager.Storage
         [Test]
         public void AddApplicationTestIfApplicationNameIsSaved()
         {
-            String applicationName = "some name!";
+            string applicationName = "some name!";
 
             ApplicationStorageView application = new ApplicationStorageView("username3");
 
             application.ApplicationName = applicationName;
 
-            String applicationId = ManagerStorage.AddApplication(application);
+            string applicationId = ManagerStorage.AddApplication(application);
 
             ApplicationStorageView resultApplication = ManagerStorage.GetApplication(applicationId);
 
@@ -989,7 +989,7 @@ namespace Alchemi.Tester.Manager.Storage
 			now = now.AddDays(1);
 			DateTime timeCreated2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Ready, timeCreated1, false, "test");
+			string applicationId = AddApplication(ApplicationState.Ready, timeCreated1, false, "test");
 
 			ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, timeCreated2, true, "test2");
 
@@ -1036,7 +1036,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime timeCreated = DateTime.Now;
 
-			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
+			string applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
 
 			ManagerStorage.UpdateApplication(null);
 			
@@ -1056,7 +1056,7 @@ namespace Alchemi.Tester.Manager.Storage
             now = now.AddDays(1);
             DateTime timeCompleted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-            String applicationId = AddApplication(ApplicationState.Ready, timeCreated, false, "test");
+            string applicationId = AddApplication(ApplicationState.Ready, timeCreated, false, "test");
 
             ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, timeCreated, true, "test2");
 
@@ -1075,8 +1075,8 @@ namespace Alchemi.Tester.Manager.Storage
         [Test]
         public void UpdateApplicationTestIfApplicationNameIsSaved()
         {
-            String applicationName = "another name!";
-            String applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
+            string applicationName = "another name!";
+            string applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, false, "test");
 
             ApplicationStorageView updatedApplication = new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, true, "test2");
 
@@ -1108,7 +1108,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
+			string applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
 			
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
@@ -1129,9 +1129,9 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime timeCreated = DateTime.Now;
 
-			String applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
-			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
-			String applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, true, "username3");
+			string applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, true, "username1");
+			string applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, true, "username3");
 			
 			ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
@@ -1159,8 +1159,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetApplicationsTestUserApplications()
 		{
-			String applicationId1 = AddApplication(0, DateTime.Now, true, "username1");
-			String executorId = null;
+			string applicationId1 = AddApplication(0, DateTime.Now, true, "username1");
+			string executorId = null;
 
 			// Add a few threads to ths application
 			AddThread(applicationId1, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
@@ -1169,7 +1169,7 @@ namespace Alchemi.Tester.Manager.Storage
 			AddThread(applicationId1, executorId, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
 			AddThread(applicationId1, executorId, 5, ThreadState.Dead, DateTime.Now, DateTime.Now, 0, false);
 
-			String applicationId2 = AddApplication(0, DateTime.Now, true, "username2");
+			string applicationId2 = AddApplication(0, DateTime.Now, true, "username2");
 
 			AddThread(applicationId2, executorId, 1, 0, DateTime.Now, DateTime.Now, 0, false);
 
@@ -1183,8 +1183,8 @@ namespace Alchemi.Tester.Manager.Storage
         [Test]
         public void GetApplicationsTestApplicationNameDefaultValue()
         {
-            String applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
-            String expectedName = String.Format("Noname: [{0}]", applicationId);
+            string applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
+            string expectedName = String.Format("Noname: [{0}]", applicationId);
 
             ApplicationStorageView[] applications = ManagerStorage.GetApplications();
 
@@ -1209,7 +1209,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId);
 
@@ -1232,9 +1232,9 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, false, "username1");
-			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
-			String applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, false, "username3");
+			string applicationId1 = AddApplication(ApplicationState.Stopped, timeCreated, false, "username1");
+			string applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId3 = AddApplication(ApplicationState.AwaitingManifest, timeCreated, false, "username3");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(applicationId2);
 
@@ -1271,7 +1271,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
+			string applicationId = AddApplication(ApplicationState.Stopped, timeCreated, true, "username2");
 			
 			ApplicationStorageView application = ManagerStorage.GetApplication(Guid.NewGuid().ToString());
 
@@ -1281,8 +1281,8 @@ namespace Alchemi.Tester.Manager.Storage
         [Test]
         public void GetApplicationTestApplicationNameDefaultValue()
         {
-            String applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
-            String expectedName = String.Format("Noname: [{0}]", applicationId);
+            string applicationId = AddApplication(ApplicationState.Stopped, DateTime.Now, false, "username1");
+            string expectedName = String.Format("Noname: [{0}]", applicationId);
 
             ApplicationStorageView application = ManagerStorage.GetApplication(applicationId);
 
@@ -1305,7 +1305,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
 			
 			ApplicationStorageView[] applicationsBefore = ManagerStorage.GetApplications();
 
@@ -1323,7 +1323,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
 			
 			ApplicationStorageView[] applicationsBefore = ManagerStorage.GetApplications();
 
@@ -1354,8 +1354,8 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime timeCreated = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String applicationId1 = AddApplication(ApplicationState.Ready, timeCreated, true, "username1");
-			String applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
+			string applicationId1 = AddApplication(ApplicationState.Ready, timeCreated, true, "username1");
+			string applicationId2 = AddApplication(ApplicationState.Ready, timeCreated, true, "username2");
 
 			AddThread(applicationId1, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
 			AddThread(applicationId1, null, 2, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
@@ -1387,7 +1387,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddExecutorTest1()
 		{
-			String executorId = AddExecutor(false, false, DateTime.Now, "", 9000, "username1", 0, 0, 0, 0);
+			string executorId = AddExecutor(false, false, DateTime.Now, "", 9000, "username1", 0, 0, 0, 0);
 
 			Assert.IsNotNull(executorId);
 			Assert.AreNotEqual("", executorId);
@@ -1448,7 +1448,7 @@ namespace Alchemi.Tester.Manager.Storage
 			now = now.AddDays(1);
 			DateTime pingTime2 = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
 
 			ExecutorStorageView updatedExecutor = new ExecutorStorageView(true, false, pingTime2, "test2", 8888, "username2", 222, 456, 56, (float)5.6);
 
@@ -1502,7 +1502,7 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime1 = DateTime.Now;
 
-			String executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, pingTime1, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
 
 			ManagerStorage.UpdateExecutor(null);
 			
@@ -1525,7 +1525,7 @@ namespace Alchemi.Tester.Manager.Storage
             DateTime now = DateTime.Now;
             DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-            String executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
+            string executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
 
             ExecutorStorageView[] executorsBefore = ManagerStorage.GetExecutors();
 
@@ -1543,7 +1543,7 @@ namespace Alchemi.Tester.Manager.Storage
             DateTime now = DateTime.Now;
             DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-            String executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
+            string executorId = AddExecutor(true, false, pingTime, "hostname", 1, "username1", 1, 2, 3, 4);
 
             ExecutorStorageView[] executorsBefore = ManagerStorage.GetExecutors();
 
@@ -1582,7 +1582,7 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
@@ -1610,9 +1610,9 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime = DateTime.Now;
 
-			String executorId1 = AddExecutor(false, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId1 = AddExecutor(false, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView[] executors = ManagerStorage.GetExecutors();
 
@@ -1641,9 +1641,9 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime = DateTime.Now;
 
-			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(TriStateBoolean.True);
 
@@ -1659,9 +1659,9 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime = DateTime.Now;
 
-			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(true, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView[] executors = ManagerStorage.GetExecutors(TriStateBoolean.Undefined);
 
@@ -1677,10 +1677,10 @@ namespace Alchemi.Tester.Manager.Storage
 		{
 			DateTime pingTime = DateTime.Now;
 
-			String executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
-			String executorId4 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId1 = AddExecutor(true, true, pingTime, "test1", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId4 = AddExecutor(true, false, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView[] dedicatedAndConnectedExecutors = ManagerStorage.GetExecutors(TriStateBoolean.True, TriStateBoolean.True);
 			ExecutorStorageView[] dedicatedExecutors = ManagerStorage.GetExecutors(TriStateBoolean.True, TriStateBoolean.Undefined);
@@ -1710,9 +1710,9 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime pingTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
 
-			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView executor = ManagerStorage.GetExecutor(executorId);
 
@@ -1755,9 +1755,9 @@ namespace Alchemi.Tester.Manager.Storage
 			DateTime now = DateTime.Now;
 			DateTime pingTime = DateTime.MinValue; // this gets stored internally is the ping time was not set
 
-			String executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
-			String executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
-			String executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, pingTime, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId2 = AddExecutor(false, true, pingTime, "test2", 9999, "username2", 111, 123, 34, (float)3.4);
+			string executorId3 = AddExecutor(false, true, pingTime, "test3", 9999, "username3", 111, 123, 34, (float)3.4);
 			
 			ExecutorStorageView executor = ManagerStorage.GetExecutor(executorId);
 
@@ -1792,7 +1792,7 @@ namespace Alchemi.Tester.Manager.Storage
 				"x86 Family 6 Model 13 Stepping 6"
 				);
 
-			String executorId = ManagerStorage.AddExecutor(executorStorage);
+			string executorId = ManagerStorage.AddExecutor(executorStorage);
 
 			ExecutorStorageView executor = ManagerStorage.GetExecutor(executorId);
 
@@ -1834,8 +1834,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddThreadTest1()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId, 1, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
 		}
@@ -1858,8 +1858,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddThreadTestNullExecutorId()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = null;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = null;
 
 			AddThread(applicationId, executorId, 1, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 1, false);
 		}
@@ -1872,8 +1872,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void AddThreadTestNullTimesAndExecutor()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 threadId = 23;
+			string applicationId = Guid.NewGuid().ToString();
+			int threadId = 23;
 
 			ThreadStorageView thread = new ThreadStorageView(applicationId, threadId);
 
@@ -1892,11 +1892,11 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateThreadTest1()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = Guid.NewGuid().ToString();
-			String executorId2 = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = Guid.NewGuid().ToString();
+			string executorId2 = Guid.NewGuid().ToString();
 
-			Int32 threadId = 122;
+			int threadId = 122;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -1939,9 +1939,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateThreadTest2()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 122;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 122;
 
 			DateTime timeCreated = DateTime.Now.AddDays(1);
 
@@ -1964,9 +1964,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateThreadTest3()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 122;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 122;
 			DateTime timeStarted = DateTime.Now;
 			DateTime timeFinished = DateTime.Now.AddDays(1);
 
@@ -1982,8 +1982,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void UpdateThreadTestNullExecutorIdAndTimes()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 threadId = 23;
+			string applicationId = Guid.NewGuid().ToString();
+			int threadId = 23;
 
 			ThreadStorageView newThread = new ThreadStorageView(applicationId, threadId);
 
@@ -2020,9 +2020,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestSimpleScenario()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2048,8 +2048,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestMinimumSetup()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			ThreadStorageView newThread = new ThreadStorageView(applicationId, threadId);
 
@@ -2070,8 +2070,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestNoThread()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			int threadId = 125;
 			
 			ThreadStorageView thread = ManagerStorage.GetThread(applicationId, threadId);
 
@@ -2090,9 +2090,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTest1()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2124,8 +2124,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTest2()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId, 1, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
 			AddThread(applicationId, executorId, 2, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
@@ -2144,8 +2144,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestAllthreadsWithStatus()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
 			AddThread(applicationId, executorId, 2, ThreadState.Started, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
@@ -2177,10 +2177,10 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestApplicationThreads()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String otherApplicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string otherApplicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2214,9 +2214,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsTestApplicationThreadsWithStatus()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2249,11 +2249,11 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetThreadsAppStatusThreadStatusTestSimpleScenario()
 		{
-			String applicationId1 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
-			String applicationId2 = AddApplication(ApplicationState.Stopped, DateTime.Now, true, "username");
-			String applicationId3 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId1 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
+			string applicationId2 = AddApplication(ApplicationState.Stopped, DateTime.Now, true, "username");
+			string applicationId3 = AddApplication(ApplicationState.Ready, DateTime.Now, true, "username");
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 			
 			DateTime now = DateTime.Now;
 			DateTime timeStarted = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second, 0);
@@ -2296,9 +2296,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadsTestSimpleScenario()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2330,8 +2330,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadsTestMultiple()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId, 1, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
 			AddThread(applicationId, executorId, 2, ThreadState.Dead, DateTime.Now, DateTime.Now.AddDays(1), 7, false);
@@ -2363,9 +2363,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadsTestThreadsWithStatus()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2404,10 +2404,10 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadsTestDedicatedWithStatus()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
-			String executorId2 = AddExecutor(false, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			string executorId2 = AddExecutor(false, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2444,10 +2444,10 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadsTestConnectedWithStatus()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
-			String executorId2 = AddExecutor(false, false, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
-			Int32 threadId = 125;
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = AddExecutor(true, true, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			string executorId2 = AddExecutor(false, false, DateTime.Now, "test", 1, "username1", 0, 0, 0, 0);
+			int threadId = 125;
 
 			// TB: due to rounding errors the milliseconds might be lost in the database storage.
 			// TB: I think this is OK so we create a test DateTime without milliseconds
@@ -2487,9 +2487,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetApplicationThreadCountTestNoThreadInformation()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 totalThreads;
-			Int32 unfinishedThreads;
+			string applicationId = Guid.NewGuid().ToString();
+			int totalThreads;
+			int unfinishedThreads;
 
 			ManagerStorage.GetApplicationThreadCount(applicationId, out totalThreads, out unfinishedThreads);
 
@@ -2504,9 +2504,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetApplicationThreadCountTestSimpleScenario()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			Int32 totalThreads;
-			Int32 unfinishedThreads;
+			string applicationId = Guid.NewGuid().ToString();
+			int totalThreads;
+			int unfinishedThreads;
 
 			// add 4 threads, 3 are unfinished
 			AddThread(applicationId, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
@@ -2531,9 +2531,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetApplicationThreadCountTestNoThreadInformationForOverload()
 		{
-			String applicationId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
 
-			Int32 result = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
+			int result = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
 
 			Assert.AreEqual(0, result);
 		}
@@ -2545,7 +2545,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetApplicationThreadCountTestSimpleScenarioForOverload()
 		{
-			String applicationId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
 
 			// add 4 threads, 3 are unfinished
 			AddThread(applicationId, null, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
@@ -2553,11 +2553,11 @@ namespace Alchemi.Tester.Manager.Storage
 			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
 			AddThread(applicationId, null, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
 
-			Int32 ready = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Ready);
-			Int32 scheduled = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Scheduled);
-			Int32 started = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Started);
-			Int32 finished = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Finished);
-			Int32 dead = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
+			int ready = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Ready);
+			int scheduled = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Scheduled);
+			int started = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Started);
+			int finished = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Finished);
+			int dead = ManagerStorage.GetApplicationThreadCount(applicationId, ThreadState.Dead);
 
 			Assert.AreEqual(1, ready);
 			Assert.AreEqual(1, scheduled);
@@ -2577,9 +2577,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadCountTestNoThreadInformation()
 		{
-			String executorId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
-			Int32 result = ManagerStorage.GetExecutorThreadCount(executorId, ThreadState.Dead);
+			int result = ManagerStorage.GetExecutorThreadCount(executorId, ThreadState.Dead);
 
 			Assert.AreEqual(0, result);
 		}
@@ -2591,9 +2591,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadCountTestEmptyRequestArray()
 		{
-			String executorId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
-			Int32 result = ManagerStorage.GetExecutorThreadCount(executorId);
+			int result = ManagerStorage.GetExecutorThreadCount(executorId);
 
 			Assert.AreEqual(0, result);
 		}
@@ -2605,12 +2605,12 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadCountTestNullExecutorId()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
 
-			Int32 result = ManagerStorage.GetExecutorThreadCount(null, ThreadState.Started);
+			int result = ManagerStorage.GetExecutorThreadCount(null, ThreadState.Started);
 
 			Assert.AreEqual(0, result);
 		}
@@ -2622,9 +2622,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetExecutorThreadCountTestSimpleScenario()
 		{
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = Guid.NewGuid().ToString();
-			String executorId2 = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = Guid.NewGuid().ToString();
+			string executorId2 = Guid.NewGuid().ToString();
 
 			// add 4 threads, 3 are unfinished
 			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
@@ -2638,12 +2638,12 @@ namespace Alchemi.Tester.Manager.Storage
 			AddThread(applicationId, null, 3, ThreadState.Started, DateTime.Now, DateTime.Now, 0, false);
 			AddThread(applicationId, executorId2, 4, ThreadState.Finished, DateTime.Now, DateTime.Now, 0, false);
 
-			Int32 ready = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Ready);
-			Int32 scheduled = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Scheduled);
-			Int32 started = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Started);
-			Int32 finished = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Finished);
-			Int32 dead = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Dead);
-			Int32 notDeadOrFinished = ManagerStorage.GetExecutorThreadCount(
+			int ready = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Ready);
+			int scheduled = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Scheduled);
+			int started = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Started);
+			int finished = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Finished);
+			int dead = ManagerStorage.GetExecutorThreadCount(executorId1, ThreadState.Dead);
+			int notDeadOrFinished = ManagerStorage.GetExecutorThreadCount(
 				executorId1, 
 				ThreadState.Ready,
 				ThreadState.Scheduled,
@@ -2668,9 +2668,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteThreadTestSimpleDelete()
 		{
-			String executorId = Guid.NewGuid().ToString();
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
 
@@ -2687,8 +2687,8 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteThreadTestNothingAdded()
 		{
-			String executorId = Guid.NewGuid().ToString();
-			String applicationId = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
 
 			ManagerStorage.DeleteThread(new ThreadStorageView(applicationId, 1));
 
@@ -2700,9 +2700,9 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void DeleteThreadTestNullThreadToDelete()
 		{
-			String executorId = Guid.NewGuid().ToString();
-			String applicationId = Guid.NewGuid().ToString();
-			String executorId1 = Guid.NewGuid().ToString();
+			string executorId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
+			string executorId1 = Guid.NewGuid().ToString();
 
 			AddThread(applicationId, executorId1, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 0, false);
 
@@ -2723,7 +2723,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetSystemSummaryTestExecutorCount()
 		{
-			String executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
 
 			SystemSummary result = ManagerStorage.GetSystemSummary();
 
@@ -2749,7 +2749,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[Test]
 		public void GetSystemSummaryTestUnfinishedThreadCount()
 		{
-			String executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
+			string executorId = AddExecutor(false, true, DateTime.Now, "test", 9999, "username1", 111, 123, 34, (float)3.4);
 
 			string applicationId = AddApplication(ApplicationState.Ready, DateTime.Now, true, "user");
 			AddThread(applicationId, executorId, 1, ThreadState.Ready, DateTime.Now, DateTime.Now, 1, false);

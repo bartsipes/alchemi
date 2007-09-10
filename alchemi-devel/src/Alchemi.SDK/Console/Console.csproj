@@ -108,10 +108,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="App.ico" />
+    <Content Include="TODO.txt" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Console.cs">
+    <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ConsoleForm.cs">

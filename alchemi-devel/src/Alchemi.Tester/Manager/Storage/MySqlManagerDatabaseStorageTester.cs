@@ -56,7 +56,7 @@ namespace Alchemi.Tester.Manager.Storage
 		[SetUp]
 		public void TestStartUp()
 		{
-			String connectionString = ConfigurationManager.AppSettings["MySqlTesterConnectionString"];
+			string connectionString = ConfigurationManager.AppSettings["MySqlTesterConnectionString"];
 
 			if (connectionString == null)
 			{
