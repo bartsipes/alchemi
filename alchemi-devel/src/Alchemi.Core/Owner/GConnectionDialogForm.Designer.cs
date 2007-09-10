@@ -197,7 +197,7 @@ namespace Alchemi.Core.Owner
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Alchemi Grid Connection";
-            this.Load += new System.EventHandler(this.GConnectionDialogForm2_Load);
+            this.Load += new System.EventHandler(this.GConnectionDialogForm_Load);
             this.grpCredentials.ResumeLayout(false);
             this.grpCredentials.PerformLayout();
             this.grpManager.ResumeLayout(false);

@@ -46,25 +46,14 @@ namespace Alchemi.Core
         // Create a logger for use in this class
         private static readonly Logger logger = new Logger();
 
-        //----------------------------------------------------------------------------------------------- 
-        // member variables
-        //----------------------------------------------------------------------------------------------- 
-
         private const string DefaultRemoteObjectPrefix = "Alchemi_Node";
         private string _RemoteObjPrefix = DefaultRemoteObjectPrefix;
         private bool _ChannelRegistered = false;
-        private IManager _Manager = null;
-        private EndPoint _ManagerEP = null;
-        private EndPoint _OwnEP = null;
         private TcpChannel _Channel = null;
-        private SecurityCredentials _Credentials;
         private bool _Initted = false;
-        private GConnection _Connection;
+        
 
-        //----------------------------------------------------------------------------------------------- 
-        // constructors
-        //----------------------------------------------------------------------------------------------- 
-
+        #region Constructors
         /// <summary>
         /// Creates a new instance of the GNode class
         /// </summary>
@@ -73,8 +62,11 @@ namespace Alchemi.Core
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GNode"/> class.
+        /// </summary>
+        /// <param name="container">The container.</param>
         protected GNode(IContainer container)
-        //public GNode(IContainer container)
         {
             container.Add(this);
 
@@ -92,6 +84,13 @@ namespace Alchemi.Core
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GNode"/> class.
+        /// </summary>
+        /// <param name="managerEP">The manager EP.</param>
+        /// <param name="ownEP">The own EP.</param>
+        /// <param name="credentials">The credentials.</param>
+        /// <param name="remoteObjectPrefix">The remote object prefix.</param>
         protected GNode(EndPoint managerEP, EndPoint ownEP, SecurityCredentials credentials, string remoteObjectPrefix)
         {
             _OwnEP = ownEP;
@@ -104,51 +103,66 @@ namespace Alchemi.Core
         /// <summary>
         /// Creates a new instance of the GConnection class
         /// </summary>
-        /// <param name="connection"></param>
+        /// <param name="connection">The connection.</param>
         protected GNode(GConnection connection)
         {
             Connection = connection;
             Init();
-        }
+        } 
+        #endregion
 
 
 
-        //----------------------------------------------------------------------------------------------- 
-        // properties
-        //----------------------------------------------------------------------------------------------- 
-
+        #region Property - Manager
+        private IManager _Manager = null;
         /// <summary>
         /// Gets the manager
         /// </summary>
         public IManager Manager
         {
             get { return _Manager; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - ManagerEP
+        private EndPoint _ManagerEP = null;
         /// <summary>
         /// Gets the manager end point
         /// </summary>
         public EndPoint ManagerEP
         {
             get { return _ManagerEP; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - OwnEP
+        private EndPoint _OwnEP = null;
         /// <summary>
         /// Gets the node end point
         /// </summary>
         public EndPoint OwnEP
         {
             get { return _OwnEP; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Credentials
+        private SecurityCredentials _Credentials;
         /// <summary>
         /// Gets the security credentials
         /// </summary>
         public SecurityCredentials Credentials
         {
             get { return _Credentials; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Connection
+        private GConnection _Connection;
         /// <summary>
         /// Gets or sets the GConnection
         /// </summary>
@@ -168,24 +182,12 @@ namespace Alchemi.Core
                     _ManagerEP = new EndPoint(value.Host, value.Port, RemotingMechanism.TcpBinary);
                 }
             }
-        }
-
-        //public Alchemi.Core.Owner.GConnection GConnection
-        //{
-        //    get
-        //    {
-        //        throw new System.NotImplementedException();
-        //    }
-        //    set
-        //    {
-        //    }
-        //}
+        } 
+        #endregion
 
 
-        //----------------------------------------------------------------------------------------------- 
-        // public methods
-        //----------------------------------------------------------------------------------------------- 
 
+        #region Method - Init
         /// <summary>
         /// Initialised the remoted "node"
         /// </summary>
@@ -204,10 +206,12 @@ namespace Alchemi.Core
             GetManagerRef();
             RemoteSelf();
             _Initted = true;
-        }
+        } 
+        #endregion
 
-        //----------------------------------------------------------------------------------------------- 
 
+
+        #region Method - GetRemoteRef
         /// <summary>
         /// Gets the reference to the remote node
         /// </summary>
@@ -216,8 +220,17 @@ namespace Alchemi.Core
         public static GNode GetRemoteRef(EndPoint remoteEP)
         {
             return GetRemoteRef(remoteEP, DefaultRemoteObjectPrefix);
-        }
+        } 
+        #endregion
 
+
+        #region Method - GetRemoteRef
+        /// <summary>
+        /// Gets the remote ref.
+        /// </summary>
+        /// <param name="remoteEP">The remote endpoint.</param>
+        /// <param name="remoteObjectPrefix">The remote object prefix.</param>
+        /// <returns></returns>
         public static GNode GetRemoteRef(EndPoint remoteEP, string remoteObjectPrefix)
         {
             switch (remoteEP.RemotingMechanism)
@@ -228,10 +241,11 @@ namespace Alchemi.Core
                 default:
                     return null;
             }
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------          
 
+        #region Method - GetRemoteManagerRef
         /// <summary>
         /// Gets the reference to a remote manager
         /// </summary>
@@ -252,29 +266,49 @@ namespace Alchemi.Core
             }
 
             return manager;
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------          
 
+
+        #region Method Override - InitializeLifetimeService
         /// <summary>
-        /// 
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
+        /// </returns>
+        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. </exception>
+        /// <PermissionSet>
+        /// 	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
+        /// </PermissionSet>
         public override object InitializeLifetimeService()
         {
             return null;
+        } 
+        #endregion
+
+
+
+        #region Method - GetManagerRef
+        private void GetManagerRef()
+        {
+            if (_ManagerEP != null)
+            {
+                _Manager = GetRemoteManagerRef(_ManagerEP);
+            }
         }
+        #endregion
 
-        //----------------------------------------------------------------------------------------------- 
-        // private methods
-        //----------------------------------------------------------------------------------------------- 
 
-        /*
-         * RemoteSelf:
-         * - if the own end point is valid: 
-         *	- register a new channel, if not already done.
-         *	- if successful, then marshal this GNode object over the remoting channel
-         */
+
+        #region Method - RemoteSelf
+        /// <summary>
+        /// Remotes this instance across a channel
+        /// - if the own end point is valid: 
+        ///  - register a new channel, if not already done.
+        ///  - if successful, then marshal this GNode object over the remoting channel
+        /// </summary>
         private void RemoteSelf()
         {
             if (_OwnEP != null)
@@ -337,20 +371,11 @@ namespace Alchemi.Core
                         break;
                 }
             }
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------          
 
-        private void GetManagerRef()
-        {
-            if (_ManagerEP != null)
-            {
-                _Manager = GetRemoteManagerRef(_ManagerEP);
-            }
-        }
-
-        //-----------------------------------------------------------------------------------------------          
-
+        #region Method - UnRemoteSelf
         /// <summary>
         /// Unregister channel and disconnect remoting
         /// </summary>
@@ -371,6 +396,7 @@ namespace Alchemi.Core
                 }
                 logger.Debug("Unremoting self...done");
             }
-        }
+        } 
+        #endregion
     }
 }

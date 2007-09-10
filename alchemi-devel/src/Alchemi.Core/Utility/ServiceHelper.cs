@@ -34,9 +34,16 @@ namespace Alchemi.Core.Utility
     /// </summary>
     public sealed class ServiceHelper
     {
+        #region Private Constructor
         //FxCop rules specify having no public constructors for static helpers
-        private ServiceHelper() { }
+        private ServiceHelper()
+        {
+        } 
+        #endregion
 
+
+
+        #region Method - CheckServiceInstallation
         /// <summary>
         /// Verifies if the Window service with the given name is installed.
         /// </summary>
@@ -61,8 +68,11 @@ namespace Alchemi.Core.Utility
                 sc = null;
             }
             return exists;
-        }
+        } 
+        #endregion
 
+
+        #region Method - InstallService
         /// <summary>
         /// Installs the Windows service with the given "installer" object.
         /// </summary>
@@ -76,8 +86,11 @@ namespace Alchemi.Core.Utility
             InstallContext ctx = new InstallContext("Install.log", cmdline);
             ti.Context = ctx;
             ti.Install(new Hashtable());
-        }
+        } 
+        #endregion
 
+
+        #region Method - UninstallService
         /// <summary>
         /// Uninstalls the Windows service with the given "installer" object.
         /// </summary>
@@ -91,6 +104,7 @@ namespace Alchemi.Core.Utility
             InstallContext ctx = new InstallContext("Uninstall.log", cmdline);
             ti.Context = ctx;
             ti.Uninstall(null);
-        }
+        } 
+        #endregion
     }
 }

@@ -110,7 +110,7 @@ namespace Alchemi.Examples.PiCalculator
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR: {0}", e.StackTrace);
+                Console.WriteLine("ERROR: {0}", e.ToString());
             }
 
             Console.ReadLine();

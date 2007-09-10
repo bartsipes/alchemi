@@ -73,6 +73,7 @@ namespace Alchemi.Core.Executor
         #endregion
 
 
+
         #region Constructor
         /// <summary>
         /// Creates an instance of the HeartBeatInfo object with the given interval, used, and available CPU power.

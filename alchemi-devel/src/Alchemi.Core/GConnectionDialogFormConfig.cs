@@ -23,31 +23,6 @@
  */
 #endregion
 
-#region Alchemi copyright and license notice
-
-/*
-* Alchemi [.NET Grid Computing Framework]
-* http://www.alchemi.net
-*
-* Title			:	GConnectionDialogFormConfig.cs
-* Project		:	Alchemi.Core
-* Created on	:	August 2005
-* Copyright		:	Copyright © 2006 The University of Melbourne
-*					This technology has been developed with the support of 
-*					the Australian Research Council and the University of Melbourne
-*					research grants as part of the Gridbus Project
-*					within GRIDS Laboratory at the University of Melbourne, Australia.
-* Author         :  Krishna Nadiminti (kna@csse.unimelb.edu.au) and Rajkumar Buyya (raj@csse.unimelb.edu.au) 
-* License        :  GPL
-*					This program is free software; you can redistribute it and/or 
-*					modify it under the terms of the GNU General Public
-*					License as published by the Free Software Foundation;
-*					See the GNU General Public License 
-*					(http://www.gnu.org/copyleft/gpl.html) for more details.
-*
-*/
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -68,12 +43,7 @@ namespace Alchemi.Core
         // Create a logger for use in this class
         private static readonly Logger logger = new Logger();
 
-        public const string Default_Config_File = "GConnectionDialogForm.dat";
-
-        private string _Host     = "localhost";
-        private int    _Port     = 9000;
-        private string _Username = "user";
-        private string _Password = "user";
+        public const string Default_Config_File = "GConnectionDialogForm.dat";   
 
         private string _Filename;
 
@@ -86,6 +56,9 @@ namespace Alchemi.Core
             _Filename = filename;
         }
 
+
+        #region Property - Host
+        private string _Host = "localhost";
         /// <summary>
         /// Gets or sets the host.
         /// </summary>
@@ -94,8 +67,12 @@ namespace Alchemi.Core
         {
             get { return _Host; }
             set { _Host = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Port
+        private int _Port = 9000;
         /// <summary>
         /// Gets or sets the port.
         /// </summary>
@@ -104,8 +81,12 @@ namespace Alchemi.Core
         {
             get { return _Port; }
             set { _Port = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Username
+        private string _Username = "user";
         /// <summary>
         /// Gets or sets the username.
         /// </summary>
@@ -114,8 +95,12 @@ namespace Alchemi.Core
         {
             get { return _Username; }
             set { _Username = value; }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Password
+        private string _Password = "user";
         /// <summary>
         /// Gets or sets the password.
         /// </summary>
@@ -124,7 +109,10 @@ namespace Alchemi.Core
         {
             get { return _Password; }
             set { _Password = value; }
-        }
+        } 
+        #endregion
+
+
 
         /// <summary>
         /// Reads the config from a file

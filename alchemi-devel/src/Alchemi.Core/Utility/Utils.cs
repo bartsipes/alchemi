@@ -36,37 +36,21 @@ using System.Security.Principal;
 
 namespace Alchemi.Core.Utility
 {
-    public enum AlchemiRole
-    {
-        Manager,
-        Executor,
-        Owner,
-        Admin
-    }
-
-    public enum DateTimeInterval
-    {
-        Tick,
-        Millisecond,
-        Second,
-        Minute,
-        Hour,
-        Day,
-        Week,
-        Fortnight,
-        Month,
-        Quarter,
-        Year
-    }
-
     /// <summary>
     /// This class contains some convenient utility function used in various classes in the Alchemi framework
     /// </summary>
     public sealed class Utils
     {
+        #region Private Constructor
         //We dont want anyone to instantiate this util class.
-        private Utils() { }
+        private Utils()
+        {
+        } 
+        #endregion
 
+
+
+        #region Method - Trace
         /// <summary>
         /// Prints the message with a stack trace to the console.
         /// </summary>
@@ -75,10 +59,12 @@ namespace Alchemi.Core.Utility
         {
             StackTrace st = new StackTrace();
             Console.WriteLine("{0}.{1} :: {2}", st.GetFrame(1).GetMethod().ReflectedType, st.GetFrame(1).GetMethod().Name, msg);
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+
+        #region Method - SerializeToByteArray
         /// <summary>
         /// Serializes an object graph to an in-memory byte-array using the binary formatter.
         /// </summary>
@@ -90,10 +76,11 @@ namespace Alchemi.Core.Utility
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(stream, graph);
             return stream.ToArray();
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - DeserializeFromByteArray
         /// <summary>
         /// Desserializes a byte array using the binary formatter to return the object after deserialization.
         /// </summary>
@@ -109,10 +96,11 @@ namespace Alchemi.Core.Utility
                 o = formatter.Deserialize(stream);
             }
             return o;
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - WriteByteArrayToFile
         /// <summary>
         /// Write the given byte-array to a file
         /// </summary>
@@ -133,15 +121,16 @@ namespace Alchemi.Core.Utility
             }
             finally
             {
-                if (writer!=null)
+                if (writer != null)
                     writer.Close();
-                if (stream!=null)
+                if (stream != null)
                     stream.Close();
             }
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------        
 
+        #region Method - ReadByteArrayFromFile
         /// <summary>
         /// Reads the file at the specified location and returns a byte-array.
         /// </summary>
@@ -162,16 +151,17 @@ namespace Alchemi.Core.Utility
             }
             finally
             {
-                if (reader!=null)
+                if (reader != null)
                     reader.Close();
-                if (file!=null)
+                if (file != null)
                     file.Close();
             }
             return contents;
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - SerializeToFile
         /// <summary>
         /// Serializes an object graph to a disk file.
         /// </summary>
@@ -180,10 +170,11 @@ namespace Alchemi.Core.Utility
         public static void SerializeToFile(object objGraph, string fileLocation)
         {
             WriteByteArrayToFile(fileLocation, SerializeToByteArray(objGraph));
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - DeserializeFromFile
         /// <summary>
         /// Desserializes a file using the binary formatter to return the object after deserialization.
         /// Throws an Exception if the File cannot be found / read.
@@ -193,9 +184,12 @@ namespace Alchemi.Core.Utility
         public static object DeserializeFromFile(string fileLocation)
         {
             return DeserializeFromByteArray(ReadByteArrayFromFile(fileLocation));
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
+
+
+        #region Method - BoolToSqlBit
         /// <summary>
         /// Converts the input boolean val to an int name, used in SQL queries.
         /// </summary>
@@ -204,10 +198,12 @@ namespace Alchemi.Core.Utility
         public static int BoolToSqlBit(bool val)
         {
             return (val ? 1 : 0);
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+
+        #region Method - WriteBase64EncodedToFile
         /// <summary>
         /// Writes the given base64-data  to a file
         /// Throws an Exception if the File cannot written.
@@ -217,10 +213,11 @@ namespace Alchemi.Core.Utility
         public static void WriteBase64EncodedToFile(string fileLocation, string base64EncodedData)
         {
             WriteByteArrayToFile(fileLocation, Convert.FromBase64String(base64EncodedData));
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - ReadBase64EncodedFromFile
         /// <summary>
         /// Reads a base64-encoded file and returns the contents as a string.
         /// </summary>
@@ -229,22 +226,31 @@ namespace Alchemi.Core.Utility
         public static string ReadBase64EncodedFromFile(string fileLocation)
         {
             return Convert.ToBase64String(ReadByteArrayFromFile(fileLocation));
-        }
+        } 
+        #endregion
 
 
+
+        #region Method - EncodeBase64
         public static string EncodeBase64(string stringToEncodeToBase64)
         {
             byte[] encbuff = System.Text.Encoding.UTF8.GetBytes(stringToEncodeToBase64);
             return Convert.ToBase64String(encbuff);
-        }
+        } 
+        #endregion
+
+
+        #region Method - DecodeBase64
         public static string DecodeBase64(string base64EncodedString)
         {
             byte[] decbuff = Convert.FromBase64String(base64EncodedString);
             return System.Text.Encoding.UTF8.GetString(decbuff);
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+
+        #region Method - ReadStringFromFile
         /// <summary>
         /// Reads a text file and returns the contents as a string
         /// </summary>
@@ -258,10 +264,12 @@ namespace Alchemi.Core.Utility
                 contents = sr.ReadToEnd();
             }
             return contents;
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
+
+        #region Property - AssemblyVersion
         /// <summary>
         /// Gets the version of the current assembly.
         /// </summary>
@@ -272,10 +280,12 @@ namespace Alchemi.Core.Utility
                 Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                 return v.Major + "." + v.Minor + "." + v.Build;
             }
-        }
+        } 
+        #endregion
+        
 
-        //-----------------------------------------------------------------------------------------------    
 
+        #region Method - ValueFromConsole
         /// <summary>
         /// Prompts the user for a name, reads it from the console and returns it 
         /// </summary>
@@ -291,9 +301,12 @@ namespace Alchemi.Core.Utility
                 val = defaultValue;
             }
             return val;
-        }
+        } 
+        #endregion
 
 
+
+        #region Method - DateDiff
         /// <summary>
         /// same common params similar to the VBScript DateDiff: 
         /// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/script56/html/vsfctdatediff.asp
@@ -351,8 +364,11 @@ namespace Alchemi.Core.Utility
                     break;
             }
             return diff;
-        }
+        } 
+        #endregion
 
+
+        #region Method - MakeSqlSafe
         /// <summary>
         /// 
         /// </summary>
@@ -366,8 +382,11 @@ namespace Alchemi.Core.Utility
                 output = input.Replace("'", "").Replace("\"", "");
             }
             return output;
-        }
+        } 
+        #endregion
 
+
+        #region Method - IsSqlSafe
         /// <summary>
         /// 
         /// </summary>
@@ -377,8 +396,12 @@ namespace Alchemi.Core.Utility
         {
             //if the result returned by MakeSqlSafe is same as the original string, then it is safe.
             return (text == MakeSqlSafe(text));
-        }
+        } 
+        #endregion
 
+
+
+        #region Method - GetFilePath
         /// <summary>
         /// Gets the location (including full path) of the given file name.
         /// This returns a path in the users' application-data directory, of the form:
@@ -400,7 +423,11 @@ namespace Alchemi.Core.Utility
                 filepath
                 };
             return GetAbsPath(paths, createIfNeeded);
-        }
+        } 
+        #endregion
+
+
+        #region Method - GetAbsPath
         /// <summary>
         /// Combines the elements in the string[] into a full path.
         /// and creates the directories if needed.
@@ -421,8 +448,11 @@ namespace Alchemi.Core.Utility
                 Directory.CreateDirectory(Path.GetDirectoryName(absPath));
             }
             return absPath;
-        }
+        } 
+        #endregion
 
+
+        #region Method - GetEnv
         /// <summary>
         /// Gets a formatted string to print out the current working environment
         /// </summary>
@@ -492,6 +522,7 @@ namespace Alchemi.Core.Utility
             sb.Append("\n ************ END ENV ***************** ");
 
             return sb.ToString();
-        }
+        } 
+        #endregion
     }
 }

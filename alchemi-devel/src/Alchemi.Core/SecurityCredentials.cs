@@ -33,26 +33,32 @@ namespace Alchemi.Core
 	[Serializable]
     public class SecurityCredentials
 	{
+        #region Property - Username
         private string _Username;
-        private string _Password;
-
-		/// <summary>
-		/// Username
-		/// </summary>        
+        /// <summary>
+        /// Username
+        /// </summary>        
         public string Username
         {
             get { return _Username; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Password
-		/// </summary>        
+
+        #region Property - Password
+        private string _Password;
+        /// <summary>
+        /// Password
+        /// </summary>        
         public string Password
         {
             get { return _Password; }
-            set { _Password = value; }                
-        }
+            set { _Password = value; }
+        } 
+        #endregion
 
+
+        #region Constructor
         /// <summary>
         /// Creates an instance of the SecurityCredentials class
         /// </summary>
@@ -62,6 +68,7 @@ namespace Alchemi.Core
         {
             _Username = username;
             _Password = password;
-        }
+        } 
+        #endregion
 	}
 }

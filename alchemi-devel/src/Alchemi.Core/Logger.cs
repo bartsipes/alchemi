@@ -42,13 +42,19 @@ namespace Alchemi.Core
         /// </summary>
         public static LogEventHandler LogHandler;
 
+
+        #region Constructor
         /// <summary>
         /// Creates an instance of the logger.
         /// </summary>
         public Logger()
         {
-        }
+        } 
+        #endregion
 
+
+
+        #region Method - Info
         /// <summary>
         /// Raises a log event with the given message and Info level
         /// </summary>
@@ -56,8 +62,11 @@ namespace Alchemi.Core
         public void Info(string msg)
         {
             RaiseLogEvent(msg, LogLevel.Info, null);
-        }
+        } 
+        #endregion
 
+
+        #region Method - Debug
         /// <summary>
         /// Raises a log event with the given message and Debug level
         /// </summary>
@@ -65,8 +74,11 @@ namespace Alchemi.Core
         public void Debug(string debugMsg)
         {
             RaiseLogEvent(debugMsg, LogLevel.Debug, null);
-        }
+        } 
+        #endregion
 
+
+        #region Method - Debug
         /// <summary>
         /// Raises a log event with the given message and Debug level and exception
         /// </summary>
@@ -75,8 +87,11 @@ namespace Alchemi.Core
         public void Debug(string debugMsg, Exception ex)
         {
             RaiseLogEvent(debugMsg, LogLevel.Debug, ex);
-        }
+        } 
+        #endregion
 
+
+        #region Method - Error
         /// <summary>
         /// Raises a log event with the given message and Error level and exception
         /// </summary>
@@ -85,8 +100,11 @@ namespace Alchemi.Core
         public void Error(string msg, Exception ex)
         {
             RaiseLogEvent(msg, LogLevel.Error, ex);
-        }
+        } 
+        #endregion
 
+
+        #region Method - Warn
         /// <summary>
         /// Raises a log event with the given message and Warn level
         /// </summary>
@@ -94,8 +112,11 @@ namespace Alchemi.Core
         public void Warn(string msg)
         {
             RaiseLogEvent(msg, LogLevel.Warn, null);
-        }
+        } 
+        #endregion
 
+
+        #region Method - Warn
         /// <summary>
         /// Raises a log event with the given message and Warn level and exception
         /// </summary>
@@ -104,22 +125,27 @@ namespace Alchemi.Core
         public void Warn(string msg, Exception ex)
         {
             RaiseLogEvent(msg, LogLevel.Warn, ex);
-        }
+        } 
+        #endregion
 
+
+
+        #region Method - RaiseLogEvent
         private void RaiseLogEvent(string msg, LogLevel level, Exception ex)
         {
             string source = "?source?";
             string member = "?member?";
             try
             {
-
                 if (LogHandler == null)
                 {
                     return;
                 }
 
-                //make sure two stackframes above, we have the actually call to the logger! otherwise we get the wrong name!
-                //for this, make sure the RaiseLogEvent method is private..and is called by all other logger.XXXX methods
+                // make sure two stackframes above, we have the actually call to the logger!
+                // otherwise we get the wrong name!
+                // for this, make sure the RaiseLogEvent method is private, and is called by
+                // all other logger.XXXX methods
                 StackFrame s = new StackFrame(2, true);
                 if (s != null)
                 {
@@ -130,12 +156,17 @@ namespace Alchemi.Core
                         member = s.GetMethod().Name + "():" + s.GetFileLineNumber();
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             RaiseLogEvent(msg, level, ex, source, member);
-        }
+        } 
+        #endregion
 
-        private void RaiseLogEvent(string msg, LogLevel level, Exception ex, String source, String member)
+
+        #region Method - RaiseLogEvent
+        private void RaiseLogEvent(string msg, LogLevel level, Exception ex, string source, string member)
         {
             try
             {
@@ -143,10 +174,16 @@ namespace Alchemi.Core
                 if (LogHandler != null)
                     LogHandler(source, new LogEventArgs(source, member, msg, level, ex));
             }
-            catch (Exception) { } //always handle errors when raising events. (since event-handlers are not in our control).
+            catch (Exception)
+            {
+                //always handle errors when raising events. (since event-handlers are not in our control).
+            }
+        } 
+        #endregion
 
-        }
 
+
+        #region Method Override - InitializeLifetimeService
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
@@ -158,10 +195,8 @@ namespace Alchemi.Core
         public override object InitializeLifetimeService()
         {
             return null;
-        }
+        } 
+        #endregion
+
     }
-
-
-
-
 }

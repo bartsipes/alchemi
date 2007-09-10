@@ -37,42 +37,49 @@ namespace Alchemi.Core.Utility
         private MemoryStream _Ms;
         private XmlTextWriter _Writer;
 
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Creates an instance of the XML writer capable of writing text
-		/// </summary>
-        public XmlTextWriter Writer
-        {
-            get { return _Writer; } 
-        }
-
-        //-----------------------------------------------------------------------------------------------    
-
-		/// <summary>
-		/// Creates an instance of an XML writer capable of writing ASCII text with indented format.
-		/// </summary>
+        #region Constructor
+        /// <summary>
+        /// Creates an instance of an XML writer capable of writing ASCII text with indented format.
+        /// </summary>
         public XmlStringWriter()
         {
             _Ms = new MemoryStream();
             _Writer = new XmlTextWriter(_Ms, System.Text.Encoding.ASCII);
             _Writer.Formatting = Formatting.Indented;
             _Writer.Indentation = 2;
+        } 
+        #endregion
+
+
+
+        #region Property - Writer
+        /// <summary>
+        /// Creates an instance of the XML writer capable of writing text
+        /// </summary>
+        public XmlTextWriter Writer
+        {
+            get { return _Writer; }
         }
-    
-        //-----------------------------------------------------------------------------------------------    
-    
-		/// <summary>
-		///	Returns the XML written to memory (so far) by the writer.
-		/// </summary>
-		/// <returns></returns>
+        #endregion
+
+
+
+        #region Method - GetXmlString
+        /// <summary>
+        ///	Returns the XML written to memory (so far) by the writer.
+        /// </summary>
+        /// <returns></returns>
         public string GetXmlString()
         {
             _Writer.Flush();
             _Ms.Position = 0;
 
             return (new StreamReader(_Ms)).ReadToEnd();
-        }
+        } 
+        #endregion
+
+
 
         #region IDisposable Members
 

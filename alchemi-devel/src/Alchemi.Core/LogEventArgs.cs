@@ -30,25 +30,27 @@ using System.Text;
 namespace Alchemi.Core
 {
     /// <summary>
+    /// Delegate for the log event
+    /// </summary>
+    public delegate void LogEventHandler(object sender, LogEventArgs e);
+
+
+    /// <summary>
     /// The arguments passed when raising a log event.
     /// </summary>
     public class LogEventArgs : EventArgs
     {
-        private LogLevel _Level = LogLevel.Info;
-        private string _Message;
-        private string _Source;
-        private string _Member;
-        private Exception _Exception = null;
-
+        #region Constructors
         /// <summary>
-        /// Default constructor: creates an instance of the LogEventArgs class
+        /// Initializes a new instance of the <see cref="LogEventArgs"/> class.
         /// </summary>
         public LogEventArgs()
         {
         }
 
+
         /// <summary>
-        /// Creates an instance of the LogEventArgs class with the given message, level and exception.
+        /// Initializes a new instance of the <see cref="LogEventArgs"/> class.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="sourceMember">The source member.</param>
@@ -57,37 +59,18 @@ namespace Alchemi.Core
         /// <param name="ex">The exception.</param>
         public LogEventArgs(string source, string sourceMember, string message, LogLevel level, Exception ex)
         {
-            this._Member = sourceMember;
-            this._Level = level;
-            this._Message = message;
-            this._Exception = ex;
             this._Source = source;
-        }
+            this._Member = sourceMember;
+            this._Message = message;
+            this._Level = level;
+            this._Exception = ex;
+        } 
+        #endregion
 
-        /// <summary>
-        /// Gets the level of the log message
-        /// </summary>
-        public LogLevel Level
-        {
-            get { return _Level; }
-        }
 
-        /// <summary>
-        /// Getsthe log message
-        /// </summary>
-        public string Message
-        {
-            get { return _Message; }
-        }
 
-        /// <summary>
-        /// Gets the exception for the log event
-        /// </summary>
-        public Exception Exception
-        {
-            get { return _Exception; }
-        }
-
+        #region Property - Source
+        private string _Source;
         /// <summary>
         /// Gets the source 
         /// </summary>
@@ -95,7 +78,11 @@ namespace Alchemi.Core
         {
             get { return _Source; }
         }
+        #endregion
 
+
+        #region Property - Member
+        private string _Member;
         /// <summary>
         /// Gets the member of the source class that raised the log event
         /// </summary>
@@ -103,5 +90,43 @@ namespace Alchemi.Core
         {
             get { return _Member; }
         }
+        #endregion
+
+
+        #region Property - Message
+        private string _Message;
+        /// <summary>
+        /// Getsthe log message
+        /// </summary>
+        public string Message
+        {
+            get { return _Message; }
+        }
+        #endregion
+
+
+        #region Property - Level
+        private LogLevel _Level = LogLevel.Info;
+        /// <summary>
+        /// Gets the level of the log message
+        /// </summary>
+        public LogLevel Level
+        {
+            get { return _Level; }
+        } 
+        #endregion
+
+
+        #region Property - Exception
+        private Exception _Exception = null;
+        /// <summary>
+        /// Gets the exception for the log event
+        /// </summary>
+        public Exception Exception
+        {
+            get { return _Exception; }
+        } 
+        #endregion
+
     }
 }

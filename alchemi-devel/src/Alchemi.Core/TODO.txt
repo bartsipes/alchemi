@@ -50,6 +50,7 @@ GConnectionDialogForm
 GConnectionDialogFormConfig
 ===
 [ ] Move into the Owner namespace?
+[ ] Use the Utils.(De)SerializeToFile functions here?
 
 GThread
 ===
@@ -64,3 +65,25 @@ ThreadCollection
 ===
 [ ] Rewrite this using List<GThread>
 
+Utils
+===
+[ ] Create generic versions of the functions to use, like
+    public static void SerializeToFile<T>(T obj, string fileLocation)
+[ ] Use these functions everywhere else and eliminate the typecasts
+[ ] Get rid of ReadStringFromFile and use File.ReadAllText
+[ ] Not sure why there is a DateDiff function since DateTimes support the - operator...
+[ ] Trace() only prints to Console -- rewrite so it prints to log file?
+    Or just get rid of it since it's not used anywhere?
+    
+GNode
+===
+[ ] Rewrite GNode.RemoteSelf so that is has multiple catch statements
+[ ] Not all constructors call InitializeComponent -- is this a problem?
+
+Logger
+===
+[ ] Maybe I'm missing something but why does it have a delegate instead of an event?
+
+Exceptions
+===
+[ ] Move these into their own files?  Possibly make Alchemi.Core.Exceptions to keep them in

@@ -33,51 +33,51 @@ namespace Alchemi.Core
 	/// </summary>
     public interface ICrossPlatformManager
     {
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <returns></returns>
-        string /* taskId */ CreateTask(string username, string password);
-        
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <param name="taskXml"></param>
-		/// <returns></returns>
-		string /* taskId */ SubmitTask(string username, string password, string taskXml);
-        
-		/// <summary>
-		/// Add a job to the manager with the given credentials, task and jobID, priority and XML description
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <param name="taskId"></param>
-		/// <param name="jobId"></param>
-		/// <param name="priority"></param>
-		/// <param name="jobXml"></param>
+        /// <summary>
+        /// Creates a task.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>The taskId</returns>
+        string CreateTask(string username, string password);
+
+        /// <summary>
+        /// Submits the task.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="taskXml">The task XML.</param>
+        /// <returns>The taskId</returns>
+		string SubmitTask(string username, string password, string taskXml);
+
+        /// <summary>
+        /// Add a job to the manager with the given credentials, task and jobID, priority and XML description
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="taskId">The taskId.</param>
+        /// <param name="jobId">The jobId.</param>
+        /// <param name="priority">The priority.</param>
+        /// <param name="jobXml">The job XML.</param>
 		void AddJob(string username, string password, string taskId, int jobId, int priority, string jobXml);
-        
-		/// <summary>
-		/// Gets the XML description of the finished jobs for the given application/task id
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <param name="taskId">task / application id</param>
-		/// <returns></returns>
-		string /* taskXml */ GetFinishedJobs(string username, string password, string taskId);
-        
-		/// <summary>
-		/// Gets the status of the job with the given id and task/application id.
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
-		/// <param name="taskId">application / task id</param>
-		/// <param name="jobId"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Gets the XML description of the finished jobs for the given application/task id
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="taskId">task/application id</param>
+        /// <returns>The task XML</returns>
+		string GetFinishedJobs(string username, string password, string taskId);
+
+        /// <summary>
+        /// Gets the status of the job with the given id and task/application id.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="taskId">task/application id</param>
+        /// <param name="jobId">The job id.</param>
+        /// <returns>The job state</returns>
 		int GetJobState(string username, string password, string taskId, int jobId);
     }
 }

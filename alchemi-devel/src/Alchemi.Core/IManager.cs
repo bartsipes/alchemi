@@ -64,7 +64,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <param name="applicationName"></param>
-        void Owner_SetApplicationName(SecurityCredentials sc, string appId, String applicationName);
+        void Owner_SetApplicationName(SecurityCredentials sc, string appId, string applicationName);
 
         /// <summary>
         /// Verify if an application exists.
@@ -397,22 +397,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <returns></returns>
-        ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId);
-
-        // <summary>
-        // Executes a select query against the Manager database.
-        // 
-        // Updates: 
-        // 
-        //	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManager interface.
-        //	 Datasets should never be returned to the UI. 
-        //	 
-        // </summary>
-        // <param name="sc"></param>
-        // <param name="perm"></param>
-        // <param name="query"></param>
-        // <returns>results of the query as a Dataset</returns>
-        //		DataSet Admon_ExecQuery(SecurityCredentials sc, Permission perm, string query);
+        ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, string executorId);
 
         /// <summary>
         /// Delete the given thread form the database.

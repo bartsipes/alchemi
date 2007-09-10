@@ -3,9 +3,9 @@
  * Alchemi [.NET Grid Computing Framework]
  * http://www.alchemi.net
  *
- * Title        :   Delegates.cs
- * Project      :   Alchemi.Core
- * Created on   :   2003
+ * Title        :   AlchemiRole.cs
+ * Project      :   Alchemi.Core.Utility
+ * Created on   :   9/10/07
  * Copyright    :   Copyright © 2006 The University of Melbourne
  *                  This technology has been developed with the support of 
  *                  the Australian Research Council and the University of Melbourne
@@ -13,7 +13,7 @@
  *                  within GRIDS Laboratory at the University of Melbourne, Australia.
  * Author       :   Akshay Luther (akshayl@csse.unimelb.edu.au)
  *                  Rajkumar Buyya (raj@csse.unimelb.edu.au)
- *                  Krishna Nadiminti (kna@csse.unimelb.edu.au)
+ *                  Krishna Nadiminti (kna@csse.unimelb.edu.au) 
  * License      :   GPL
  *                  This program is free software; you can redistribute it and/or 
  *                  modify it under the terms of the GNU General Public
@@ -24,10 +24,17 @@
  */
 #endregion
 
-namespace Alchemi.Core
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Alchemi.Core.Utility
 {
-	/// <summary>
-	/// Delegate for the log event
-	/// </summary>
-	public delegate void LogEventHandler(object sender, LogEventArgs e);
+    public enum AlchemiRole
+    {
+        Manager,
+        Executor,
+        Owner,
+        Admin
+    }
 }

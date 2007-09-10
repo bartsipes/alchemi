@@ -64,7 +64,7 @@ namespace Alchemi.Core.Owner
         #endregion
 
 
-        private void GConnectionDialogForm2_Load(object sender, EventArgs e)
+        private void GConnectionDialogForm_Load(object sender, EventArgs e)
         {
             ReadConfig();
         }

@@ -35,65 +35,71 @@ namespace Alchemi.Core
 	[Serializable]
     public class EndPoint
     {
+        #region Property - Host
         private string _Host;
+        /// <summary>
+        /// Returns  the host name of this end point.
+        /// </summary>
+        public string Host
+        {
+            get { return _Host; }
+            set { _Host = value; }
+        } 
+        #endregion
+        
+
+        #region Property - Port
         private int _Port;
-        private RemotingMechanism _RemotingMechanism;
-
-        //-----------------------------------------------------------------------------------------------    
-
-		/// <summary>
-		/// Gets or sets the port number of the connection to this node
-		/// </summary>
+        /// <summary>
+        /// Gets or sets the port number of the connection to this node
+        /// </summary>
         public int Port
         {
             get { return _Port; }
             set { _Port = value; }
-        }
-    
-		/// <summary>
-		/// Gets or sets the remoting mechanism used to connect to this node
-		/// </summary>
+        } 
+        #endregion
+
+
+        #region Property - RemotingMechanism
+        private RemotingMechanism _RemotingMechanism;
+        /// <summary>
+        /// Gets or sets the remoting mechanism used to connect to this node
+        /// </summary>
         public RemotingMechanism RemotingMechanism
         {
             get { return _RemotingMechanism; }
             set { _RemotingMechanism = value; }
-        }
+        } 
+        #endregion
     
-        //-----------------------------------------------------------------------------------------------    
-    
-		/// <summary>
-		/// Creates an instance of the OwnEndPoint
-		/// </summary>
-		/// <param name="port"></param>
-		/// <param name="remotingMechanism"></param>
-        public EndPoint(int port, RemotingMechanism remotingMechanism) : this(Dns.GetHostName(), port, remotingMechanism)
+
+
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndPoint"/> class.
+        /// </summary>
+        /// <param name="port">The port.</param>
+        /// <param name="remotingMechanism">The remoting mechanism.</param>
+        public EndPoint(int port, RemotingMechanism remotingMechanism)
+            : this(Dns.GetHostName(), port, remotingMechanism)
         {
         }
 
-        public EndPoint(string host, int port, RemotingMechanism remotingMechanism) 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EndPoint"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
+        /// <param name="port">The port.</param>
+        /// <param name="remotingMechanism">The remoting mechanism.</param>
+        public EndPoint(string host, int port, RemotingMechanism remotingMechanism)
         {
             _Host = host;
             _Port = port;
             _RemotingMechanism = remotingMechanism;
         }
 
-        //-----------------------------------------------------------------------------------------------    
-
-
-		/// <summary>
-		/// Returns  the host name of this end point.
-		/// </summary>
-		public string Host
-		{
-			get
-			{
-                return _Host;
-			}
-            set
-            {
-                _Host = value;
-            }
-		}
+        #endregion
 
     }
 }

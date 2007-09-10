@@ -38,15 +38,18 @@ namespace Alchemi.Core.Utility
     /// </summary>
     public sealed class HashUtil
     {
+        #region Private Constructor
         /// <summary>
         /// Private constructor to prevent instantiation of this class.
         /// </summary>
         private HashUtil()
         {
-        }
+        } 
+        #endregion
 
 
 
+        #region Method - GetHash
         /// <summary>
         /// Generates the hash of a text.
         /// </summary>
@@ -63,11 +66,14 @@ namespace Alchemi.Core.Utility
                 case HashType.SHA256: result = DoHashingAlgorithm(input, new SHA256Managed()); break;
                 case HashType.SHA384: result = DoHashingAlgorithm(input, new SHA384Managed()); break;
                 case HashType.SHA512: result = DoHashingAlgorithm(input, new SHA512Managed()); break;
-                default: result = "Invalid HashType"; break;                   
+                default: result = "Invalid HashType"; break;
             }
             return result;
-        }
+        } 
+        #endregion
 
+
+        #region Method - CheckHash
         /// <summary>Checks a text with a hash.</summary>
         /// <param name="original">The text to compare the hash against.</param>
         /// <param name="hashed">The hash to compare against.</param>
@@ -77,9 +83,11 @@ namespace Alchemi.Core.Utility
         {
             string strOrigHash = GetHash(original, hashType);
             return (strOrigHash == hashed);
-        }
+        } 
+        #endregion
 
 
+        #region Method - DoHashingAlgorithm
         /// <summary>
         /// Performs the hashing operation on the inputs string using the specified HashAlgorithm.
         /// </summary>
@@ -97,6 +105,7 @@ namespace Alchemi.Core.Utility
                 hex.AppendFormat("{0:x2}", b);
             }
             return hex.ToString();
-        }
+        } 
+        #endregion
     }
 }

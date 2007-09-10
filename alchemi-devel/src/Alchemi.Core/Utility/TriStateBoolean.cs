@@ -31,65 +31,82 @@ namespace Alchemi.Core.Utility
 	/// </summary>
 	public struct TriStateBoolean
 	{
-		private Int32 m_value;
+        public static readonly TriStateBoolean True = new TriStateBoolean(1);
+        public static readonly TriStateBoolean False = new TriStateBoolean(0);
+        public static readonly TriStateBoolean Undefined = new TriStateBoolean(-1);
 
-		public static readonly TriStateBoolean True = new TriStateBoolean(1);
-		public static readonly TriStateBoolean False = new TriStateBoolean(0);
-		public static readonly TriStateBoolean Undefined = new TriStateBoolean(-1);
+		private int m_value;
+
+
+        #region Private Constructor
+        private TriStateBoolean(int value)
+        {
+            m_value = value;
+        } 
+        #endregion
+
 		
-		private TriStateBoolean(Int32 value)
-		{
-			m_value = value;
-		}
 
-		#region "Miscellaneous"
+		// NOTE: Equals must be overridden for Value types because of the inefficient default implementation.
 
-		// NOTE: Equals must be overwritten for Value types because of the inefficient default implementation.
+        #region Method Override - Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
 
-		public override bool Equals(object obj)
-		{
-			if (obj == null)
-			{
-				return false;
-			}
+            if (!(obj is TriStateBoolean))
+            {
+                return false;
+            }
 
-			if (!(obj is TriStateBoolean))
-			{
-				return false;
-			}
+            return this.Equals((TriStateBoolean)obj);
+        } 
+        #endregion
 
-			return this.Equals ((TriStateBoolean) obj);
-		}
 
-		public Boolean Equals(TriStateBoolean obj)
-		{
-			return obj.m_value.Equals(m_value);
-		}
+        #region Method - Equals
+        public bool Equals(TriStateBoolean obj)
+        {
+            return obj.m_value.Equals(m_value);
+        } 
+        #endregion
 
-		public override int GetHashCode()
-		{
-			return m_value.GetHashCode ();
-		}
 
-		public override string ToString()
-		{
-			return m_value.ToString();
-		}
 
-		#endregion
+        #region Method Override - GetHashCode
+        public override int GetHashCode()
+        {
+            return m_value.GetHashCode();
+        } 
+        #endregion
 
-		#region "Operators"
 
-		public static Boolean operator==(TriStateBoolean obj1, TriStateBoolean obj2)
-		{
-			return (obj1.Equals(obj2));
-		}
+        #region Method Override - ToString
+        public override string ToString()
+        {
+            return m_value.ToString();
+        } 
+        #endregion
 
-		public static Boolean operator!=(TriStateBoolean obj1, TriStateBoolean obj2)
-		{
-			return !(obj1 == obj2);
-		}
-		#endregion
+
+
+        #region == Operator
+        public static Boolean operator ==(TriStateBoolean obj1, TriStateBoolean obj2)
+        {
+            return (obj1.Equals(obj2));
+        } 
+        #endregion
+
+
+        #region != Operator
+        public static Boolean operator !=(TriStateBoolean obj1, TriStateBoolean obj2)
+        {
+            return !(obj1 == obj2);
+        } 
+        #endregion
 
 	}
 }
