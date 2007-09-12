@@ -47,16 +47,14 @@ namespace Alchemi.Console.DataForms
             InitializeComponent();
 
             m_console = console;
-
-            this.Load += new EventHandler(StorageMaintenanceForm_Load);
         }
 
-        void StorageMaintenanceForm_Load(object sender, EventArgs e)
+
+        private void StorageMaintenanceForm_Load(object sender, EventArgs e)
         {
             lstApplicationStatesToRemove.Items.Clear();
-
+            
             ApplicationState[] states = (ApplicationState[])Enum.GetValues(typeof(ApplicationState));
-
             foreach (ApplicationState state in states)
             {
                 lstApplicationStatesToRemove.Items.Add(state);
@@ -262,6 +260,8 @@ namespace Alchemi.Console.DataForms
             }
 
         }
+
+
 
     }
 }

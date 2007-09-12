@@ -121,6 +121,9 @@
     <Compile Include="DataForms\PasswordForm.Designer.cs">
       <DependentUpon>PasswordForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataForms\SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -166,23 +169,49 @@
     <Compile Include="PropertiesDialogs\ApplicationProperties.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PropertiesDialogs\ApplicationProperties.Designer.cs">
+      <DependentUpon>ApplicationProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="PropertiesDialogs\ExecutorProperties.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertiesDialogs\ExecutorProperties.Designer.cs">
+      <DependentUpon>ExecutorProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="PropertiesDialogs\GroupProperties.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PropertiesDialogs\GroupProperties.Designer.cs">
+      <DependentUpon>GroupProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="PropertiesDialogs\PermissionProperties.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertiesDialogs\PermissionProperties.Designer.cs">
+      <DependentUpon>PermissionProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="PropertiesDialogs\PropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PropertiesDialogs\PropertiesForm.Designer.cs">
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="PropertiesDialogs\ThreadProperties.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="PropertiesDialogs\ThreadProperties.Designer.cs">
+      <DependentUpon>ThreadProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="PropertiesDialogs\UserProperties.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PropertiesDialogs\UserProperties.Designer.cs">
+      <DependentUpon>UserProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SysPerfForm.cs">
       <SubType>Form</SubType>
@@ -235,6 +264,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PropertiesDialogs\UserProperties.resx">
       <DependentUpon>UserProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SysPerfForm.resx">
       <DependentUpon>SysPerfForm.cs</DependentUpon>

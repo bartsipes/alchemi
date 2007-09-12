@@ -38,6 +38,7 @@ namespace Alchemi.Console.DataForms
             // 
             // btnCancel
             // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(136, 72);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -88,10 +89,12 @@ namespace Alchemi.Console.DataForms
             this.lbPwd1.TabIndex = 13;
             this.lbPwd1.Text = "Password";
             // 
-            // PasswordForm2
+            // PasswordForm
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(258, 103);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
@@ -103,7 +106,7 @@ namespace Alchemi.Console.DataForms
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "PasswordForm2";
+            this.Name = "PasswordForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change Password";

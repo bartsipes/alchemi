@@ -2,8 +2,18 @@ Global
 ===
 [ ] Update all of the forms so that the UI code is in a .designer.cs file
 [ ] String->string, Int32->int
+[ ] Upgrade to latest version of NPlot (0.9.10.0)
+[ ] Or...Move everything to ZedGraph instead of NPlot
 
 CustomListItems
 ===
 [ ] Get rid of public fields (should be properties)
 [ ] Separate classes into distinct files
+
+StorageMaintenanceForm
+===
+[ ] Get rid of threading stuff and use a BackgroundWorker
+
+ExecutorProperties
+===
+[ ] Get rid of ArrayList implementation and use generics (if NPlot supports it)

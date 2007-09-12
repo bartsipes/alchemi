@@ -56,10 +56,13 @@ namespace Alchemi.Console.DataForms
             this.lstApplicationStatesToRemove = new System.Windows.Forms.ListBox();
             this.maintenanceOptions = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.numTimeExecutorPingedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.chkRemoveExecutorsByTimePinged = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.numTimeApplicationCompletedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numTimeApplicationCreatedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
             this.chkRemoveApplicationsByTimeCompleted = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -74,15 +77,12 @@ namespace Alchemi.Console.DataForms
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.numTimeApplicationCreatedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
-            this.numTimeApplicationCompletedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
-            this.numTimeExecutorPingedCutOffInMinutes = new System.Windows.Forms.NumericUpDown();
             this.maintenanceOptions.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCreatedCutOffInMinutes)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCompletedCutOffInMinutes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeExecutorPingedCutOffInMinutes)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCompletedCutOffInMinutes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCreatedCutOffInMinutes)).BeginInit();
             this.SuspendLayout();
             // 
             // btnPerformMaintenance
@@ -170,6 +170,13 @@ namespace Alchemi.Console.DataForms
             this.tabPage1.Text = "Executor maintenance";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // numTimeExecutorPingedCutOffInMinutes
+            // 
+            this.numTimeExecutorPingedCutOffInMinutes.Location = new System.Drawing.Point(400, 106);
+            this.numTimeExecutorPingedCutOffInMinutes.Name = "numTimeExecutorPingedCutOffInMinutes";
+            this.numTimeExecutorPingedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
+            this.numTimeExecutorPingedCutOffInMinutes.TabIndex = 13;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -217,6 +224,20 @@ namespace Alchemi.Console.DataForms
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Application maintenance";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // numTimeApplicationCompletedCutOffInMinutes
+            // 
+            this.numTimeApplicationCompletedCutOffInMinutes.Location = new System.Drawing.Point(365, 236);
+            this.numTimeApplicationCompletedCutOffInMinutes.Name = "numTimeApplicationCompletedCutOffInMinutes";
+            this.numTimeApplicationCompletedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
+            this.numTimeApplicationCompletedCutOffInMinutes.TabIndex = 14;
+            // 
+            // numTimeApplicationCreatedCutOffInMinutes
+            // 
+            this.numTimeApplicationCreatedCutOffInMinutes.Location = new System.Drawing.Point(365, 198);
+            this.numTimeApplicationCreatedCutOffInMinutes.Name = "numTimeApplicationCreatedCutOffInMinutes";
+            this.numTimeApplicationCreatedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
+            this.numTimeApplicationCreatedCutOffInMinutes.TabIndex = 13;
             // 
             // label3
             // 
@@ -345,27 +366,6 @@ namespace Alchemi.Console.DataForms
             this.checkBox7.Text = "Remove All Applications";
             this.checkBox7.UseVisualStyleBackColor = true;
             // 
-            // numTimeApplicationCreatedCutOffInMinutes
-            // 
-            this.numTimeApplicationCreatedCutOffInMinutes.Location = new System.Drawing.Point(365, 198);
-            this.numTimeApplicationCreatedCutOffInMinutes.Name = "numTimeApplicationCreatedCutOffInMinutes";
-            this.numTimeApplicationCreatedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
-            this.numTimeApplicationCreatedCutOffInMinutes.TabIndex = 13;
-            // 
-            // numTimeApplicationCompletedCutOffInMinutes
-            // 
-            this.numTimeApplicationCompletedCutOffInMinutes.Location = new System.Drawing.Point(365, 236);
-            this.numTimeApplicationCompletedCutOffInMinutes.Name = "numTimeApplicationCompletedCutOffInMinutes";
-            this.numTimeApplicationCompletedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
-            this.numTimeApplicationCompletedCutOffInMinutes.TabIndex = 14;
-            // 
-            // numTimeExecutorPingedCutOffInMinutes
-            // 
-            this.numTimeExecutorPingedCutOffInMinutes.Location = new System.Drawing.Point(400, 106);
-            this.numTimeExecutorPingedCutOffInMinutes.Name = "numTimeExecutorPingedCutOffInMinutes";
-            this.numTimeExecutorPingedCutOffInMinutes.Size = new System.Drawing.Size(75, 20);
-            this.numTimeExecutorPingedCutOffInMinutes.TabIndex = 13;
-            // 
             // StorageMaintenanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -379,14 +379,15 @@ namespace Alchemi.Console.DataForms
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Storage Maintenance Form";
+            this.Load += new System.EventHandler(this.StorageMaintenanceForm_Load);
             this.maintenanceOptions.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTimeExecutorPingedCutOffInMinutes)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCreatedCutOffInMinutes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCompletedCutOffInMinutes)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numTimeExecutorPingedCutOffInMinutes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTimeApplicationCreatedCutOffInMinutes)).EndInit();
             this.ResumeLayout(false);
 
         }
