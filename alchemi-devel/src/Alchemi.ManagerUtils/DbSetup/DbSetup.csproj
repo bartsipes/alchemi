@@ -105,7 +105,7 @@
     <Compile Include="Installer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InstallerProgressEvent.cs">
+    <Compile Include="InstallerProgressEventArgs.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InstallProgress.cs">
@@ -114,7 +114,7 @@
     <Compile Include="ManagerStorageTypeDropdownItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Starter.cs">
+    <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Installer.resx">

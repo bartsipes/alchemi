@@ -201,9 +201,9 @@ namespace Alchemi.ManagerUtils.DbSetup
         }
 
         private delegate void MyProgressEventsHandler(
-            object sender, InstallerProgressEvent e);
+            object sender, InstallerProgressEventArgs e);
 
-        private void UpdateUI(object sender, InstallerProgressEvent e)
+        private void UpdateUI(object sender, InstallerProgressEventArgs e)
         {
             if (e.Message.Length > 0)
             {
@@ -227,7 +227,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             if (InvokeRequired)
             {
                 // Wrap the parameters in some EventArgs-derived custom class:
-                System.EventArgs e = new InstallerProgressEvent(message, percentDone);
+                System.EventArgs e = new InstallerProgressEventArgs(message, percentDone);
                 object[] pList = { this, e };
 
                 // Invoke the method. This class is derived
@@ -239,7 +239,7 @@ namespace Alchemi.ManagerUtils.DbSetup
             {
                 // We're already on the UI thread just
                 // call straight through.
-                UpdateUI(this, new InstallerProgressEvent(message,
+                UpdateUI(this, new InstallerProgressEventArgs(message,
                     percentDone));
             }
         }

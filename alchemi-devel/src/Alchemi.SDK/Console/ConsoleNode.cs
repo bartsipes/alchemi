@@ -32,6 +32,9 @@ namespace Alchemi.Console
 {
 	public class ConsoleNode : GNode
 	{
-        public ConsoleNode(GConnection gc) : base(gc) {}
+        public ConsoleNode(GConnection gc) 
+            : base(gc)
+        {
+        }
 	}
 }

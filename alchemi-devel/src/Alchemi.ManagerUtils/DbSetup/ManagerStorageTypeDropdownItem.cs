@@ -34,19 +34,36 @@ namespace Alchemi.ManagerUtils.DbSetup
 	/// </summary>
 	public class ManagerStorageTypeDropdownItem
 	{
-		public String Description;
-
-		public ManagerStorageEnum StorageType;
-
-		public ManagerStorageTypeDropdownItem(String description, ManagerStorageEnum storageType)
+		public ManagerStorageTypeDropdownItem(string description, ManagerStorageEnum storageType)
 		{
-			Description = description;
-			StorageType = storageType;
+			this.Description = description;
+			this.StorageType = storageType;
 		}
+
+
+        #region Property - Description
+        private string _Description;
+        public string Description
+        {
+            get { return _Description; }
+            set { _Description = value; }
+        } 
+        #endregion
+
+
+        #region Property - StorageType
+        private ManagerStorageEnum _StorageType;
+        public ManagerStorageEnum StorageType
+        {
+            get { return _StorageType; }
+            set { _StorageType = value; }
+        } 
+        #endregion
+
 
 		public override string ToString()
 		{
-			return Description;
+			return this.Description;
 		}
 	}
 }

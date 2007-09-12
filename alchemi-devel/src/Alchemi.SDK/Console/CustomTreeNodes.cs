@@ -52,11 +52,13 @@ namespace Alchemi.Console
 	public class DummyTreeNode : TreeNode
 	{
 
-		public DummyTreeNode(String text) : base("")
+		public DummyTreeNode(string text) 
+            : base("")
 		{
 		}
 
-		public DummyTreeNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base("", imageIndex, selectedImageIndex)
+		public DummyTreeNode (string text, int imageIndex,  Int32 selectedImageIndex ) 
+            : base("", imageIndex, selectedImageIndex)
 		{
 		}
 
@@ -101,11 +103,13 @@ namespace Alchemi.Console
 		}
 
 
-		public SpecialParentNode(String text) : base(text)
+		public SpecialParentNode(string text) 
+            : base(text)
 		{
 		}
 
-		public SpecialParentNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
+		public SpecialParentNode (string text, int imageIndex,  int selectedImageIndex ) 
+            : base(text, imageIndex, selectedImageIndex)
 		{
 		}
 
@@ -115,12 +119,14 @@ namespace Alchemi.Console
 	{
 		public ApplicationStorageView AlchemiApplication;
 
-		public ApplicationTreeNode(String text) : base(text)
+		public ApplicationTreeNode(string text) 
+            : base(text)
 		{
 			this.NodeType = SpecialParentNodeType.Applications;
 		}
 
-		public ApplicationTreeNode (String text, Int32 imageIndex,  Int32 selectedImageIndex ) : base(text, imageIndex, selectedImageIndex)
+		public ApplicationTreeNode (string text, int imageIndex,  int selectedImageIndex ) 
+            : base(text, imageIndex, selectedImageIndex)
 		{
 			this.NodeType = SpecialParentNodeType.Applications;
 		}

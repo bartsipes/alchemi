@@ -30,18 +30,38 @@ namespace Alchemi.ManagerUtils.DbSetup
 	/// <summary>
 	/// Date used to send the installer progress information from the worker thread to the UI thread.
 	/// </summary>
-	public class InstallerProgressEvent : System.EventArgs
+	public class InstallerProgressEventArgs : EventArgs
 	{
-		/// <summary>
-		/// The message to add to the bottom of the log.
-		/// </summary>
-		public String Message;
-		public Int32 PercentDone;
-
-		public InstallerProgressEvent(String message, Int32 percentDone)
+        public InstallerProgressEventArgs(string message, int percentDone)
 		{
-			Message = message;
-			PercentDone = percentDone;
+			this.Message = message;
+			this.PercentDone = percentDone;
 		}
+
+
+        #region Property - Message
+        private string _Message;
+        /// <summary>
+        /// The message to add to the bottom of the log.
+        /// </summary>
+        public string Message
+        {
+            get { return _Message; }
+            private set { _Message = value; }
+        } 
+        #endregion
+
+
+        #region Property - PercentDone
+        private int _PercentDone;
+        /// <summary>
+        /// The percentage completed
+        /// </summary>
+        public int PercentDone
+        {
+            get { return _PercentDone; }
+            set { _PercentDone = value; }
+        } 
+        #endregion
 	}
 }

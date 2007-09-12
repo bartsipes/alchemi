@@ -34,7 +34,8 @@ namespace Alchemi.Console
 	{
 		public ApplicationStorageView AlchemiApplication;
 
-		public ApplicationItem(string text): base(text)
+		public ApplicationItem(string text)
+            : base(text)
 		{
 		}
 	}
@@ -56,7 +57,8 @@ namespace Alchemi.Console
             }
         }
 
-		public ThreadItem(string text) : base(text)
+		public ThreadItem(string text) 
+            : base(text)
 		{
 		}
 	}
@@ -65,7 +67,8 @@ namespace Alchemi.Console
 	{
 		public ExecutorStorageView Executor;
 
-		public ExecutorItem(string text) : base(text)
+		public ExecutorItem(string text) 
+            : base(text)
 		{
 		}
 	}
@@ -74,7 +77,8 @@ namespace Alchemi.Console
 	{
 		public UserStorageView User;
 
-		public UserItem(String text) : base(text)
+		public UserItem(String text) 
+            : base(text)
 		{
 		}
 	}
@@ -83,7 +87,8 @@ namespace Alchemi.Console
 	{
 		public GroupStorageView GroupView;
 
-		public GroupItem(String text) : base(text)
+		public GroupItem(String text) 
+            : base(text)
 		{
 		}
 	}
@@ -92,7 +97,8 @@ namespace Alchemi.Console
 	{
 		public PermissionStorageView Permission;
 
-		public PermissionItem(String text) : base(text)
+		public PermissionItem(String text) 
+            : base(text)
 		{
 		}
 	}
