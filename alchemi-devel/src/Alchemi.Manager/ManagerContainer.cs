@@ -52,7 +52,7 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Manager Configuration
 		/// </summary>
-		public Configuration Config=null;
+		public Configuration Config = null;
 
 		/// <summary>
 		/// The configuration file used to set remoting parameters for the Manager.

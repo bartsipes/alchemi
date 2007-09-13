@@ -11,27 +11,31 @@ namespace Alchemi.Executor
 {
     internal class HeartbeatWorker
     {
-        private Logger logger;
+        private static readonly Logger logger = new Logger();
+
         /// <summary>
         /// Default heart beat interval (5 seconds)
         /// </summary>
         internal const int DEFAULT_INTERVAL = 5;
 
-        private bool _stop;
-        private int _HeartbeatInterval;
-
-        private Thread _HeartbeatThread;
-
         private GExecutor _executor;
+        private Thread _HeartbeatThread;
+        private bool _stop;
 
+
+        #region Constructor
         internal HeartbeatWorker(GExecutor executor)
         {
             _stop = false;
             _HeartbeatInterval = DEFAULT_INTERVAL;
             _executor = executor;
-            logger = new Logger();
-        }
+        } 
+        #endregion
 
+
+
+        #region Property - HeartbeatInterval
+        private int _HeartbeatInterval;
         /// <summary>
         /// Gets or sets the heartbeat interval for the executor (in seconds).
         /// </summary>
@@ -45,8 +49,12 @@ namespace Alchemi.Executor
             {
                 _HeartbeatInterval = value;
             }
-        }
+        } 
+        #endregion
 
+
+
+        #region Method - Start
         internal void Start()
         {
             _stop = false;
@@ -55,15 +63,22 @@ namespace Alchemi.Executor
             _HeartbeatThread.IsBackground = true;
             _HeartbeatThread.Priority = ThreadPriority.Lowest;
             _HeartbeatThread.Start();
-        }
+        } 
+        #endregion
 
+
+        #region Method - Stop
         internal void Stop()
         {
             //dont wait for it to stop, its a background thread :
             //so it will be killed with the process anyway.
-            _stop = true; 
-        }
+            _stop = true;
+        } 
+        #endregion
 
+
+
+        #region Method - Heartbeat
         private void Heartbeat()
         {
             int pingFailCount = 0;
@@ -121,7 +136,7 @@ namespace Alchemi.Executor
                     }
                     catch (Exception e)
                     {
-                        if (e is SocketException  || e is System.Runtime.Remoting.RemotingException)
+                        if (e is SocketException || e is System.Runtime.Remoting.RemotingException)
                         {
                             pingFailCount++;
                             //we disconnect the executor if the manager cant be pinged three times
@@ -166,6 +181,7 @@ namespace Alchemi.Executor
             }
 
             logger.Info("HeartBeat Thread Exited.");
-        }
+        } 
+        #endregion
     }
 }

@@ -29,32 +29,42 @@ namespace Alchemi.Executor.Sandbox
             _executor = executor;
         }
 
+        #region Property - _Manager
         private IManager _Manager
         {
             get
             {
                 return _executor.Manager;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - _GridAppDomains
         private IDictionary<string, GridAppDomain> _GridAppDomains
         {
             get
             {
                 return _executor._GridAppDomains;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - _Credentials
         private SecurityCredentials _Credentials
         {
             get
             {
                 return _executor.Credentials;
             }
-        }
+        } 
+        #endregion
 
-        //the caller of this method will lock the GridAppDomains, so no worries:
-        //no need to lock it here.
+
+        #region Method - GetManifestAndSetupDomain
+        // the caller of this method will lock the GridAppDomains, so no worries:
+        // no need to lock it here.
         private void GetManifestAndSetupDomain()
         {
             string appDir = ExecutorUtil.GetApplicationDirectory(_CurTi.ApplicationId);
@@ -92,12 +102,14 @@ namespace Alchemi.Executor.Sandbox
             {
                 logger.Info("I got the lock but this app domain is already created.");
             }
+        } 
+        #endregion
 
-        }
 
-        //if we have an exception in the secondary appdomain, it will raise an exception in this method,
-        //since the cross-app-domain call uses remoting internally, and it is just as if a remote method 
-        //has caused an exception. we have a handler for that below anyway.
+        #region Method - ExecuteThreadInAppDomain
+        // if we have an exception in the secondary appdomain, it will raise an exception in this method,
+        // since the cross-app-domain call uses remoting internally, and it is just as if a remote method 
+        // has caused an exception. we have a handler for that below anyway.
         private void ExecuteThreadInAppDomain()
         {
             byte[] rawThread = null;
@@ -116,7 +128,7 @@ namespace Alchemi.Executor.Sandbox
                     }
                     gad = _GridAppDomains[_CurTi.ApplicationId];
                 }
- 
+
                 //get thread from manager
                 rawThread = _Manager.Executor_GetThread(_Credentials, _CurTi);
                 logger.Debug("Got thread from manager. executing it: " + _CurTi.ThreadId);
@@ -145,22 +157,22 @@ namespace Alchemi.Executor.Sandbox
             }
             catch (Exception e)
             {
-				logger.Warn(string.Format("grid thread # {0} failed ({1})", _CurTi.UniqueId, e.GetType()), e);
-				try
-				{
-					_Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, e);
-				}
-				catch (Exception ex1)
-				{
-					if (_CurTi != null)
-					{
-						logger.Warn("Error trying to set failed thread for App: " + _CurTi.ApplicationId + ", thread=" + _CurTi.ThreadId + ". Original Exception = \n" + e, ex1);
-					}
-					else
-					{
-						logger.Warn("Error trying to set failed thread: Original exception = " + e, ex1);
-					}
-				}
+                logger.Warn(string.Format("grid thread # {0} failed ({1})", _CurTi.UniqueId, e.GetType()), e);
+                try
+                {
+                    _Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, e);
+                }
+                catch (Exception ex1)
+                {
+                    if (_CurTi != null)
+                    {
+                        logger.Warn("Error trying to set failed thread for App: " + _CurTi.ApplicationId + ", thread=" + _CurTi.ThreadId + ". Original Exception = \n" + e, ex1);
+                    }
+                    else
+                    {
+                        logger.Warn("Error trying to set failed thread: Original exception = " + e, ex1);
+                    }
+                }
             }
             finally
             {
@@ -173,8 +185,11 @@ namespace Alchemi.Executor.Sandbox
                 catch { }
                 logger.Info("Exited ExecuteThreadInAppDomain...");
             }
-        }
+        } 
+        #endregion
 
+
+        #region Method - GetPermissionSetForApp
         private PermissionSet GetPermissionSetForApp(string readonlyDir, string appDir)
         {
             SecurityConfig scfg = null;
@@ -201,8 +216,11 @@ namespace Alchemi.Executor.Sandbox
             //return scfg.GetGThreadPermissions(readonlyDir, appDir);
             PermissionSet ps = (PolicyLevel.CreateAppDomainLevel()).GetNamedPermissionSet("FullTrust");
             return ps;
-        }
+        } 
+        #endregion
 
+
+        #region Method - CreateSandboxDomain
         private void CreateSandboxDomain(string appDir)
         {
             Type appDomainExecutorType = typeof(AppDomainExecutor);
@@ -215,10 +233,10 @@ namespace Alchemi.Executor.Sandbox
             string readOnlyDir = Path.GetDirectoryName(appDomainExecutorType.Assembly.Location);
             PermissionSet grantSet = GetPermissionSetForApp(readOnlyDir, appDir);
 
-			// need to load config file here
-        	string appConfigFile = Path.Combine(appDir, "App.config");
-			if (File.Exists(appConfigFile))
-				info.ConfigurationFile = "App.config";
+            // need to load config file here
+            string appConfigFile = Path.Combine(appDir, "App.config");
+            if (File.Exists(appConfigFile))
+                info.ConfigurationFile = "App.config";
 
             //we could have some assemblies run with higher trust here if needed.
             AppDomain domain = AppDomain.CreateDomain(_CurTi.ApplicationId, null, info, grantSet, null);
@@ -239,21 +257,29 @@ namespace Alchemi.Executor.Sandbox
 
             //_GridAppDomains is locked by caller, so we don't need to worry about that.
             _GridAppDomains.Add(_CurTi.ApplicationId, new GridAppDomain(domain, executor));
-        }
+        } 
+        #endregion
 
+
+        #region Method - Start
         internal void Start()
         {
             _execThread = new Thread(new ThreadStart(ExecuteThreadInAppDomain));
             _execThread.Name = "ExecutorWorker-" + _CurTi.UniqueId;
             _execThread.Priority = ThreadPriority.Lowest;
             _execThread.Start();
-        }
+        } 
+        #endregion
+
+
+        #region Method - Stop
         internal void Stop()
         {
             if (_execThread != null && _execThread.IsAlive)
             {
                 _execThread.Abort();
             }
-        }
+        } 
+        #endregion
     }
 }

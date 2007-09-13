@@ -37,71 +37,142 @@ namespace Alchemi.Executor
 	/// </summary>
 	public class ExecutorContainer
 	{
-		public event GotDisconnectedEventHandler GotDisconnected;
-		public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
+        // Create a logger for use in this class
+        private static readonly Logger logger = new Logger();
+
+        public Configuration _Config = null;
+        private GExecutor _Executor = null;
+
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExecutorContainer"/> class.
+        /// </summary>
+        public ExecutorContainer()
+        {
+        }
+        #endregion
+
+
+        #region Event - GotDisconnected
+        private event GotDisconnectedEventHandler _GotDisconnected;
+        /// <summary>
+        /// Occurs when the Executor becomes disconnected from the Manager.
+        /// </summary>
+        public event GotDisconnectedEventHandler GotDisconnected
+        {
+            add { _GotDisconnected += value; }
+            remove { _GotDisconnected -= value; }
+        }
+
+        protected virtual void OnGotDisconnected()
+        {
+            if (_GotDisconnected != null)
+            {
+                _GotDisconnected();
+            }
+        } 
+        #endregion
+
+
+        #region Event - NonDedicatedExecutingStatusChanged
+        private event NonDedicatedExecutingStatusChangedEventHandler _NonDedicatedExecutingStatusChanged;
+        public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged
+        {
+            add { _NonDedicatedExecutingStatusChanged += value; }
+            remove { _NonDedicatedExecutingStatusChanged -= value; }
+        }
+
+        protected virtual void OnNonDedicatedExecutingStatusChanged()
+        {
+            if (_NonDedicatedExecutingStatusChanged != null)
+            {
+                _NonDedicatedExecutingStatusChanged();
+            }
+        } 
+        #endregion
 		
-		public Configuration Config=null;
-		private GExecutor _Executor = null;
 
-		// Create a logger for use in this class
-		private static readonly Logger logger = new Logger();
 
-		public ExecutorContainer()
-		{
-		}
+        #region Property - Connected
+        public bool Connected
+        {
+            get
+            {
+                return (_Executor == null ? false : true);
+            }
+        } 
+        #endregion
 
-		public bool Connected
-		{
-			get { return (_Executor == null? false : true);}
-		}
 
-		public void Connect() //TODO FIX RECONNECT PROPERLY.
-		{
-			logger.Info("Connecting....");
-			EndPoint rep = new EndPoint(
-				Config.ManagerHost,
-				Config.ManagerPort,
-				RemotingMechanism.TcpBinary
-				);
+        #region Property - ConnectVerified
+        /// <summary>
+        /// Returns whether the Connection has been verified previously.
+        /// </summary>
+        public bool ConnectVerified
+        {
+            get { return _Config.ConnectVerified; }
+        }
+        #endregion
 
-			logger.Debug("Created remote-end-point");
-			EndPoint oep = new EndPoint(Config.OwnPort,RemotingMechanism.TcpBinary);
 
-			logger.Debug("Created own-end-point");
-			// connect to manager
-			_Executor = new GExecutor(rep, oep, Config.Id, Config.Dedicated, Config.AutoRevertToNDE, 
-                new SecurityCredentials(Config.Username, Config.Password), ExecutorUtil.BaseDirectory);
 
-			Config.ConnectVerified = true;
-			Config.Id = _Executor.Id;
-			Config.Dedicated = _Executor.Dedicated;
+        #region Method - Connect
+        /// <summary>
+        /// Connect to the Manager
+        /// </summary>
+        public void Connect() 
+        {
+            //TODO FIX RECONNECT PROPERLY.
 
-			_Executor.GotDisconnected += new GotDisconnectedEventHandler(GExecutor_GotDisconnected);
-			_Executor.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(GExecutor_NonDedicatedExecutingStatusChanged);
+            logger.Info("Connecting....");
+            EndPoint rep = new EndPoint(
+                _Config.ManagerHost,
+                _Config.ManagerPort,
+                RemotingMechanism.TcpBinary
+                );
 
-			Config.Slz();
+            logger.Debug("Created remote-end-point");
+            EndPoint oep = new EndPoint(_Config.OwnPort, RemotingMechanism.TcpBinary);
 
-			logger.Info("Connected successfully.");
-		}
+            logger.Debug("Created own-end-point");
+            // connect to manager
+            _Executor = new GExecutor(rep, oep, _Config.Id, _Config.Dedicated, _Config.AutoRevertToNDE,
+                new SecurityCredentials(_Config.Username, _Config.Password), ExecutorUtil.BaseDirectory);
 
-		/// <summary>
-		/// Reconnect to the Manager.
-		/// </summary>
-		public void Reconnect()
-		{
-			Reconnect(Config.RetryMax ,Config.RetryInterval);
-		}
+            _Config.ConnectVerified = true;
+            _Config.Id = _Executor.Id;
+            _Config.Dedicated = _Executor.Dedicated;
 
-		/// <summary>
-		/// Try to Reconnect to the Manager.
-		///
-		/// </summary>
-		/// <param name="maxRetryCount">Maximum number of times to retry, if connection fails. -1 signifies: try forever.</param>
-		/// <param name="retryInterval">Retry connection after every 'retryInterval' seconds.</param>
-		public void Reconnect(int maxRetryCount, int retryInterval)
-		{
-			int retryCount = 0;
-			const int DEFAULT_RETRY_INTERVAL = 30; //30 seconds
+            _Executor.GotDisconnected += new GotDisconnectedEventHandler(GExecutor_GotDisconnected);
+            _Executor.NonDedicatedExecutingStatusChanged += new NonDedicatedExecutingStatusChangedEventHandler(GExecutor_NonDedicatedExecutingStatusChanged);
+
+            _Config.Serialize();
+
+            logger.Info("Connected successfully.");
+        } 
+        #endregion
+
+
+        #region Method - Reconnect
+        /// <summary>
+        /// Reconnect to the Manager.
+        /// </summary>
+        public void Reconnect()
+        {
+            Reconnect(_Config.RetryMax, _Config.RetryInterval);
+        } 
+        #endregion
+
+        #region Method - Reconnect
+        /// <summary>
+        /// Try to Reconnect to the Manager.
+        /// </summary>
+        /// <param name="maxRetryCount">Maximum number of times to retry, if connection fails. -1 signifies: try forever.</param>
+        /// <param name="retryInterval">Retry connection after every 'retryInterval' seconds.</param>
+        public void Reconnect(int maxRetryCount, int retryInterval)
+        {
+            int retryCount = 0;
+            const int DEFAULT_RETRY_INTERVAL = 30; //30 seconds
 
             //first unregister channel etc... wait for a bit and then start  again.
             try
@@ -114,114 +185,145 @@ namespace Alchemi.Executor
                 logger.Warn(" Error unremoting self when trying to Re-connect. ", ex);
             }
 
-			while (true)
-			{
+            while (true)
+            {
                 //play safe & also wait for a bit first...
                 if (retryInterval < 0 || retryInterval > System.Int32.MaxValue)
                     retryInterval = DEFAULT_RETRY_INTERVAL;
 
                 Thread.Sleep(retryInterval * 1000); //convert to milliseconds
 
-				if (maxRetryCount >= 0 && retryCount < maxRetryCount)
-					break;
+                if (maxRetryCount >= 0 && retryCount < maxRetryCount)
+                    break;
 
-				logger.Debug ("Attempting to reconnect ... attempt: "+(retryCount+1));
-				retryCount++;
-				try //handle the error since we want to retry later.
-				{
-					Connect();
-				}
-				catch (Exception ex)
-				{
-					//ignore the error. retry later.
-					logger.Debug("Error re-connecting attempt: " + retryCount, ex);
-				}
+                logger.Debug("Attempting to reconnect ... attempt: " + (retryCount + 1));
+                retryCount++;
+                try //handle the error since we want to retry later.
+                {
+                    Connect();
+                }
+                catch (Exception ex)
+                {
+                    //ignore the error. retry later.
+                    logger.Debug("Error re-connecting attempt: " + retryCount, ex);
+                }
 
                 if (Connected)
                     break;
-			}
+            }
 
-			//if Executor is null, then it is not Connected. The Connected property actually checks for that.
-			if (_Executor!=null)
-			{
-				if (_Executor.Dedicated)
-				{
-					logger.Debug("Reconnected successfully.[Dedicated mode.]");
-				}
-				else //not dedicated...
-				{
-					logger.Debug("Reconnected successfully.[Non-dedicated mode.]");
-					_Executor.StartNonDedicatedExecuting(1000);
-				}
-			}
-		}
+            //if Executor is null, then it is not Connected. The Connected property actually checks for that.
+            if (_Executor != null)
+            {
+                if (_Executor.Dedicated)
+                {
+                    logger.Debug("Reconnected successfully.[Dedicated mode.]");
+                }
+                else //not dedicated...
+                {
+                    logger.Debug("Reconnected successfully.[Non-dedicated mode.]");
+                    _Executor.StartNonDedicatedExecuting(1000);
+                }
+            }
+        } 
+        #endregion
 
-		public void Disconnect()
-		{
-			if (Connected)
-			{
+
+        #region Method - Disconnect
+        /// <summary>
+        /// Disconnects from the Manager
+        /// </summary>
+        public void Disconnect()
+        {
+            if (Connected)
+            {
                 _Executor.Disconnect();
-				_Executor = null;
-				logger.Info("Disconnected successfully.");
-			}
-		}
+                _Executor = null;
+                logger.Info("Disconnected successfully.");
+            }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Read the configuration file.
-		/// </summary>
-		/// <param name="useDefault"></param>
-		public void ReadConfig(bool useDefault)
-		{
-			if (!useDefault)
-			{
-				//handle the error and lets use default if the config cannot be found.
-				try
-				{
-					lock (this) // since we may reload the config dynamically from another thread, if needed.
-					{
-						Config = Configuration.GetConfiguration();
-					}
-					logger.Debug("Using configuration from Alchemi.Executor.config.xml ...");
-				}
-				catch (Exception ex)
-				{
-					logger.Debug("Error getting existing config. Continuing with default config...",ex);
-					useDefault = true;
-				}
-			}
 
-			//this needs to be a seperate if-block, 
+        #region Method - ReadConfig
+        /// <summary>
+        /// Read the configuration file.
+        /// </summary>
+        /// <param name="useDefault"></param>
+        public void ReadConfig(bool useDefault)
+        {
+            if (!useDefault)
+            {
+                //handle the error and lets use default if the config cannot be found.
+                try
+                {
+                    lock (this) // since we may reload the config dynamically from another thread, if needed.
+                    {
+                        _Config = Configuration.Deserialize();
+                    }
+                    logger.Debug("Using configuration from Alchemi.Executor.config.xml ...");
+                }
+                catch (Exception ex)
+                {
+                    logger.Debug("Error getting existing config. Continuing with default config...", ex);
+                    useDefault = true;
+                }
+            }
+
+            //this needs to be a seperate if-block, 
             //since we may have a problem getting existing config. then we use default
-			if (useDefault)
-			{
-				Config = new Configuration();
-				logger.Debug("Using default configuration...");
-			}
-		}
+            if (useDefault)
+            {
+                _Config = new Configuration();
+                logger.Debug("Using default configuration...");
+            }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Returns a name specifying whether the Connection has been verified previously.
-		/// </summary>
-		public bool ConnectVerified
-		{
-			get { return Config.ConnectVerified; }
-		}
 
-		/// <summary>
-		/// Stops the Executor Container
-		/// </summary>
-		public void Stop()
-		{
-			if (Config!=null)
-			{
-				Config.Slz();
-			}
-			
-			Disconnect();
+        #region Method - Start
+        /// <summary>
+        /// Starts the Executor Container
+        /// </summary>
+        public void Start()
+        {
+            logger.Debug("debug mode: curdir env=" + Environment.CurrentDirectory + " app-base=" + AppDomain.CurrentDomain.BaseDirectory);
+
+            ReadConfig(false);
+
+            if (ConnectVerified)
+            {
+                logger.Info("Using last verified configuration ...");
+                Connect();
+            }
+            else
+            {
+                if (!Connected)
+                    Connect();
+            }
+        }
+        #endregion
+
+
+        #region Method - Stop
+        /// <summary>
+        /// Stops the Executor Container
+        /// </summary>
+        public void Stop()
+        {
+            if (_Config != null)
+            {
+                _Config.Serialize();
+            }
+
+            Disconnect();
 
             Cleanup();
-		}
+        } 
+        #endregion
 
+
+        #region Method - Cleanup
         private void Cleanup()
         {
             //handle errors since clean up shouldnt hold up the other actions.
@@ -246,58 +348,52 @@ namespace Alchemi.Executor
             {
                 logger.Debug("Clean up error. Continuing...", e);
             }
+        } 
+        #endregion
+
+
+        #region Method - UpdateHeartBeatInterval
+        public void UpdateHeartBeatInterval(int newInterval)
+        {
+            if (_Executor != null)
+            {
+                _Executor.HeartBeatInterval = newInterval;
+            }
         }
+        #endregion
 
-		/// <summary>
-		/// Starts the Executor Container
-		/// </summary>
-		public void Start()
-		{
-			logger.Debug("debug mode: curdir env="+Environment.CurrentDirectory + " app-base="+AppDomain.CurrentDomain.BaseDirectory);
 
-			ReadConfig(false);
 
-			if (ConnectVerified)
-			{
-				logger.Info("Using last verified configuration ...");
-				Connect();
-			}
-			else
-			{
-				if (!Connected)
-					Connect();
-			}
-		}
+        #region Method - GExecutor_GotDisconnected
+        private void GExecutor_GotDisconnected()
+        {
+            //always handle errors when raising events
+            try
+            {
+                //bubble the event to whoever handles this.
+                OnGotDisconnected();
+            }
+            catch
+            {
+            }
+        } //TODO REVIEW Catch ALLs everywhere 
+        #endregion
 
-		private void GExecutor_GotDisconnected()
-		{
-			//always handle errors when raising events
-			try
-			{
-				//bubble the event to whoever handles this.
-				if (GotDisconnected!=null)
-					GotDisconnected();
-			}catch {}
-		} //TODO REVIEW Catch ALLs everywhere
 
-		private void GExecutor_NonDedicatedExecutingStatusChanged()
-		{
-			//always handle errors when raising events
-			try
-			{
-				//bubble the event up
-				if (NonDedicatedExecutingStatusChanged!=null)
-					NonDedicatedExecutingStatusChanged();
-			}catch {}
-		}
-
-		public void UpdateHeartBeatBInterval(int newHBInterval)
-		{
-			if (_Executor != null)
-			{
-	            _Executor.HeartBeatInterval = newHBInterval;
-			}
-		}
+        #region Method - GExecutor_NonDedicatedExecutingStatusChanged
+        private void GExecutor_NonDedicatedExecutingStatusChanged()
+        {
+            //always handle errors when raising events
+            try
+            {
+                //bubble the event up
+                OnNonDedicatedExecutingStatusChanged();
+            }
+            catch
+            {
+            }
+        } 
+        #endregion
 
 	}
 }

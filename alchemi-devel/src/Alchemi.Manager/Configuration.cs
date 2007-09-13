@@ -47,26 +47,32 @@ namespace Alchemi.Manager
 		/// Database server host name
 		/// </summary>
         public string DbServer = "localhost";
+
 		/// <summary>
 		/// Database server username
 		/// </summary>
         public string DbUsername = "sa";
+
 		/// <summary>
 		/// Database password
 		/// </summary>
         public string DbPassword = "xxxx";
+
 		/// <summary>
 		/// Database name
 		/// </summary>
         public string DbName = "Alchemi";
+
         /// <summary>
         /// Database connect timeout
         /// </summary>
         public int DbConnectTimeout = 5;
+
         /// <summary>
         /// Database max pool size
         /// </summary>
         public int DbMaxPoolSize = 5;
+
         /// <summary>
         /// Database min pool size
         /// </summary>
@@ -87,31 +93,38 @@ namespace Alchemi.Manager
 		/// Manager id (valid only if the Manager is also an Executor)
 		/// </summary>
         public string Id = "";
+
 		/// <summary>
 		/// Host name of the Manager to connect to. (valid only if the Manager is also an Executor)
 		/// </summary>
         public string ManagerHost = "";
+
 		/// <summary>
 		/// Port of the Manager to connect to. (valid only if the Manager is also an Executor)
 		/// </summary>
         public int ManagerPort = 0;
+
 		/// <summary>
 		/// Port on which the Manager sends/recieves messages to/from the Executors.
 		/// </summary>
         public int OwnPort = 9000;
+
 		/// <summary>
 		/// Specifies if the connection parameters have been verified. 
 		/// The parameters are verified if the Manager has been able to connect sucessfully using the current parameter values.
 		/// </summary>
         public bool ConnectVerified = false;
+
 		/// <summary>
 		/// 
 		/// </summary>
         //public bool InUse = false;
+
 		/// <summary>
 		/// Specifies if this Manager is an "intermediate" Manager...ie. if it is performing the role of an Executor also.
 		/// </summary>
         public bool Intermediate = false;
+
 		/// <summary>
 		/// Specifies if the Manager is Dedicated.(valid only if the Manager is also an Executor)
 		/// </summary>
@@ -126,6 +139,7 @@ namespace Alchemi.Manager
         /// Specifies the scheduler type name; null or empty indicates the default scheduler type name.
         /// </summary>
         public string SchedulerTypeName = "";
+
 
         //-----------------------------------------------------------------------------------------------
 		

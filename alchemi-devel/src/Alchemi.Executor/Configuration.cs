@@ -44,31 +44,38 @@ namespace Alchemi.Executor
 		/// Executor Id
 		/// </summary>
         public string Id;
+
 		/// <summary>
 		/// Host of the Manager
 		/// </summary>
         public string ManagerHost = "localhost";
+
 		/// <summary>
 		/// Port of the Manager
 		/// </summary>
         public int ManagerPort = 9000;
+
 		/// <summary>
 		/// Specifies whether the Executor is dedicated
 		/// </summary>
         public bool Dedicated = true;
+
 		/// <summary>
 		/// Specifies the port on which the Executor listens for messages.
 		/// </summary>
         public int OwnPort = 9001;
+
 		/// <summary>
 		/// Specifies if the Executor connected successfully with the current settings 
         /// for the ManagerHost,ManagerPort
 		/// </summary>
         public bool ConnectVerified = false;
+
 		/// <summary>
 		/// Username for connection to the Manager
 		/// </summary>
         public string Username = "executor";
+
 		/// <summary>
 		/// Password for connection to the Manager
 		/// </summary>
@@ -100,45 +107,27 @@ namespace Alchemi.Executor
         /// if the Manager cannot be contacted in dedicated mode.
         /// </summary> 
         public bool AutoRevertToNDE = false;
+
         /// <summary>
         /// Enforce secure sandboxed execution. Default: false.
         /// Turn this off to allow legacy applications (ie. GJobs)
         /// </summary>
         public bool SecureSandboxedExecution = false;
     
-        //-----------------------------------------------------------------------------------------------
-    
-		/// <summary>
-		/// Returns the configuration read from the xml config file.
-		/// </summary>
-		/// <returns>Configuration object</returns>
-		public static Configuration GetConfiguration()
-        {
-            return (Configuration)DeSlz(typeof(Configuration));
-        }
-    
-		/// <summary>
-		/// Creates an instance of the Configuration class.
-		/// </summary>
+
+
+        #region Constructor
+        /// <summary>
+        /// Creates an instance of the Configuration class.
+        /// </summary>
         public Configuration()
         {
-        }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------
-    
-		/// <summary>
-		///  Serialises and saves the configuration to the xml config file
-		/// </summary>
-		public void Slz()
-        {
-			XmlSerializer xs = new XmlSerializer(this.GetType());
-            StreamWriter sw = new StreamWriter(DefaultConfigFile);
-            xs.Serialize(sw, this);
-            sw.Close();
-        }
 
-        //-----------------------------------------------------------------------------------------------
 
+        #region Property - DefaultConfigFile
         private static string DefaultConfigFile
         {
             get
@@ -146,24 +135,45 @@ namespace Alchemi.Executor
                 return Utils.GetFilePath(ConfigFileName, AlchemiRole.Executor, true);
             }
         }
+        #endregion
 
-		/// <summary>
-		/// Deserialises and reads the configuration from the given xml file
-		/// </summary>
-		/// <returns>Configuration object</returns>
-		private static Object DeSlz(Type type)
+
+
+        #region Method - Serialize
+        /// <summary>
+        ///  Serialises and saves the configuration to the xml config file
+        /// </summary>
+        public void Serialize()
         {
-            XmlSerializer xs = new XmlSerializer(type);
+            XmlSerializer xs = new XmlSerializer(typeof(Configuration));
+            StreamWriter sw = new StreamWriter(Configuration.DefaultConfigFile);
+            xs.Serialize(sw, this);
+            sw.Close();
+        } 
+        #endregion
+
+
+        #region Method - Deserialize
+        /// <summary>
+        /// Reads the configuration from the xml file
+        /// </summary>
+        /// <returns></returns>
+        public static Configuration Deserialize()
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(Configuration));
             string configFile = DefaultConfigFile;
+
             if (!File.Exists(DefaultConfigFile))
             {
                 //look in current dir
                 configFile = ConfigFileName;
             }
             FileStream fs = new FileStream(configFile, FileMode.Open);
-            Object obj = xs.Deserialize(fs);
+            Configuration obj = (Configuration)xs.Deserialize(fs);
             fs.Close();
             return obj;
-        }
+        } 
+        #endregion
+
     }
 }

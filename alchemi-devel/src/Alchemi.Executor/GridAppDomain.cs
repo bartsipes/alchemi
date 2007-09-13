@@ -34,39 +34,44 @@ namespace Alchemi.Executor
 	/// This class is a container for the AppDomainExecutor and AppDomain.
 	/// </summary>
     internal class GridAppDomain
-    {
-        private AppDomain _Domain;
-        private AppDomainExecutor _Executor;
-
-        //----------------------------------------------------------------------------------------------- 
-  
-		/// <summary>
-		/// Gets the AppDomain
-		/// </summary>
-        internal AppDomain Domain
-        {
-            get { return _Domain; }
-        }
-
-		/// <summary>
-		/// Gets the AppDommainExecutor
-		/// </summary>
-        internal AppDomainExecutor Executor
-        {
-            get { return _Executor; }
-        }
-
-        //----------------------------------------------------------------------------------------------- 
-
-		/// <summary>
-		/// Initialises a new instance of the GridAppDomain with the given AppDomain and AppDomainExecutor
-		/// </summary>
-		/// <param name="domain"></param>
-		/// <param name="executor"></param>
+    {        
+        #region Constructor
+        /// <summary>
+        /// Initialises a new instance of the GridAppDomain with the given AppDomain and AppDomainExecutor
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="executor"></param>
         internal GridAppDomain(AppDomain domain, AppDomainExecutor executor)
         {
             _Domain = domain;
             _Executor = executor;
-        }
+        } 
+        #endregion      
+
+
+
+        #region Property - Domain
+        private AppDomain _Domain;
+        /// <summary>
+        /// Gets the AppDomain
+        /// </summary>
+        internal AppDomain Domain
+        {
+            get { return _Domain; }
+        } 
+        #endregion
+
+
+        #region Property - Executor
+        private AppDomainExecutor _Executor;
+        /// <summary>
+        /// Gets the AppDommainExecutor
+        /// </summary>
+        internal AppDomainExecutor Executor
+        {
+            get { return _Executor; }
+        } 
+        #endregion
+
     }
 }

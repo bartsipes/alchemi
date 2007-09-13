@@ -36,7 +36,14 @@ using Alchemi.Manager.Storage;
 namespace Alchemi.Manager
 {
     /// <summary>
-    /// MappingScheduler class represents a scheduler where applications are mapped to executors. The term 'mapping' is used to try and avoid confusion with 'assigning' where a thread is assigned to an executor. A 'mapped' executor receives threads from the corresponding 'mapped' application. An application is mapped to an executor by an algorithm that takes the applications and distributes them evenly across the executors. If there are more executors than applications then an application may be mapped to more than one executor. Conversely, if there are more applications than executors then an executor may be mapped to more than one application. 
+    /// MappingScheduler class represents a scheduler where applications are mapped to executors.
+    /// The term 'mapping' is used to try and avoid confusion with 'assigning' where a thread is
+    /// assigned to an executor. A 'mapped' executor receives threads from the corresponding 'mapped' 
+    /// application. An application is mapped to an executor by an algorithm that takes the 
+    /// applications and distributes them evenly across the executors. If there are more executors 
+    /// than applications then an application may be mapped to more than one executor. Conversely,
+    /// if there are more applications than executors then an executor may be mapped to more than
+    /// one application. 
     /// </summary>
     public class MappingScheduler : IScheduler
     {

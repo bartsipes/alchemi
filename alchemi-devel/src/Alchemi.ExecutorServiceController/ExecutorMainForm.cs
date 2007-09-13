@@ -122,7 +122,7 @@ namespace Alchemi.ExecutorService
 				//this is a service. just read the config.
 				ExecutorContainer ec = new ExecutorContainer();
 				ec.ReadConfig(false);
-				Config = ec.Config;
+				Config = ec._Config;
 				ec = null;
 
 				this.btConnect.Text = "StartApplication";
@@ -186,7 +186,7 @@ namespace Alchemi.ExecutorService
 					if (Config!=null)
 					{
 						GetConfigFromUI();
-						Config.Slz();
+						Config.Serialize();
 					}
 					sc.Start();
 					sc.WaitForStatus(ServiceControllerStatus.Running,new TimeSpan(0,0,28));
@@ -368,7 +368,7 @@ namespace Alchemi.ExecutorService
 		{
 			ExecutorContainer ec = new ExecutorContainer();
 			ec.ReadConfig(true);
-			Config = ec.Config;
+			Config = ec._Config;
 			ec = null;
 			RefreshUIControls();
 		}

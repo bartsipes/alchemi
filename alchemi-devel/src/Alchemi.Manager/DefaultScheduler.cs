@@ -51,42 +51,51 @@ namespace Alchemi.Manager
         private IManagerStorage store;
 
         private int nextExecutorIndex = 0;
-       
+
+
+        #region Constructor
         /// <summary>
         /// Default constructor required by scheduler factory.
         /// </summary>
         public DefaultScheduler()
         {
             store = ManagerStorageFactory.ManagerStorage();
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Return a non-dedicated schedule: i.e a threadIdentifier of the next thread to be executed.
-		/// This is to support voluntary / non-dedicated execution, where an executor asks for the next
-		/// work unit. 
-		/// </summary>
-		/// <param name="executorId">The executorId passed in refers to the Executor which will run this thread.</param>
-		/// <returns>ThreadIdentifier of the next available thread</returns>
+
+
+        #region Method - ScheduleNonDedicated
+        /// <summary>
+        /// Return a non-dedicated schedule: i.e a threadIdentifier of the next thread to be executed.
+        /// This is to support voluntary / non-dedicated execution, where an executor asks for the next
+        /// work unit. 
+        /// </summary>
+        /// <param name="executorId">The executorId passed in refers to the Executor which will run this thread.</param>
+        /// <returns>ThreadIdentifier of the next available thread</returns>
         public ThreadIdentifier ScheduleNonDedicated(string executorId)
         {
-			ThreadStorageView threadStorage = GetNextAvailableThread();
+            ThreadStorageView threadStorage = GetNextAvailableThread();
             if (threadStorage == null)
             {
                 return null;
             }
-			
-			logger.Debug(String.Format("Schedule non-dedicated. app_id={0},threadID={1}",
-				threadStorage.ApplicationId,
-				threadStorage.ThreadId)
-				);
 
-			string appid = threadStorage.ApplicationId;
-			int threadId = threadStorage.ThreadId;
-			int priority = threadStorage.Priority;
+            logger.Debug(String.Format("Schedule non-dedicated. app_id={0},threadID={1}",
+                threadStorage.ApplicationId,
+                threadStorage.ThreadId)
+                );
+
+            string appid = threadStorage.ApplicationId;
+            int threadId = threadStorage.ThreadId;
+            int priority = threadStorage.Priority;
 
             return new ThreadIdentifier(appid, threadId, priority);
-        }
+        } 
+        #endregion
 
+
+        #region Method - GetNextAvailableExecutor
         /// <summary>
         /// Return the next available ExecutorId. 
         /// For an executor to be available the following considions have to be met:
@@ -109,79 +118,86 @@ namespace Alchemi.Manager
                 }
 
                 ExecutorStorageView executor = executors[nextExecutorIndex];
-                int threadsOnExecutor = store.GetExecutorThreadCount(executor.ExecutorId, 
-                    ThreadState.Ready, 
+                int threadsOnExecutor = store.GetExecutorThreadCount(executor.ExecutorId,
+                    ThreadState.Ready,
                     ThreadState.Scheduled,
                     ThreadState.Started);
-				if (threadsOnExecutor < executors[nextExecutorIndex].NumberOfCpu)
-					return executor;
+                if (threadsOnExecutor < executors[nextExecutorIndex].NumberOfCpu)
+                    return executor;
             }
 
             return null;
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Return the thread with the highest priority from the pool of Ready threads.
-		/// 
-		/// Note: pathetic way of selecting the highest priority thread. 
-		///		This should be moved into the storage for a more efficient implementation.
-		/// </summary>
-		/// <returns></returns>
-		protected ThreadStorageView GetNextAvailableThread()
-		{
-			// achieve thread safety by locking on a static variable
-			// this lock is not enough, we should lock until the thread status changes
-			lock(threadChooserLock)
-			{
-				ThreadStorageView[] threads = store.GetThreads(ApplicationState.Ready, ThreadState.Ready);
 
-				if (threads == null || threads.Length == 0)
-				{
-					return null;
-				}
+        #region Method - GetNextAvailableThread
+        /// <summary>
+        /// Return the thread with the highest priority from the pool of Ready threads.
+        /// 
+        /// Note: pathetic way of selecting the highest priority thread. 
+        ///		This should be moved into the storage for a more efficient implementation.
+        /// </summary>
+        /// <returns></returns>
+        protected ThreadStorageView GetNextAvailableThread()
+        {
+            // achieve thread safety by locking on a static variable
+            // this lock is not enough, we should lock until the thread status changes
+            lock (threadChooserLock)
+            {
+                ThreadStorageView[] threads = store.GetThreads(ApplicationState.Ready, ThreadState.Ready);
 
-				ThreadStorageView highestPriorityThread = threads[0];
+                if (threads == null || threads.Length == 0)
+                {
+                    return null;
+                }
 
-				foreach (ThreadStorageView thread in threads)
-				{
-					if (thread.Priority > highestPriorityThread.Priority)
-					{
-						highestPriorityThread = thread;
-					}
-				}
+                ThreadStorageView highestPriorityThread = threads[0];
 
-				return highestPriorityThread;
-			}
-		}
+                foreach (ThreadStorageView thread in threads)
+                {
+                    if (thread.Priority > highestPriorityThread.Priority)
+                    {
+                        highestPriorityThread = thread;
+                    }
+                }
 
-		/// <summary>
-		/// Queries the database to return the next dedicated schedule.
-		/// </summary>
-		/// <returns>DedicatedSchedule</returns>
+                return highestPriorityThread;
+            }
+        } 
+        #endregion
+
+
+        #region Method - ScheduleDedicated
+        /// <summary>
+        /// Queries the database to return the next dedicated schedule.
+        /// </summary>
+        /// <returns>DedicatedSchedule</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
-			ExecutorStorageView executorStorage = GetNextAvailableExecutor();
-			if (executorStorage == null)
-			{
-				return null;
-			}
+            ExecutorStorageView executorStorage = GetNextAvailableExecutor();
+            if (executorStorage == null)
+            {
+                return null;
+            }
 
-			ThreadStorageView threadStorage = GetNextAvailableThread();
-			if (threadStorage == null)
-			{
-				return null;
-			}
+            ThreadStorageView threadStorage = GetNextAvailableThread();
+            if (threadStorage == null)
+            {
+                return null;
+            }
 
-			DedicatedSchedule dsched = null;
-			string executorId = executorStorage.ExecutorId;
-			string appid = threadStorage.ApplicationId;
-			int threadId = threadStorage.ThreadId;
-			int priority = threadStorage.Priority;
+            DedicatedSchedule dsched = null;
+            string executorId = executorStorage.ExecutorId;
+            string appid = threadStorage.ApplicationId;
+            int threadId = threadStorage.ThreadId;
+            int priority = threadStorage.Priority;
 
-			ThreadIdentifier ti= new ThreadIdentifier(appid, threadId, priority);
-			dsched = new DedicatedSchedule(ti, executorId);
+            ThreadIdentifier ti = new ThreadIdentifier(appid, threadId, priority);
+            dsched = new DedicatedSchedule(ti, executorId);
 
             return dsched;
-        }
+        } 
+        #endregion
     }
 }

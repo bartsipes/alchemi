@@ -42,10 +42,7 @@ namespace Alchemi.ExecutorExec
 		static void Main() 
 		{
 			Application.EnableVisualStyles();
-			ExecutorMainForm f = new ExecutorMainForm();
-			Application.DoEvents();
-			Application.Run(f);
-			f = null;
+			Application.Run(new ExecutorMainForm());
 		}
 	}
 }

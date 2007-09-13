@@ -16,19 +16,35 @@ namespace Alchemi.Executor
 
         private bool _stop;
         private int _EmptyThreadInterval;
-        private bool _ExecutingNonDedicated;
-
         private Thread _NonDedicatedMonitorThread;
-
         private GExecutor _executor;
 
+
+        #region Constructor
         internal NonDedicatedExecutorWorker(GExecutor executor)
         {
-            this._executor = executor;
+            _executor = executor;
             _stop = false;
             _EmptyThreadInterval = DEFAULT_EMPTYTHREAD_INTERVAL;
-        }
+        } 
+        #endregion
 
+
+
+        #region Property - ExecutingNonDedicated
+        private bool _ExecutingNonDedicated;
+        internal bool ExecutingNonDedicated
+        {
+            get
+            {
+                return _ExecutingNonDedicated;
+            }
+        }
+        #endregion
+
+
+
+        #region Method - Start
         internal void Start()
         {
             _stop = false;
@@ -36,12 +52,19 @@ namespace Alchemi.Executor
             _NonDedicatedMonitorThread.Name = "Non-dedicatedMonitor";
             _NonDedicatedMonitorThread.Priority = ThreadPriority.BelowNormal;
             _NonDedicatedMonitorThread.Start();
-        }
+        } 
+        #endregion
+
+
+        #region Method - Stop
         internal void Stop()
         {
             _stop = true; //clean way to abort thread
-        }
-        
+        } 
+        #endregion
+
+
+        #region Method - NonDedicatedMonitor
         private void NonDedicatedMonitor()
         {
             bool gotDisconnected = false;
@@ -107,14 +130,8 @@ namespace Alchemi.Executor
             }
 
             logger.Info("NonDedicatedMonitor Thread Exited.");
-        }
+        } 
+        #endregion
 
-        internal bool ExecutingNonDedicated
-        {
-            get
-            {
-                return _ExecutingNonDedicated;
-            }
-        }
     }
 }

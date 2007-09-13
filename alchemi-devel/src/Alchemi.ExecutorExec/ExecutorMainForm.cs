@@ -130,7 +130,7 @@ namespace Alchemi.ExecutorExec
 			//not a service. normal exec startup mode.
 			_container = new ExecutorContainer();
 			_container.ReadConfig(false);
-			Config = _container.Config;
+			Config = _container._Config;
 
 			this.btConnect.Text = "Connect";
 			this.btDisconnect.Text = "Disconnect";
@@ -171,7 +171,7 @@ namespace Alchemi.ExecutorExec
 
 		private void udHBInterval_ValueChanged(object sender, EventArgs e)
 		{
-			_container.UpdateHeartBeatBInterval((int)udHBInterval.Value);
+			_container.UpdateHeartBeatInterval((int)udHBInterval.Value);
 
 			Config.HeartBeatInterval = (int) udHBInterval.Value;
 		}
@@ -278,7 +278,7 @@ namespace Alchemi.ExecutorExec
 			{
 				//we dont call start here, because we are doing the same thing here
 				_container.ReadConfig(false);
-				Config = _container.Config;
+				Config = _container._Config;
 				RefreshUIControls();
 				if (Config.ConnectVerified)
 				{
@@ -341,7 +341,7 @@ namespace Alchemi.ExecutorExec
 		protected override void ResetExecutor()
 		{
 			_container.ReadConfig(true);
-			Config = _container.Config;
+			Config = _container._Config;
 			RefreshUIControls();
 		}
 
@@ -366,7 +366,7 @@ namespace Alchemi.ExecutorExec
 			{
 				Log("Attempting to connect to Manager...");
 				GetConfigFromUI();
-				_container.Config = Config;
+				_container._Config = Config;
 				_container.Connect();
 				Log("Connected to Manager.");
 			}

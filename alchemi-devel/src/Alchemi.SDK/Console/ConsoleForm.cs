@@ -1770,8 +1770,7 @@ namespace Alchemi.Console
 								else
 								{
 									FillApplicationsTree();	
-								}
-								
+								}								
 							}	
 						}						
 					}
@@ -1787,7 +1786,7 @@ namespace Alchemi.Console
 
         private void mnuStorageMaintenance_Click(object sender, EventArgs e)
         {
-            DataForms.StorageMaintenanceForm maintenanceForm = new DataForms.StorageMaintenanceForm(console);
+            StorageMaintenanceForm maintenanceForm = new StorageMaintenanceForm(console);
 
             maintenanceForm.ShowDialog();
         }
@@ -1806,7 +1805,6 @@ namespace Alchemi.Console
                 // TODO: make sure the right permissions are set
                 mnuTools.Visible = true;
             }
-
         }
 	}
 }

@@ -46,7 +46,13 @@ namespace Alchemi.Executor
 {
     public delegate void NonDedicatedExecutingStatusChangedEventHandler();
     public delegate void GotDisconnectedEventHandler();
- 
+
+    //kna: July 25, 06: 
+    /*
+     * Modified GExecutor : split into a number of seperate worker classes,
+     * running on seperate threads.
+     * Also added ability to run multiple threads at the same time.
+     */
 	/// <summary>
 	/// The GExecutor class is an implementation of the IExecutor interface and represents an Executor node.
 	/// </summary>
@@ -55,60 +61,125 @@ namespace Alchemi.Executor
 		// Create a logger for use in this class
 		private static readonly Logger logger = new	Logger();
 
-        private string _Id;
-        private bool _Dedicated;
         private bool _AutoRevertToNDE;
-
-        //kna: July 25, 06: 
-        /*
-         * Modified GExecutor : split into a number of seperate worker classes,
-         * running on seperate threads.
-         * Also added ability to run multiple threads at the same time.
-         */
         private IDictionary <ThreadIdentifier, ExecutorWorker> _ActiveWorkers;
         private HeartbeatWorker _HeartbeatWorker;
         private NonDedicatedExecutorWorker _NDEWorker;
 
         internal IDictionary<string, GridAppDomain> _GridAppDomains;
-        
-		/// <summary>
-		/// Raised when the connection status of a non-dedicated Executor is changed.
-		/// </summary>
-        public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged;
-		
-		/// <summary>
-		/// This event is raised only when a Executor loses connection to the Manager.
-		/// (This can happen in both non-dedicated and dedicated modes.
-		/// </summary>
-        public event GotDisconnectedEventHandler GotDisconnected;
 
-		/// <summary>
-		/// Gets the executor id
-		/// </summary>
+
+        #region Constructor
+        /// <summary>
+        /// Creates an instance of the GExecutor with the given end points 
+        /// (one for itself, and one for the manager), credentials and other options.
+        /// </summary>
+        /// <param name="managerEP">Manager end point</param>
+        /// <param name="ownEP">Own end point</param>
+        /// <param name="id">executor id</param>
+        /// <param name="dedicated">Specifies whether the executor is dedicated</param>
+        /// <param name="sc">Security credentials</param>
+        /// <param name="baseDir">Working directory for the executor</param>
+        public GExecutor(EndPoint managerEP, EndPoint ownEP, string id, bool dedicated, bool autoRevertToNDE, SecurityCredentials sc, string baseDir)
+            : base(managerEP, ownEP, sc)
+        {
+            _AutoRevertToNDE = autoRevertToNDE;
+            _Dedicated = dedicated;
+            _Id = id;
+
+            if (String.IsNullOrEmpty(_Id))
+            {
+                logger.Info("Registering new executor");
+                _Id = Manager.Executor_RegisterNewExecutor(this.Credentials, null, this.Info);
+                logger.Info("Successfully Registered new executor:" + _Id);
+            }
+
+            _GridAppDomains = new Dictionary<string, GridAppDomain>();
+            _ActiveWorkers = new Dictionary<ThreadIdentifier, ExecutorWorker>();
+
+            //handle exception since we want to connect to the manager 
+            //even if it doesnt succeed the first time.
+            //that is, we need to handle InvalidExecutor and ConnectBack Exceptions.
+            try
+            {
+                try
+                {
+                    ConnectToManager();
+                }
+                catch (InvalidExecutorException)
+                {
+                    logger.Info("Invalid executor! Registering new executor again...");
+
+                    _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
+
+                    logger.Info("New ExecutorID = " + _Id);
+                    ConnectToManager();
+                }
+            }
+            catch (ConnectBackException)
+            {
+                if (_AutoRevertToNDE)
+                {
+                    logger.Warn("Couldn't connect as dedicated executor. Reverting to non-dedicated executor. ConnectBackException");
+                    _Dedicated = false;
+                    ConnectToManager();
+                }
+            }
+
+            //for non-dedicated mode, the heart-beat thread will be started when execution is started
+            if (_Dedicated)
+            {
+                logger.Debug("Dedicated mode: starting heart-beat thread");
+                StartHeartBeat(HeartbeatWorker.DEFAULT_INTERVAL);
+            }
+        }
+        #endregion
+
+
+        
+        #region Property - Id
+        private string _Id;
+        /// <summary>
+        /// Gets the executor id
+        /// </summary>
         public string Id
         {
             get { return _Id; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets whether the executor is dedicated
-		/// </summary>
+
+        #region Property - Dedicated
+        private bool _Dedicated;
+        /// <summary>
+        /// Gets whether the executor is dedicated
+        /// </summary>
         public bool Dedicated
         {
             get { return _Dedicated; }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Gets whether the executor is currently running a grid thread in non-dedicated mode.
-		/// </summary>
+
+        #region Property - ExecutingNonDedicated
+        /// <summary>
+        /// Gets whether the executor is currently running a grid thread in non-dedicated mode.
+        /// </summary>
         public bool ExecutingNonDedicated
         {
-            get 
+            get
             {
-                return (_NDEWorker == null ? false : _NDEWorker.ExecutingNonDedicated);
+                if (_NDEWorker == null)
+                {
+                    return false;
+                }
+                return _NDEWorker.ExecutingNonDedicated;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - HeartBeatInterval
         public int HeartBeatInterval
         {
             get
@@ -119,130 +190,73 @@ namespace Alchemi.Executor
             {
                 this._HeartbeatWorker.Interval = value;
             }
-        }
+        } 
+        #endregion
 
+
+        #region Property - Info
         private ExecutorInfo Info
         {
-            get 
+            get
             {
-				//TODO need to see how executor info. is passed to manager, when and how things are updated.
-				//TODO need to discover/report these properly
+                //TODO need to see how executor info. is passed to manager, when and how things are updated.
+                //TODO need to discover/report these properly
                 ExecutorInfo info = new ExecutorInfo();
-				//info.Dedicated = this._Dedicated;
-				info.Hostname = OwnEP.Host;
-				info.OS = Environment.OSVersion.ToString();
-				info.NumberOfCpus = Environment.ProcessorCount;
-				info.MaxDiskSpace = 0; //need to fix
-				info.MaxMemory = 0; //need to fix
+                //info.Dedicated = this._Dedicated;
+                info.Hostname = OwnEP.Host;
+                info.OS = Environment.OSVersion.ToString();
+                info.NumberOfCpus = Environment.ProcessorCount;
+                info.MaxDiskSpace = 0; //need to fix
+                info.MaxMemory = 0; //need to fix
 
-				//here we can better catch the error, since it is not a show-stopper. just informational.
-				try
-				{
-					//need to find a better way to do these things.
-					RegistryKey hklm = Registry.LocalMachine;
-					hklm = hklm.OpenSubKey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0");
-					int cpuPower = int.Parse(hklm.GetValue("~MHz").ToString());
-					info.MaxCpuPower = cpuPower * info.NumberOfCpus;
-					info.Architecture = hklm.GetValue("Identifier","x86").ToString(); //CPU arch.
-					hklm.Close();
-				}catch (Exception e)
-				{
-					logger.Debug("Error getting executorInfo. Continuing...",e);
-				}
+                //here we can better catch the error, since it is not a show-stopper. just informational.
+                try
+                {
+                    //need to find a better way to do these things.
+                    RegistryKey hklm = Registry.LocalMachine;
+                    hklm = hklm.OpenSubKey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0");
+                    int cpuPower = int.Parse(hklm.GetValue("~MHz").ToString());
+                    info.MaxCpuPower = cpuPower * info.NumberOfCpus;
+                    info.Architecture = hklm.GetValue("Identifier", "x86").ToString(); //CPU arch.
+                    hklm.Close();
+                }
+                catch (Exception e)
+                {
+                    logger.Debug("Error getting executorInfo. Continuing...", e);
+                }
 
                 return info;
             }
-        }
+        } 
+        #endregion
 
-        //----------------------------------------------------------------------------------------------- 
-        // constructors
-        //----------------------------------------------------------------------------------------------- 
-        
-		/// <summary>
-		/// Creates an instance of the GExecutor with the given end points 
-		/// (one for itself, and one for the manager), credentials and other options.
-		/// </summary>
-		/// <param name="managerEP">Manager end point</param>
-		/// <param name="ownEP">Own end point</param>
-		/// <param name="id">executor id</param>
-		/// <param name="dedicated">Specifies whether the executor is dedicated</param>
-		/// <param name="sc">Security credentials</param>
-		/// <param name="baseDir">Working directory for the executor</param>
-        public GExecutor(EndPoint managerEP, EndPoint ownEP, string id, bool dedicated, bool autoRevertToNDE, SecurityCredentials sc, string baseDir) : base(managerEP, ownEP, sc)
+
+
+        #region Method - StartHeartBeat
+        private void StartHeartBeat(int interval)
         {
-            _AutoRevertToNDE = autoRevertToNDE;
-            _Dedicated = dedicated;
-            _Id = id;
-
-            if (_Id == null || _Id == "")
-            {
-				logger.Info("Registering new executor");
-                _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
-				logger.Info("Successfully Registered new executor:"+_Id);
-            }
-
-            _GridAppDomains = new System.Collections.Generic.Dictionary<string, GridAppDomain>();
-            _ActiveWorkers = new System.Collections.Generic.Dictionary<ThreadIdentifier, ExecutorWorker>();
-
-			//handle exception since we want to connect to the manager 
-			//even if it doesnt succeed the first time.
-			//that is, we need to handle InvalidExecutor and ConnectBack Exceptions.
-            try 
-            {
-                try
-                {
-                    ConnectToManager();
-                }
-                catch (InvalidExecutorException)
-                {
-					logger.Info("Invalid executor! Registering new executor again...");
-
-                    _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
-                    
-					logger.Info("New ExecutorID = " + _Id);
-                    ConnectToManager();
-                }
-            }
-            catch (ConnectBackException) 
-            {
-                if (_AutoRevertToNDE)
-                {
-                    logger.Warn("Couldn't connect as dedicated executor. Reverting to non-dedicated executor. ConnectBackException");
-                    _Dedicated = false;
-                    ConnectToManager();
-                }
-            }
-
-			//for non-dedicated mode, the heart-beat thread will be started when execution is started
-            if (_Dedicated)
-            {
-				logger.Debug("Dedicated mode: starting heart-beat thread");
-				StartHeartBeatThread(HeartbeatWorker.DEFAULT_INTERVAL);
-            }
-        }
-
-		private void StartHeartBeatThread(int interval)
-		{
-            _HeartbeatWorker= new HeartbeatWorker(this);
+            _HeartbeatWorker = new HeartbeatWorker(this);
             _HeartbeatWorker.Interval = interval;
             _HeartbeatWorker.Start();
-		}
+        } 
+        #endregion
 
+
+        #region Method - StopHeartBeat
         private void StopHeartBeat()
         {
-			logger.Debug("Stopping heartbeat thread...");
+            logger.Debug("Stopping heartbeat thread...");
             _HeartbeatWorker.Stop();
             _HeartbeatWorker = null;
-			logger.Debug("HeartBeat stopped.");
-        }
+            logger.Debug("HeartBeat stopped.");
+        } 
+        #endregion
 
-        //----------------------------------------------------------------------------------------------- 
-        // public methods
-        //----------------------------------------------------------------------------------------------- 
 
-		/// <summary>
-		/// Abort all running threads and Disconnect from the Manager. 
-		/// </summary>
+        #region Method - Disconnect
+        /// <summary>
+        /// Abort all running threads and Disconnect from the Manager. 
+        /// </summary>
         public void Disconnect()
         {
             if (!_Dedicated)
@@ -250,29 +264,29 @@ namespace Alchemi.Executor
             else
                 StopHeartBeat();
 
-			//handle disconnection error, since we dont want that to hold up the disconnect process.
-			try
-			{
-				Manager.Executor_DisconnectExecutor(Credentials, _Id);
-				logger.Debug("Disconnected executor.");
-			}
-			catch (SocketException se)
-			{
-				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",se);
-			}
-			catch (System.Runtime.Remoting.RemotingException re)
-			{
-				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",re);
-			}
-			catch (Exception ex)
-			{
-				logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...",ex);
-			}
+            //handle disconnection error, since we dont want that to hold up the disconnect process.
+            try
+            {
+                Manager.Executor_DisconnectExecutor(Credentials, _Id);
+                logger.Debug("Disconnected executor.");
+            }
+            catch (SocketException se)
+            {
+                logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...", se);
+            }
+            catch (RemotingException re)
+            {
+                logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...", re);
+            }
+            catch (Exception ex)
+            {
+                logger.Debug("Error trying to disconnect from Manager. Continuing disconnection process...", ex);
+            }
 
             RelinquishIncompleteThreads();
             UnRemoteSelf();
 
-			logger.Debug("Unloading AppDomains on this executor...");
+            logger.Debug("Unloading AppDomains on this executor...");
             lock (_GridAppDomains)
             {
                 foreach (object gad in _GridAppDomains.Values)
@@ -292,78 +306,71 @@ namespace Alchemi.Executor
             //TODO: file clean up via garbage-collector type thread.
         }
 
-        //-----------------------------------------------------------------------------------------------    
+        #endregion
 
-		/// <summary>
-		/// StartApplication execution in non-dedicated mode.
-		/// </summary>
-		/// <param name="emptyThreadInterval">Interval to wait in between attempts to get a thread from the manager</param>
+
+        #region Method - StartNonDedicatedExecuting
+        /// <summary>
+        /// StartApplication execution in non-dedicated mode.
+        /// </summary>
+        /// <param name="emptyThreadInterval">Interval to wait in between attempts to get a thread from the manager</param>
         public void StartNonDedicatedExecuting(int emptyThreadInterval)
         {
             if (!_Dedicated & !ExecutingNonDedicated)
             {
-				logger.Debug("Starting Non-dedicatedMonitor thread");
+                logger.Debug("Starting Non-dedicatedMonitor thread");
                 _NDEWorker = new NonDedicatedExecutorWorker(this);
                 _NDEWorker.Start();
 
                 //raise the nde status change event.
                 OnNonDedicatedExecutingStatusChanged();
 
-				//start the heartbeat thread.
-				logger.Debug("Starting heart-beat thread: non-dedicated mode");
-				StartHeartBeatThread(HeartbeatWorker.DEFAULT_INTERVAL);
-			}
-        }
+                //start the heartbeat thread.
+                logger.Debug("Starting heart-beat thread: non-dedicated mode");
+                StartHeartBeat(HeartbeatWorker.DEFAULT_INTERVAL);
+            }
+        } 
+        #endregion
 
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Stops execution in non-dedicated mode.
-		/// </summary>
+        #region Method - StopNonDedicatedExecuting
+        /// <summary>
+        /// Stops execution in non-dedicated mode.
+        /// </summary>
         public void StopNonDedicatedExecuting()
         {
             if (!_Dedicated & ExecutingNonDedicated)
             {
-				logger.Debug("Stopping Non-dedicated execution monitor thread...");
+                logger.Debug("Stopping Non-dedicated execution monitor thread...");
                 this._NDEWorker.Stop();
                 _NDEWorker = null;
-				
-				logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
+
+                logger.Debug("Raising event: NonDedicatedExecutingStatusChanged");
                 OnNonDedicatedExecutingStatusChanged();
             }
-        }
+        } 
+        #endregion
 
-        internal void OnNonDedicatedExecutingStatusChanged()
-        {
-            try
-            {
-                if (NonDedicatedExecutingStatusChanged != null)
-                    NonDedicatedExecutingStatusChanged();
-            }
-            catch (Exception ex)
-            {
-                logger.Debug("Error in NonDedicatedExecutingStatusChanged event-handler: " + ex.ToString());
-            }
-        }
 
-        //-----------------------------------------------------------------------------------------------    
 
-		/// <summary>
-		/// Pings the executor node. If this method runs successfully, it means that the remoting set up 
-		/// between the manager and executor is working.
-		/// </summary>
+        #region Method - PingExecutor
+        /// <summary>
+        /// Pings the executor node. If this method runs successfully, it means that the remoting set up 
+        /// between the manager and executor is working.
+        /// </summary>
         public void PingExecutor()
         {
             // for testing communication
-			logger.Debug("Executor pinged successfully");
-        }
-    
-        //-----------------------------------------------------------------------------------------------    
+            logger.Debug("Executor pinged successfully");
+        } 
+        #endregion
 
-		/// <summary>
-		/// Executes the given thread
-		/// </summary>
-		/// <param name="ti">ThreadIdentifier representing the GridThread to be executed on this node.</param>
+
+        #region Method - Manager_ExecuteThread
+        /// <summary>
+        /// Executes the given thread
+        /// </summary>
+        /// <param name="ti">ThreadIdentifier representing the GridThread to be executed on this node.</param>
         public void Manager_ExecuteThread(ThreadIdentifier ti)
         {
             lock (_ActiveWorkers)
@@ -380,19 +387,22 @@ namespace Alchemi.Executor
                 _ActiveWorkers[ti] = worker;
                 worker.Start();
             }
-        }
+        } 
+        #endregion
 
-		/// <summary>
-		/// Cleans up all the application related files on the executor.
-		/// </summary>
-		/// <param name="appid">Application Id</param>
-		public void Manager_CleanupApplication(string appid)
-		{
-			try
-			{
-				//unload the app domain and clean up all the files here, for this application.
-				try
-				{
+
+        #region Method - Manager_CleanupApplication
+        /// <summary>
+        /// Cleans up all the application related files on the executor.
+        /// </summary>
+        /// <param name="appid">Application Id</param>
+        public void Manager_CleanupApplication(string appid)
+        {
+            try
+            {
+                //unload the app domain and clean up all the files here, for this application.
+                try
+                {
                     if (_GridAppDomains != null)
                     {
                         lock (_GridAppDomains)
@@ -413,43 +423,79 @@ namespace Alchemi.Executor
                             }
                         }
                     }
-				}
-				catch (Exception e)
-				{
-					logger.Debug("Error unloading appdomain:",e);
-				}
+                }
+                catch (Exception e)
+                {
+                    logger.Debug("Error unloading appdomain:", e);
+                }
                 Cleanup(appid);
-			}
-			catch (Exception e)
-			{
-				//just debug info. to see why clean up failed.
-				logger.Debug("Clean up app error: "+e.Message);
-			}
-		}
+            }
+            catch (Exception e)
+            {
+                //just debug info. to see why clean up failed.
+                logger.Debug("Clean up app error: " + e.Message);
+            }
+        } 
+        #endregion
 
-        //----------------------------------------------------------------------------------------------- 
-        // private methods
-        //----------------------------------------------------------------------------------------------- 
 
+        #region Method - Manager_AbortThread
+        /// <summary>
+        /// Abort the given thread.
+        /// </summary>
+        /// <param name="ti">ThreadIdentifier object representing the GridThread to be aborted</param>
+        public void Manager_AbortThread(ThreadIdentifier ti)
+        {
+            if (_ActiveWorkers != null)
+            {
+                lock (_ActiveWorkers)
+                {
+                    if (_ActiveWorkers.ContainsKey(ti))
+                    {
+                        _ActiveWorkers[ti].Stop();
+                        _ActiveWorkers.Remove(ti);
+                    }
+                }
+            }
+        } 
+        #endregion
+
+
+        #region Method - DisconnectNDE
+        internal void DisconnectNDE()
+        {
+            UnRemoteSelf();
+        } 
+        #endregion
+
+
+
+        #region Method - Cleanup
         private void Cleanup(string appId)
         {
             Directory.Delete(ExecutorUtil.GetApplicationDirectory(appId), true);
-        }
+        } 
+        #endregion
 
+
+        #region Method - ConnectToManager
         private void ConnectToManager()
         {
             if (_Dedicated)
             {
-				logger.Debug("Connecting to Manager dedicated...");
+                logger.Debug("Connecting to Manager dedicated...");
                 Manager.Executor_ConnectDedicatedExecutor(Credentials, _Id, OwnEP);
             }
             else
             {
-				logger.Debug("Connecting to Manager NON-dedicated...");
+                logger.Debug("Connecting to Manager NON-dedicated...");
                 Manager.Executor_ConnectNonDedicatedExecutor(Credentials, _Id, OwnEP);
             }
-        }
+        } 
+        #endregion
 
+
+        #region Method - RelinquishIncompleteThreads
         private void RelinquishIncompleteThreads()
         {
             if (_ActiveWorkers != null)
@@ -483,44 +529,71 @@ namespace Alchemi.Executor
                     }
                 }
             }
+        } 
+        #endregion
+
+
+
+        #region Event - NonDedicatedExecutingStatusChanged
+        private event NonDedicatedExecutingStatusChangedEventHandler _NonDedicatedExecutingStatusChanged;
+        /// <summary>
+        /// Raised when the connection status of a non-dedicated Executor is changed.
+        /// </summary>
+        public event NonDedicatedExecutingStatusChangedEventHandler NonDedicatedExecutingStatusChanged
+        {
+            add { _NonDedicatedExecutingStatusChanged += value; }
+            remove { _NonDedicatedExecutingStatusChanged -= value; }
         }
 
-		/// <summary>
-		/// Abort the given thread.
-		/// </summary>
-		/// <param name="ti">ThreadIdentifier object representing the GridThread to be aborted</param>
-        public void Manager_AbortThread(ThreadIdentifier ti)
+        /// <summary>
+        /// Raises the NonDedicatedExecutingStatusChanged event
+        /// </summary>
+        internal void OnNonDedicatedExecutingStatusChanged()
         {
-            if (_ActiveWorkers != null)
+            try
             {
-                lock (_ActiveWorkers)
+                if (_NonDedicatedExecutingStatusChanged != null)
                 {
-                    if (_ActiveWorkers.ContainsKey(ti))
-                    {
-                        _ActiveWorkers[ti].Stop();
-                        _ActiveWorkers.Remove(ti);
-                    }
+                    _NonDedicatedExecutingStatusChanged();
                 }
             }
-		}
+            catch (Exception ex)
+            {
+                logger.Debug("Error in NonDedicatedExecutingStatusChanged event-handler: " + ex.ToString());
+            }
+        }
+        #endregion
 
-        internal void DisconnectNDE()
+
+        #region Event - GotDisconnected
+        private event GotDisconnectedEventHandler _GotDisconnected;
+        /// <summary>
+        /// This event is raised only when a Executor loses connection to the Manager.
+        /// (This can happen in both non-dedicated and dedicated modes.
+        /// </summary>
+        public event GotDisconnectedEventHandler GotDisconnected
         {
-            UnRemoteSelf();
+            add { _GotDisconnected += value; }
+            remove { _GotDisconnected -= value; }
         }
 
         internal void OnGotDisconnected()
         {
             try
             {
-                if (GotDisconnected != null)
+                if (_GotDisconnected != null)
                 {
                     logger.Debug("Raising event: Executor GotDisconnected.");
-                    GotDisconnected();
+                    _GotDisconnected();
                 }
             }
-            catch { } //it is always better to catch exceptions on eventhandlers, because we don't know what may be in it.
-        }
+            catch
+            {
+                // it is always better to catch exceptions on eventhandlers,
+                // because we don't know what may be in it.
+            }
+        } 
+        #endregion
     }
 }
 

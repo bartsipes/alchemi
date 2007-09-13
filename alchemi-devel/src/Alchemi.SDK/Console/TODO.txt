@@ -4,6 +4,7 @@ Global
 [ ] String->string, Int32->int
 [ ] Upgrade to latest version of NPlot (0.9.10.0)
 [ ] Or...Move everything to ZedGraph instead of NPlot
+[ ] Redo the menu so it uses the new MenuStrip in .NET 2.0
 
 CustomListItems
 ===

@@ -1,0 +1,3 @@
+ExecutorContainer
+===
+[ ] Completely eat exceptions from the events?  At least write to the logger.

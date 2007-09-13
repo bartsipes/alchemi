@@ -36,25 +36,43 @@ namespace Alchemi.Manager
 	/// </summary>
     public class DedicatedSchedule
     {
-		/// <summary>
-		/// ThreadIdentifier representing the scheduled application and thread.
-		/// </summary>
-        public readonly ThreadIdentifier TI;
-
-		/// <summary>
-		/// The id of the Executor scheduled to execute this thread
-		/// </summary>
-        public readonly string ExecutorId;
-
-		/// <summary>
-		/// Constructor with a threadIdentifier and executorId
-		/// </summary>
-		/// <param name="ti">ThreadIdentifier</param>
-		/// <param name="executorId">Executor Id</param>
+        #region Constructor
+        /// <summary>
+        /// Constructor with a threadIdentifier and executorId
+        /// </summary>
+        /// <param name="ti">ThreadIdentifier</param>
+        /// <param name="executorId">Executor Id</param>
         public DedicatedSchedule(ThreadIdentifier ti, string executorId)
         {
-            TI = ti;
-            ExecutorId = executorId;
+            _ti = ti;
+            _ExecutorId = executorId;
         }
+        #endregion
+
+
+
+        #region Property - TI
+        private ThreadIdentifier _ti;
+        /// <summary>
+        /// ThreadIdentifier representing the scheduled application and thread.
+        /// </summary>      
+        public ThreadIdentifier TI
+        {
+            get { return _ti; }
+        } 
+        #endregion
+
+
+        #region Property - ExecutorId
+        private string _ExecutorId;
+        /// <summary>
+        /// The id of the Executor scheduled to execute this thread
+        /// </summary>
+        public string ExecutorId
+        {
+            get { return _ExecutorId; }
+        } 
+        #endregion
+
     }
 }
