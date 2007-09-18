@@ -78,6 +78,7 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>

@@ -41,6 +41,7 @@ using Microsoft.Win32;
 using System.Collections.Generic;
 using Alchemi.Core.Utility;
 using Alchemi.Executor.Sandbox;
+using System.Management;
 
 namespace Alchemi.Executor
 {
@@ -206,12 +207,36 @@ namespace Alchemi.Executor
                 info.Hostname = OwnEP.Host;
                 info.OS = Environment.OSVersion.ToString();
                 info.NumberOfCpus = Environment.ProcessorCount;
-                info.MaxDiskSpace = 0; //need to fix
-                info.MaxMemory = 0; //need to fix
 
                 //here we can better catch the error, since it is not a show-stopper. just informational.
                 try
                 {
+                    //Maybe better to use only ManagementObjects? We get much more info like number of cores, etc...
+                    //and also we get EVERYTHING!
+                    //ManagementObject processor = new
+                    //    ManagementObject("Win32_Processor");
+                    //processor.Get();
+
+                    //Probably useful here are : MaxClockSpeed/CurrentClockSpeed, 
+                    //NumberOfCores/NumberOfLogicalProcessors, Architecture (but this is an int16 :-(, so can't replace just yet).
+
+                    //this is probably broken for network shares...
+                    ManagementObject disk = new
+                        ManagementObject("win32_logicaldisk.deviceid='" +
+                            Path.GetPathRoot(ExecutorUtil.BaseDirectory).Substring(0, 2) + "'");
+                    disk.Get();
+
+                    info.MaxDiskSpace = Convert.ToSingle(disk["FreeSpace"]);
+                    disk.Dispose(); //needed?
+
+                    ManagementObject memory = new
+                       ManagementObject("Win32_PhysicalMemory");
+                    memory.Get();
+
+                    info.MaxMemory = Convert.ToSingle(memory["Capacity"]);
+                    memory.Dispose(); //needed?
+
+
                     //need to find a better way to do these things.
                     RegistryKey hklm = Registry.LocalMachine;
                     hklm = hklm.OpenSubKey("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0");
