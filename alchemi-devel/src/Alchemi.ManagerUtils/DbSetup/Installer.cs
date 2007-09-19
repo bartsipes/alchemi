@@ -816,7 +816,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 		private void SaveConfigurationData(Configuration configuration)
 		{
 			UpdateConfigurationFromForm(configuration);
-			configuration.Slz();
+			configuration.Serialize();
 			configurationFileChanged = false;
 			saveButton.Enabled = configurationFileChanged;
 		}

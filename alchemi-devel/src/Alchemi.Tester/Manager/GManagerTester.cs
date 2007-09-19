@@ -44,7 +44,7 @@ namespace Alchemi.Tester.Manager
 	[TestFixture]
 	public class GManagerTester : GManager
 	{
-		private InMemoryManagerStorage m_managerStorage;
+		private InMemoryManagerStorage _managerStorage;
 
 		private void SetupApplicationsGroupsAndUsers(Permission permission)
 		{
@@ -59,32 +59,32 @@ namespace Alchemi.Tester.Manager
 
 			users[0] = new UserStorageView("username1", "password1", groupId);
 
-			m_managerStorage.AddGroups(groups);
+			_managerStorage.AddGroups(groups);
 
-			m_managerStorage.AddUsers(users);
+			_managerStorage.AddUsers(users);
 
-			m_managerStorage.AddGroupPermission(groupId, permission);
+			_managerStorage.AddGroupPermission(groupId, permission);
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
 			// add applications, only one assigned to this user
 
-			m_managerStorage.AddApplication(new ApplicationStorageView("username1"));
-			m_managerStorage.AddApplication(new ApplicationStorageView("username2"));
-			m_managerStorage.AddApplication(new ApplicationStorageView("username3"));		
+			_managerStorage.AddApplication(new ApplicationStorageView("username1"));
+			_managerStorage.AddApplication(new ApplicationStorageView("username2"));
+			_managerStorage.AddApplication(new ApplicationStorageView("username3"));		
 		}
 
 		[SetUp]
 		public void SetUp()
 		{
-			m_managerStorage = new InMemoryManagerStorage();
-			ManagerStorageFactory.SetManagerStorage(m_managerStorage);
+			_managerStorage = new InMemoryManagerStorage();
+			ManagerStorageFactory.SetManagerStorage(_managerStorage);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			m_managerStorage = null;
+			_managerStorage = null;
 			ManagerStorageFactory.SetManagerStorage(null);
 		}
 
@@ -105,7 +105,7 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			string applicationId = m_managerStorage.AddApplication(application);
+			string applicationId = _managerStorage.AddApplication(application);
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 			
@@ -124,7 +124,7 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			string applicationId = m_managerStorage.AddApplication(application);
+			string applicationId = _managerStorage.AddApplication(application);
 
 			SecurityCredentials sc = new SecurityCredentials("username2", HashUtil.GetHash("password1", HashType.MD5));
 			
@@ -143,7 +143,7 @@ namespace Alchemi.Tester.Manager
 		{
 			ApplicationStorageView application = new ApplicationStorageView("username1");
 
-			string applicationId = m_managerStorage.AddApplication(application);
+			string applicationId = _managerStorage.AddApplication(application);
 			string invalidApplicationId = Guid.NewGuid().ToString();
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
@@ -170,11 +170,11 @@ namespace Alchemi.Tester.Manager
 
 			users[0] = new UserStorageView("username1", "password1", groupId);
 
-			m_managerStorage.AddGroups(groups);
+			_managerStorage.AddGroups(groups);
 
-			m_managerStorage.AddUsers(users);
+			_managerStorage.AddUsers(users);
 
-			m_managerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
+			_managerStorage.AddGroupPermission(groupId, Permission.ExecuteThread);
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
@@ -220,7 +220,7 @@ namespace Alchemi.Tester.Manager
 
 			users[0] = new UserStorageView("username1", "password1", groupId);
 
-			m_managerStorage.AddUsers(users);
+			_managerStorage.AddUsers(users);
 
 			SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
@@ -373,8 +373,8 @@ namespace Alchemi.Tester.Manager
 
             SecurityCredentials sc = new SecurityCredentials("username1", HashUtil.GetHash("password1", HashType.MD5));
 
-            m_managerStorage.AddApplication(new ApplicationStorageView("username1"));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "test", 1, "test", 1, 1, 1, 1));
+            _managerStorage.AddApplication(new ApplicationStorageView("username1"));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "test", 1, "test", 1, 1, 1, 1));
 
             StorageMaintenanceParameters maintenanceParameters = new StorageMaintenanceParameters();
 
@@ -382,13 +382,13 @@ namespace Alchemi.Tester.Manager
             maintenanceParameters.RemoveAllApplications = true;
 
             // just to keep things honest make sure there is something there
-            Assert.AreNotEqual(0, m_managerStorage.GetExecutors().Length);
-            Assert.AreNotEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreNotEqual(0, _managerStorage.GetExecutors().Length);
+            Assert.AreNotEqual(0, _managerStorage.GetApplications().Length);
 
             Admon_PerformStorageMaintenance(sc, maintenanceParameters);
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 	}
 }

@@ -39,81 +39,81 @@ namespace Alchemi.Core.Manager.Storage
 
 
         #region Property - InternalThreadId
-        private int m_internalThreadId;
+        private int _internalThreadId;
         /// <summary>
         /// Internal thread Id.
         /// </summary>
         public int InternalThreadId
         {
-            get { return m_internalThreadId; }
-            set { m_internalThreadId = value; }
+            get { return _internalThreadId; }
+            set { _internalThreadId = value; }
         } 
         #endregion
 
 
         #region Property - ApplicationId
-        private string m_applicationId;
+        private string _applicationId;
         /// <summary>
         /// The application Id to which this thread belongs to.
         /// </summary>
         public string ApplicationId
         {
-            get { return m_applicationId; }
-            set { m_applicationId = value; }
+            get { return _applicationId; }
+            set { _applicationId = value; }
         } 
         #endregion
 
 
         #region Property - ExecutorId
-        private string m_executorId;
+        private string _executorId;
         /// <summary>
         /// The executor Id of the Executor on which this thread was executed.
         /// </summary>
         public string ExecutorId
         {
-            get { return m_executorId; }
-            set { m_executorId = value; }
+            get { return _executorId; }
+            set { _executorId = value; }
         } 
         #endregion
 
 
         #region Property - ThreadId
-        private int m_threadId;
+        private int _threadId;
         /// <summary>
         /// The thread Id.
         /// </summary>
         public int ThreadId
         {
-            get { return m_threadId; }
-            set { m_threadId = value; }
+            get { return _threadId; }
+            set { _threadId = value; }
         } 
         #endregion
 
 
         #region Property - State
-        private ThreadState m_state;
+        private ThreadState _state;
         /// <summary>
         /// The thread state.
         /// <seealso cref="ThreadState"/>
         /// </summary>
         public ThreadState State
         {
-            get { return m_state; }
-            set { m_state = value; }
+            get { return _state; }
+            set { _state = value; }
         } 
         #endregion
 
 
         #region Property - TimeStarted
-        private DateTime m_timeStarted;
+        private DateTime _timeStarted;
         /// <summary>
         /// The time this thread was started.
         /// <seealso cref="TimeStartedSet"/>
         /// </summary>
         public DateTime TimeStarted
         {
-            get { return m_timeStarted; }
-            set { m_timeStarted = value; }
+            get { return _timeStarted; }
+            set { _timeStarted = value; }
         } 
         #endregion
 
@@ -125,21 +125,21 @@ namespace Alchemi.Core.Manager.Storage
         /// </summary>
         public bool TimeStartedSet
         {
-            get { return (m_timeStarted != c_noTimeSet); }
+            get { return (_timeStarted != c_noTimeSet); }
         }
         #endregion
 
 
         #region Property - TimeFinished
-        private DateTime m_timeFinished;
+        private DateTime _timeFinished;
         /// <summary>
         /// The time this thread was finished.
         /// <seealso cref="TimeFinishedSet"/>
         /// </summary>
         public DateTime TimeFinished
         {
-            get { return m_timeFinished; }
-            set { m_timeFinished = value; }
+            get { return _timeFinished; }
+            set { _timeFinished = value; }
         } 
         #endregion
 
@@ -150,32 +150,32 @@ namespace Alchemi.Core.Manager.Storage
         /// </summary>
         public bool TimeFinishedSet
         {
-            get { return (m_timeFinished != c_noTimeSet); }
+            get { return (_timeFinished != c_noTimeSet); }
         } 
         #endregion
 
 
         #region Property - Priority
-        private int m_priority;
+        private int _priority;
         /// <summary>
         /// The thread priority.
         /// </summary>
         public int Priority
         {
-            get { return m_priority; }
-            set { m_priority = value; }
+            get { return _priority; }
+            set { _priority = value; }
         } 
         #endregion
 
 
         #region Property - Failed
-        private bool m_failed;
+        private bool _failed;
         /// <summary>
         /// Gets a name indicating whether this thread failed running.
         /// </summary>
         public bool Failed
         {
-            get { return m_failed; }
+            get { return _failed; }
         } 
         #endregion
 
@@ -187,7 +187,7 @@ namespace Alchemi.Core.Manager.Storage
         /// </summary>
         public void ResetTimeStarted()
         {
-            m_timeStarted = c_noTimeSet;
+            _timeStarted = c_noTimeSet;
         } 
         #endregion
 
@@ -198,7 +198,7 @@ namespace Alchemi.Core.Manager.Storage
         /// </summary>
         public void ResetTimeFinished()
         {
-            m_timeFinished = c_noTimeSet;
+            _timeFinished = c_noTimeSet;
         } 
         #endregion
 
@@ -306,15 +306,15 @@ namespace Alchemi.Core.Manager.Storage
                 bool failed
             )
         {
-            m_internalThreadId = internalThreadId;
-            m_applicationId = applicationId;
-            m_executorId = executorId;
-            m_threadId = threadId;
-            m_state = state;
-            m_timeStarted = timeStarted;
-            m_timeFinished = timeFinished;
-            m_priority = priority;
-            m_failed = failed;
+            _internalThreadId = internalThreadId;
+            _applicationId = applicationId;
+            _executorId = executorId;
+            _threadId = threadId;
+            _state = state;
+            _timeStarted = timeStarted;
+            _timeFinished = timeFinished;
+            _priority = priority;
+            _failed = failed;
         } 
         #endregion
 

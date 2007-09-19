@@ -50,8 +50,8 @@ namespace Alchemi.Core.Owner
 		private const int DefaultCapacity = 8;
 
 		//private IList m_cThreads = new ArrayList();
-        IList m_cThreads = new List<GThread>();
-		private Hashtable m_cThreadIdException = new Hashtable();
+        IList _Threads = new List<GThread>();
+		private Hashtable _ThreadIdException = new Hashtable();
 
 
         #region Event - Full
@@ -96,20 +96,20 @@ namespace Alchemi.Core.Owner
             {
                 throw new ArgumentOutOfRangeException("nCapacity", nCapacity, "0 < nCapacity <= Int32.MaxValue");
             }
-            m_nCapacity = nCapacity;
+            _Capacity = nCapacity;
         } 
         #endregion
 
 
 
         #region Property - Capacity
-        private int m_nCapacity = DefaultCapacity;
+        private int _Capacity = DefaultCapacity;
         /// <summary>
         /// Capacity property represents the maximum the number of threads that can be held in the buffer.
         /// </summary>
         public int Capacity
         {
-            get { return m_nCapacity; }
+            get { return _Capacity; }
         } 
         #endregion
 
@@ -120,7 +120,7 @@ namespace Alchemi.Core.Owner
         /// </summary>
         public int Count
         {
-            get { return m_cThreads.Count; }
+            get { return _Threads.Count; }
         } 
         #endregion
 
@@ -133,7 +133,7 @@ namespace Alchemi.Core.Owner
         /// <returns>whether it is full</returns>
         public bool IsFull
         {
-            get { return (m_cThreads.Count == m_nCapacity); }
+            get { return (_Threads.Count == _Capacity); }
         } 
         #endregion
 
@@ -149,7 +149,7 @@ namespace Alchemi.Core.Owner
 				throw new ThreadBufferFullException("Attempting to add a thread to a full thread buffer.");
 			}
 			
-			m_cThreads.Add(oThread);
+			_Threads.Add(oThread);
 
 			if (this.IsFull) 
 			{
@@ -163,7 +163,7 @@ namespace Alchemi.Core.Owner
 		/// </summary>
 		public override void Start()
 		{
-			foreach (GThread oThread in m_cThreads) 
+			foreach (GThread oThread in _Threads) 
 			{
 				try
 				{
@@ -171,7 +171,7 @@ namespace Alchemi.Core.Owner
 				}
 				catch (Exception oException) 
 				{
-					m_cThreadIdException[oThread.Id] = oException;
+					_ThreadIdException[oThread.Id] = oException;
 				}
 			}
 		}
@@ -184,7 +184,7 @@ namespace Alchemi.Core.Owner
 		/// <returns>thread exception</returns>
 		public Exception GetException(int nThreadId) 
 		{
-			return (Exception) m_cThreadIdException[nThreadId];
+			return (Exception) _ThreadIdException[nThreadId];
 		}
 
 
@@ -197,7 +197,7 @@ namespace Alchemi.Core.Owner
 		{
 			get
 			{
-				return m_cThreads.IsSynchronized;
+				return _Threads.IsSynchronized;
 			}
 		}
 
@@ -208,7 +208,7 @@ namespace Alchemi.Core.Owner
 		/// <param name="nIndex">index</param>
 		public void CopyTo(Array oArray, int nIndex)
 		{
-			m_cThreads.CopyTo(oArray, nIndex);
+			_Threads.CopyTo(oArray, nIndex);
 		}
 
 		/// <summary>
@@ -218,7 +218,7 @@ namespace Alchemi.Core.Owner
 		{
 			get
 			{
-				return m_cThreads.SyncRoot;
+				return _Threads.SyncRoot;
 			}
 		}
 
@@ -233,7 +233,7 @@ namespace Alchemi.Core.Owner
 		/// <returns>enumerator</returns>
 		public IEnumerator GetEnumerator()
 		{
-			return m_cThreads.GetEnumerator();
+			return _Threads.GetEnumerator();
 		}
 
 		#endregion

@@ -35,85 +35,85 @@ namespace Alchemi.Core.Manager.Storage
 	{
 
         #region Property - MaxPower
-        private string m_maxPower;
+        private string _maxPower;
         /// <summary>
         /// Maximum power.
         /// </summary>
         public string MaxPower
         {
-            get { return m_maxPower; }
+            get { return _maxPower; }
         } 
         #endregion
 
 
         #region Property - TotalExecutors
-        private int m_totalExecutors;
+        private int _totalExecutors;
         /// <summary>
         /// The total number of Executors.
         /// </summary>
         public int TotalExecutors
         {
-            get { return m_totalExecutors; }
+            get { return _totalExecutors; }
         } 
         #endregion
 
 
         #region Property - PowerUsage
-        private int m_powerUsage;
+        private int _powerUsage;
         /// <summary>
         /// The power usage.
         /// </summary>
         public int PowerUsage
         {
-            get { return m_powerUsage; }
+            get { return _powerUsage; }
         } 
         #endregion
 
 
         #region Property - PowerAvailable
-        private Int32 m_powerAvailable;
+        private Int32 _powerAvailable;
         /// <summary>
         /// The available power.
         /// </summary>
         public int PowerAvailable
         {
-            get { return m_powerAvailable; }
+            get { return _powerAvailable; }
         } 
         #endregion
 
 
         #region Property - PowerTotalUsage
-        private string m_powerTotalUsage;
+        private string _powerTotalUsage;
         /// <summary>
         /// The total power usage.
         /// </summary>
         public string PowerTotalUsage
         {
-            get { return m_powerTotalUsage; }
+            get { return _powerTotalUsage; }
         } 
         #endregion
 
 
         #region Property - UnfinishedThreads
-        private int m_unfinishedThreads;
+        private int _unfinishedThreads;
         /// <summary>
         /// The number of unfinished threads.
         /// </summary>
         public int UnfinishedThreads
         {
-            get { return m_unfinishedThreads; }
+            get { return _unfinishedThreads; }
         } 
         #endregion
 
 
         #region Property - UnfinishedApps
-        private int m_unfinishedApps;
+        private int _unfinishedApps;
         /// <summary>
         /// The number of unfinished applications.
         /// </summary>
         public int UnfinishedApps
         {
-            get { return m_unfinishedApps; }
+            get { return _unfinishedApps; }
         } 
         #endregion
 
@@ -139,13 +139,13 @@ namespace Alchemi.Core.Manager.Storage
             int unfinishedApps,
             int unfinishedThreads)
         {
-            m_maxPower = maxPower;
-            m_totalExecutors = totalExecutors;
-            m_powerUsage = powerUsage;
-            m_powerAvailable = powerAvailable;
-            m_powerTotalUsage = powerTotalUsage;
-            m_unfinishedApps = unfinishedApps;
-            m_unfinishedThreads = unfinishedThreads;
+            _maxPower = maxPower;
+            _totalExecutors = totalExecutors;
+            _powerUsage = powerUsage;
+            _powerAvailable = powerAvailable;
+            _powerTotalUsage = powerTotalUsage;
+            _unfinishedApps = unfinishedApps;
+            _unfinishedThreads = unfinishedThreads;
         } 
         #endregion
 	}

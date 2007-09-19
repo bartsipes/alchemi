@@ -49,7 +49,7 @@ namespace Alchemi.Manager.Storage
 		// Create a logger for use in this class
 		protected static readonly Logger logger = new Logger();
 
-		protected String m_connectionString;
+		protected String ConnectionString;
 
 		protected virtual String IsNullOperator
 		{
@@ -62,7 +62,7 @@ namespace Alchemi.Manager.Storage
 
 		public GenericManagerDatabaseStorage(String connectionString)
 		{
-			m_connectionString = connectionString;
+			ConnectionString = connectionString;
 		}
 
 		#region IManagerStorageSetup Members
@@ -225,7 +225,7 @@ namespace Alchemi.Manager.Storage
 		protected DataSet RunSqlReturnDataSet(string query)
 		{
 			DataSet result = null;
-			using (IDbConnection connection = GetConnection(m_connectionString))
+			using (IDbConnection connection = GetConnection(ConnectionString))
 			{
 				IDbCommand command = GetCommand();
 				command.Connection = connection;
@@ -1593,7 +1593,7 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		protected IDataReader RunSpReturnDataReader(String storedProcedure)
 		{
-			IDbConnection connection = GetConnection(m_connectionString);
+			IDbConnection connection = GetConnection(ConnectionString);
 			IDbCommand command = GetCommand();
 			command.Connection = connection;
 			command.CommandText = storedProcedure;
@@ -1607,7 +1607,7 @@ namespace Alchemi.Manager.Storage
 
 		protected IDataReader RunSqlReturnDataReader(String sqlQuery)
 		{
-			IDbConnection connection = GetConnection(m_connectionString);
+			IDbConnection connection = GetConnection(ConnectionString);
 			IDbCommand command = GetCommand();
 
 			command.Connection = connection;
@@ -1630,7 +1630,7 @@ namespace Alchemi.Manager.Storage
 		/// <returns></returns>
 		protected object RunSpReturnScalar(String storedProcedure, params IDataParameter[] parameters)
 		{
-			using(IDbConnection connection = GetConnection(m_connectionString))
+			using(IDbConnection connection = GetConnection(ConnectionString))
 			{
 				IDbCommand command = GetCommand();
 
@@ -1660,7 +1660,7 @@ namespace Alchemi.Manager.Storage
 		{
 			try
 			{
-				using(IDbConnection connection = GetConnection(m_connectionString))
+				using(IDbConnection connection = GetConnection(ConnectionString))
 				{
 					IDbCommand command = GetCommand();
 
@@ -1697,7 +1697,7 @@ namespace Alchemi.Manager.Storage
 
 		protected object RunSqlReturnScalar(String sqlQuery, params IDataParameter[] parameters)
 		{
-			using(IDbConnection connection = GetConnection(m_connectionString))
+			using(IDbConnection connection = GetConnection(ConnectionString))
 			{
 				IDbCommand command = GetCommand();
 

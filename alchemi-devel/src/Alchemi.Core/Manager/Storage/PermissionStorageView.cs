@@ -37,27 +37,27 @@ namespace Alchemi.Core.Manager.Storage
 	{
 
         #region Property - PermissionName
-        private string m_prmname;
+        private string _permissionName;
         /// <summary>
         /// A human readable permission name.
         /// </summary>
         public string PermissionName
         {
-            get { return m_prmname; }
-            set { m_prmname = value; }
+            get { return _permissionName; }
+            set { _permissionName = value; }
         } 
         #endregion
 
 
         #region Property - PermissionId
-        private int m_prmId;
+        private int _permissionId;
         /// <summary>
         /// Permission Id.
         /// </summary>
         public int PermissionId
         {
-            get { return m_prmId; }
-            set { m_prmId = value; }
+            get { return _permissionId; }
+            set { _permissionId = value; }
         } 
         #endregion
 
@@ -71,8 +71,8 @@ namespace Alchemi.Core.Manager.Storage
         /// <param name="name"></param>
         public PermissionStorageView(int id, string name)
         {
-            m_prmId = id;
-            m_prmname = name;
+            _permissionId = id;
+            _permissionName = name;
         }
 
         /// <summary>
@@ -81,8 +81,8 @@ namespace Alchemi.Core.Manager.Storage
         /// <param name="perm"></param>
         public PermissionStorageView(Permission perm)
         {
-            m_prmId = (int)perm;
-            m_prmname = perm.ToString();
+            _permissionId = (int)perm;
+            _permissionName = perm.ToString();
         } 
         #endregion
 

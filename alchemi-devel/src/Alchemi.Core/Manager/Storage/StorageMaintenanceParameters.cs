@@ -36,65 +36,65 @@ namespace Alchemi.Core.Manager.Storage
         // Application maintenance parameters
 
         #region Property - ApplicationTimeCreatedCutOff
-        private TimeSpan m_applicationTimeCreatedCutOff;
+        private TimeSpan _applicationTimeCreatedCutOff;
         /// <summary>
         /// TODO:
         /// </summary>
         public TimeSpan ApplicationTimeCreatedCutOff
         {
-            get { return m_applicationTimeCreatedCutOff; }
+            get { return _applicationTimeCreatedCutOff; }
             set
             {
-                m_applicationTimeCreatedCutOff = value;
-                m_applicationTimeCreatedCutOffSet = true;
+                _applicationTimeCreatedCutOff = value;
+                _applicationTimeCreatedCutOffSet = true;
             }
         } 
         #endregion
 
 
         #region Property - ApplicationTimeCreatedCutOffSet
-        private bool m_applicationTimeCreatedCutOffSet = false;
+        private bool _applicationTimeCreatedCutOffSet = false;
         /// <summary>
         /// TODO:
         /// </summary>
         public bool ApplicationTimeCreatedCutOffSet
         {
-            get { return m_applicationTimeCreatedCutOffSet; }
+            get { return _applicationTimeCreatedCutOffSet; }
         } 
         #endregion
 
 
         #region Property - ApplicationTimeCompletedCutOff
-        private TimeSpan m_applicationTimeCompletedCutOff;
+        private TimeSpan _applicationTimeCompletedCutOff;
         /// <summary>
         /// TODO:
         /// </summary>
         public TimeSpan ApplicationTimeCompletedCutOff
         {
-            get { return m_applicationTimeCompletedCutOff; }
+            get { return _applicationTimeCompletedCutOff; }
             set
             {
-                m_applicationTimeCompletedCutOff = value;
-                m_applicationTimeCompletedCutOffSet = true;
+                _applicationTimeCompletedCutOff = value;
+                _applicationTimeCompletedCutOffSet = true;
             }
         } 
         #endregion
 
 
         #region Property - ApplicationTimeCompletedCutOffSet
-        private bool m_applicationTimeCompletedCutOffSet = false;
+        private bool _applicationTimeCompletedCutOffSet = false;
         /// <summary>
         /// TODO:
         /// </summary>
         public bool ApplicationTimeCompletedCutOffSet
         {
-            get { return m_applicationTimeCompletedCutOffSet; }
+            get { return _applicationTimeCompletedCutOffSet; }
         } 
         #endregion
 
 
         #region Property - ApplicationStatesToRemove
-        private List<ApplicationState> m_applicationStatesToRemove;
+        private List<ApplicationState> _applicationStatesToRemove;
         /// <summary>
         /// TODO:
         /// </summary>
@@ -102,26 +102,26 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                if (m_applicationStatesToRemove == null)
+                if (_applicationStatesToRemove == null)
                 {
-                    m_applicationStatesToRemove = new List<ApplicationState>();
+                    _applicationStatesToRemove = new List<ApplicationState>();
                 }
 
-                return m_applicationStatesToRemove.ToArray();
+                return _applicationStatesToRemove.ToArray();
             }
         } 
         #endregion
 
 
         #region Property - RemoveAllApplications
-        private bool m_removeAllApplications = false;
+        private bool _removeAllApplications = false;
         /// <summary>
         /// TODO:
         /// </summary>
         public bool RemoveAllApplications
         {
-            get { return m_removeAllApplications; }
-            set { m_removeAllApplications = value; }
+            get { return _removeAllApplications; }
+            set { _removeAllApplications = value; }
         } 
         #endregion
 
@@ -129,43 +129,43 @@ namespace Alchemi.Core.Manager.Storage
         // Executor maintenance parameters
 
         #region Property - ExecutorPingTimeCutOff
-        private TimeSpan m_executorPingTimeCutOff;
+        private TimeSpan _executorPingTimeCutOff;
         /// <summary>
         /// TODO:
         /// </summary>
         public TimeSpan ExecutorPingTimeCutOff
         {
-            get { return m_executorPingTimeCutOff; }
+            get { return _executorPingTimeCutOff; }
             set
             {
-                m_executorPingTimeCutOff = value;
-                m_executorPingTimeCutOffSet = true;
+                _executorPingTimeCutOff = value;
+                _executorPingTimeCutOffSet = true;
             }
         } 
         #endregion
 
 
         #region Property - ExecutorPingTimeCutOffSet
-        private bool m_executorPingTimeCutOffSet = false;
+        private bool _executorPingTimeCutOffSet = false;
         /// <summary>
         /// TODO:
         /// </summary>
         public bool ExecutorPingTimeCutOffSet
         {
-            get { return m_executorPingTimeCutOffSet; }
+            get { return _executorPingTimeCutOffSet; }
         } 
         #endregion
 
 
         #region Property - RemoveAllExecutors
-        private bool m_removeAllExecutors = false;
+        private bool _removeAllExecutors = false;
         /// <summary>
         /// TODO:
         /// </summary>
         public bool RemoveAllExecutors
         {
-            get { return m_removeAllExecutors; }
-            set { m_removeAllExecutors = value; }
+            get { return _removeAllExecutors; }
+            set { _removeAllExecutors = value; }
         } 
         #endregion
 
@@ -184,12 +184,12 @@ namespace Alchemi.Core.Manager.Storage
 
         public void AddApplicationStateToRemove(ApplicationState stateToAdd)
         {
-            if (m_applicationStatesToRemove == null)
+            if (_applicationStatesToRemove == null)
             {
-                m_applicationStatesToRemove = new List<ApplicationState>();
+                _applicationStatesToRemove = new List<ApplicationState>();
             }
 
-            m_applicationStatesToRemove.Add(stateToAdd);
+            _applicationStatesToRemove.Add(stateToAdd);
         }
 
         public void AddApplicationStatesToRemove(IEnumerable<ApplicationState> enumerable)

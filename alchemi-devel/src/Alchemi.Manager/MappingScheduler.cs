@@ -49,14 +49,14 @@ namespace Alchemi.Manager
     {
         private static readonly Logger logger = new Logger();
 
-        private Mapping m_oMapping;
+        private Mapping _Mapping;
 
         /// <summary>
         /// Default constructor required by scheduler factory.
         /// </summary>
         public MappingScheduler()
         {
-            m_oMapping = new Mapping();
+            _Mapping = new Mapping();
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace Alchemi.Manager
         {
             lock(this)
             {
-                m_oMapping.Update();
+                _Mapping.Update();
 
-                IList cApplicationIds = m_oMapping.GetApplicationIds(strExecutorId);
+                IList cApplicationIds = _Mapping.GetApplicationIds(strExecutorId);
                 ThreadStorageView oThreadStorage = GetNextThread(cApplicationIds);
                 if (oThreadStorage != null)
                 {
@@ -143,9 +143,9 @@ namespace Alchemi.Manager
         /// <returns>thread identifier</returns>
         public DedicatedSchedule ScheduleDedicated()
         {
-            lock (m_oMapping)
+            lock (_Mapping)
             {
-                m_oMapping.Update();
+                _Mapping.Update();
 
                 IList cThreads = SortThreadsByPriority(GetThreads());
                 foreach (ThreadStorageView oThreadStorage in cThreads)
@@ -197,7 +197,7 @@ namespace Alchemi.Manager
         /// <returns>next executor for application</returns>
         private string GetNextExecutor(string strApplicationId)
         {
-            IList cExecutorIds = m_oMapping.GetExecutorIds(strApplicationId);
+            IList cExecutorIds = _Mapping.GetExecutorIds(strApplicationId);
             foreach (string strExecutorId in cExecutorIds)
             {
                 int nThreadCount = ManagerStorageFactory.ManagerStorage().GetExecutorThreadCount(strExecutorId, ThreadState.Ready, ThreadState.Scheduled, ThreadState.Started);
@@ -214,8 +214,8 @@ namespace Alchemi.Manager
 
         // TODO: Applications and Executors properties are not used in DefaultScheduler or ExecutorScheduler probably because ManagerStorage is used instead. Consider changing IScheduler interface to reflect this.
 
-        private MApplicationCollection m_cApplications;
-        private MExecutorCollection m_cExecutors;
+        private MApplicationCollection _Applications;
+        private MExecutorCollection _Executors;
 
         /// <summary>
         /// Applications property represents the applications.
@@ -224,7 +224,7 @@ namespace Alchemi.Manager
         {
             set
             {
-                m_cApplications = value;
+                _Applications = value;
             }
         }
 
@@ -235,7 +235,7 @@ namespace Alchemi.Manager
         {
             set
             {
-                m_cExecutors = value;
+                _Executors = value;
             }
         }
 
@@ -249,16 +249,16 @@ namespace Alchemi.Manager
     {
         private static readonly Logger logger = new Logger();
 
-        private Hashtable m_cApplicationExecutor;
-        private Hashtable m_cExecutorApplication;
+        private Hashtable _ApplicationExecutor;
+        private Hashtable _ExecutorApplication;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         public Mapping()
         {
-            m_cApplicationExecutor = new Hashtable();
-            m_cExecutorApplication = new Hashtable();
+            _ApplicationExecutor = new Hashtable();
+            _ExecutorApplication = new Hashtable();
         }
 
         /// <summary>
@@ -268,7 +268,7 @@ namespace Alchemi.Manager
         /// <returns>application ids</returns>
         public IList GetApplicationIds(string strExecutorId)
         {
-            IList cList = (IList) m_cExecutorApplication[strExecutorId];
+            IList cList = (IList) _ExecutorApplication[strExecutorId];
             return (cList != null) ? cList : new ArrayList();
         }
 
@@ -279,7 +279,7 @@ namespace Alchemi.Manager
         /// <returns>executor ids</returns>
         public IList GetExecutorIds(string strApplicationId)
         {
-            IList cList = (IList) m_cApplicationExecutor[strApplicationId];
+            IList cList = (IList) _ApplicationExecutor[strApplicationId];
             return (cList != null) ? cList : new ArrayList();
         }
 
@@ -329,8 +329,8 @@ namespace Alchemi.Manager
         /// </summary>
         private void Clear()
         {
-            m_cApplicationExecutor.Clear();
-            m_cExecutorApplication.Clear();
+            _ApplicationExecutor.Clear();
+            _ExecutorApplication.Clear();
         }
 
         /// <summary>
@@ -380,8 +380,8 @@ namespace Alchemi.Manager
         /// <param name="strExecutorId">executor id</param>
         private void Map(string strApplicationId, string strExecutorId)
         {
-            AddToList(strApplicationId, strExecutorId, m_cApplicationExecutor);
-            AddToList(strExecutorId, strApplicationId, m_cExecutorApplication);
+            AddToList(strApplicationId, strExecutorId, _ApplicationExecutor);
+            AddToList(strExecutorId, strApplicationId, _ExecutorApplication);
         }
 
         /// <summary>

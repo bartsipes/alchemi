@@ -40,7 +40,14 @@ namespace Alchemi.Executor
         // Create a logger for use in this class
         private static readonly Logger logger = new Logger();
 
-        public Configuration _Config = null;
+        private Configuration _Config = null;
+
+        public Configuration Config
+        {
+            get { return _Config; }
+            set { _Config = value; }
+        }
+
         private GExecutor _Executor = null;
 
         #region Constructor

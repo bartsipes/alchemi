@@ -39,13 +39,13 @@ namespace Alchemi.Tester.Manager.Storage
 	[TestFixture]
 	public class PostgresqlManagerDatabaseStorageTester : ManagerStorageTester
 	{
-		private PostgresqlManagerDatabaseStorage m_managerStorage;
+		private PostgresqlManagerDatabaseStorage _managerStorage;
 
 		public override IManagerStorage ManagerStorage
 		{
 			get
 			{
-				return m_managerStorage;
+				return _managerStorage;
 			}
 		}
 
@@ -69,16 +69,16 @@ namespace Alchemi.Tester.Manager.Storage
 					);
 			}
 
-			m_managerStorage = new PostgresqlManagerDatabaseStorage(connectionString);
+			_managerStorage = new PostgresqlManagerDatabaseStorage(connectionString);
 
-			m_managerStorage.SetUpStorage();
-			m_managerStorage.InitializeStorageData();
+			_managerStorage.SetUpStorage();
+			_managerStorage.InitializeStorageData();
 		}
 
 		[TearDown]
 		public void TestShutDown()
 		{
-			m_managerStorage.TearDownStorage();
+			_managerStorage.TearDownStorage();
 		}
 
         public PostgresqlManagerDatabaseStorageTester()

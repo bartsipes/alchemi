@@ -42,22 +42,22 @@ namespace Alchemi.Tester.Manager
 	[TestFixture]
 	public class MExecutorCollectionTester
 	{
-		private InMemoryManagerStorage m_managerStorage;
-		private MExecutorCollection m_executorCollection;
+		private InMemoryManagerStorage _managerStorage;
+		private MExecutorCollection _executorCollection;
 
 		[SetUp]
 		public void SetUp()
 		{
-			m_managerStorage = new InMemoryManagerStorage();
-			ManagerStorageFactory.SetManagerStorage(m_managerStorage);
+			_managerStorage = new InMemoryManagerStorage();
+			ManagerStorageFactory.SetManagerStorage(_managerStorage);
 
-			m_executorCollection = new MExecutorCollection();
+			_executorCollection = new MExecutorCollection();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			m_managerStorage = null;
+			_managerStorage = null;
 			ManagerStorageFactory.SetManagerStorage(null);
 		}
 
@@ -75,18 +75,18 @@ namespace Alchemi.Tester.Manager
 			// add one that is not connected
 			ExecutorStorageView executor3 = new ExecutorStorageView(false, false, DateTime.Now, "hostname", 10, "username", 1, 1, 1, 1);
 
-			string executorId1 = m_managerStorage.AddExecutor(executor1);
-			string executorId2 = m_managerStorage.AddExecutor(executor2);
-			string executorId3 = m_managerStorage.AddExecutor(executor3);
+			string executorId1 = _managerStorage.AddExecutor(executor1);
+			string executorId2 = _managerStorage.AddExecutor(executor2);
+			string executorId3 = _managerStorage.AddExecutor(executor3);
 
 			string applicationId = Guid.NewGuid().ToString();
 
 			// add a few threads
-			m_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId1, 1, ThreadState.Started, DateTime.Now, DateTime.Now, 1, false));
-			m_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId2, 1, ThreadState.Dead, DateTime.Now, DateTime.Now, 1, false));
-			m_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId3, 1, ThreadState.Started, DateTime.Now, DateTime.Now, 1, false));
+			_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId1, 1, ThreadState.Started, DateTime.Now, DateTime.Now, 1, false));
+			_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId2, 1, ThreadState.Dead, DateTime.Now, DateTime.Now, 1, false));
+			_managerStorage.AddThread(new ThreadStorageView(applicationId, executorId3, 1, ThreadState.Started, DateTime.Now, DateTime.Now, 1, false));
 
-			ExecutorStorageView[] executors = m_executorCollection.AvailableDedicatedExecutors;
+			ExecutorStorageView[] executors = _executorCollection.AvailableDedicatedExecutors;
 
 			Assert.AreEqual(1, executors.Length);
 			Assert.AreEqual(executorId2, executors[0].ExecutorId);

@@ -40,8 +40,8 @@ namespace Alchemi.Core.Owner
         private const int DefaultThreadBufferCapacity = 8;
 
         
-        private GThreadBuffer m_oThreadBuffer;
-        private int m_nInternalThreadId;
+        private GThreadBuffer _ThreadBuffer;
+        private int _InternalThreadId;
 
 
         #region Constructors
@@ -96,20 +96,20 @@ namespace Alchemi.Core.Owner
                 throw new ArgumentOutOfRangeException("threadBufferCapacity", threadBufferCapacity, "0 < threadBufferCapacity <= Int32.MaxValue");
             }
 
-            m_nThreadBufferCapacity = threadBufferCapacity;
-            m_oThreadBuffer = CreateThreadBuffer();
+            _ThreadBufferCapacity = threadBufferCapacity;
+            _ThreadBuffer = CreateThreadBuffer();
         } 
         #endregion
 
 
         #region Property - ThreadBufferCapacity
-        private int m_nThreadBufferCapacity;
+        private int _ThreadBufferCapacity;
         /// <summary>
         /// ThreadBufferCapacity property represents the thread buffer capacity. 
         /// </summary>
         public int ThreadBufferCapacity
         {
-            get { return m_nThreadBufferCapacity; }
+            get { return _ThreadBufferCapacity; }
         } 
         #endregion
 
@@ -123,10 +123,10 @@ namespace Alchemi.Core.Owner
             lock (this)
             {
                 // assign an internal thread id...
-                thread.SetId(m_nInternalThreadId++);
+                thread.SetId(_InternalThreadId++);
 
                 // add thread to thread buffer...
-                m_oThreadBuffer.Add(thread);
+                _ThreadBuffer.Add(thread);
             }
         }
 
@@ -148,16 +148,16 @@ namespace Alchemi.Core.Owner
             lock (this)
             {
                 // check whether any threads to flush...
-                if (m_oThreadBuffer.Count > 0)
+                if (_ThreadBuffer.Count > 0)
                 {
                     // remove full event handler from thread buffer...
-                    m_oThreadBuffer.Full -= new FullEventHandler(ThreadBuffer_Full);
+                    _ThreadBuffer.Full -= new FullEventHandler(ThreadBuffer_Full);
 
                     // start thread buffer thread...
-                    base.StartThread(m_oThreadBuffer);
+                    base.StartThread(_ThreadBuffer);
 
                     // create new thread buffer...
-                    m_oThreadBuffer = CreateThreadBuffer();
+                    _ThreadBuffer = CreateThreadBuffer();
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace Alchemi.Core.Owner
         /// </summary>
         private GThreadBuffer CreateThreadBuffer()
         {
-            GThreadBuffer oThreadBuffer = new GThreadBuffer(m_nThreadBufferCapacity);
+            GThreadBuffer oThreadBuffer = new GThreadBuffer(_ThreadBufferCapacity);
             oThreadBuffer.Full += new FullEventHandler(ThreadBuffer_Full);
             return oThreadBuffer;
         }

@@ -36,23 +36,23 @@ namespace Alchemi.Tester.Manager.Storage
 	[TestFixture]
 	public class InMemoryManagerStorageTester : ManagerStorageTester
 	{
-		private InMemoryManagerStorage m_managerStorage;
+		private InMemoryManagerStorage _managerStorage;
 
 		public override IManagerStorage ManagerStorage
 		{
 			get
 			{
-				return m_managerStorage;
+				return _managerStorage;
 			}
 		}
 
 		[SetUp]
 		public void TestStartUp()
 		{
-			m_managerStorage = new InMemoryManagerStorage();
+			_managerStorage = new InMemoryManagerStorage();
 
-			m_managerStorage.SetUpStorage();
-			m_managerStorage.InitializeStorageData();
+			_managerStorage.SetUpStorage();
+			_managerStorage.InitializeStorageData();
 		}
 
 		public InMemoryManagerStorageTester()

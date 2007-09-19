@@ -42,7 +42,7 @@ namespace Alchemi.ManagerUtils.DbSetup
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox logTextBox;
         private System.Windows.Forms.Button cancelButton;
-        private Installer m_parent;
+        private Installer _parent;
         private System.Windows.Forms.ProgressBar installProgressBar;
         private System.Windows.Forms.Button closeButton;
 
@@ -60,10 +60,10 @@ namespace Alchemi.ManagerUtils.DbSetup
 
             this.Closing += new CancelEventHandler(InstallProgress_Closing);
 
-            m_parent = parent;
+            _parent = parent;
 
-            Size = m_parent.Size;
-            Location = m_parent.Location;
+            Size = _parent.Size;
+            Location = _parent.Location;
 
             closeButton.Size = cancelButton.Size;
             closeButton.Location = cancelButton.Location;
@@ -184,7 +184,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 
         private void InstallProgress_Load(object sender, System.EventArgs e)
         {
-            m_parent.Visible = false;
+            _parent.Visible = false;
 
             // start the installer on its own thread so we get proper feedback
             MethodInvoker mi = new MethodInvoker(
@@ -194,10 +194,10 @@ namespace Alchemi.ManagerUtils.DbSetup
 
         private void InstallProgress_Closing(object sender, CancelEventArgs e)
         {
-            m_parent.Size = Size;
-            m_parent.Location = Location;
+            _parent.Size = Size;
+            _parent.Location = Location;
 
-            m_parent.Visible = true;
+            _parent.Visible = true;
         }
 
         private delegate void MyProgressEventsHandler(
@@ -251,14 +251,14 @@ namespace Alchemi.ManagerUtils.DbSetup
             ShowProgress("Installer thread starting...",
                 0);
 
-            ShowProgress(String.Format("Database type: {0}", m_parent.managerConfiguration.DbType),
+            ShowProgress(String.Format("Database type: {0}", _parent.managerConfiguration.DbType),
                 0);
 
             try
             {
                 /// Create a storage object with the initial catalogue left to the default one.
                 /// This is usually master for SQL Server or nothing for mySQL
-                IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(m_parent.managerConfiguration, false);
+                IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(_parent.managerConfiguration, false);
 
                 // this storage object is also a storage setup object so it is safe to cast
                 IManagerStorageSetup setup = (IManagerStorageSetup)storage;
@@ -266,10 +266,10 @@ namespace Alchemi.ManagerUtils.DbSetup
                 ShowProgress("Creating the database.",
                     1);
 
-                if (m_parent.managerConfiguration.DbType == ManagerStorageEnum.db4o)
-                    setup.CreateStorage(m_parent.managerConfiguration.DbFilePath);
+                if (_parent.managerConfiguration.DbType == ManagerStorageEnum.db4o)
+                    setup.CreateStorage(_parent.managerConfiguration.DbFilePath);
                 else
-                    setup.CreateStorage(m_parent.managerConfiguration.DbName);
+                    setup.CreateStorage(_parent.managerConfiguration.DbName);
 
                 ShowProgress("Database created.",
                     20);
@@ -289,7 +289,7 @@ namespace Alchemi.ManagerUtils.DbSetup
 
             try
             {
-                IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(m_parent.managerConfiguration);
+                IManagerStorage storage = ManagerStorageFactory.CreateManagerStorage(_parent.managerConfiguration);
 
                 // this storage object is also a storage setup object so it is safe to cast
                 IManagerStorageSetup setup = (IManagerStorageSetup)storage;

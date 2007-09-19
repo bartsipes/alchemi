@@ -40,80 +40,192 @@ namespace Alchemi.Executor
     {
         public const string ConfigFileName = "Alchemi.Executor.config.xml";
 
-		/// <summary>
+        #region Property -Id
+        /// <summary>
 		/// Executor Id
 		/// </summary>
-        public string Id;
+        private string _Id;
 
-		/// <summary>
+        public string Id
+        {
+            get { return _Id; }
+            set { _Id = value; }
+        }
+        #endregion
+
+        #region Property -ManagerHost
+        /// <summary>
 		/// Host of the Manager
 		/// </summary>
-        public string ManagerHost = "localhost";
+        private string _ManagerHost = "localhost";
 
-		/// <summary>
+        public string ManagerHost
+        {
+            get { return _ManagerHost; }
+            set { _ManagerHost = value; }
+        }
+        #endregion
+
+        #region Property -ManagerPort
+        /// <summary>
 		/// Port of the Manager
 		/// </summary>
-        public int ManagerPort = 9000;
+        private int _ManagerPort = 9000;
 
-		/// <summary>
+        public int ManagerPort
+        {
+            get { return _ManagerPort; }
+            set { _ManagerPort = value; }
+        }
+        #endregion
+
+        #region Property -Dedicated
+        /// <summary>
 		/// Specifies whether the Executor is dedicated
 		/// </summary>
-        public bool Dedicated = true;
+        private bool _Dedicated = true;
 
-		/// <summary>
+        public bool Dedicated
+        {
+            get { return _Dedicated; }
+            set { _Dedicated = value; }
+        }
+        #endregion
+
+        #region Property -OwnPort
+        /// <summary>
 		/// Specifies the port on which the Executor listens for messages.
 		/// </summary>
-        public int OwnPort = 9001;
+        private int _OwnPort = 9001;
 
-		/// <summary>
+        public int OwnPort
+        {
+            get { return _OwnPort; }
+            set { _OwnPort = value; }
+        }
+        #endregion
+
+        #region Property -ConnectVerified
+        /// <summary>
 		/// Specifies if the Executor connected successfully with the current settings 
         /// for the ManagerHost,ManagerPort
 		/// </summary>
-        public bool ConnectVerified = false;
+        private bool _ConnectVerified = false;
 
-		/// <summary>
+        public bool ConnectVerified
+        {
+            get { return _ConnectVerified; }
+            set { _ConnectVerified = value; }
+        }
+        #endregion
+
+        #region Property -Username
+        /// <summary>
 		/// Username for connection to the Manager
 		/// </summary>
-        public string Username = "executor";
+        private string _Username = "executor";
 
-		/// <summary>
+        public string Username
+        {
+            get { return _Username; }
+            set { _Username = value; }
+        }
+        #endregion
+
+        #region Property -Password
+        /// <summary>
 		/// Password for connection to the Manager
 		/// </summary>
-        public string Password = "executor";
+        private string _Password = "executor";
 
-		/// <summary>
+        public string Password
+        {
+            get { return _Password; }
+            set { _Password = value; }
+        }
+        #endregion
+
+        #region Property -HeartBeatInterval
+        /// <summary>
 		/// Time interval (in seconds) between "heartbeats", ie. pinging the Manager 
         /// to notify that this Executor is alive.
 		/// </summary>
-		public int HeartBeatInterval = 5; //seconds
-		
-		/// <summary>
+        private int _HeartBeatInterval = 5; //seconds
+
+        public int HeartBeatInterval
+        {
+            get { return _HeartBeatInterval; }
+            set { _HeartBeatInterval = value; }
+        }
+        #endregion
+
+        #region Property -RetryConnect
+        /// <summary>
 		/// Number of times to retry connecting, if the connection to the Manager is lost
 		/// </summary>
-		public bool RetryConnect = true; //retry connecting to manager on disconnection
+        private bool _RetryConnect = true; //retry connecting to manager on disconnection
 
-		/// <summary>
+        public bool RetryConnect
+        {
+            get { return _RetryConnect; }
+            set { _RetryConnect = value; }
+        }
+        #endregion
+
+        #region Property -RetryInterval
+        /// <summary>
 		/// Time interval between successive connection retries
 		/// </summary>
-		public int RetryInterval = 30; //seconds
+        private int _RetryInterval = 30; //seconds
 
-		/// <summary>
+        public int RetryInterval
+        {
+            get { return _RetryInterval; }
+            set { _RetryInterval = value; }
+        }
+        #endregion
+
+        #region Property -RetryMax
+        /// <summary>
 		/// Maximum number of times to retry connecting
 		/// </summary>
-		public int RetryMax = -1; //try reconnecting forever.
+        private int _RetryMax = -1; //try reconnecting forever.
 
+        public int RetryMax
+        {
+            get { return _RetryMax; }
+            set { _RetryMax = value; }
+        }
+        #endregion
+
+        #region Property -AutoRevertToNDE
         /// <summary>
         /// Specifies whether to automatically revert to non-dedicated executor mode, 
         /// if the Manager cannot be contacted in dedicated mode.
         /// </summary> 
-        public bool AutoRevertToNDE = false;
+        private bool _AutoRevertToNDE = false;
 
+        public bool AutoRevertToNDE
+        {
+            get { return _AutoRevertToNDE; }
+            set { _AutoRevertToNDE = value; }
+        }
+        #endregion
+
+        #region Property -SecureSandboxedExecution
         /// <summary>
         /// Enforce secure sandboxed execution. Default: false.
         /// Turn this off to allow legacy applications (ie. GJobs)
         /// </summary>
-        public bool SecureSandboxedExecution = false;
-    
+        private bool _SecureSandboxedExecution = false;
+
+        public bool SecureSandboxedExecution
+        {
+            get { return _SecureSandboxedExecution; }
+            set { _SecureSandboxedExecution = value; }
+        }
+        #endregion
+
 
 
         #region Constructor

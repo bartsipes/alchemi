@@ -41,19 +41,19 @@ namespace Alchemi.Tester.Manager
 	[TestFixture]
 	public class ManagerContainerTester : ManagerContainer
 	{
-		private InMemoryManagerStorage m_managerStorage;
+		private InMemoryManagerStorage _managerStorage;
 
 		[SetUp]
 		public void SetUp()
 		{
-			m_managerStorage = new InMemoryManagerStorage();
-			ManagerStorageFactory.SetManagerStorage(m_managerStorage);
+			_managerStorage = new InMemoryManagerStorage();
+			ManagerStorageFactory.SetManagerStorage(_managerStorage);
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			m_managerStorage = null;
+			_managerStorage = null;
 			ManagerStorageFactory.SetManagerStorage(null);
 		}
 
@@ -71,9 +71,9 @@ namespace Alchemi.Tester.Manager
 			// add one that is not connected
 			ExecutorStorageView executor3 = new ExecutorStorageView(false, false, DateTime.Now, "hostname", 10, "username", 1, 1, 1, 1);
 
-			string executorId1 = m_managerStorage.AddExecutor(executor1);
-			string executorId2 = m_managerStorage.AddExecutor(executor2);
-			string executorId3 = m_managerStorage.AddExecutor(executor3);
+			string executorId1 = _managerStorage.AddExecutor(executor1);
+			string executorId2 = _managerStorage.AddExecutor(executor2);
+			string executorId3 = _managerStorage.AddExecutor(executor3);
 
 			// whatever was not responsive in the last 60 seconds should get lost
 			TimeSpan timeSpan = new TimeSpan(0, 0, 60);
@@ -84,9 +84,9 @@ namespace Alchemi.Tester.Manager
             Assert.Fail("DisconnectTimedOutExecutors(timeSpan) is moved to a seperate class now. Need a new test case.");
 
             // check what was disconnected
-			Assert.IsTrue(m_managerStorage.GetExecutor(executorId1).Connected);
-			Assert.IsFalse(m_managerStorage.GetExecutor(executorId2).Connected);
-			Assert.IsFalse(m_managerStorage.GetExecutor(executorId3).Connected);
+			Assert.IsTrue(_managerStorage.GetExecutor(executorId1).Connected);
+			Assert.IsFalse(_managerStorage.GetExecutor(executorId2).Connected);
+			Assert.IsFalse(_managerStorage.GetExecutor(executorId3).Connected);
 		}
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace Alchemi.Tester.Manager
             //DisconnectTimedOutExecutors(timeSpan);
             Assert.Fail("DisconnectTimedOutExecutors(timeSpan) is moved to a seperate class now. Need a new test case.");
 			
-			Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+			Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
 		}
 
 	}

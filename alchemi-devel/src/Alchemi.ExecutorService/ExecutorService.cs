@@ -346,7 +346,7 @@ namespace Alchemi.ExecutorService
 			try
 			{
 				logger.Info("Got disconnected!");
-				if (this.execContainer._Config.Dedicated && this.execContainer._Config.RetryConnect)
+				if (this.execContainer.Config.Dedicated && this.execContainer.Config.RetryConnect)
 				{
 					logger.Info("Trying to reconnect.");
 					execContainer.Reconnect();					

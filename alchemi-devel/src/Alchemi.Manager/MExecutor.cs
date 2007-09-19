@@ -292,8 +292,8 @@ namespace Alchemi.Manager
     /// </summary>
     public class ExecuteCurrentThreadParameters
     {
-        private ThreadIdentifier m_oThreadIdentifier;
-        private MThread m_oMThread;
+        private ThreadIdentifier _ThreadIdentifier;
+        private MThread _MThread;
 
         /// <summary>
         /// Constructor that takes the thread identifier and mthread.
@@ -302,8 +302,8 @@ namespace Alchemi.Manager
         /// <param name="oMThread">mthread parameter</param>
         public ExecuteCurrentThreadParameters(ThreadIdentifier oThreadIdentifier, MThread oMThread)
         {
-            m_oThreadIdentifier = oThreadIdentifier;
-            m_oMThread = oMThread;
+            _ThreadIdentifier = oThreadIdentifier;
+            _MThread = oMThread;
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Alchemi.Manager
         {
             get
             {
-                return m_oThreadIdentifier;
+                return _ThreadIdentifier;
             }
         }
 
@@ -324,7 +324,7 @@ namespace Alchemi.Manager
         {
             get
             {
-                return m_oMThread;
+                return _MThread;
             }
         }
     }

@@ -35,18 +35,18 @@ namespace Alchemi.Console.DataForms
 {
     public partial class StorageMaintenanceForm : Form
     {
-        private ConsoleNode m_console;
-        private StorageMaintenanceParameters m_maintenanceParameters;
-        private Thread m_maintenanceThread;
-        private PleaseWait m_pleaseWait;
-        private String m_errorMessage;
-        private bool m_success;
+        private ConsoleNode _console;
+        private StorageMaintenanceParameters _maintenanceParameters;
+        private Thread _maintenanceThread;
+        private PleaseWait _pleaseWait;
+        private String _errorMessage;
+        private bool _success;
 
         public StorageMaintenanceForm(ConsoleNode console)
         {
             InitializeComponent();
 
-            m_console = console;
+            _console = console;
         }
 
 
@@ -104,36 +104,36 @@ namespace Alchemi.Console.DataForms
 
         private void btnPerformMaintenance_Click(object sender, EventArgs e)
         {
-            m_maintenanceParameters = GetStorageMaintenanceParameters();
+            _maintenanceParameters = GetStorageMaintenanceParameters();
 
-            m_success = false;
+            _success = false;
 
-            m_maintenanceThread = new Thread(new ThreadStart(MaintenanceWorkerThread));
-            m_maintenanceThread.Name = "MaintenanceWorkerThread";
-            m_maintenanceThread.Start();
+            _maintenanceThread = new Thread(new ThreadStart(MaintenanceWorkerThread));
+            _maintenanceThread.Name = "MaintenanceWorkerThread";
+            _maintenanceThread.Start();
 
             //wait a bit to see if it is done already and if so no longer display the wait dialog.
-            m_maintenanceThread.Join(1000);
+            _maintenanceThread.Join(1000);
 
-            if (m_maintenanceThread.ThreadState != System.Threading.ThreadState.Stopped)
+            if (_maintenanceThread.ThreadState != System.Threading.ThreadState.Stopped)
             {
 
                 // put up the display dialog
-                m_pleaseWait = new PleaseWait();
+                _pleaseWait = new PleaseWait();
 
-                if (m_pleaseWait.ShowDialog() != DialogResult.OK)
+                if (_pleaseWait.ShowDialog() != DialogResult.OK)
                 {
-                    m_maintenanceThread.Join(1000);
+                    _maintenanceThread.Join(1000);
 
-                    m_maintenanceThread.Abort();
+                    _maintenanceThread.Abort();
                 }
             }
 
-            m_maintenanceThread = null;
+            _maintenanceThread = null;
 
             StringBuilder message = new StringBuilder();
 
-            if (m_success)
+            if (_success)
             {
                 message.Append("Maintenance task completed.");
             }
@@ -141,9 +141,9 @@ namespace Alchemi.Console.DataForms
             {
                 message.Append("Maintenance task aborted.");
 
-                if (m_errorMessage != null)
+                if (_errorMessage != null)
                 {
-                    message.AppendFormat(" Error message: {0}", m_errorMessage);
+                    message.AppendFormat(" Error message: {0}", _errorMessage);
                 }
             }
 
@@ -156,12 +156,12 @@ namespace Alchemi.Console.DataForms
         /// </summary>
         private void WorkerThreadCompleted()
         {
-            m_pleaseWait.DialogResult = DialogResult.OK;
+            _pleaseWait.DialogResult = DialogResult.OK;
         }
 
         private void WorkerThreadAborted()
         {
-            m_pleaseWait.DialogResult = DialogResult.Cancel;
+            _pleaseWait.DialogResult = DialogResult.Cancel;
         }
 
         /// <summary>
@@ -172,12 +172,12 @@ namespace Alchemi.Console.DataForms
         {
             try
             {
-                m_console.Manager.Admon_PerformStorageMaintenance(m_console.Credentials, m_maintenanceParameters);
+                _console.Manager.Admon_PerformStorageMaintenance(_console.Credentials, _maintenanceParameters);
             }
             catch (AuthorizationException aex)
             {
-                m_errorMessage = aex.Message;
-                m_success = false;
+                _errorMessage = aex.Message;
+                _success = false;
 
                 // done, let everybody know that we are done
                 MethodInvoker mia = new MethodInvoker(WorkerThreadAborted);
@@ -187,8 +187,8 @@ namespace Alchemi.Console.DataForms
             }
             catch (Exception ex)
             {
-                m_errorMessage = ex.ToString();
-                m_success = false;
+                _errorMessage = ex.ToString();
+                _success = false;
 
                 // done, let everybody know that we are done
                 MethodInvoker mia = new MethodInvoker(WorkerThreadAborted);
@@ -197,7 +197,7 @@ namespace Alchemi.Console.DataForms
                 return;
             }
 
-            m_success = true;
+            _success = true;
 
             // done, let everybody know that we are done
             MethodInvoker mic = new MethodInvoker(WorkerThreadCompleted);

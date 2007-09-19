@@ -35,8 +35,8 @@ namespace Alchemi.Manager.Storage
 	/// </summary>
 	public class ManagerStorageFactory
 	{
-		private static IManagerStorage m_managerStorage = null;
-		private static object m_inMemoryManagerStorageLock = new object();
+		private static IManagerStorage _managerStorage = null;
+		private static object _inMemoryManagerStorageLock = new object();
 
 		public ManagerStorageFactory()
 		{
@@ -44,12 +44,12 @@ namespace Alchemi.Manager.Storage
 
 		public static IManagerStorage ManagerStorage()
 		{
-			if (m_managerStorage == null)
+			if (_managerStorage == null)
 			{
 				CreateManagerStorage(null);
 			}
 
-			return m_managerStorage;
+			return _managerStorage;
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Alchemi.Manager.Storage
 		/// <param name="managerStorage"></param>
 		public static void SetManagerStorage(IManagerStorage managerStorage)
 		{
-			m_managerStorage = managerStorage;
+			_managerStorage = managerStorage;
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@ namespace Alchemi.Manager.Storage
 							);
 					}
 
-					m_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
+					_managerStorage = new SqlServerManagerDatabaseStorage(sqlConnStr);
 					break;
 
 				case ManagerStorageEnum.MySql:
@@ -153,7 +153,7 @@ namespace Alchemi.Manager.Storage
 							);						
 					}
 
-					m_managerStorage = new MySqlManagerDatabaseStorage(sqlConnStr);
+					_managerStorage = new MySqlManagerDatabaseStorage(sqlConnStr);
 					break;
                 case ManagerStorageEnum.Postgresql:
                     if (overwriteDefaultDatabase)
@@ -183,22 +183,22 @@ namespace Alchemi.Manager.Storage
                             );
                     }
 
-                    m_managerStorage = new PostgresqlManagerDatabaseStorage(sqlConnStr);
+                    _managerStorage = new PostgresqlManagerDatabaseStorage(sqlConnStr);
                     break;
                 case ManagerStorageEnum.db4o:
-                    if (m_managerStorage == null)
+                    if (_managerStorage == null)
                     {
-                        lock (m_inMemoryManagerStorageLock)
+                        lock (_inMemoryManagerStorageLock)
                         {
                             // make sure that when we got the lock we are still uninitialized
-                            if (m_managerStorage == null)
+                            if (_managerStorage == null)
                             {
                                 db4oManagerStorage db4oStorage = new db4oManagerStorage(configuration.DbFilePath);
 
                                 // volatile storage, we must initialize the data here
                                 //db4oStorage.InitializeStorageData();
 
-                                m_managerStorage = db4oStorage;
+                                _managerStorage = db4oStorage;
                             }
                         }
                     }
@@ -206,19 +206,19 @@ namespace Alchemi.Manager.Storage
                     break;
 				case ManagerStorageEnum.InMemory:
 					/// in memory storage is volatile so we always return the same object
-					if (m_managerStorage == null)
+					if (_managerStorage == null)
 					{
-						lock (m_inMemoryManagerStorageLock)
+						lock (_inMemoryManagerStorageLock)
 						{
 							// make sure that when we got the lock we are still uninitialized
-							if (m_managerStorage == null)
+							if (_managerStorage == null)
 							{
 								InMemoryManagerStorage inMemoryStorage = new InMemoryManagerStorage();
 
 								// volatile storage, we must initialize the data here
 								inMemoryStorage.InitializeStorageData();
 
-								m_managerStorage = inMemoryStorage;
+								_managerStorage = inMemoryStorage;
 							}
 						}
 					}
@@ -230,7 +230,7 @@ namespace Alchemi.Manager.Storage
                         string.Format("Unknown storage type: {0}", configuration.DbType));
 			}
 
-			return m_managerStorage;
+			return _managerStorage;
 		}
 
 	}

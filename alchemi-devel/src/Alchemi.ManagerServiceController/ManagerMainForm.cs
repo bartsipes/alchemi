@@ -265,7 +265,7 @@ namespace Alchemi.ManagerService
 					Configuration Config = GetConfigFromUI();
 					if (Config!=null)
 					{					
-						Config.Slz();
+						Config.Serialize();
 					}
 					sc.Start();
 					sc.WaitForStatus(ServiceControllerStatus.Running,new TimeSpan(0,0,28));

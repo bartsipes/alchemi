@@ -35,51 +35,51 @@ namespace Alchemi.Core.Manager.Storage
 	{
 
         #region Property - IsSystem
-        private bool m_is_system;
+        private bool _isSystem;
         /// <summary>
         /// Gets or sets a name indicating whether this Group is a system group.
         /// </summary>
         public bool IsSystem
         {
-            get { return m_is_system; }
-            set { m_is_system = value; }
+            get { return _isSystem; }
+            set { _isSystem = value; }
         } 
         #endregion
 
 
         #region Property - GroupName
-        private string m_groupName;
+        private string _groupName;
         /// <summary>
         /// The group name.
         /// </summary>
         public string GroupName
         {
-            get { return m_groupName; }
+            get { return _groupName; }
         } 
         #endregion
 
 
         #region Property - GroupId
-        private int m_groupId;
+        private int _groupId;
         /// <summary>
         /// The group Id.
         /// </summary>
         public int GroupId
         {
-            get { return m_groupId; }
+            get { return _groupId; }
         } 
         #endregion
 
 
         #region Property - Description
-        private string m_description;
+        private string _description;
         /// <summary>
         /// A human readable description for this group.
         /// </summary>
         public string Description
         {
-            get { return m_description; }
-            set { m_description = value; }
+            get { return _description; }
+            set { _description = value; }
         } 
         #endregion
 
@@ -92,8 +92,8 @@ namespace Alchemi.Core.Manager.Storage
         /// <param name="groupName"></param>
         public GroupStorageView(int groupId, string groupName)
         {
-            m_groupId = groupId;
-            m_groupName = groupName;
+            _groupId = groupId;
+            _groupName = groupName;
         }
 
         /// <summary>

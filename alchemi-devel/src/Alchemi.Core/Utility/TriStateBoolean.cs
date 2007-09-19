@@ -35,13 +35,13 @@ namespace Alchemi.Core.Utility
         public static readonly TriStateBoolean False = new TriStateBoolean(0);
         public static readonly TriStateBoolean Undefined = new TriStateBoolean(-1);
 
-		private int m_value;
+		private int _value;
 
 
         #region Private Constructor
         private TriStateBoolean(int value)
         {
-            m_value = value;
+            _value = value;
         } 
         #endregion
 
@@ -70,7 +70,7 @@ namespace Alchemi.Core.Utility
         #region Method - Equals
         public bool Equals(TriStateBoolean obj)
         {
-            return obj.m_value.Equals(m_value);
+            return obj._value.Equals(_value);
         } 
         #endregion
 
@@ -79,7 +79,7 @@ namespace Alchemi.Core.Utility
         #region Method Override - GetHashCode
         public override int GetHashCode()
         {
-            return m_value.GetHashCode();
+            return _value.GetHashCode();
         } 
         #endregion
 
@@ -87,7 +87,7 @@ namespace Alchemi.Core.Utility
         #region Method Override - ToString
         public override string ToString()
         {
-            return m_value.ToString();
+            return _value.ToString();
         } 
         #endregion
 

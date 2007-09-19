@@ -37,118 +37,118 @@ namespace Alchemi.Core.Manager.Storage
 
 
         #region Property - Architecture
-        private string m_architecture;
+        private string _architecture;
         /// <summary>
         /// Executor architecture.
         /// </summary>
         public string Architecture
         {
-            get { return m_architecture; }
-            set { m_architecture = value; }
+            get { return _architecture; }
+            set { _architecture = value; }
         } 
         #endregion
 
 
         #region Property - OS
-        private string m_os;
+        private string _os;
         /// <summary>
         /// Executor Operating System.
         /// </summary>
         public string OS
         {
-            get { return m_os; }
-            set { m_os = value; }
+            get { return _os; }
+            set { _os = value; }
         } 
         #endregion
 
 
         #region Property - NumberOfCpu
-        private int m_numberOfCpu;
+        private int _numberOfCpu;
         /// <summary>
         /// The number of CPUs on this Executor.
         /// </summary>
         public int NumberOfCpu
         {
-            get { return m_numberOfCpu; }
-            set { m_numberOfCpu = value; }
+            get { return _numberOfCpu; }
+            set { _numberOfCpu = value; }
         } 
         #endregion
 
 
         #region Property - MaxDisk
-        private float m_maxDisk;
+        private float _maxDisk;
         /// <summary>
         /// The maximum disk space available on this Executor.
         /// </summary>
         public float MaxDisk
         {
-            get { return m_maxDisk; }
-            set { m_maxDisk = value; }
+            get { return _maxDisk; }
+            set { _maxDisk = value; }
         } 
         #endregion
 
 
         #region Property - MaxMemory
-        private float m_maxMemory;
+        private float _maxMemory;
         /// <summary>
         /// The maximum memory available on this Executor.
         /// </summary>
         public float MaxMemory
         {
-            get { return m_maxMemory; }
-            set { m_maxMemory = value; }
+            get { return _maxMemory; }
+            set { _maxMemory = value; }
         } 
         #endregion
 
 
         #region Property - ExecutorId
-        private string m_executorId;
+        private string _executorId;
         /// <summary>
         /// Executor Id.
         /// </summary>
         public string ExecutorId
         {
-            get { return m_executorId; }
-            set { m_executorId = value; }
+            get { return _executorId; }
+            set { _executorId = value; }
         } 
         #endregion
 
 
         #region Property - Dedicated
-        private bool m_dedicated;
+        private bool _dedicated;
         /// <summary>
         /// Gets or sets a name indicating whether the Executor is dedicated or not.
         /// </summary>
         public bool Dedicated
         {
-            get { return m_dedicated; }
-            set { m_dedicated = value; }
+            get { return _dedicated; }
+            set { _dedicated = value; }
         } 
         #endregion
 
 
         #region Property - Connected
-        private bool m_connected;
+        private bool _connected;
         /// <summary>
         /// Gets or sets a name indicating whether the Executor is connected or not.
         /// </summary>
         public bool Connected
         {
-            get { return m_connected; }
-            set { m_connected = value; }
+            get { return _connected; }
+            set { _connected = value; }
         } 
         #endregion
 
 
         #region Property - PingTime
-        private DateTime m_pingTime;
+        private DateTime _pingTime;
         /// <summary>
         /// The last time this Executor was pinged
         /// </summary>
         public DateTime PingTime
         {
-            get { return m_pingTime; }
-            set { m_pingTime = value; }
+            get { return _pingTime; }
+            set { _pingTime = value; }
         } 
         #endregion
 
@@ -161,97 +161,97 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                return (m_pingTime != c_noTimeSet);
+                return (_pingTime != c_noTimeSet);
             }
         } 
         #endregion
 
 
         #region Property - HostName
-        private string m_hostname;
+        private string _hostname;
         /// <summary>
         /// The Executor's host name.
         /// </summary>
         public string HostName
         {
-            get { return m_hostname; }
-            set { m_hostname = value; }
+            get { return _hostname; }
+            set { _hostname = value; }
         } 
         #endregion
 
 
         #region Property - Port
-        private int m_port;
+        private int _port;
         /// <summary>
         /// The Executor's port.
         /// </summary>
         public int Port
         {
-            get { return m_port; }
-            set { m_port = value; }
+            get { return _port; }
+            set { _port = value; }
         } 
         #endregion
 
 
         #region Property - Username
-        private string m_username;
+        private string _username;
         /// <summary>
         /// The Executor's username.
         /// </summary>
         public string Username
         {
-            get { return m_username; }
+            get { return _username; }
         } 
         #endregion
 
 
         #region Property - MaxCpu
-        private int m_maxCpu;
+        private int _maxCpu;
         /// <summary>
         /// The maximum CPU of the Executor.
         /// </summary>
         public int MaxCpu
         {
-            get { return m_maxCpu; }
+            get { return _maxCpu; }
         } 
         #endregion
 
 
         #region Property - CpuUsage
-        private int m_cpuUsage;
+        private int _cpuUsage;
         /// <summary>
         /// The CPU usage for this Executor.
         /// </summary>
         public int CpuUsage
         {
-            get { return m_cpuUsage; }
-            set { m_cpuUsage = value; }
+            get { return _cpuUsage; }
+            set { _cpuUsage = value; }
         } 
         #endregion
 
 
         #region Property - AvailableCpu
-        private int m_availableCpu;
+        private int _availableCpu;
         /// <summary>
         /// The available CPU power for this Executor.
         /// </summary>
         public int AvailableCpu
         {
-            get { return m_availableCpu; }
-            set { m_availableCpu = value; }
+            get { return _availableCpu; }
+            set { _availableCpu = value; }
         } 
         #endregion
 
 
         #region Property - TotalCpuUsage
-        private float m_totalCpuUsage;
+        private float _totalCpuUsage;
         /// <summary>
         /// The total CPU usage for this Executor.
         /// </summary>
         public float TotalCpuUsage
         {
-            get { return m_totalCpuUsage; }
-            set { m_totalCpuUsage = value; }
+            get { return _totalCpuUsage; }
+            set { _totalCpuUsage = value; }
         } 
         #endregion
 
@@ -519,17 +519,17 @@ namespace Alchemi.Core.Manager.Storage
             string architecture
             )
         {
-            m_executorId = executorId;
-            m_dedicated = dedicated;
-            m_connected = connected;
-            m_pingTime = pingTime;
-            m_hostname = hostname;
-            m_port = port;
-            m_username = username;
-            m_maxCpu = maxCpu;
-            m_cpuUsage = cpuUsage;
-            m_availableCpu = availableCpu;
-            m_totalCpuUsage = totalCpuUsage;
+            _executorId = executorId;
+            _dedicated = dedicated;
+            _connected = connected;
+            _pingTime = pingTime;
+            _hostname = hostname;
+            _port = port;
+            _username = username;
+            _maxCpu = maxCpu;
+            _cpuUsage = cpuUsage;
+            _availableCpu = availableCpu;
+            _totalCpuUsage = totalCpuUsage;
             MaxMemory = maxMemory;
             MaxDisk = maxDisk;
             NumberOfCpu = numberOfCpu;

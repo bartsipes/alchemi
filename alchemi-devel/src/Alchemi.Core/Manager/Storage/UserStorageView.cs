@@ -37,33 +37,33 @@ namespace Alchemi.Core.Manager.Storage
 	{
 
         #region Property - IsSystem
-        private bool m_is_system;
+        private bool _isSystem;
         /// <summary>
         /// Gets or sets a name indicating whether this user is a system user.
         /// </summary>
         public bool IsSystem
         {
-            get { return m_is_system; }
-            set { m_is_system = value; }
+            get { return _isSystem; }
+            set { _isSystem = value; }
         } 
         #endregion
 
 
         #region Property - Username
-        private string m_username;
+        private string _username;
         /// <summary>
         /// The username.
         /// </summary>
         public string Username
         {
-            get { return m_username; }
-            set { m_username = value; }
+            get { return _username; }
+            set { _username = value; }
         } 
         #endregion
 
 
         #region Property - Password
-        private string m_password = null;
+        private string _password = null;
         /// <summary>
         /// The password. This name is never stored in the database.
         /// This is used to calculate the MD5 hash stored in the database. 
@@ -73,21 +73,21 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                return m_password;
+                return _password;
             }
             set
             {
-                m_password = value;
+                _password = value;
 
                 // clean the password hash once the clear-text password was set
-                m_passwordMd5Hash = null;
+                _passwordMd5Hash = null;
             }
         } 
         #endregion
 
 
         #region Property - PasswordMd5Hash
-        private string m_passwordMd5Hash = null;
+        private string _passwordMd5Hash = null;
         /// <summary>
         /// The password's MD5 hash. When validating the user's password only this hash is required.
         /// <seealso cref="Password"/>
@@ -96,35 +96,35 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                if (m_passwordMd5Hash != null)
+                if (_passwordMd5Hash != null)
                 {
-                    return m_passwordMd5Hash;
+                    return _passwordMd5Hash;
                 }
                 else
                 {
-                    return HashUtil.GetHash(m_password, HashType.MD5);
+                    return HashUtil.GetHash(_password, HashType.MD5);
                 }
             }
             set
             {
-                m_passwordMd5Hash = value;
+                _passwordMd5Hash = value;
 
                 // remove the clear-text password
-                m_password = null;
+                _password = null;
             }
         } 
         #endregion
 
 
         #region Property - GroupId
-        private int m_groupId;
+        private int _groupId;
         /// <summary>
         /// The group id this user belongs to.
         /// </summary>
         public int GroupId
         {
-            get { return m_groupId; }
-            set { m_groupId = value; }
+            get { return _groupId; }
+            set { _groupId = value; }
         } 
         #endregion
 
@@ -139,9 +139,9 @@ namespace Alchemi.Core.Manager.Storage
         /// <param name="groupId"></param>
         public UserStorageView(string username, string password, int groupId)
         {
-            m_username = username;
-            m_password = password;
-            m_groupId = groupId;
+            _username = username;
+            _password = password;
+            _groupId = groupId;
         }
 
         /// <summary>

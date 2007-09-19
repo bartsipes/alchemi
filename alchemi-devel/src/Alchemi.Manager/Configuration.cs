@@ -46,99 +46,202 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Database server host name
 		/// </summary>
-        public string DbServer = "localhost";
+        private string _DbServer = "localhost";
+
+        public string DbServer
+        {
+            get { return _DbServer; }
+            set { _DbServer = value; }
+        }
 
 		/// <summary>
 		/// Database server username
 		/// </summary>
-        public string DbUsername = "sa";
+        private string _DbUsername = "sa";
+
+        public string DbUsername
+        {
+            get { return _DbUsername; }
+            set { _DbUsername = value; }
+        }
 
 		/// <summary>
 		/// Database password
 		/// </summary>
-        public string DbPassword = "xxxx";
+        private string _DbPassword = "xxxx";
+
+        public string DbPassword
+        {
+            get { return _DbPassword; }
+            set { _DbPassword = value; }
+        }
 
 		/// <summary>
 		/// Database name
 		/// </summary>
-        public string DbName = "Alchemi";
+        private string _DbName = "Alchemi";
+
+        public string DbName
+        {
+            get { return _DbName; }
+            set { _DbName = value; }
+        }
 
         /// <summary>
         /// Database connect timeout
         /// </summary>
-        public int DbConnectTimeout = 5;
+        private int _DbConnectTimeout = 5;
+
+        public int DbConnectTimeout
+        {
+            get { return _DbConnectTimeout; }
+            set { _DbConnectTimeout = value; }
+        }
 
         /// <summary>
         /// Database max pool size
         /// </summary>
-        public int DbMaxPoolSize = 5;
+        private int _DbMaxPoolSize = 5;
+
+        public int DbMaxPoolSize
+        {
+            get { return _DbMaxPoolSize; }
+            set { _DbMaxPoolSize = value; }
+        }
 
         /// <summary>
         /// Database min pool size
         /// </summary>
-        public int DbMinPoolSize = 5;
+        private int _DbMinPoolSize = 5;
+
+        public int DbMinPoolSize
+        {
+            get { return _DbMinPoolSize; }
+            set { _DbMinPoolSize = value; }
+        }
 
         /// <summary>
         /// Default filename for file-based db storage
         /// </summary>
-        public string DbFilePath = "Alchemi.db";
+        private string _DbFilePath = "Alchemi.db";
+
+        public string DbFilePath
+        {
+            get { return _DbFilePath; }
+            set { _DbFilePath = value; }
+        }
 
 		/// <summary>
 		/// The storage used by this Manager.
 		/// Defaults to In-memory.
 		/// </summary>
-		public ManagerStorageEnum DbType = ManagerStorageEnum.InMemory;
+        private ManagerStorageEnum _DbType = ManagerStorageEnum.InMemory;
+
+        public ManagerStorageEnum DbType
+        {
+            get { return _DbType; }
+            set { _DbType = value; }
+        }
 
 		/// <summary>
 		/// Manager id (valid only if the Manager is also an Executor)
 		/// </summary>
-        public string Id = "";
+        private string _Id = "";
+
+        public string Id
+        {
+            get { return _Id; }
+            set { _Id = value; }
+        }
 
 		/// <summary>
 		/// Host name of the Manager to connect to. (valid only if the Manager is also an Executor)
 		/// </summary>
-        public string ManagerHost = "";
+        private string _ManagerHost = "";
+
+        public string ManagerHost
+        {
+            get { return _ManagerHost; }
+            set { _ManagerHost = value; }
+        }
 
 		/// <summary>
 		/// Port of the Manager to connect to. (valid only if the Manager is also an Executor)
 		/// </summary>
-        public int ManagerPort = 0;
+        private int _ManagerPort = 0;
+
+        public int ManagerPort
+        {
+            get { return _ManagerPort; }
+            set { _ManagerPort = value; }
+        }
 
 		/// <summary>
 		/// Port on which the Manager sends/recieves messages to/from the Executors.
 		/// </summary>
-        public int OwnPort = 9000;
+        private int _OwnPort = 9000;
+
+        public int OwnPort
+        {
+            get { return _OwnPort; }
+            set { _OwnPort = value; }
+        }
 
 		/// <summary>
 		/// Specifies if the connection parameters have been verified. 
 		/// The parameters are verified if the Manager has been able to connect sucessfully using the current parameter values.
 		/// </summary>
-        public bool ConnectVerified = false;
+        private bool _ConnectVerified = false;
 
-		/// <summary>
-		/// 
-		/// </summary>
-        //public bool InUse = false;
+        public bool ConnectVerified
+        {
+            get { return _ConnectVerified; }
+            set { _ConnectVerified = value; }
+        }
 
 		/// <summary>
 		/// Specifies if this Manager is an "intermediate" Manager...ie. if it is performing the role of an Executor also.
 		/// </summary>
-        public bool Intermediate = false;
+        private bool _Intermediate = false;
+
+        public bool Intermediate
+        {
+            get { return _Intermediate; }
+            set { _Intermediate = value; }
+        }
 
 		/// <summary>
 		/// Specifies if the Manager is Dedicated.(valid only if the Manager is also an Executor)
 		/// </summary>
-        public bool Dedicated = false;
+        private bool _Dedicated = false;
+
+        public bool Dedicated
+        {
+            get { return _Dedicated; }
+            set { _Dedicated = value; }
+        }
 
         /// <summary>
         /// Specifies the scheduler assembly name; null or empty indicates the default scheduler assembly name.
         /// </summary>
-        public string SchedulerAssemblyName = "";
+        private string _SchedulerAssemblyName = "";
+
+        public string SchedulerAssemblyName
+        {
+            get { return _SchedulerAssemblyName; }
+            set { _SchedulerAssemblyName = value; }
+        }
 
         /// <summary>
         /// Specifies the scheduler type name; null or empty indicates the default scheduler type name.
         /// </summary>
-        public string SchedulerTypeName = "";
+        private string _SchedulerTypeName = "";
+
+        public string SchedulerTypeName
+        {
+            get { return _SchedulerTypeName; }
+            set { _SchedulerTypeName = value; }
+        }
 
 
         //-----------------------------------------------------------------------------------------------
@@ -149,7 +252,7 @@ namespace Alchemi.Manager
 		/// <returns>Configuration object</returns>
         public static Configuration GetConfiguration()
         {
-            return DeSlz(Utils.GetFilePath(ConfigFileName, AlchemiRole.Manager, true));
+            return Deserialize(Utils.GetFilePath(ConfigFileName, AlchemiRole.Manager, true));
         }
 
 		/// <summary>
@@ -165,7 +268,7 @@ namespace Alchemi.Manager
         /// <summary>
         ///  Serialises and saves the configuration to an xml file
         /// </summary>
-        public void Slz()
+        public void Serialize()
         {
             XmlSerializer xs = new XmlSerializer(typeof(Configuration));
             StreamWriter sw = new StreamWriter(ConfigFile);
@@ -184,7 +287,7 @@ namespace Alchemi.Manager
         /// </summary>
         /// <param name="file">Name of the config file</param>
         /// <returns>Configuration object</returns>
-        private static Configuration DeSlz(string file)
+        private static Configuration Deserialize(string file)
         {
             XmlSerializer xs = new XmlSerializer(typeof(Configuration));
             FileStream fs = new FileStream(file, FileMode.Open);

@@ -40,7 +40,7 @@ namespace Alchemi.Core.Manager.Storage
 		
 
         #region Property - ApplicationName
-        private string m_appName;
+        private string _appName;
         /// <summary>
         /// The application name.
         /// </summary>
@@ -48,9 +48,9 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                if (m_appName != null && m_appName.Length > 0)
+                if (_appName != null && _appName.Length > 0)
                 {
-                    return m_appName;
+                    return _appName;
                 }
                 else
                 {
@@ -59,35 +59,35 @@ namespace Alchemi.Core.Manager.Storage
             }
             set
             {
-                m_appName = value;
+                _appName = value;
             }
         } 
         #endregion
 
 
         #region Property - ApplicationId
-        private string m_applicationId;
+        private string _applicationId;
         /// <summary>
         /// The Application Id.
         /// </summary>
         public string ApplicationId
         {
-            get { return m_applicationId; }
-            set { m_applicationId = value; }
+            get { return _applicationId; }
+            set { _applicationId = value; }
         }
         #endregion
 
 
         #region Property - State
-        private ApplicationState m_state;
+        private ApplicationState _state;
         /// <summary>
         /// The Application state.
         /// <seealso cref="ApplicationState"/>
         /// </summary>
         public ApplicationState State
         {
-            get { return m_state; }
-            set { m_state = value; }
+            get { return _state; }
+            set { _state = value; }
         } 
         #endregion
 
@@ -121,13 +121,13 @@ namespace Alchemi.Core.Manager.Storage
 
 
         #region Property - TimeCreated
-        private DateTime m_timeCreated;
+        private DateTime _timeCreated;
         /// <summary>
         /// The time the application was created.
         /// </summary>
         public DateTime TimeCreated
         {
-            get { return m_timeCreated; }
+            get { return _timeCreated; }
         } 
         #endregion
 
@@ -141,21 +141,21 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                return (m_timeCreated != c_noDateTime);
+                return (_timeCreated != c_noDateTime);
             }
         }
         #endregion
 
 
         #region Property - TimeCompleted
-        private DateTime m_timeCompleted;
+        private DateTime _timeCompleted;
         /// <summary>
         /// The time the application was completed.
         /// </summary>
         public DateTime TimeCompleted
         {
-            get { return m_timeCompleted; }
-            set { m_timeCompleted = value; }
+            get { return _timeCompleted; }
+            set { _timeCompleted = value; }
         } 
         #endregion
 
@@ -169,38 +169,38 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                return (m_timeCompleted != c_noDateTime);
+                return (_timeCompleted != c_noDateTime);
             }
         } 
         #endregion
 
 
         #region Property - Primary
-        private bool m_primary;
+        private bool _primary;
         /// <summary>
         /// Gets a name indicating whether this is the primary application.
         /// </summary>
         public bool Primary
         {
-            get { return m_primary; }
+            get { return _primary; }
         } 
         #endregion
 
 
         #region Property - Username
-        private string m_username;
+        private string _username;
         /// <summary>
         /// The user that created this application.
         /// </summary>
         public string Username
         {
-            get { return m_username; }
+            get { return _username; }
         } 
         #endregion
 
 
         #region Property - TotalThreads
-        private int m_totalThreads = c_valueNotSet;
+        private int _totalThreads = c_valueNotSet;
         /// <summary>
         /// The total thread count for this application.
         /// </summary>
@@ -208,22 +208,22 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                if (m_totalThreads == c_valueNotSet)
+                if (_totalThreads == c_valueNotSet)
                 {
                     throw new Exception("The total thread name is not set for this application object.");
                 }
-                return m_totalThreads;
+                return _totalThreads;
             }
             set
             {
-                m_totalThreads = value;
+                _totalThreads = value;
             }
         } 
         #endregion
 
 
         #region Property - UnfinishedThreads
-        private int m_unfinishedThreads = c_valueNotSet;
+        private int _unfinishedThreads = c_valueNotSet;
         /// <summary>
         /// The unfinished thread count for this application.
         /// </summary>
@@ -231,15 +231,15 @@ namespace Alchemi.Core.Manager.Storage
         {
             get
             {
-                if (m_unfinishedThreads == c_valueNotSet)
+                if (_unfinishedThreads == c_valueNotSet)
                 {
                     throw new Exception("The unfinished thread name is not set for this application object.");
                 }
-                return m_unfinishedThreads;
+                return _unfinishedThreads;
             }
             set
             {
-                m_unfinishedThreads = value;
+                _unfinishedThreads = value;
             }
         } 
         #endregion
@@ -262,11 +262,11 @@ namespace Alchemi.Core.Manager.Storage
                 string username
         )
         {
-            m_applicationId = applicationId;
-            m_state = state;
-            m_timeCreated = timeCreated;
-            m_primary = primary;
-            m_username = username;
+            _applicationId = applicationId;
+            _state = state;
+            _timeCreated = timeCreated;
+            _primary = primary;
+            _username = username;
         }
 
 

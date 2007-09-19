@@ -36,28 +36,28 @@ namespace Alchemi.Tester.Manager.Storage
     [TestFixture]
     public class db4oManagerStorageTester : ManagerStorageTester
     {
-        private db4oManagerStorage m_managerStorage;
+        private db4oManagerStorage _managerStorage;
 
         public override IManagerStorage ManagerStorage
         {
             get
             {
-                return m_managerStorage;
+                return _managerStorage;
             }
         }
 
         [SetUp]
         public void TestStartUp()
         {
-            m_managerStorage = new db4oManagerStorage(@"C:\TEMP\test.db");
+            _managerStorage = new db4oManagerStorage(@"C:\TEMP\test.db");
 
-            m_managerStorage.SetUpStorage();
-            m_managerStorage.InitializeStorageData();
+            _managerStorage.SetUpStorage();
+            _managerStorage.InitializeStorageData();
         }
         [TearDown]
         public void TestShutdown()
         {
-            m_managerStorage.Dispose();
+            _managerStorage.Dispose();
         }
 
         public db4oManagerStorageTester()

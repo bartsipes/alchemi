@@ -52,17 +52,35 @@ namespace Alchemi.Manager
 		/// <summary>
 		/// Manager Configuration
 		/// </summary>
-		public Configuration Config = null;
+        private Configuration _Config = null;
+
+        public Configuration Config
+        {
+            get { return _Config; }
+            set { _Config = value; }
+        }
 
 		/// <summary>
 		/// The configuration file used to set remoting parameters for the Manager.
 		/// </summary>
-		public string RemotingConfigFile = "Alchemi.Manager.exe.config"; //this will be changed by the service/exec application and set to the right name.
+        private string _RemotingConfigFile = "Alchemi.Manager.exe.config"; //this will be changed by the service/exec application and set to the right name.
+
+        public string RemotingConfigFile
+        {
+            get { return _RemotingConfigFile; }
+            set { _RemotingConfigFile = value; }
+        }
 
 		/// <summary>
 		/// Specifies if the Manager is started.
 		/// </summary>
-		public bool Started = false;
+        private bool _Started = false;
+
+        public bool Started
+        {
+            get { return _Started; }
+            set { _Started = value; }
+        }
 
 		//since starting and stopping may take a while, we better avoid calling start/stop twice,
 		//when the process of start/stop is in progress
@@ -199,7 +217,7 @@ namespace Alchemi.Manager
                 _InitExecutorsThread.Name = "InitExecutorsThread";
                 _InitExecutorsThread.Start();
 
-                Config.Slz();
+                Config.Serialize();
 
                 Started = true;
 
@@ -288,7 +306,7 @@ namespace Alchemi.Manager
                 logger.Info("Unregistering the remoting channel...");
                 ChannelServices.UnregisterChannel(_Chnl);
 
-                Config.Slz();
+                Config.Serialize();
 
                 Started = false;
             }

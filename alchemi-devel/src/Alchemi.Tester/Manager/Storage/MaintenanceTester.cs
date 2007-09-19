@@ -33,18 +33,18 @@ namespace Alchemi.Tester.Manager.Storage
     [TestFixture]
     public class MaintenanceTester
     {
-        InMemoryManagerStorage m_managerStorage = null;
+        InMemoryManagerStorage _managerStorage = null;
 
         [SetUp]
         public void SetUp()
         {
-            m_managerStorage = new InMemoryManagerStorage();
+            _managerStorage = new InMemoryManagerStorage();
         }
 
         [TearDown]
         public void TearDown()
         {
-            m_managerStorage = null;
+            _managerStorage = null;
         }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace Alchemi.Tester.Manager.Storage
         {
             DateTime pingTime = DateTime.Now;
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
 
             DateTime timeCreated = DateTime.Now;
 
@@ -79,11 +79,11 @@ namespace Alchemi.Tester.Manager.Storage
             application4.TimeCompleted = DateTime.Now.AddDays(-3);
             application5.TimeCompleted = DateTime.Now.AddDays(3);
 
-            m_managerStorage.AddApplication(application1);
-            m_managerStorage.AddApplication(application2);
-            m_managerStorage.AddApplication(application3);
-            m_managerStorage.AddApplication(application4);
-            m_managerStorage.AddApplication(application5);
+            _managerStorage.AddApplication(application1);
+            _managerStorage.AddApplication(application2);
+            _managerStorage.AddApplication(application3);
+            _managerStorage.AddApplication(application4);
+            _managerStorage.AddApplication(application5);
         
         }
 
@@ -94,11 +94,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage);
+            maintenance.RemoveApplications(_managerStorage);
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -106,13 +106,13 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, ApplicationState.Stopped);
+            maintenance.RemoveApplications(_managerStorage, ApplicationState.Stopped);
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -120,14 +120,14 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
 
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, ApplicationState.Stopped);
+            maintenance.RemoveApplications(_managerStorage, ApplicationState.Stopped);
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -135,17 +135,17 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
 
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, ApplicationState.Stopped, ApplicationState.Ready);
+            maintenance.RemoveApplications(_managerStorage, ApplicationState.Stopped, ApplicationState.Ready);
 
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -153,11 +153,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, DateTime.Now);
+            maintenance.RemoveApplications(_managerStorage, DateTime.Now);
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -166,13 +166,13 @@ namespace Alchemi.Tester.Manager.Storage
             Maintenance maintenance = new Maintenance();
             DateTime timeCreated = DateTime.Now;
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated, false, "username1"));
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, timeCreated.AddDays(-1));
+            maintenance.RemoveApplications(_managerStorage, timeCreated.AddDays(-1));
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -182,17 +182,17 @@ namespace Alchemi.Tester.Manager.Storage
 
             DateTime timeCreated = DateTime.Now;
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-5), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(-4), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, timeCreated.AddDays(1), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-3), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(2), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-5), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(-4), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, timeCreated.AddDays(1), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-3), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(2), false, "username1"));
 
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, timeCreated);
+            maintenance.RemoveApplications(_managerStorage, timeCreated);
 
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -200,11 +200,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveApplications(m_managerStorage, new TimeSpan(1000));
+            maintenance.RemoveApplications(_managerStorage, new TimeSpan(1000));
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -213,14 +213,14 @@ namespace Alchemi.Tester.Manager.Storage
             Maintenance maintenance = new Maintenance();
             DateTime timeCreated = DateTime.Now;
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated, false, "username1"));
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
 
             // one hour should be enough to avoid removing this one.
-            maintenance.RemoveApplications(m_managerStorage, new TimeSpan(1, 0, 0));
+            maintenance.RemoveApplications(_managerStorage, new TimeSpan(1, 0, 0));
 
-            Assert.AreEqual(1, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(1, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -230,18 +230,18 @@ namespace Alchemi.Tester.Manager.Storage
 
             DateTime timeCreated = DateTime.Now;
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-5), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(-4), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, timeCreated.AddDays(1), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-3), false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(2), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-5), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(-4), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, timeCreated.AddDays(1), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, timeCreated.AddDays(-3), false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, timeCreated.AddDays(2), false, "username1"));
 
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
 
             // put a 20 hour cut-off, this should remove 3 of the applications
-            maintenance.RemoveApplications(m_managerStorage, new TimeSpan(20, 0, 0));
+            maintenance.RemoveApplications(_managerStorage, new TimeSpan(20, 0, 0));
 
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
         }
 
         #endregion
@@ -253,11 +253,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveAllApplications(m_managerStorage);
+            maintenance.RemoveAllApplications(_managerStorage);
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -265,17 +265,17 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
-            m_managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Ready, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.AwaitingManifest, DateTime.Now, false, "username1"));
+            _managerStorage.AddApplication(new ApplicationStorageView(ApplicationState.Stopped, DateTime.Now, false, "username1"));
 
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
 
-            maintenance.RemoveAllApplications(m_managerStorage);
+            maintenance.RemoveAllApplications(_managerStorage);
 
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         #endregion
@@ -287,11 +287,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, DateTime.Now);
+            maintenance.RemoveExecutors(_managerStorage, DateTime.Now);
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -300,13 +300,13 @@ namespace Alchemi.Tester.Manager.Storage
             Maintenance maintenance = new Maintenance();
             DateTime pingTime = DateTime.Now;
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime, "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime, "hostname", 1, "username", 1, 2, 3, 4));
 
-            Assert.AreEqual(1, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(1, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, pingTime.AddDays(-1));
+            maintenance.RemoveExecutors(_managerStorage, pingTime.AddDays(-1));
 
-            Assert.AreEqual(1, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(1, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -316,16 +316,16 @@ namespace Alchemi.Tester.Manager.Storage
 
             DateTime pingTime = DateTime.Now;
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, pingTime);
+            maintenance.RemoveExecutors(_managerStorage, pingTime);
 
-            Assert.AreEqual(2, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(2, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -333,11 +333,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, new TimeSpan(1000));
+            maintenance.RemoveExecutors(_managerStorage, new TimeSpan(1000));
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -346,13 +346,13 @@ namespace Alchemi.Tester.Manager.Storage
             Maintenance maintenance = new Maintenance();
             DateTime pingTime = DateTime.Now;
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime, "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime, "hostname", 1, "username", 1, 2, 3, 4));
 
-            Assert.AreEqual(1, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(1, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, new TimeSpan(1, 0, 0));
+            maintenance.RemoveExecutors(_managerStorage, new TimeSpan(1, 0, 0));
 
-            Assert.AreEqual(1, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(1, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -362,16 +362,16 @@ namespace Alchemi.Tester.Manager.Storage
 
             DateTime pingTime = DateTime.Now;
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, pingTime.AddDays(-1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, true, pingTime.AddDays(2), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, false, pingTime.AddDays(1), "hostname", 1, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, false, pingTime.AddDays(-2), "hostname", 1, "username", 1, 2, 3, 4));
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveExecutors(m_managerStorage, new TimeSpan(20, 0, 0));
+            maintenance.RemoveExecutors(_managerStorage, new TimeSpan(20, 0, 0));
 
-            Assert.AreEqual(2, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(2, _managerStorage.GetExecutors().Length);
         }
 
         #endregion
@@ -383,11 +383,11 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveAllExecutors(m_managerStorage);
+            maintenance.RemoveAllExecutors(_managerStorage);
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
         }
 
         [Test]
@@ -395,16 +395,16 @@ namespace Alchemi.Tester.Manager.Storage
         {
             Maintenance maintenance = new Maintenance();
 
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "hostname", 123, "username", 0, 0, 0, 0));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(true, false, DateTime.Now, "hostname", 4543, "username", 1, 2, 3, 4));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, true, DateTime.Now, "hostname", 1, "username", 0, 0, 7, 0));
-            m_managerStorage.AddExecutor(new ExecutorStorageView(false, false, DateTime.Now, "hostname", 33, "username", 0, 4, 0, 0));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, true, DateTime.Now, "hostname", 123, "username", 0, 0, 0, 0));
+            _managerStorage.AddExecutor(new ExecutorStorageView(true, false, DateTime.Now, "hostname", 4543, "username", 1, 2, 3, 4));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, true, DateTime.Now, "hostname", 1, "username", 0, 0, 7, 0));
+            _managerStorage.AddExecutor(new ExecutorStorageView(false, false, DateTime.Now, "hostname", 33, "username", 0, 4, 0, 0));
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
 
-            maintenance.RemoveAllExecutors(m_managerStorage);
+            maintenance.RemoveAllExecutors(_managerStorage);
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
         }
 
         #endregion
@@ -421,10 +421,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(0, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(0, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -437,10 +437,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(2, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -453,10 +453,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(0, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(0, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -469,10 +469,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -485,12 +485,12 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
             // we should have left the one that didn't have the time completed set
             // and 2 more that were not in the cut-off range
-            Assert.AreEqual(3, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(3, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -504,10 +504,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(2, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(2, _managerStorage.GetApplications().Length);
         }
 
         [Test]
@@ -518,10 +518,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(4, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(5, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(4, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(5, _managerStorage.GetApplications().Length);
         }
 
 
@@ -535,7 +535,7 @@ namespace Alchemi.Tester.Manager.Storage
 
             try
             {
-                maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+                maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
             }
             catch (NullReferenceException)
             {
@@ -557,10 +557,10 @@ namespace Alchemi.Tester.Manager.Storage
 
             PrepareComplexStorageForMaintenanceTests();
 
-            maintenance.PerformMaintenance(m_managerStorage, maintenanceParameters);
+            maintenance.PerformMaintenance(_managerStorage, maintenanceParameters);
 
-            Assert.AreEqual(2, m_managerStorage.GetExecutors().Length);
-            Assert.AreEqual(3, m_managerStorage.GetApplications().Length);
+            Assert.AreEqual(2, _managerStorage.GetExecutors().Length);
+            Assert.AreEqual(3, _managerStorage.GetApplications().Length);
         }
 
         #endregion
