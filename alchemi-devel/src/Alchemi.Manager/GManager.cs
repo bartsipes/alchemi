@@ -427,7 +427,10 @@ namespace Alchemi.Manager
                         if (me.RemoteRef != null)
                             me.RemoteRef.Manager_CleanupApplication(appid);
                     }
-                    catch { }
+					catch(Exception e)
+					{
+						logger.Warn("Exception calling Manager_CleanupApplication: " + appid + " error: " + e.Message);
+					}
                 }
                 Cleanup(appid);
             }

@@ -500,7 +500,10 @@ namespace Alchemi.Core.Owner
 		{
             StopApplication();
 
-            Manager.Owner_StopApplication(Credentials, this._Id);
+            Manager.Owner_StopApplication(Credentials, _Id);
+			if (_MultiUse) 
+				Manager.Owner_CleanupApplication(Credentials, _Id);
+
 			//TODO: may be we need not have a seperate "state" for the application. if all threads are dead, app should have state: stopped as well isnt it?
 			//how do we handle multi-use apps then?
 		}
