@@ -35,40 +35,40 @@ namespace Alchemi.Core.Executor
     public struct HeartbeatInfo
     {
         #region Property - Interval
-        private int _Interval;
+        private int _interval;
         /// <summary>
         /// Heartbeat interval (in seconds)
         /// </summary>
         public int Interval
         {
-            get { return _Interval; }
-            set { _Interval = value; }
+            get { return _interval; }
+            set { _interval = value; }
         } 
         #endregion
 
 
         #region Property - PercentUsedCpuPower
-        private int _PercentUsedCpuPower;
+        private int _percentUsedCpuPower;
         /// <summary>
         /// Percent of CPU power currently being used.
         /// </summary>
         public int PercentUsedCpuPower
         {
-            get { return _PercentUsedCpuPower; }
-            set { _PercentUsedCpuPower = value; }
+            get { return _percentUsedCpuPower; }
+            set { _percentUsedCpuPower = value; }
         } 
         #endregion
 
 
         #region Property - PercentAvailCpuPower
-        private int _PercentAvailCpuPower;
+        private int _percentAvailCpuPower;
         /// <summary>
         /// Percent of CPU power that is currently available.
         /// </summary>
         public int PercentAvailCpuPower
         {
-            get { return _PercentAvailCpuPower; }
-            set { _PercentAvailCpuPower = value; }
+            get { return _percentAvailCpuPower; }
+            set { _percentAvailCpuPower = value; }
         } 
         #endregion
 
@@ -83,9 +83,9 @@ namespace Alchemi.Core.Executor
         /// <param name="avail">The CPU power currently available.</param>
         public HeartbeatInfo(int interval, int used, int avail)
         {
-            _Interval = interval;
-            _PercentUsedCpuPower = used;
-            _PercentAvailCpuPower = avail;
+            _interval = interval;
+            _percentUsedCpuPower = used;
+            _percentAvailCpuPower = avail;
         } 
         #endregion
     }

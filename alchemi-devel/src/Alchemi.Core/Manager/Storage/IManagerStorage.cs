@@ -110,7 +110,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// </summary>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		GroupStorageView GetGroup(Int32 groupId);
+		GroupStorageView GetGroup(int groupId);
 
 		/// <summary>
 		/// Add group permissions to the given group Id.
@@ -118,21 +118,21 @@ namespace Alchemi.Core.Manager.Storage
 		/// </summary>
 		/// <param name="groupId">The group Id</param>
 		/// <param name="permission">Permission to set.</param>
-		void AddGroupPermission(Int32 groupId, Permission permission);
+		void AddGroupPermission(int groupId, Permission permission);
 
 		/// <summary>
 		/// Get a list of the current group permissions.
 		/// </summary>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		Permission[] GetGroupPermissions(Int32 groupId);
+		Permission[] GetGroupPermissions(int groupId);
 
 		/// <summary>
 		/// Get a list of the current group permissions.
 		/// </summary>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId);
+		PermissionStorageView[] GetGroupPermissionStorageView(int groupId);
 
 		/// <summary>
 		/// Delete the given group and all the users associated with it.
@@ -145,14 +145,14 @@ namespace Alchemi.Core.Manager.Storage
 		/// </summary>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		UserStorageView[] GetGroupUsers(Int32 groupId);
+		UserStorageView[] GetGroupUsers(int groupId);
 
 		/// <summary>
 		/// Add an executor to the storage.
 		/// </summary>
 		/// <param name="executor"></param>
 		/// <returns></returns>
-		String AddExecutor(ExecutorStorageView executor);
+		string AddExecutor(ExecutorStorageView executor);
 
 		/// <summary>
 		/// Update the details for an existing executor in the storage.
@@ -192,14 +192,14 @@ namespace Alchemi.Core.Manager.Storage
 		/// </summary>
 		/// <param name="executorId"></param>
 		/// <returns></returns>
-		ExecutorStorageView GetExecutor(String executorId);
+		ExecutorStorageView GetExecutor(string executorId);
 
 		/// <summary>
 		/// Add an application to the storage.
 		/// </summary>
 		/// <param name="application"></param>
 		/// <returns></returns>
-		String AddApplication(ApplicationStorageView application);
+		string AddApplication(ApplicationStorageView application);
 
 		/// <summary>
 		/// Update the details of an application in the storage.
@@ -233,21 +233,21 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="userName"></param>
 		/// <param name="populateThreadCount"></param>
 		/// <returns></returns>
-		ApplicationStorageView[] GetApplications(String userName, bool populateThreadCount);
+		ApplicationStorageView[] GetApplications(string userName, bool populateThreadCount);
 
 		/// <summary>
 		/// Get the details for the application with the given application Id.
 		/// </summary>
 		/// <param name="applicationId"></param>
 		/// <returns></returns>
-		ApplicationStorageView GetApplication(String applicationId);
+		ApplicationStorageView GetApplication(string applicationId);
 
 		/// <summary>
 		/// Add a thread to the storage.
 		/// </summary>
 		/// <param name="thread"></param>
 		/// <returns></returns>
-		Int32 AddThread(ThreadStorageView thread);
+		int AddThread(ThreadStorageView thread);
 
 		/// <summary>
 		/// Update the details of a thread in the storage.
@@ -261,7 +261,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="applicationId"></param>
 		/// <param name="threadId"></param>
 		/// <returns></returns>
-		ThreadStorageView GetThread(String applicationId, Int32 threadId);
+		ThreadStorageView GetThread(string applicationId, int threadId);
 		
 		/// <summary>
 		/// Get all threads with the given states.
@@ -284,7 +284,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="applicationId"></param>
 		/// <param name="state"></param>
 		/// <returns></returns>
-		ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] state);
+		ThreadStorageView[] GetThreads(string applicationId, params ThreadState[] state);
 
 		/// <summary>
 		/// Get all threads with the given states whithin an executor.
@@ -292,7 +292,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="executorId"></param>
 		/// <param name="state"></param>
 		/// <returns></returns>
-		ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] state);
+		ThreadStorageView[] GetExecutorThreads(string executorId, params ThreadState[] state);
 
 		/// <summary>
 		/// Get all threads with the given states and where the executors's dedicated status is as requested.
@@ -317,7 +317,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="applicationId"></param>
 		/// <param name="totalthreads"></param>
 		/// <param name="unfinishedThreads"></param>
-		void GetApplicationThreadCount(String applicationId, out Int32 totalthreads, out Int32 unfinishedThreads);
+		void GetApplicationThreadCount(string applicationId, out int totalthreads, out int unfinishedThreads);
 
 		/// <summary>
 		/// Get the number of threads with a given state in an application.
@@ -325,7 +325,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="applicationId"></param>
 		/// <param name="threadState"></param>
 		/// <returns></returns>
-		Int32 GetApplicationThreadCount(String applicationId, ThreadState threadState);
+		int GetApplicationThreadCount(string applicationId, ThreadState threadState);
 
 		/// <summary>
 		/// Get the number of threads on an executor.
@@ -333,7 +333,7 @@ namespace Alchemi.Core.Manager.Storage
 		/// <param name="executorId"></param>
 		/// <param name="threadState"></param>
 		/// <returns></returns>
-		Int32 GetExecutorThreadCount(String executorId, params ThreadState[] threadState);
+		int GetExecutorThreadCount(string executorId, params ThreadState[] threadState);
 
 		/// <summary>
 		/// Delete a thread from the storage.
@@ -349,13 +349,5 @@ namespace Alchemi.Core.Manager.Storage
 		/// An object with the summary information or null if the storage does not implement system summary.
 		/// </returns>
 		SystemSummary GetSystemSummary();
-
-		//for generic queries
-		//	22 January 2006 - Tibor Biro (tb@tbiro.com) - Removed from the IManagerStorage interface.
-		//DataSet RunSqlReturnDataSet(string query);
-
-		//	22 January 2006 - Tibor Biro (tb@tbiro.com) - Do not use through this interface!
-		//	This will be removed as soon as the DBInstall utility is retired.
-		//void RunSql(string sqlQuery);
 	}
 }

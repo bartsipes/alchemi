@@ -81,15 +81,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerServiceController", 
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F520AA3-7252-4D9D-BDA6-EED249B0EEE2}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
-	ProjectSection(SolutionItems) = preProject
-		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
-	EndProjectSection
-EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "F:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager\", "{0E2EECC7-FE64-41AE-AB65-BA9E050B168B}"
 	ProjectSection(WebsiteProperties) = preProject
 		ProjectReferences = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}|Alchemi.Core.dll;"

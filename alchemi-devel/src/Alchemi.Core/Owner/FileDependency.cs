@@ -39,13 +39,13 @@ namespace Alchemi.Core.Owner
     {
 
         #region Property - FileName
-        private readonly string _FileName;
+        private readonly string _fileName;
         /// <summary>
         /// The filename of the FileDependency
         /// </summary>
         public string FileName
         {
-            get { return _FileName; }
+            get { return _fileName; }
         } 
         #endregion
 
@@ -57,7 +57,7 @@ namespace Alchemi.Core.Owner
         /// <param name="fileName">name of the file</param>
         protected FileDependency(string fileName)
         {
-            _FileName = fileName;
+            _fileName = fileName;
         } 
         #endregion
 

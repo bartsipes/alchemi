@@ -43,14 +43,14 @@ namespace Alchemi.Core.Owner
     {
 
         #region Property - Base64EncodedContents
-        protected string _Base64EncodedContents = "";
+        private string _base64EncodedContents = String.Empty;
         /// <summary>
         /// Gets or sets the file contents in base64-encoded format
         /// </summary>
         public string Base64EncodedContents
         {
-            get { return _Base64EncodedContents; }
-            set { _Base64EncodedContents = value; }
+            get { return _base64EncodedContents; }
+            set { _base64EncodedContents = value; }
         } 
         #endregion
     
@@ -87,7 +87,7 @@ namespace Alchemi.Core.Owner
         /// <param name="fileLocation">location of the file</param>
         public void Pack(string fileLocation)
         {
-            _Base64EncodedContents = Utils.ReadBase64EncodedFromFile(fileLocation);
+            _base64EncodedContents = Utils.ReadBase64EncodedFromFile(fileLocation);
         } 
         #endregion
 
@@ -99,7 +99,7 @@ namespace Alchemi.Core.Owner
         /// <param name="fileLocation">file location</param>
         public override void Unpack(string fileLocation)
         {
-            Utils.WriteBase64EncodedToFile(fileLocation, _Base64EncodedContents);
+            Utils.WriteBase64EncodedToFile(fileLocation, _base64EncodedContents);
         } 
         #endregion
 
@@ -124,7 +124,6 @@ namespace Alchemi.Core.Owner
 
             AddFilesToList(list, rootFolderName, "");
             return list.ToArray();
-
         }
 
 

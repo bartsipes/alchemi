@@ -96,20 +96,20 @@ namespace Alchemi.Core.Owner
                 throw new ArgumentOutOfRangeException("threadBufferCapacity", threadBufferCapacity, "0 < threadBufferCapacity <= Int32.MaxValue");
             }
 
-            _ThreadBufferCapacity = threadBufferCapacity;
+            _threadBufferCapacity = threadBufferCapacity;
             _ThreadBuffer = CreateThreadBuffer();
         } 
         #endregion
 
 
         #region Property - ThreadBufferCapacity
-        private int _ThreadBufferCapacity;
+        private int _threadBufferCapacity;
         /// <summary>
         /// ThreadBufferCapacity property represents the thread buffer capacity. 
         /// </summary>
         public int ThreadBufferCapacity
         {
-            get { return _ThreadBufferCapacity; }
+            get { return _threadBufferCapacity; }
         } 
         #endregion
 
@@ -167,7 +167,7 @@ namespace Alchemi.Core.Owner
         /// </summary>
         private GThreadBuffer CreateThreadBuffer()
         {
-            GThreadBuffer oThreadBuffer = new GThreadBuffer(_ThreadBufferCapacity);
+            GThreadBuffer oThreadBuffer = new GThreadBuffer(_threadBufferCapacity);
             oThreadBuffer.Full += new FullEventHandler(ThreadBuffer_Full);
             return oThreadBuffer;
         }
