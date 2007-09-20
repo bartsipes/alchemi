@@ -204,7 +204,19 @@ namespace Alchemi.Core.Owner
         public string ApplicationName
         {
             get { return _ApplicationName; }
-            set { _ApplicationName = value; }
+            set 
+            {
+                // Need to be careful with the length here because
+                // it is stored in the database as VARCHAR(50).
+                if (value.Length >= 50)
+                {
+                    _ApplicationName = value.Substring(0, 50);
+                }
+                else
+                {
+                    _ApplicationName = value;
+                }
+            }
         } 
         #endregion
 

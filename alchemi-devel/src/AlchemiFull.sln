@@ -95,12 +95,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Alchemi.build = Alchemi.build
 		Alchemi.ndoc = Alchemi.ndoc
-		..\doc\AlchemiManualv.1.0.doc = ..\doc\AlchemiManualv.1.0.doc
 		..\AlchemiRoadmap.txt = ..\AlchemiRoadmap.txt
 		..\license.rtf = ..\license.rtf
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "C:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager", "{B4E6C9E0-9EEA-4327-ABD6-965CAF57A2DA}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "F:\...\Alchemi.CrossPlatformManager\", "Alchemi.CrossPlatformManager\", "{B4E6C9E0-9EEA-4327-ABD6-965CAF57A2DA}"
 	ProjectSection(WebsiteProperties) = preProject
 		ProjectReferences = "{234F2AB1-B1F6-4FAD-9DAD-E18AF5847880}|Alchemi.Core.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/Alchemi.CrossPlatformManager"
