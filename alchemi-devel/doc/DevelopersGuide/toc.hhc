@@ -5,5 +5,23 @@
 <!-- Sitemap 1.0 -->
 </HEAD><BODY>
 <UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="html\Introduction\introduction.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Coding Standard">
+		<param name="Local" value="html\CodingStandard\coding_standard.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Naming Conventions">
+			<param name="Local" value="html\CodingStandard\naming_conventions.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Coding Practices">
+			<param name="Local" value="html\CodingStandard\coding_practices.html">
+			</OBJECT>
+	</UL>
 </UL>
 </BODY></HTML>

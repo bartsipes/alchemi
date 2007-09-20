@@ -1,0 +1,4 @@
+[x] Put an Exec task into the MsBuild file that calls
+    C:\Program Files\HTML Help Workshop\hhc.exe UsersGuide.hhp
+[x] Automatically open the CHM file after it is built
+

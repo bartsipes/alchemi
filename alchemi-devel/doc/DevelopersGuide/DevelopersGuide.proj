@@ -9,8 +9,19 @@
     <TemplateFile Include="html\template.html">
       <InProject>false</InProject>
     </TemplateFile>
+    <HhpFile Include="DevelopersGuide.hhp">
+      <InProject>false</InProject>
+    </HhpFile>
+    <ChmFile Include="DevelopersGuide.chm">
+      <InProject>false</InProject>
+    </ChmFile>
   </ItemGroup>
   <ItemGroup>
+    <XmlFiles Include="html\Title\title.xml" />
+    <Content Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <XmlFiles Include="html\Introduction\introduction.xml" />
     <XmlFiles Include="html\CodingStandard\coding_standard.xml" />
     <XmlFiles Include="html\CodingStandard\naming_conventions.xml" />
     <XmlFiles Include="html\CodingStandard\coding_practices.xml" />
@@ -18,6 +29,10 @@
   <Target Name="Build">
     <Message Importance="high" Text="Merging XML files into HTML template..." />
     <InjectFile TemplateFile="@(TemplateFile)" Placeholder="$content$" DataFiles="@(XmlFiles)" OutputFiles="@(XmlFiles->'%(RelativeDir)%(Filename).html')" />
+    <Message Importance="high" Text="Running HTML Help Workshop... @(HhpFile->'%(RootDir)%(Directory)')" />
+    <Exec Command="&quot;%PROGRAMFILES%\HTML Help Workshop\hhc.exe&quot; DevelopersGuide.hhp" WorkingDirectory="@(HhpFile->'%(RootDir)%(Directory)')" ContinueOnError="true" />
+    <Message Importance="high" Text="Attempting to open compiled help file..." />
+    <Exec Command="@(ChmFile)" />
   </Target>
   <Target Name="Clean">
     <Message Importance="high" Text="Removing compiled HTML files..." />

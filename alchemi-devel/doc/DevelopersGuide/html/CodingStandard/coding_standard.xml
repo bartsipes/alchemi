@@ -1,31 +1,8 @@
-<h2>Coding Practices</h2>
+<h1>Coding Standard</h1>
 
-<ol>
-  <li>
-    Avoid putting multiple classes in a single file.
-  </li>
+<p>This section is an attempt to standardize the Alchemi codebase to make it easier for new developers to become productive with the Alchemi code.</p>
 
-  <li>
-    A single file should contribute types to only a single namespace.  Avoid having multiple namespaces in the same file.
-  </li>
-
-  <li>
-    Avoid files with more than 500 lines (excluding machine-generated code).
-  </li>
-
-  <li>
-    Avoid methods with more than 25 lines.
-  </li>
-
-  <li>
-    Avoid methods with more than five arguments.  Use structures for passing multiple arguments.
-  </li>
-  
-  
-  
-  
-  
-  
-  
-  
-</ol>
+<p>
+  Much of the standard has been adapted from <a href="http://www.amazon.com/Programming-NET-Components-Juval-Lowy/dp/0596102070/" target="_new">Juval Lowy's book <i>Programming .NET Components, 2nd Edition</i>
+  </a>.  We have adapted it in parts to fit the current Alchemi codebase.
+</p>

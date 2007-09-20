@@ -38,7 +38,10 @@ interface <b>I</b>MyInterface
   </li>
 
   <li>
-    Prefix private member variables with "m_".
+    Prefix private member variables with and underscore ("_") and use camel casing.
+    <pre>
+private string _userCredentials;
+    </pre>
   </li>
 
   <li>
