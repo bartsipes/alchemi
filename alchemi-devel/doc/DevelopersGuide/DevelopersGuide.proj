@@ -1,33 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{A62A2009-7486-49D5-ABE9-8911B364B7F2}</ProjectGuid>
+    <ProjectGuid>{862A2009-7486-49D5-ABE9-8911B364B7F2}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <UsingTask AssemblyFile="..\..\msbuild\lib\Alchemi.Tasks.dll" TaskName="Alchemi.Tasks.InjectFile" />
-  <ItemGroup>
-    <Content Include="README.txt" />
-    <Content Include="TODO.txt" />
-  </ItemGroup>
   <ItemGroup>
     <TemplateFile Include="html\template.html">
       <InProject>false</InProject>
     </TemplateFile>
   </ItemGroup>
   <ItemGroup>
-    <XmlFiles Include="html\Title\title.xml" />
-    <XmlFiles Include="html\Intro\intro.xml" />
-    <XmlFiles Include="html\Intro\network_is_computer.xml" />
-    <XmlFiles Include="html\Intro\how_alchemi_works.xml" />
-    <XmlFiles Include="html\Installation\installation.xml" />
-    <XmlFiles Include="html\Installation\manager.xml" />
-    <XmlFiles Include="html\Installation\executor.xml" />
-    <XmlFiles Include="html\Configuration\configuration.xml" />
-    <XmlFiles Include="html\Configuration\manager.xml" />
-    <XmlFiles Include="html\Configuration\executor.xml" />
-    <XmlFiles Include="html\Operation\operation.xml" />
-    <XmlFiles Include="html\Operation\manager.xml" />
-    <XmlFiles Include="html\Operation\executor.xml" />
+    <XmlFiles Include="html\CodingStandard\coding_standard.xml" />
+    <XmlFiles Include="html\CodingStandard\naming_conventions.xml" />
+    <XmlFiles Include="html\CodingStandard\coding_practices.xml" />
   </ItemGroup>
   <Target Name="Build">
     <Message Importance="high" Text="Merging XML files into HTML template..." />

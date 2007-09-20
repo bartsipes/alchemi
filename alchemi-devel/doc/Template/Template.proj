@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{39C0C054-6788-11DC-88B1-F31B56D89593}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="alchemi.css" />
+    <Content Include="template.html" />
+    <Content Include="alchemi.jpg" />
+  </ItemGroup>
+  <Target Name="Build">
+    <Message Importance="high" Text="Copying template to User's Guide..." />
+    <Copy SourceFiles="@(Content)" DestinationFolder="../UsersGuide/html" />
+    <Message Importance="high" Text="Copying template to Developer's Guide..." />
+    <Copy SourceFiles="@(Content)" DestinationFolder="../DevelopersGuide/html" />
+  </Target>
+</Project>
