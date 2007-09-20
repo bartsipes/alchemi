@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Mdv.Tasks")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Alchemi.Tasks")]
+[assembly: AssemblyDescription("Common MSBuild Tasks for Alchemi")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Matt Valerio")]
-[assembly: AssemblyProduct("Mdv.Tasks")]
+[assembly: AssemblyCompany("Alchemi")]
+[assembly: AssemblyProduct("Alchemi.Tasks")]
 [assembly: AssemblyCopyright("Copyright © 2007 Matt Valerio")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
