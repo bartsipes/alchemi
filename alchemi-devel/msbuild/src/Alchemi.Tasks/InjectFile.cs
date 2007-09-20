@@ -1,3 +1,20 @@
+#region Creative Commons License
+// Copyright (c) 2007 Matt Valerio
+//
+// In summary,
+// You are free:
+//  - To share (copy, distribute, and transmit) this work
+//  - To remix (adapt) this work
+// Provided that:
+//  - Attribution of the work is given (but not in any way that suggests endorsement)
+//
+// This work is licensed under the Creative Commons Attribution 3.0 Unported License.
+//
+// To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/ 
+// or send a letter to:
+// Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +61,7 @@ namespace Alchemi.Tasks
         #endregion
 
 
-        #region Placeholder
+        #region Property - Placeholder
         private string m_Placeholder;
         /// <summary>
         /// [Required] The placeholder text where the entire contents of DataFile gets
@@ -59,7 +76,7 @@ namespace Alchemi.Tasks
         #endregion
 
 
-        #region OutputFiles
+        #region Property - OutputFiles
         private ITaskItem[] m_OutputFiles;
         /// <summary>
         /// [Required] After the DataFile text has been inserted into the TemplateFile where
@@ -74,6 +91,8 @@ namespace Alchemi.Tasks
         #endregion
 
 
+
+        #region Method Override - Execute
         /// <summary>
         /// When overridden in a derived class, executes the task.
         /// </summary>
@@ -97,7 +116,7 @@ namespace Alchemi.Tasks
 
 
             try
-            {               
+            {
                 string templateFilename = this.TemplateFile.ItemSpec;
                 string template = File.ReadAllText(templateFilename);
 
@@ -113,11 +132,11 @@ namespace Alchemi.Tasks
                     Log.LogMessage(MessageImportance.High, " Data: {0}", dataFilename);
                     Log.LogMessage(MessageImportance.High, " Placeholder: {0}", this.Placeholder);
                     Log.LogMessage(MessageImportance.High, " Output: {0}", outputFilename);
-                    
+
                     string data = File.ReadAllText(dataFilename);
                     string output = template.Replace(this.Placeholder, data);
                     File.WriteAllText(outputFilename, output);
-                }               
+                }
             }
             catch (Exception ex)
             {
@@ -125,13 +144,7 @@ namespace Alchemi.Tasks
                 return false;
             }
             return true;
-        }
-
-        //private string GetFullPath(ITaskItem item)
-        //{
-        //    string itemSpec = item.ItemSpec;
-        //    string fullPath = item.GetMetadata("FullPath");
-        //    return Path.Combine(fullPath, itemSpec);
-        //}
+        } 
+        #endregion
     }
 }
