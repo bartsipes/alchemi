@@ -39,7 +39,7 @@ namespace Alchemi.Console.DataForms
         private StorageMaintenanceParameters _maintenanceParameters;
         private Thread _maintenanceThread;
         private PleaseWait _pleaseWait;
-        private String _errorMessage;
+        private string _errorMessage;
         private bool _success;
 
         public StorageMaintenanceForm(ConsoleNode console)

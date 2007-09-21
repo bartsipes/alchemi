@@ -77,7 +77,7 @@ namespace Alchemi.Console
 	{
 		public UserStorageView User;
 
-		public UserItem(String text) 
+		public UserItem(string text) 
             : base(text)
 		{
 		}
@@ -87,7 +87,7 @@ namespace Alchemi.Console
 	{
 		public GroupStorageView GroupView;
 
-		public GroupItem(String text) 
+		public GroupItem(string text) 
             : base(text)
 		{
 		}
@@ -97,7 +97,7 @@ namespace Alchemi.Console
 	{
 		public PermissionStorageView Permission;
 
-		public PermissionItem(String text) 
+		public PermissionItem(string text) 
             : base(text)
 		{
 		}

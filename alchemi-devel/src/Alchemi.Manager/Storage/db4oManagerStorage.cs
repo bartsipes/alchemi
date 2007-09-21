@@ -44,7 +44,7 @@ namespace Alchemi.Manager.Storage
             }
             UserStorageView user = null;
             IObjectContainer container = GetStorage();
-            Int32 groupId = -1;
+            int groupId = -1;
             try
             {
                 IList<UserStorageView> users = container.Query<UserStorageView>(delegate(UserStorageView userFinder)
@@ -322,7 +322,7 @@ namespace Alchemi.Manager.Storage
                     groupPerms.Add(groupId, permissions);
                 }
 
-                Int32 index = permissions.IndexOf(permission);
+                int index = permissions.IndexOf(permission);
 
                 // only add it if it is not already in the array
                 if (index < 0)
@@ -452,7 +452,7 @@ namespace Alchemi.Manager.Storage
                 return null;
             }
 
-            String executorId;
+            string executorId;
             if (executor.ExecutorId == null)
             {
                 executorId = Guid.NewGuid().ToString();
@@ -619,7 +619,7 @@ namespace Alchemi.Manager.Storage
                 return null;
             }
 
-            String applicationId = Guid.NewGuid().ToString();
+            string applicationId = Guid.NewGuid().ToString();
 
             application.ApplicationId = applicationId;
 
@@ -687,8 +687,8 @@ namespace Alchemi.Manager.Storage
                 {
                     if (populateThreadCount)
                     {
-                        Int32 totalThreads;
-                        Int32 unfinishedThreads;
+                        int totalThreads;
+                        int unfinishedThreads;
 
                         GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
 
@@ -884,7 +884,7 @@ namespace Alchemi.Manager.Storage
             return GetThreads(null, state);
         }
 
-        public ThreadStorageView[] GetThreads(String applicationId, params ThreadState[] threadStates)
+        public ThreadStorageView[] GetThreads(string applicationId, params ThreadState[] threadStates)
         {
             ArrayList threadList = new ArrayList();
 
@@ -931,7 +931,7 @@ namespace Alchemi.Manager.Storage
             return (ThreadStorageView[])threadList.ToArray(typeof(ThreadStorageView));
         }
 
-        public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] threadStates)
+        public ThreadStorageView[] GetExecutorThreads(string executorId, params ThreadState[] threadStates)
         {
             ArrayList threadList = new ArrayList();
 
@@ -1038,7 +1038,7 @@ namespace Alchemi.Manager.Storage
 
         public int GetApplicationThreadCount(string applicationId, ThreadState threadState)
         {
-            Int32 threadCount = 0;
+            int threadCount = 0;
             IObjectContainer container = GetStorage();
             try
             {
@@ -1059,7 +1059,7 @@ namespace Alchemi.Manager.Storage
 
         public int GetExecutorThreadCount(string executorId, params ThreadState[] threadState)
         {
-            Int32 threadCount = 0;
+            int threadCount = 0;
 
             if (threadState == null && threadState.Length == 0)
             {
@@ -1129,10 +1129,10 @@ namespace Alchemi.Manager.Storage
             ApplicationStorageView[] applications = GetApplications();
             ThreadStorageView[] threads = GetThreads();
 
-            Int32 totalExecutors = executors != null ? executors.Length : 0;
+            int totalExecutors = executors != null ? executors.Length : 0;
 
             // calculate number of unfinished applications
-            Int32 unfinishedApps = 0;
+            int unfinishedApps = 0;
             foreach (ApplicationStorageView application in applications)
             {
                 if (application.State == ApplicationState.AwaitingManifest || application.State == ApplicationState.Ready)
@@ -1141,7 +1141,7 @@ namespace Alchemi.Manager.Storage
                 }
             }
 
-            Int32 unfinishedThreads = 0;
+            int unfinishedThreads = 0;
             foreach (ThreadStorageView thread in threads)
             {
                 if (thread.State != ThreadState.Dead && thread.State != ThreadState.Finished)
@@ -1151,8 +1151,8 @@ namespace Alchemi.Manager.Storage
             }
 
             float maxPowerValue = 0;
-            Int32 powerUsage = 0;
-            Int32 powerAvailable = 0;
+            int powerUsage = 0;
+            int powerAvailable = 0;
             float totalUsageValue = 0;
 
             int connectedExecutorCount = 0;
@@ -1180,8 +1180,8 @@ namespace Alchemi.Manager.Storage
                 powerUsage = 0;
             }
 
-            String powerTotalUsage = String.Format("{0} GHz*Hr", Math.Round(totalUsageValue, 6));
-            String maxPower = String.Format("{0} GHz", Math.Round(maxPowerValue / 1000, 6));
+            string powerTotalUsage = String.Format("{0} GHz*Hr", Math.Round(totalUsageValue, 6));
+            string maxPower = String.Format("{0} GHz", Math.Round(maxPowerValue / 1000, 6));
 
             SystemSummary summary = new SystemSummary(
                 maxPower,
@@ -1212,7 +1212,7 @@ namespace Alchemi.Manager.Storage
             }
         }
 
-        public void CreateStorage(String databaseName)
+        public void CreateStorage(string databaseName)
         {
             if (_db4oServer != null)
                 _db4oServer.Close();

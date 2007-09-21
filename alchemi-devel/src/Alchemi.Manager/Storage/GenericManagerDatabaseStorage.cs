@@ -49,9 +49,9 @@ namespace Alchemi.Manager.Storage
 		// Create a logger for use in this class
 		protected static readonly Logger logger = new Logger();
 
-		protected String ConnectionString;
+		protected string ConnectionString;
 
-		protected virtual String IsNullOperator
+		protected virtual string IsNullOperator
 		{
 			get
 			{
@@ -60,22 +60,22 @@ namespace Alchemi.Manager.Storage
 		}
 		
 
-		public GenericManagerDatabaseStorage(String connectionString)
+		public GenericManagerDatabaseStorage(string connectionString)
 		{
 			ConnectionString = connectionString;
 		}
 
 		#region IManagerStorageSetup Members
 
-		protected virtual String GetSetupFileLocation()
+		protected virtual string GetSetupFileLocation()
 		{
 			return "SqlServer";
 		}
 
 
-		public void CreateStorage(String databaseName)
+		public void CreateStorage(string databaseName)
 		{
-			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_database.sql");
+			string sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_database.sql");
 
 			/// The database name is unknown at compilation time so we have to replace it now
 			sqlScript = sqlScript.Replace("DATABASE_NAME_TOKEN", databaseName);
@@ -88,14 +88,14 @@ namespace Alchemi.Manager.Storage
 		/// </summary>
 		public void SetUpStorage()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure.sql");
+			string sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure.sql");
 
 			RunSql(sqlScript);			
 		}
 
 		public void InitializeStorageData()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_data.sql");
+			string sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_data.sql");
 
 			RunSql(sqlScript);
 
@@ -104,7 +104,7 @@ namespace Alchemi.Manager.Storage
 
 		public void TearDownStorage()
 		{
-			String sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure_drop.sql");
+			string sqlScript = GetStringFromEmbededScriptFile(GetSetupFileLocation(), "Alchemi_structure_drop.sql");
 
 			RunSql(sqlScript);
 		}
@@ -174,13 +174,13 @@ namespace Alchemi.Manager.Storage
             string unfinishedApplicationCountSqlQuery = this.GetUnfinishedApplicationCountSqlQuery();
 			
 			SystemSummary summary = null;
-			String maxPower= null;
-			Int32 totalExecutors = 0;
-			Int32 powerUsage = 0;
-			Int32 powerAvailable = 0;
-			String powerTotalUsage = null;
-			Int32 unfinishedApps = 0;
-			Int32 unfinishedThreads = 0;
+			string maxPower= null;
+			int totalExecutors = 0;
+			int powerUsage = 0;
+			int powerAvailable = 0;
+			string powerTotalUsage = null;
+			int unfinishedApps = 0;
+			int unfinishedThreads = 0;
 			
 			try
 			{
@@ -254,7 +254,7 @@ namespace Alchemi.Manager.Storage
 
 			foreach (UserStorageView user in users)
 			{
-				String sqlQuery;
+				string sqlQuery;
 				
 //				sqlQuery = String.Format("insert usr(usr_id, usr_name, password) values({0}, '{1}', '{2}')",
 //					user.UserId,
@@ -287,7 +287,7 @@ namespace Alchemi.Manager.Storage
 
 			foreach (UserStorageView user in updates)
 			{
-				String sqlQuery;
+				string sqlQuery;
 				
 				if (user.Password != null && user.Password != "")
 				{
@@ -319,9 +319,9 @@ namespace Alchemi.Manager.Storage
 			{
 				while(dataReader.Read())
 				{
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-					String password = dataReader.GetString(dataReader.GetOrdinal("password"));
-					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					string password = dataReader.GetString(dataReader.GetOrdinal("password"));
+					int groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
 					bool isSystem = false;
 
 					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
@@ -353,8 +353,8 @@ namespace Alchemi.Manager.Storage
             {
                 if (dataReader.Read())
                 {
-                    String password = dataReader.GetString(dataReader.GetOrdinal("password"));
-                    Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
+                    string password = dataReader.GetString(dataReader.GetOrdinal("password"));
+                    int groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
                     bool isSystem = false;
 
                     if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
@@ -381,7 +381,7 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			String sqlQuery;
+			string sqlQuery;
 			
 			sqlQuery = String.Format("delete from usr where usr_name='{0}'", 
 				Utils.MakeSqlSafe(userToDelete.Username));
@@ -418,7 +418,7 @@ namespace Alchemi.Manager.Storage
 
 			foreach (GroupStorageView group in groups)
 			{
-				String sqlQuery;
+				string sqlQuery;
 				
 				sqlQuery = String.Format("insert into grp(grp_id, grp_name, is_system) values({0}, '{1}', {2})", 
 					group.GroupId,
@@ -438,8 +438,8 @@ namespace Alchemi.Manager.Storage
 			{
 				while(dataReader.Read())
 				{
-					Int32 groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
-					String groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
+					int groupId = dataReader.GetInt32(dataReader.GetOrdinal("grp_id"));
+					string groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
 					bool isSystem = false;
 					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
 					{
@@ -457,13 +457,13 @@ namespace Alchemi.Manager.Storage
 			return (GroupStorageView[])groupList.ToArray(typeof(GroupStorageView));
 		}
 
-		public GroupStorageView GetGroup(Int32 groupId)
+		public GroupStorageView GetGroup(int groupId)
 		{
 			using(IDataReader dataReader = RunSqlReturnDataReader(String.Format("select grp_id, grp_name, is_system from grp where grp_id={0}", groupId)))
 			{
 				if(dataReader.Read())
 				{
-					String groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
+					string groupName = dataReader.GetString(dataReader.GetOrdinal("grp_name"));
 					bool isSystem = false;
 					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
 					{
@@ -485,9 +485,9 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public void AddGroupPermission(Int32 groupId, Permission permission)
+		public void AddGroupPermission(int groupId, Permission permission)
 		{
-			String sqlQuery;
+			string sqlQuery;
 			
 			// in case there is a duplicate remove the permission first
 			sqlQuery = String.Format("delete from grp_prm where grp_id={0} and prm_id={1}", 
@@ -508,7 +508,7 @@ namespace Alchemi.Manager.Storage
 		/// </summary>
 		/// <param name="groupId"></param>
 		/// <returns></returns>
-		public Permission[] GetGroupPermissions(Int32 groupId)
+		public Permission[] GetGroupPermissions(int groupId)
 		{
 			ArrayList permissions = new ArrayList();
 
@@ -527,7 +527,7 @@ namespace Alchemi.Manager.Storage
 			return (Permission[])permissions.ToArray(typeof(Permission));
 		}
 
-		public PermissionStorageView[] GetGroupPermissionStorageView(Int32 groupId)
+		public PermissionStorageView[] GetGroupPermissionStorageView(int groupId)
 		{
 			return PermissionStorageView.GetPermissionStorageView(GetGroupPermissions(groupId));
 		}
@@ -539,7 +539,7 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			String sqlQuery;
+			string sqlQuery;
 			
 			sqlQuery = String.Format("DELETE FROM usr WHERE grp_id='{0}'; DELETE FROM grp WHERE grp_id='{0}';", 
 				groupToDelete.GroupId);
@@ -549,7 +549,7 @@ namespace Alchemi.Manager.Storage
 			RunSql(sqlQuery);
 		}
 
-		public UserStorageView[] GetGroupUsers(Int32 groupId)
+		public UserStorageView[] GetGroupUsers(int groupId)
 		{
 			ArrayList userList = new ArrayList();
 
@@ -557,8 +557,8 @@ namespace Alchemi.Manager.Storage
 			{
 				while(dataReader.Read())
 				{
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-					String password = dataReader.GetString(dataReader.GetOrdinal("password"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					string password = dataReader.GetString(dataReader.GetOrdinal("password"));
 					bool isSystem = false;
 
 					if (!dataReader.IsDBNull(dataReader.GetOrdinal("is_system")))
@@ -586,21 +586,21 @@ namespace Alchemi.Manager.Storage
 		/// <returns>true if the permission is set, false otherwise</returns>
 		public bool CheckPermission(SecurityCredentials sc, Permission perm)
 		{
-			String query = String.Format("select count(*) as permitted from usr inner join grp on grp.grp_id = usr.grp_id inner join grp_prm on grp_prm.grp_id = grp.grp_id inner join prm on prm.prm_id = grp_prm.prm_id where usr.usr_name = '{0}' and prm.prm_id >= {1}", 
+			string query = String.Format("select count(*) as permitted from usr inner join grp on grp.grp_id = usr.grp_id inner join grp_prm on grp_prm.grp_id = grp.grp_id inner join prm on prm.prm_id = grp_prm.prm_id where usr.usr_name = '{0}' and prm.prm_id >= {1}", 
 				Utils.MakeSqlSafe(sc.Username),
 				(int)perm);
 
 			return Convert.ToBoolean(RunSqlReturnScalar(query));
 		}
 
-		public String AddExecutor(ExecutorStorageView executor)
+		public string AddExecutor(ExecutorStorageView executor)
 		{
 			if (executor == null)
 			{
 				return null;
 			}
 
-			String executorId;
+			string executorId;
 			if (executor.ExecutorId == null)
 			{
 				executorId = Guid.NewGuid().ToString();
@@ -628,7 +628,7 @@ namespace Alchemi.Manager.Storage
 			return executorId;
 		}
 
-		protected void UpdateExecutorPingTime(String executorId, DateTime pingTime)
+		protected void UpdateExecutorPingTime(string executorId, DateTime pingTime)
 		{
 			IDataParameter dateTimeParameter = GetParameter(DatabaseParameterDecoration() + "ping_time", pingTime, DbType.DateTime);
 			
@@ -645,7 +645,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		protected void UpdateExecutorHostAddress(String executorId, String hostName, Int32 port)
+		protected void UpdateExecutorHostAddress(string executorId, string hostName, int port)
 		{
 			RunSql(String.Format("update executor set host='{1}', port={2} where executor_id='{0}'",
 				executorId,
@@ -654,7 +654,7 @@ namespace Alchemi.Manager.Storage
 				));
 		}
 
-		protected void UpdateExecutorCpuUsage(String executorId, Int32 maxCpu, Int32 cpuUsage, Int32 availableCpu, float totalCpuUsage)
+		protected void UpdateExecutorCpuUsage(string executorId, int maxCpu, int cpuUsage, int availableCpu, float totalCpuUsage)
 		{
 			IDataParameter totalCpuUsageParameter = GetParameter(DatabaseParameterDecoration() + "cpu_totaluse", totalCpuUsage, DbType.Double);
 
@@ -669,7 +669,7 @@ namespace Alchemi.Manager.Storage
 				totalCpuUsageParameter);
 		}
 
-		protected void UpdateExecutorDetails(String executorId, bool dedicated, bool connected, String userName)
+		protected void UpdateExecutorDetails(string executorId, bool dedicated, bool connected, string userName)
 		{
 			RunSql(String.Format("update executor set is_dedicated={1}, is_connected={2}, usr_name='{3}' where executor_id='{0}'",
 				executorId,
@@ -679,7 +679,7 @@ namespace Alchemi.Manager.Storage
 				));
 		}
 		
-		protected void UpdateExecutorAdditionalInformation(String executorId, float maxMemory, float maxDisk, Int32 numberOfCpu, String os, String architecture)
+		protected void UpdateExecutorAdditionalInformation(string executorId, float maxMemory, float maxDisk, int numberOfCpu, string os, string architecture)
 		{
 			IDataParameter maxMemoryParameter = GetParameter(DatabaseParameterDecoration() + "max_memory", maxMemory, DbType.Double);
 			IDataParameter maxDiskParameter = GetParameter(DatabaseParameterDecoration() + "max_disk", maxDisk, DbType.Double);
@@ -719,7 +719,7 @@ namespace Alchemi.Manager.Storage
                 return;
             }
 
-            String sqlQuery;
+            string sqlQuery;
 
             sqlQuery = string.Format("DELETE FROM executor WHERE executor_id='{0}'",
                 executorToDelete.ExecutorId);
@@ -782,7 +782,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public ExecutorStorageView GetExecutor(String executorId)
+		public ExecutorStorageView GetExecutor(string executorId)
 		{
 			if (executorId == null)
 			{
@@ -817,24 +817,24 @@ namespace Alchemi.Manager.Storage
 				while(dataReader.Read())
 				{
 					// in SQL the executor ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
+					string executorId = dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString(); 
 
 					bool dedicated = dataReader.GetBoolean(dataReader.GetOrdinal("is_dedicated"));
 					bool connected = dataReader.GetBoolean(dataReader.GetOrdinal("is_connected"));
 					DateTime pingTime = GetDateTime(dataReader, "ping_time");
-					String hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
-					Int32 port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
-					Int32 maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
-					Int32 cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
-					Int32 availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
+					string hostname = dataReader.GetString(dataReader.GetOrdinal("host"));
+					int port = dataReader.IsDBNull(dataReader.GetOrdinal("port")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("port"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					int maxCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_max")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_max"));
+					int cpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_usage")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_usage"));
+					int availableCpu = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_avail")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("cpu_avail"));
 					float totalCpuUsage = dataReader.IsDBNull(dataReader.GetOrdinal("cpu_totalusage")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("cpu_totalusage"));
 
 					float maxMemory = dataReader.IsDBNull(dataReader.GetOrdinal("mem_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("mem_max"));;
 					float maxDisk = dataReader.IsDBNull(dataReader.GetOrdinal("disk_max")) ? 0 : (float)dataReader.GetDouble(dataReader.GetOrdinal("disk_max"));
-					Int32 numberOfCpu = dataReader.IsDBNull(dataReader.GetOrdinal("num_cpus")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("num_cpus"));
-					String os = dataReader.IsDBNull(dataReader.GetOrdinal("os")) ? "" : dataReader.GetString(dataReader.GetOrdinal("os"));
-					String architecture = dataReader.IsDBNull(dataReader.GetOrdinal("arch")) ? "" : dataReader.GetString(dataReader.GetOrdinal("arch"));
+					int numberOfCpu = dataReader.IsDBNull(dataReader.GetOrdinal("num_cpus")) ? 0 : dataReader.GetInt32(dataReader.GetOrdinal("num_cpus"));
+					string os = dataReader.IsDBNull(dataReader.GetOrdinal("os")) ? "" : dataReader.GetString(dataReader.GetOrdinal("os"));
+					string architecture = dataReader.IsDBNull(dataReader.GetOrdinal("arch")) ? "" : dataReader.GetString(dataReader.GetOrdinal("arch"));
 
 					ExecutorStorageView executor = new ExecutorStorageView(
 						executorId,
@@ -864,14 +864,14 @@ namespace Alchemi.Manager.Storage
 			return (ExecutorStorageView[])executors.ToArray(typeof(ExecutorStorageView));
 		}
 
-		public String AddApplication(ApplicationStorageView application)
+		public string AddApplication(ApplicationStorageView application)
 		{
 			if (application == null)
 			{
 				return null;
 			}
 
-			String applicationId = Guid.NewGuid().ToString();
+			string applicationId = Guid.NewGuid().ToString();
 
             IDataParameter timeCreatedParameter = GetParameter(DatabaseParameterDecoration() + "time_created", application.TimeCreated, DbType.DateTime);
             if (!application.TimeCreatedSet)
@@ -959,12 +959,12 @@ namespace Alchemi.Manager.Storage
 				while(dataReader.Read())
 				{
 					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+					string applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
 					ApplicationStorageView application = new ApplicationStorageView(
 						applicationId,
@@ -987,8 +987,8 @@ namespace Alchemi.Manager.Storage
 
 					if (populateThreadCount)
 					{
-						Int32 totalThreads;
-						Int32 unfinishedThreads;
+						int totalThreads;
+						int unfinishedThreads;
 
 						GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
 
@@ -1005,7 +1005,7 @@ namespace Alchemi.Manager.Storage
 			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
 		}
 
-		public ApplicationStorageView[] GetApplications(String userName, bool populateThreadCount)
+		public ApplicationStorageView[] GetApplications(string userName, bool populateThreadCount)
 		{
 			ArrayList applications = new ArrayList();
 
@@ -1016,12 +1016,12 @@ namespace Alchemi.Manager.Storage
 				while(dataReader.Read())
 				{
 					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+					string applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
 
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 					DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
 					ApplicationStorageView application = new ApplicationStorageView(
 						applicationId,
@@ -1036,8 +1036,8 @@ namespace Alchemi.Manager.Storage
 
 					if (populateThreadCount)
 					{
-						Int32 totalThreads;
-						Int32 unfinishedThreads;
+						int totalThreads;
+						int unfinishedThreads;
 
 						GetApplicationThreadCount(application.ApplicationId, out totalThreads, out unfinishedThreads);
 
@@ -1054,7 +1054,7 @@ namespace Alchemi.Manager.Storage
 			return (ApplicationStorageView[])applications.ToArray(typeof(ApplicationStorageView));
 		}
 
-		public ApplicationStorageView GetApplication(String applicationId)
+		public ApplicationStorageView GetApplication(string applicationId)
 		{
             using (IDataReader dataReader = RunSqlReturnDataReader(String.Format("select application_id, application_name, state, time_created, is_primary, usr_name, time_completed from application where application_id='{0}'", applicationId)))
 			{
@@ -1063,7 +1063,7 @@ namespace Alchemi.Manager.Storage
 					ApplicationState state = (ApplicationState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
                     DateTime timeCreated = GetDateTime(dataReader, "time_created");
 					bool primary = dataReader.GetBoolean(dataReader.GetOrdinal("is_primary"));
-					String username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
+					string username = dataReader.GetString(dataReader.GetOrdinal("usr_name"));
 
 					ApplicationStorageView application = new ApplicationStorageView(
 						applicationId,
@@ -1095,7 +1095,7 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			String sqlQuery;
+			string sqlQuery;
 			
 			sqlQuery = string.Format("DELETE FROM application WHERE application_id='{0}'; DELETE FROM thread WHERE application_id='{0}';",
 				applicationToDelete.ApplicationId);
@@ -1105,7 +1105,7 @@ namespace Alchemi.Manager.Storage
 			RunSql(sqlQuery);
 		}
 
-		public Int32 AddThread(ThreadStorageView thread)
+		public int AddThread(ThreadStorageView thread)
 		{
 			if (thread == null)
 			{
@@ -1192,7 +1192,7 @@ namespace Alchemi.Manager.Storage
 				executorIdParameter, timeStartedParameter, timeFinishedParameter);
 		}
 
-		public ThreadStorageView GetThread(String applicationId, Int32 threadId)
+		public ThreadStorageView GetThread(string applicationId, int threadId)
 		{
 			StringBuilder query = new StringBuilder();
 
@@ -1257,7 +1257,7 @@ namespace Alchemi.Manager.Storage
 			return GetThreads(null, findStates);
 		}
 
-		public ThreadStorageView[] GetThreads(String findApplicationId, params ThreadState[] findStates)
+		public ThreadStorageView[] GetThreads(string findApplicationId, params ThreadState[] findStates)
 		{
 			StringBuilder query = new StringBuilder();
 
@@ -1307,7 +1307,7 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		public ThreadStorageView[] GetExecutorThreads(String executorId, params ThreadState[] findStates)
+		public ThreadStorageView[] GetExecutorThreads(string executorId, params ThreadState[] findStates)
 		{
 			StringBuilder query = new StringBuilder();
 
@@ -1421,19 +1421,19 @@ namespace Alchemi.Manager.Storage
 			{
 				while(dataReader.Read())
 				{
-					Int32 internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
+					int internalThreadId = dataReader.GetInt32(dataReader.GetOrdinal("internal_thread_id"));
 
 					// in SQL the application ID is stored as a GUID so we use GetValue instead of GetString in order to maximize compatibility with other databases
-					String applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
-					String executorId = dataReader.IsDBNull(dataReader.GetOrdinal("executor_id")) ? null : dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString();
+					string applicationId = dataReader.GetValue(dataReader.GetOrdinal("application_id")).ToString(); 
+					string executorId = dataReader.IsDBNull(dataReader.GetOrdinal("executor_id")) ? null : dataReader.GetValue(dataReader.GetOrdinal("executor_id")).ToString();
 
-					Int32 threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
+					int threadId = dataReader.GetInt32(dataReader.GetOrdinal("thread_id"));
 					ThreadState state = (ThreadState)dataReader.GetInt32(dataReader.GetOrdinal("state"));
 
 					DateTime timeStarted = GetDateTime(dataReader, "time_started");
 					DateTime timeFinished = GetDateTime(dataReader, "time_finished");
 
-					Int32 priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
+					int priority = dataReader.GetInt32(dataReader.GetOrdinal("priority"));
 					bool failed = dataReader.IsDBNull(dataReader.GetOrdinal("failed")) ? false : dataReader.GetBoolean(dataReader.GetOrdinal("failed"));
 
 					ThreadStorageView thread = new ThreadStorageView(
@@ -1458,7 +1458,7 @@ namespace Alchemi.Manager.Storage
 		}
 
 
-		public void GetApplicationThreadCount(String applicationId, out Int32 totalThreads, out Int32 unfinishedThreads)
+		public void GetApplicationThreadCount(string applicationId, out int totalThreads, out int unfinishedThreads)
 		{
 			totalThreads = unfinishedThreads = 0;
 
@@ -1467,7 +1467,7 @@ namespace Alchemi.Manager.Storage
 			{
 				while(dataReader.Read())
 				{
-					Int32 state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
+					int state = dataReader.GetInt32(dataReader.GetOrdinal("state"));
 
 					totalThreads ++;
 
@@ -1483,7 +1483,7 @@ namespace Alchemi.Manager.Storage
 
 		}
 
-		public Int32 GetApplicationThreadCount(String applicationId, ThreadState threadState)
+		public int GetApplicationThreadCount(string applicationId, ThreadState threadState)
 		{
 			object threadCount = RunSqlReturnScalar(String.Format("select count(*) from thread where application_id='{0}' and state = {1}",
 				applicationId,
@@ -1492,7 +1492,7 @@ namespace Alchemi.Manager.Storage
 			return Convert.ToInt32(threadCount);
 		}
 
-		public Int32 GetExecutorThreadCount(String executorId, params ThreadState[] threadState)
+		public int GetExecutorThreadCount(string executorId, params ThreadState[] threadState)
 		{
 			if (executorId == null || threadState == null || threadState.Length == 0)
 			{
@@ -1532,7 +1532,7 @@ namespace Alchemi.Manager.Storage
 				return;
 			}
 
-			String sqlQuery;
+			string sqlQuery;
 			
 			sqlQuery = string.Format("DELETE FROM thread WHERE application_id='{1}' and thread_id={0};", 
 				threadToDelete.ThreadId,
@@ -1548,7 +1548,7 @@ namespace Alchemi.Manager.Storage
 		#region Generic implementation for database-specific objects
 
 		//default is using OleDbConnections.
-		protected virtual IDbConnection GetConnection(String connectionString)
+		protected virtual IDbConnection GetConnection(string connectionString)
 		{
 			return new OleDbConnection(connectionString);
 		}
@@ -1580,7 +1580,7 @@ namespace Alchemi.Manager.Storage
 
 		#region Generic database manipulation routines
 
-		protected virtual String DatabaseParameterDecoration()
+		protected virtual string DatabaseParameterDecoration()
 		{
 			return "@";
 		}
@@ -1591,7 +1591,7 @@ namespace Alchemi.Manager.Storage
 		/// </summary>
 		/// <param name="storedProcedure"></param>
 		/// <returns></returns>
-		protected IDataReader RunSpReturnDataReader(String storedProcedure)
+		protected IDataReader RunSpReturnDataReader(string storedProcedure)
 		{
 			IDbConnection connection = GetConnection(ConnectionString);
 			IDbCommand command = GetCommand();
@@ -1605,7 +1605,7 @@ namespace Alchemi.Manager.Storage
 			return command.ExecuteReader(CommandBehavior.CloseConnection);
 		}
 
-		protected IDataReader RunSqlReturnDataReader(String sqlQuery)
+		protected IDataReader RunSqlReturnDataReader(string sqlQuery)
 		{
 			IDbConnection connection = GetConnection(ConnectionString);
 			IDbCommand command = GetCommand();
@@ -1628,7 +1628,7 @@ namespace Alchemi.Manager.Storage
 		/// <param name="storedProcedure"></param>
 		/// <param name="parameters"></param>
 		/// <returns></returns>
-		protected object RunSpReturnScalar(String storedProcedure, params IDataParameter[] parameters)
+		protected object RunSpReturnScalar(string storedProcedure, params IDataParameter[] parameters)
 		{
 			using(IDbConnection connection = GetConnection(ConnectionString))
 			{
@@ -1651,12 +1651,12 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		protected void RunSql(String sqlQuery)
+		protected void RunSql(string sqlQuery)
 		{
 			RunSql(sqlQuery, null);
 		}
 
-		protected void RunSql(String sqlQuery, params IDataParameter[] parameters)
+		protected void RunSql(string sqlQuery, params IDataParameter[] parameters)
 		{
 			try
 			{
@@ -1690,12 +1690,12 @@ namespace Alchemi.Manager.Storage
 			}
 		}
 
-		protected object RunSqlReturnScalar(String sqlQuery)
+		protected object RunSqlReturnScalar(string sqlQuery)
 		{
 			return RunSqlReturnScalar(sqlQuery, null);
 		}
 
-		protected object RunSqlReturnScalar(String sqlQuery, params IDataParameter[] parameters)
+		protected object RunSqlReturnScalar(string sqlQuery, params IDataParameter[] parameters)
 		{
 			using(IDbConnection connection = GetConnection(ConnectionString))
 			{
@@ -1755,7 +1755,7 @@ namespace Alchemi.Manager.Storage
 
 		#endregion
 
-		private String GetStringFromEmbededScriptFile(String folder, String scriptFileName)
+		private string GetStringFromEmbededScriptFile(string folder, string scriptFileName)
 		{
 			Stream inputStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
 				String.Format("Alchemi.Manager.Storage.SetupFiles.{0}.{1}", folder, scriptFileName));
@@ -1767,7 +1767,7 @@ namespace Alchemi.Manager.Storage
 
 			using(StreamReader reader = new StreamReader(inputStream))
 			{
-				String data = reader.ReadToEnd();
+				string data = reader.ReadToEnd();
 				
 				reader.Close();
 

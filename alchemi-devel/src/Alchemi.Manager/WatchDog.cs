@@ -74,17 +74,17 @@ namespace Alchemi.Manager
 
                         // disconnect nde if not recd alive notification in the last 90 seconds
                         // TODO: make time interval configurable
-                        Int32 secondsToTimeout = 90;
+                        int secondsToTimeout = 90;
                         DisconnectTimedOutExecutors(new TimeSpan(0, 0, secondsToTimeout));
 
                         // reset threads whose executors have been disconnected
                         ThreadStorageView[] nonDedicatedLostThreadsStorage = ManagerStorageFactory.ManagerStorage().GetExecutorThreads(
                             false,
                             false,
-                            Alchemi.Core.Owner.ThreadState.Scheduled,
-                            Alchemi.Core.Owner.ThreadState.Started,
-                            Alchemi.Core.Owner.ThreadState.Finished,
-                            Alchemi.Core.Owner.ThreadState.Dead);
+                            ThreadState.Scheduled,
+                            ThreadState.Started,
+                            ThreadState.Finished,
+                            ThreadState.Dead);
 
                         foreach (ThreadStorageView threadStorage in nonDedicatedLostThreadsStorage)
                         {

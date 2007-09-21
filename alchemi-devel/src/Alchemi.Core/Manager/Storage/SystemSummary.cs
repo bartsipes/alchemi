@@ -71,7 +71,7 @@ namespace Alchemi.Core.Manager.Storage
 
 
         #region Property - PowerAvailable
-        private Int32 _powerAvailable;
+        private int _powerAvailable;
         /// <summary>
         /// The available power.
         /// </summary>

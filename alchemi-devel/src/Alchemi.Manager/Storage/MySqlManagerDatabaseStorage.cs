@@ -36,7 +36,7 @@ namespace Alchemi.Manager.Storage
 	/// </summary>
 	public class MySqlManagerDatabaseStorage : GenericManagerDatabaseStorage
 	{
-		public MySqlManagerDatabaseStorage(String connectionString): base (connectionString)
+		public MySqlManagerDatabaseStorage(string connectionString): base (connectionString)
 		{
 		}
 
@@ -72,17 +72,17 @@ namespace Alchemi.Manager.Storage
 
 		#endregion
 
-		protected override String GetSetupFileLocation()
+		protected override string GetSetupFileLocation()
 		{
 			return "MySQL";
 		}
 
-		protected override String DatabaseParameterDecoration()
+		protected override string DatabaseParameterDecoration()
 		{
 			return "?";
 		}
 
-		protected override String IsNullOperator
+		protected override string IsNullOperator
 		{
 			get
 			{

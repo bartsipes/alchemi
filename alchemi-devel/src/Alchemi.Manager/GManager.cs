@@ -136,7 +136,7 @@ namespace Alchemi.Manager
 
 
         #region Method - Owner_SetApplicationName
-        public void Owner_SetApplicationName(SecurityCredentials sc, string appId, String applicationName)
+        public void Owner_SetApplicationName(SecurityCredentials sc, string appId, string applicationName)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);
@@ -971,7 +971,7 @@ namespace Alchemi.Manager
 
 
         #region Method - Admon_GetGroups
-        public GroupStorageView Admon_GetGroup(SecurityCredentials sc, Int32 groupId)
+        public GroupStorageView Admon_GetGroup(SecurityCredentials sc, int groupId)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
@@ -1002,7 +1002,7 @@ namespace Alchemi.Manager
 
 
         #region Method - Admon_GetGroupUsers
-        public UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, Int32 groupId)
+        public UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, int groupId)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageUsers);
@@ -1114,7 +1114,7 @@ namespace Alchemi.Manager
 
 
         #region Method - Admon_GetExecutor
-        public ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, String executorId)
+        public ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, string executorId)
         {
             AuthenticateUser(sc);
             EnsurePermission(sc, Permission.ManageOwnApp);

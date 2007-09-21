@@ -339,7 +339,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="groupId"></param>
         /// <returns>Group details</returns>
-        GroupStorageView Admon_GetGroup(SecurityCredentials sc, Int32 groupId);
+        GroupStorageView Admon_GetGroup(SecurityCredentials sc, int groupId);
 
         /// <summary>
         /// Delete a group and all the associated users.
@@ -354,7 +354,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, Int32 groupId);
+        UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, int groupId);
 
         /// <summary>
         /// Updates the Manager database with the given table of users.

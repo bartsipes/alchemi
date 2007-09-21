@@ -160,7 +160,7 @@ namespace Alchemi.Manager
             Directory.CreateDirectory(DataDir);
         }
 
-        public String ApplicationName
+        public string ApplicationName
         {
             get
             {

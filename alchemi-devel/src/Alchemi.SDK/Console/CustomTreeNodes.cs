@@ -57,7 +57,7 @@ namespace Alchemi.Console
 		{
 		}
 
-		public DummyTreeNode (string text, int imageIndex,  Int32 selectedImageIndex ) 
+		public DummyTreeNode (string text, int imageIndex,  int selectedImageIndex ) 
             : base("", imageIndex, selectedImageIndex)
 		{
 		}

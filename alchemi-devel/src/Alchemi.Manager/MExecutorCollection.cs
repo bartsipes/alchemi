@@ -93,7 +93,7 @@ namespace Alchemi.Manager
 			}
 			else
 			{
-				String newExecutorId = ManagerStorageFactory.ManagerStorage().AddExecutor(executorStorage);
+				string newExecutorId = ManagerStorageFactory.ManagerStorage().AddExecutor(executorStorage);
 
 				logger.Debug("Registered new executor id=" + newExecutorId);
 

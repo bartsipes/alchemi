@@ -36,7 +36,7 @@ namespace Alchemi.Manager.Storage
 	public class SqlServerManagerDatabaseStorage : GenericManagerDatabaseStorage
 	{
 
-		public SqlServerManagerDatabaseStorage(String connectionString): base (connectionString)
+		public SqlServerManagerDatabaseStorage(string connectionString): base (connectionString)
 		{
 		}
 
@@ -72,7 +72,7 @@ namespace Alchemi.Manager.Storage
 
 		#endregion
 
-		protected override String GetSetupFileLocation()
+		protected override string GetSetupFileLocation()
 		{
 			return "SqlServer";
 		}

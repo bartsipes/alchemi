@@ -37,7 +37,7 @@ namespace Alchemi.Manager.Storage
     /// </summary>
     public class PostgresqlManagerDatabaseStorage : GenericManagerDatabaseStorage
     {
-        public PostgresqlManagerDatabaseStorage(String connectionString)
+        public PostgresqlManagerDatabaseStorage(string connectionString)
             : base(connectionString)
         {
         }
@@ -87,17 +87,17 @@ namespace Alchemi.Manager.Storage
 
         #endregion
 
-        protected override String GetSetupFileLocation()
+        protected override string GetSetupFileLocation()
         {
             return "Postgresql";
         }
 
-        protected override String DatabaseParameterDecoration()
+        protected override string DatabaseParameterDecoration()
         {
             return ":";
         }
 
-        protected override String IsNullOperator
+        protected override string IsNullOperator
         {
             get
             {

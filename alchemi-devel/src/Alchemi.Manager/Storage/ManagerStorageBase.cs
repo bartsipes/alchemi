@@ -36,9 +36,9 @@ namespace Alchemi.Manager.Storage
 	/// </summary>
 	public abstract class ManagerStorageBase
 	{
-		private const Int32 c_AdminsGroupId = 1;
-		private const Int32 c_ExecutorsGroupId = 2;
-		private const Int32 c_UsersGroupId = 3;
+		private const int c_AdminsGroupId = 1;
+		private const int c_ExecutorsGroupId = 2;
+		private const int c_UsersGroupId = 3;
 
 		/// <summary>
 		/// Create the default objects to complete initializing the manager storage.
