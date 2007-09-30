@@ -81,10 +81,10 @@ namespace Alchemi.Manager
                         ThreadStorageView[] nonDedicatedLostThreadsStorage = ManagerStorageFactory.ManagerStorage().GetExecutorThreads(
                             false,
                             false,
-                            ThreadState.Scheduled,
-                            ThreadState.Started,
-                            ThreadState.Finished,
-                            ThreadState.Dead);
+                            Alchemi.Core.Owner.ThreadState.Scheduled,
+                            Alchemi.Core.Owner.ThreadState.Started,
+                            Alchemi.Core.Owner.ThreadState.Finished,
+                            Alchemi.Core.Owner.ThreadState.Dead);
 
                         foreach (ThreadStorageView threadStorage in nonDedicatedLostThreadsStorage)
                         {
