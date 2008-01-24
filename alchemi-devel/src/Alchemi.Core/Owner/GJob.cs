@@ -180,7 +180,18 @@ namespace Alchemi.Core.Owner
                 process.StartInfo.RedirectStandardOutput = true;
 
                 process.StartInfo.FileName = "cmd"; //_RunCommand; //
-                process.StartInfo.Arguments = "/C " + SubstituteVariables(_RunCommand);
+                
+                //fjl This line has been replaced to fix an unknown command error
+                //caused by the process not finding the exe in the working dir
+                //process.StartInfo.Arguments = "/C " + SubstituteVariables(_RunCommand); 
+                process.StartInfo.Arguments = "/C ..\\" + SubstituteVariables(_RunCommand);
+
+                //Please Note: this new folder hierarchy will break existing code that uses the 
+                //App.Manafest.Add(new EmbeddedFileDependency(...)); to transport files that will 
+                //later be used directly by the GThread. Previous version unpacked all files into
+                //the same folder. Instead move these types of files to the 
+                //GJob.InputFiles.Add(new EmbeddedFileDependency(...)); where they will be unpacked into the
+                //thread working folder.
 
                 log.Append("Forking process: ").AppendLine(process.StartInfo.FileName);
                 log.Append("Arguments: ").AppendLine(process.StartInfo.Arguments);
