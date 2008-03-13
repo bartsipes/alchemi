@@ -31,7 +31,11 @@ namespace Alchemi.Core
 	/// </summary>
     public enum RemotingMechanism
     {
-        TcpBinary //,
+        TcpBinary,
+        WCFCustom,
+        WCFTcp,
+        WCFHttp,
+        WCF
         //WebService
     }
 }
