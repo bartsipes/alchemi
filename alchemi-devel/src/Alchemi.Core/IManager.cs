@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.ServiceModel;
 
 using Alchemi.Core.Executor;
 using Alchemi.Core.Manager.Storage;
@@ -35,17 +36,20 @@ namespace Alchemi.Core
 	/// <summary>
 	/// Defines the functions/services that need to be provided by a manager implementation
 	/// </summary>
+    [ServiceContract]
     public interface IManager : IExecutor
     {
 		/// <summary>
 		/// Pings the manager to verify if it is alive.
 		/// </summary>
+        [OperationContract]
         void PingManager();
 
         /// <summary>
         /// Authenticates the user with the given security credentials.
         /// </summary>
         /// <param name="sc">The security credentials.</param>
+        [OperationContract]
         void AuthenticateUser(SecurityCredentials sc);
 
 
@@ -56,6 +60,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns>Application id</returns>
+        [OperationContract]
         string Owner_CreateApplication(SecurityCredentials sc);
 
         /// <summary>
@@ -64,6 +69,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <param name="applicationName"></param>
+        [OperationContract]
         void Owner_SetApplicationName(SecurityCredentials sc, string appId, string applicationName);
 
         /// <summary>
@@ -73,6 +79,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>true if the application exists in the Manager database</returns>
+        [OperationContract]
         bool Owner_VerifyApplication(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -82,6 +89,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <param name="manifest"></param>
+        [OperationContract]
         void Owner_SetApplicationManifest(SecurityCredentials sc, string appId, FileDependencyCollection manifest);
 
 
@@ -92,6 +100,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
+        [OperationContract]
         bool Owner_HasApplicationManifest(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -101,6 +110,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="ti"></param>
         /// <param name="thread"></param>
+        [OperationContract]
         void Owner_SetThread(SecurityCredentials sc, ThreadIdentifier ti, byte[] thread);
 
         /// <summary>
@@ -110,6 +120,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="ti"></param>
         /// <param name="thread"></param>
+        [OperationContract]
         void Owner_SetThreads(SecurityCredentials sc, ThreadIdentifier[] threadIds, byte[][] threads);
 
         /// <summary>
@@ -118,6 +129,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>byte array representing all the threads that are finished for the given appication</returns>
+        [OperationContract]
         byte[][] Owner_GetFinishedThreads(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -127,6 +139,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="ti"></param>
         /// <returns>ThreadState</returns>
+        [OperationContract]
         ThreadState Owner_GetThreadState(SecurityCredentials sc, ThreadIdentifier ti);
 
         /// <summary>
@@ -137,6 +150,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="ti"></param>
         /// <returns></returns>
+        [OperationContract]
         Exception Owner_GetFailedThreadException(SecurityCredentials sc, ThreadIdentifier ti);
 
         /// <summary>
@@ -146,6 +160,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>ApplicationState</returns>
+        [OperationContract]
         ApplicationState Owner_GetApplicationState(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -154,6 +169,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="ti"></param>
+        [OperationContract]
         void Owner_AbortThread(SecurityCredentials sc, ThreadIdentifier ti);
 
         /// <summary>
@@ -162,6 +178,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="appId"></param>
+        [OperationContract]
         void Owner_StopApplication(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -170,6 +187,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="appId"></param>
+        [OperationContract]
         void Owner_CleanupApplication(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -179,6 +197,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>Number of finished threads</returns>
+        [OperationContract]
         int Owner_GetFinishedThreadCount(SecurityCredentials sc, string appId); 
         #endregion
 
@@ -192,6 +211,7 @@ namespace Alchemi.Core
         /// <param name="existingExecutorId"></param>
         /// <param name="info"></param>
         /// <returns>Executor id</returns>
+        [OperationContract]
         string Executor_RegisterNewExecutor(SecurityCredentials sc, string existingExecutorId, ExecutorInfo info);
 
         /// <summary>
@@ -201,6 +221,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <param name="executorEP"></param>
+        [OperationContract]
         void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
 
         /// <summary>
@@ -210,6 +231,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <param name="executorEP"></param>
+        [OperationContract]
         void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
 
         /// <summary>
@@ -218,6 +240,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
+        [OperationContract]
         void Executor_DisconnectExecutor(SecurityCredentials sc, string executorId);
 
         /// <summary>
@@ -227,6 +250,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <returns>ThreadIdentifier</returns>
+        [OperationContract]
         ThreadIdentifier Executor_GetNextScheduledThreadIdentifier(SecurityCredentials sc, string executorId);
 
         /// <summary>
@@ -236,6 +260,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>FileDependencyCollection</returns>
+        [OperationContract]
         FileDependencyCollection Executor_GetApplicationManifest(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -245,6 +270,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="ti"></param>
         /// <returns>byte array [] representing the thread </returns>
+        [OperationContract]
         byte[] Executor_GetThread(SecurityCredentials sc, ThreadIdentifier ti);
 
         /// <summary>
@@ -254,6 +280,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <param name="info"></param>
+        [OperationContract]
         void Executor_Heartbeat(SecurityCredentials sc, string executorId, HeartbeatInfo info);
 
         /// <summary>
@@ -264,6 +291,7 @@ namespace Alchemi.Core
         /// <param name="ti"></param>
         /// <param name="thread"></param>
         /// <param name="e"></param>
+        [OperationContract]
         void Executor_SetFinishedThread(SecurityCredentials sc, ThreadIdentifier ti, byte[] thread, Exception e);
 
         /// <summary>
@@ -272,6 +300,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="ti"></param>
+        [OperationContract]
         void Executor_RelinquishThread(SecurityCredentials sc, ThreadIdentifier ti); 
         #endregion
         
@@ -288,6 +317,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns>ApplicationStorageView array with application information</returns>
+        [OperationContract]
         ApplicationStorageView[] Admon_GetLiveApplicationList(SecurityCredentials sc);
 
         /// <summary>
@@ -300,6 +330,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns>ApplicationStorageView array with application information</returns>
+        [OperationContract]
         ApplicationStorageView[] Admon_GetUserApplicationList(SecurityCredentials sc);
 
         /// <summary>
@@ -308,6 +339,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="appId"></param>
         /// <returns>ThreadStorageView array with thread list</returns>
+        [OperationContract]
         ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId);
 
         /// <summary>
@@ -317,6 +349,7 @@ namespace Alchemi.Core
         /// <param name="appId"></param>
         /// <param name="status"></param>
         /// <returns>ThreadStorageView array with thread list</returns>
+        [OperationContract(Name = "Admon_GetThreadListByThreadState")]
         ThreadStorageView[] Admon_GetThreadList(SecurityCredentials sc, string appId, ThreadState status);
 
         /// <summary>
@@ -324,6 +357,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns>DataTabke with user information</returns>
+        [OperationContract]
         UserStorageView[] Admon_GetUserList(SecurityCredentials sc);
 
         /// <summary>
@@ -331,6 +365,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns>DataTable with group information</returns>
+        [OperationContract]
         GroupStorageView[] Admon_GetGroups(SecurityCredentials sc);
 
         /// <summary>
@@ -339,6 +374,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="groupId"></param>
         /// <returns>Group details</returns>
+        [OperationContract]
         GroupStorageView Admon_GetGroup(SecurityCredentials sc, int groupId);
 
         /// <summary>
@@ -346,6 +382,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="groupToDelete"></param>
+        [OperationContract]
         void Admon_DeleteGroup(SecurityCredentials sc, GroupStorageView groupToDelete);
 
         /// <summary>
@@ -354,6 +391,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
+        [OperationContract]
         UserStorageView[] Admon_GetGroupUsers(SecurityCredentials sc, int groupId);
 
         /// <summary>
@@ -361,6 +399,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="updates"></param>
+        [OperationContract]
         void Admon_UpdateUsers(SecurityCredentials sc, UserStorageView[] updates);
 
         /// <summary>
@@ -368,6 +407,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="users"></param>
+        [OperationContract]
         void Admon_AddUsers(SecurityCredentials sc, UserStorageView[] users);
 
         /// <summary>
@@ -375,6 +415,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="userToDelete"></param>
+        [OperationContract]
         void Admon_DeleteUser(SecurityCredentials sc, UserStorageView userToDelete);
 
         /// <summary>
@@ -382,6 +423,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns></returns>
+        [OperationContract]
         SystemSummary Admon_GetSystemSummary(SecurityCredentials sc);
 
         /// <summary>
@@ -389,6 +431,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns></returns>
+        [OperationContract]
         ExecutorStorageView[] Admon_GetExecutors(SecurityCredentials sc);
 
         /// <summary>
@@ -397,6 +440,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <returns></returns>
+        [OperationContract]
         ExecutorStorageView Admon_GetExecutor(SecurityCredentials sc, string executorId);
 
         /// <summary>
@@ -404,6 +448,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="threadToDelete"></param>
+        [OperationContract]
         void Admon_DeleteThread(SecurityCredentials sc, ThreadStorageView threadToDelete);
 
         /// <summary>
@@ -411,6 +456,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="applicationToDelete"></param>
+        [OperationContract]
         void Admon_DeleteApplication(SecurityCredentials sc, ApplicationStorageView applicationToDelete);
 
         /// <summary>
@@ -419,6 +465,7 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="group"></param>
         /// <returns></returns>
+        [OperationContract]
         PermissionStorageView[] Admon_GetGroupPermissions(SecurityCredentials sc, GroupStorageView group);
 
         /// <summary>
@@ -426,6 +473,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <returns></returns>
+        [OperationContract]
         PermissionStorageView[] Admon_GetPermissions(SecurityCredentials sc);
 
         /// <summary>
@@ -433,6 +481,7 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="sc"></param>
         /// <param name="maintenanceParameters"></param>
+        [OperationContract]
         void Admon_PerformStorageMaintenance(SecurityCredentials sc, StorageMaintenanceParameters maintenanceParameters);
         #endregion
     }

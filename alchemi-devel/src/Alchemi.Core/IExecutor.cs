@@ -25,17 +25,20 @@
 #endregion
 
 using Alchemi.Core.Owner;
+using System.ServiceModel;
 
 namespace Alchemi.Core
 {
 	/// <summary>
 	/// Defines the functions/services that should be provided by an executor implementation
 	/// </summary>
+    [ServiceContract]
     public interface IExecutor
     {
 		/// <summary>
 		/// Ping the executor to check if it is alive.
 		/// </summary>
+        [OperationContract]
         void PingExecutor();
 
         /// <summary>
@@ -43,6 +46,7 @@ namespace Alchemi.Core
         /// <br/>(Generally meant to be called by a Manager)
         /// </summary>
         /// <param name="ti">The thread identifier.</param>
+        [OperationContract]
         void Manager_ExecuteThread(ThreadIdentifier ti);
 
         /// <summary>
@@ -50,6 +54,7 @@ namespace Alchemi.Core
         /// <br/>(Generally meant to be called by a Manager)
         /// </summary>
         /// <param name="ti">The thread identifier.</param>
+        [OperationContract]
 		void Manager_AbortThread(ThreadIdentifier ti);
 
         /// <summary>
@@ -57,6 +62,7 @@ namespace Alchemi.Core
         /// <br/>(Generally meant to be called by a Manager)
         /// </summary>
         /// <param name="appid">The appid.</param>
+        [OperationContract]
 		void Manager_CleanupApplication(string appid);
     }
 }

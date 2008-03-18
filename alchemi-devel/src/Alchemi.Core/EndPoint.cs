@@ -58,7 +58,9 @@ namespace Alchemi.Core
             _Port = port;
             _RemotingMechanism = remotingMechanism;
         }
-
+        public EndPoint()
+        {
+        }
         #endregion
 
 

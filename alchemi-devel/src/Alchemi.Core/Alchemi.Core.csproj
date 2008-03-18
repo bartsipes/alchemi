@@ -128,6 +128,25 @@
     </Compile>
     <Compile Include="CrossPlatformHelper.cs" />
     <Compile Include="EndPointReference.cs" />
+    <Compile Include="EndPointUtils\AdvancedEndPointControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EndPointUtils\AdvancedEndPointControl.Designer.cs">
+      <DependentUpon>AdvancedEndPointControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EndPointUtils\AdvancedEndPointDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EndPointUtils\AdvancedEndPointDialog.Designer.cs">
+      <DependentUpon>AdvancedEndPointDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EndPointUtils\EndPointConfiguration.cs" />
+    <Compile Include="EndPointUtils\EndPointControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EndPointUtils\EndPointControl.Designer.cs">
+      <DependentUpon>EndPointControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions.cs">
       <SubType>Code</SubType>
     </Compile>

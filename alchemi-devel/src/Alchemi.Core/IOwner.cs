@@ -23,12 +23,15 @@
  */
 #endregion
 
+using System.ServiceModel;
+
 namespace Alchemi.Core
 {
 	/// <summary>
 	/// Defines the functions/services that should be provided by an "owner" node.
     /// (i.e the node which creates/starts an application).
 	/// </summary>
+    [ServiceContract]
 	public interface IOwner
 	{
 	}
