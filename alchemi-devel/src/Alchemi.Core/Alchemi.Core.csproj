@@ -110,6 +110,8 @@
     <Reference Include="System.Runtime.Remoting">
       <Name>System.Runtime.Remoting</Name>
     </Reference>
+    <Reference Include="System.Runtime.Serialization, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.ServiceModel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.ServiceProcess">
       <Name>System.ServiceProcess</Name>
     </Reference>
@@ -125,6 +127,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CrossPlatformHelper.cs" />
+    <Compile Include="EndPointReference.cs" />
     <Compile Include="Exceptions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -265,9 +268,12 @@
     <Compile Include="Utility\Utils.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utility\WCFUtils.cs" />
     <Compile Include="Utility\XmlStringWriter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WCFBinding.cs" />
+    <Compile Include="WCFBindingSettingType.cs" />
     <EmbeddedResource Include="GNode.resx">
       <DependentUpon>GNode.cs</DependentUpon>
       <SubType>Designer</SubType>

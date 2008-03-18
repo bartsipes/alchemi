@@ -255,4 +255,43 @@ namespace Alchemi.Core
             ExecutorId = "";
         }
     }
+
+    /// <summary>
+    /// Represents an exception used to indicate that the EndPoint instance has properties set that are not compatible.
+    /// </summary>
+    [Serializable]
+    public class InvalidEndPointException : Exception
+    {
+        /// <summary>
+        /// The end point instance.
+        /// </summary>
+        public EndPoint InvalidEndPointInstance;
+
+        /// <summary>
+        /// Creates an instance of the InvalidEndPointException class
+        /// </summary>
+        /// <param name="message">The message with more details.</param>
+        /// <param name="invalidEndPointInstance">An instance of the invalid EndPoint.</param>
+        public InvalidEndPointException(string message, EndPoint invalidEndPointInstance)
+            : base(message)
+        {
+            this.InvalidEndPointInstance = invalidEndPointInstance;
+        }
+    }
+
+    /// <summary>
+    /// Represents an exception used to indicate that there are more than one EndPointConfigurations with remoting mechanism set to remoting
+    /// </summary>
+    [Serializable]
+    public class DoubleRemotingEndPointException : Exception
+    {
+        /// <summary>
+        /// Creates an instance of the DoubleRemotingEndPointException class
+        /// </summary>
+        /// <param name="message">The message with more details.</param>
+        public DoubleRemotingEndPointException(string message)
+            : base(message)
+        {
+        }
+    }
 }
