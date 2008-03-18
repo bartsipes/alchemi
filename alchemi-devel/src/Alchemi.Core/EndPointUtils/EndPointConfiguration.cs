@@ -8,7 +8,7 @@ using Alchemi.Core.Utility;
 namespace Alchemi.Core.EndPointUtils
 {
     /// <summary>
-    /// Configuration class for managing EndPoint info in configuration files.
+    /// Configuration class for managing EndPoint element info in configuration files.
     /// </summary>
     public class EndPointConfiguration
     {
