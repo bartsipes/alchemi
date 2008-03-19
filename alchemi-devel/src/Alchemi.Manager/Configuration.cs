@@ -187,6 +187,22 @@ namespace Alchemi.Manager
             set { _OwnPort = value; }
         }
 
+        private Alchemi.Core.EndPointUtils.EndPointConfigurationCollection _EndPoints;
+        /// <summary>
+        /// Collection of end points on whitch the manager is published.
+        /// </summary>
+        public Alchemi.Core.EndPointUtils.EndPointConfigurationCollection EndPoints
+        {
+            get
+            {
+                if (_EndPoints == null)
+                    _EndPoints = new Alchemi.Core.EndPointUtils.EndPointConfigurationCollection();
+
+                return _EndPoints;
+            }
+            set { _EndPoints = value; }
+        }
+
 		/// <summary>
 		/// Specifies if the connection parameters have been verified. 
 		/// The parameters are verified if the Manager has been able to connect sucessfully using the current parameter values.
@@ -294,7 +310,7 @@ namespace Alchemi.Manager
             Configuration temp = (Configuration) xs.Deserialize(fs);
             fs.Close();
 
-			temp.ConfigFile = file;
+			temp.ConfigFile = file;            
 
             return temp;
         }

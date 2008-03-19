@@ -40,6 +40,7 @@ namespace Alchemi.Manager
     /// <summary>
     /// Represents an Alchemi Manager
     /// </summary>
+    [System.ServiceModel.ServiceBehavior(InstanceContextMode = System.ServiceModel.InstanceContextMode.PerCall)]
 	public class GManager : MarshalByRefObject, IManager
     {
 		// Create a logger for use in this class

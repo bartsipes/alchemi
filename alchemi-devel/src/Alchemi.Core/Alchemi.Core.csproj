@@ -141,6 +141,7 @@
       <DependentUpon>AdvancedEndPointDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="EndPointUtils\EndPointConfiguration.cs" />
+    <Compile Include="EndPointUtils\EndPointConfigurationCollection.cs" />
     <Compile Include="EndPointUtils\EndPointControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
