@@ -98,9 +98,11 @@ namespace Alchemi.Manager
 
             bool success = false;
             IExecutor executor;
+            EndPointReference epr = null;
             try
             {
-                executor = (IExecutor) GNode.GetRemoteRef(ep);
+                epr = GNode.GetRemoteRef(ep, typeof(IExecutor));
+                executor = (IExecutor)epr.Instance;
                 executor.PingExecutor(); //connect back to executor.
                 success = true;
 				logger.Debug("Connected dedicated. Executor_id="+_Id);
@@ -119,10 +121,20 @@ namespace Alchemi.Manager
                 //for thread-safety
                 lock (_DedicatedExecutors)
                 {
+                    //TODO: change this collection to a collection of EndPointReferences of the connections will not be properly disposed.
                     if (!_DedicatedExecutors.ContainsKey(_Id))
                     {
                         _DedicatedExecutors.Add(_Id, executor);
                         logger.Debug("Added to list of dedicated executors: executor_id=" + _Id);
+                    }
+                    else
+                    {
+                        //WCF ( doesnt remoting do that to ) closes the connection if executor connects and disconects. 
+                        //So we must remove the old and add the new record
+                        //Jure Subara
+                        _DedicatedExecutors.Remove(_Id);
+                        _DedicatedExecutors.Add(_Id, executor);
+                        logger.Debug("Refreshed the record in list od dedicated executors: executor_id=" + _Id);
                     }
                 }
 			}

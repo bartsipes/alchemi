@@ -51,6 +51,7 @@ namespace Alchemi.DevTools
             Console.WriteLine("Job Submitter v{0}", Utils.AssemblyVersion);
 
             IManager manager;
+            EndPointReference epr;
             SecurityCredentials sc;
 
             if (args.Length < 4)
@@ -61,7 +62,8 @@ namespace Alchemi.DevTools
             
             try
             {
-                manager = (IManager) GNode.GetRemoteRef(new EndPoint(args[0], int.Parse(args[1]), RemotingMechanism.TcpBinary));
+                epr = GNode.GetRemoteRef(new EndPoint(args[0], int.Parse(args[1]), RemotingMechanism.TcpBinary), typeof(IManager));
+                manager = (IManager)epr.Instance;
                 manager.PingManager();
                 sc = new SecurityCredentials(args[2], args[3]);
                 manager.AuthenticateUser(sc);
@@ -269,6 +271,13 @@ namespace Alchemi.DevTools
                 {
                     return;
                 }
+            }
+
+            //close the end point reference to manager
+            if (epr != null)
+            {
+                epr.Dispose();
+                epr = null;
             }
             
         }

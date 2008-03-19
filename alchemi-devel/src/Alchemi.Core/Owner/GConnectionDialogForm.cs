@@ -91,10 +91,12 @@ namespace Alchemi.Core.Owner
             config.Write();
 
             IManager mgr;
+            EndPointReference mgrEpr = null;
 
             try
             {
-                mgr = GNode.GetRemoteManagerRef(new EndPoint(connection.Host, connection.Port, RemotingMechanism.TcpBinary));
+                mgrEpr = GNode.GetRemoteManagerRef(new EndPoint(connection.Host, connection.Port, RemotingMechanism.TcpBinary));
+                mgr = (IManager)mgrEpr.Instance;
             }
             catch (RemotingException)
             {
@@ -110,6 +112,12 @@ namespace Alchemi.Core.Owner
             {
                 MessageBox.Show("Access denied.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+
+            if (mgrEpr != null)
+            {
+                mgrEpr.Dispose();
+                mgrEpr = null;
             }
 
             DialogResult = DialogResult.OK;

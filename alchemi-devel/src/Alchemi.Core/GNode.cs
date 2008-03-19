@@ -33,6 +33,7 @@ using System.Net.Sockets;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.ServiceModel;
 
 using Alchemi.Core.Owner;
 
@@ -47,10 +48,13 @@ namespace Alchemi.Core
         private static readonly Logger logger = new Logger();
 
         private const string DefaultRemoteObjectPrefix = "Alchemi_Node";
+        private const string DefaultWCFRemoteObjectPrefix = "";        
         private string _RemoteObjPrefix = DefaultRemoteObjectPrefix;
         private bool _ChannelRegistered = false;
         private TcpChannel _Channel = null;
         private bool _Initted = false;
+        private EndPointReference _ManagerEPRef = null;
+        private ServiceHost _ServiceHost = null;
         
 
         #region Constructors
@@ -216,10 +220,13 @@ namespace Alchemi.Core
         /// Gets the reference to the remote node
         /// </summary>
         /// <param name="remoteEP">end point of the remote node</param>
+        /// <param name="epType">WCF interface that the remote object implements.
+        /// Only needed for WCF RemotingMechanisms.
+        /// It can be null when RemotingMechanisem TcpBinary is used.</param>
         /// <returns>Node reference</returns>
-        public static GNode GetRemoteRef(EndPoint remoteEP)
+        public static EndPointReference GetRemoteRef(EndPoint remoteEP, Type epType)
         {
-            return GetRemoteRef(remoteEP, DefaultRemoteObjectPrefix);
+            return GetRemoteRef(remoteEP, epType, DefaultRemoteObjectPrefix);
         } 
         #endregion
 
@@ -229,18 +236,198 @@ namespace Alchemi.Core
         /// Gets the remote ref.
         /// </summary>
         /// <param name="remoteEP">The remote endpoint.</param>
+        /// <param name="epType">WCF interface that the remote object implements.
+        /// Only needed for WCF RemotingMechanisms.
+        /// It can be null when RemotingMechanisem TcpBinary is used.</param>
         /// <param name="remoteObjectPrefix">The remote object prefix.</param>
         /// <returns></returns>
-        public static GNode GetRemoteRef(EndPoint remoteEP, string remoteObjectPrefix)
+        public static EndPointReference GetRemoteRef(EndPoint remoteEP, Type epType, string remoteObjectPrefix)
         {
+            EndPointReference epr = null;
+
             switch (remoteEP.RemotingMechanism)
             {
                 case RemotingMechanism.TcpBinary:
-                    string uri = "tcp://" + remoteEP.Host + ":" + remoteEP.Port + "/" + remoteObjectPrefix;
-                    return (GNode)Activator.GetObject(typeof(GNode), uri);
+                    {
+                        #region TcpBinary
+                        epr = new EndPointReference();
+                        string uri = "tcp://" + remoteEP.Host + ":" + remoteEP.Port + "/" + remoteObjectPrefix;
+                        epr.Instance = Activator.GetObject(typeof(GNode), uri);
+                        break;
+                        #endregion
+                    }
+                case RemotingMechanism.WCFCustom:
+                    {
+                        #region WCFCustom
+                        System.ServiceModel.Channels.IChannelFactory<IExecutor> facExe = null;
+                        System.ServiceModel.Channels.IChannelFactory<IManager> facMan = null;
+                        System.ServiceModel.Channels.IChannelFactory<IOwner> facOwn = null;
+                        epr = new EndPointReference();
+                        switch (epType.Name)
+                        {
+                            case "IExecutor":
+                                {
+                                    facExe = new ChannelFactory<IExecutor>(remoteEP.ServiceConfigurationName);
+                                    epr._fac = facExe;
+                                    epr.Instance = facExe.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IManager":
+                                {
+                                    facMan = new ChannelFactory<IManager>(remoteEP.ServiceConfigurationName);
+                                    epr._fac = facMan;
+                                    epr.Instance = facMan.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IOwner":
+                                {
+                                    facOwn = new ChannelFactory<IOwner>(remoteEP.ServiceConfigurationName);
+                                    epr._fac = facOwn;
+                                    epr.Instance = facOwn.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new Exception("This type of WCF Service contract type is not supported");
+                                }
+                        }
+
+                        break;
+                        #endregion
+                    }
+                case RemotingMechanism.WCFTcp:
+                    {
+                        #region WCFTcp
+                        System.ServiceModel.Channels.IChannelFactory<IExecutor> facExe = null;
+                        System.ServiceModel.Channels.IChannelFactory<IManager> facMan = null;
+                        System.ServiceModel.Channels.IChannelFactory<IOwner> facOwn = null;
+                        remoteEP.Binding = WCFBinding.NetTcpBinding;
+                        epr = new EndPointReference();
+                        switch (epType.Name)
+                        {
+                            case "IExecutor":
+                                {
+                                    System.ServiceModel.NetTcpBinding tcpBin = (System.ServiceModel.NetTcpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facExe = new ChannelFactory<IExecutor>(tcpBin);
+                                    epr._fac = facExe;
+                                    epr.Instance = facExe.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IManager":
+                                {
+                                    System.ServiceModel.NetTcpBinding tcpBin = (System.ServiceModel.NetTcpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facMan = new ChannelFactory<IManager>(tcpBin);
+                                    epr._fac = facMan;
+                                    epr.Instance = facMan.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IOwner":
+                                {
+                                    System.ServiceModel.NetTcpBinding tcpBin = (System.ServiceModel.NetTcpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facOwn = new ChannelFactory<IOwner>(tcpBin);
+                                    epr._fac = facOwn;
+                                    epr.Instance = facOwn.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new Exception("This type of WCF Service contract type is not supported");
+                                }
+                        }
+
+                        break;
+                        #endregion
+                    }
+                case RemotingMechanism.WCFHttp:
+                    {
+                        #region WCFHttp
+                        System.ServiceModel.Channels.IChannelFactory<IExecutor> facExe = null;
+                        System.ServiceModel.Channels.IChannelFactory<IManager> facMan = null;
+                        System.ServiceModel.Channels.IChannelFactory<IOwner> facOwn = null;
+                        epr = new EndPointReference();
+                        remoteEP.Binding = WCFBinding.WSHttpBinding;
+                        switch (epType.Name)
+                        {
+                            case "IExecutor":
+                                {
+                                    System.ServiceModel.WSHttpBinding wsHttpBin = (System.ServiceModel.WSHttpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facExe = new ChannelFactory<IExecutor>(wsHttpBin);
+                                    epr._fac = facExe;
+                                    epr.Instance = facExe.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IManager":
+                                {
+                                    System.ServiceModel.WSHttpBinding wsHttpBin = (System.ServiceModel.WSHttpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facMan = new ChannelFactory<IManager>(wsHttpBin);
+                                    epr._fac = facMan;
+                                    epr.Instance = facMan.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IOwner":
+                                {
+                                    System.ServiceModel.WSHttpBinding wsHttpBin = (System.ServiceModel.WSHttpBinding)Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facOwn = new ChannelFactory<IOwner>(wsHttpBin);
+                                    epr._fac = facOwn;
+                                    epr.Instance = facOwn.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new Exception("This type of WCF Service contract type is not supported");
+                                }
+                        }
+
+                        break;
+                        #endregion
+                    }
+                case RemotingMechanism.WCF:
+                    {
+                        #region WCF
+                        System.ServiceModel.Channels.IChannelFactory<IExecutor> facExe = null;
+                        System.ServiceModel.Channels.IChannelFactory<IManager> facMan = null;
+                        System.ServiceModel.Channels.IChannelFactory<IOwner> facOwn = null;
+                        epr = new EndPointReference();
+                        switch (epType.Name)
+                        {
+                            case "IExecutor":
+                                {
+                                    System.ServiceModel.Channels.Binding binding = Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facExe = new ChannelFactory<IExecutor>(binding);
+                                    epr._fac = facExe;
+                                    epr.Instance = facExe.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IManager":
+                                {
+                                    System.ServiceModel.Channels.Binding binding = Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facMan = new ChannelFactory<IManager>(binding);
+                                    epr._fac = facMan;
+                                    epr.Instance = facMan.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            case "IOwner":
+                                {
+                                    System.ServiceModel.Channels.Binding binding = Utility.WCFUtils.GetWCFBinding(remoteEP);
+                                    facOwn = new ChannelFactory<IOwner>(binding);
+                                    epr._fac = facOwn;
+                                    epr.Instance = facOwn.CreateChannel(new EndpointAddress(remoteEP.FullAddress));
+                                    break;
+                                }
+                            default:
+                                {
+                                    throw new Exception("This type of WCF Service contract type is not supported");
+                                }
+                        }
+
+                        break;
+                        #endregion
+                    }
                 default:
                     return null;
             }
+
+            return epr;
         } 
         #endregion
 
@@ -251,21 +438,21 @@ namespace Alchemi.Core
         /// </summary>
         /// <param name="remoteEP">end point of the remote manager</param>
         /// <returns>Manager reference</returns>
-        public static IManager GetRemoteManagerRef(EndPoint remoteEP)
+        public static EndPointReference GetRemoteManagerRef(EndPoint remoteEP)
         {
-            IManager manager;
+            EndPointReference epr;
 
             try
             {
-                manager = (IManager)GetRemoteRef(remoteEP);
-                manager.PingManager();
+                epr = GetRemoteRef(remoteEP, typeof(IManager));
+                ((IManager)epr.Instance).PingManager();
             }
             catch (Exception e)
             {
                 throw new RemotingException("Could not connect to Manager.", e);
             }
 
-            return manager;
+            return epr;
         } 
         #endregion
 
@@ -295,7 +482,8 @@ namespace Alchemi.Core
         {
             if (_ManagerEP != null)
             {
-                _Manager = GetRemoteManagerRef(_ManagerEP);
+                _ManagerEPRef = GetRemoteManagerRef(_ManagerEP);
+                _Manager = (IManager)_ManagerEPRef.Instance;
             }
         }
         #endregion
@@ -316,59 +504,182 @@ namespace Alchemi.Core
                 switch (_OwnEP.RemotingMechanism)
                 {
                     case (RemotingMechanism.TcpBinary):
-                        if (!_ChannelRegistered)
                         {
-                            try
+                            #region .NET Remoting Publish
+                            if (!_ChannelRegistered)
                             {
-                                _Channel = new TcpChannel(_OwnEP.Port);
-                                //Hashtable properties = new Hashtable();
-
-                                //// the name must be Empty in order to allow multiple TCP channels
-                                //properties.Add("name", String.Empty);
-                                //properties.Add("port", _OwnEP.Port);
-
-                                //_Channel = new TcpChannel(
-                                //    properties, 
-                                //    new BinaryClientFormatterSinkProvider(), 
-                                //    new BinaryServerFormatterSinkProvider());
-
-                                ChannelServices.RegisterChannel(_Channel, false);
-                                _ChannelRegistered = true;
-                            }
-                            catch (Exception e)
-                            {
-                                if (
-                                    object.ReferenceEquals(e.GetType(), typeof(System.Runtime.Remoting.RemotingException)) /* assuming: "The channel tcp is already registered." */
-                                    |
-                                    object.ReferenceEquals(e.GetType(), typeof(SocketException)) /* assuming: "Only one usage of each socket address (protocol/network address/port) is normally permitted" */
-                                    )
+                                try
                                 {
+                                    _Channel = new TcpChannel(_OwnEP.Port);
+                                    //Hashtable properties = new Hashtable();
+
+                                    //// the name must be Empty in order to allow multiple TCP channels
+                                    //properties.Add("name", String.Empty);
+                                    //properties.Add("port", _OwnEP.Port);
+
+                                    //_Channel = new TcpChannel(
+                                    //    properties, 
+                                    //    new BinaryClientFormatterSinkProvider(), 
+                                    //    new BinaryServerFormatterSinkProvider());
+
+                                    ChannelServices.RegisterChannel(_Channel, false);
                                     _ChannelRegistered = true;
                                 }
-                                else
+                                catch (Exception e)
                                 {
-                                    UnRemoteSelf();
-                                    throw new RemotingException("Could not register channel while trying to remote self: " + e.Message, e);
+                                    if (
+                                        object.ReferenceEquals(e.GetType(), typeof(System.Runtime.Remoting.RemotingException)) /* assuming: "The channel tcp is already registered." */
+                                        |
+                                        object.ReferenceEquals(e.GetType(), typeof(SocketException)) /* assuming: "Only one usage of each socket address (protocol/network address/port) is normally permitted" */
+                                        )
+                                    {
+                                        _ChannelRegistered = true;
+                                    }
+                                    else
+                                    {
+                                        UnRemoteSelf();
+                                        throw new RemotingException("Could not register channel while trying to remote self: " + e.Message, e);
+                                    }
                                 }
                             }
-                        }
 
-                        if (_ChannelRegistered)
+                            if (_ChannelRegistered)
+                            {
+                                try
+                                {
+                                    logger.Info("Trying to publish a GNode at : " + _RemoteObjPrefix);
+                                    RemotingServices.Marshal(this, _RemoteObjPrefix);
+                                    logger.Info("GetObjectURI from remoting services : " + RemotingServices.GetObjectUri(this));
+                                    logger.Info("Server object type: " + RemotingServices.GetServerTypeForUri(RemotingServices.GetObjectUri(this)).FullName);
+                                }
+                                catch (Exception e)
+                                {
+                                    UnRemoteSelf();
+                                    throw new RemotingException("Could not remote self.", e);
+                                }
+                            }
+                            break;
+                            #endregion
+                        }
+                    case RemotingMechanism.WCFCustom:
                         {
+                            #region Custom WCF Publish
                             try
                             {
-                                logger.Info("Trying to publish a GNode at : " + _RemoteObjPrefix);
-                                RemotingServices.Marshal(this, _RemoteObjPrefix);
-                                logger.Info("GetObjectURI from remoting services : " + RemotingServices.GetObjectUri(this));
-                                logger.Info("Server object type: " + RemotingServices.GetServerTypeForUri(RemotingServices.GetObjectUri(this)).FullName);
+                                _ServiceHost = new ServiceHost(this, new Uri(_OwnEP.FullAddress));
+                                _ServiceHost.Open();
                             }
                             catch (Exception e)
                             {
                                 UnRemoteSelf();
-                                throw new RemotingException("Could not remote self.", e);
+                                throw e;
+                                //throw new Exception("Could not remote self.", e);
                             }
+
+                            break;
+                            #endregion
                         }
-                        break;
+                    case RemotingMechanism.WCFTcp:
+                        {
+                            #region Tcp WCF Publish
+                            try
+                            {
+                                //create a new binding
+                                _OwnEP.Binding = WCFBinding.NetTcpBinding;
+                                System.ServiceModel.NetTcpBinding tcpBin = (System.ServiceModel.NetTcpBinding)Utility.WCFUtils.GetWCFBinding(_OwnEP);
+
+                                Type contractType = null;
+
+                                if (this is Alchemi.Core.IExecutor)
+                                    contractType = typeof(Alchemi.Core.IExecutor);
+                                else if (this is Alchemi.Core.IManager)
+                                    contractType = typeof(Alchemi.Core.IManager);
+                                else if (this is Alchemi.Core.IOwner)
+                                    contractType = typeof(Alchemi.Core.IOwner);
+
+                                _ServiceHost = new ServiceHost(this, new Uri(_OwnEP.FullPublishingAddress));
+                                Utility.WCFUtils.SetPublishingServiceHost(_ServiceHost);
+                                _ServiceHost.AddServiceEndpoint(contractType, tcpBin, _OwnEP.FullPublishingAddress);
+
+                                _ServiceHost.Open();
+                            }
+                            catch (Exception e)
+                            {
+                                UnRemoteSelf();
+                                throw e;
+                                //throw new Exception("Could not remote self.", e);
+                            }
+
+                            break;
+                            #endregion
+                        }
+                    case RemotingMechanism.WCFHttp:
+                        {
+                            #region Http WCF Publish
+                            try
+                            {
+                                //create a new binding
+                                _OwnEP.Binding = WCFBinding.WSHttpBinding;
+                                System.ServiceModel.WSHttpBinding wsHttpBin = (System.ServiceModel.WSHttpBinding)Utility.WCFUtils.GetWCFBinding(_OwnEP);
+
+                                Type contractType = null;
+
+                                if (this is Alchemi.Core.IExecutor)
+                                    contractType = typeof(Alchemi.Core.IExecutor);
+                                else if (this is Alchemi.Core.IManager)
+                                    contractType = typeof(Alchemi.Core.IManager);
+                                else if (this is Alchemi.Core.IOwner)
+                                    contractType = typeof(Alchemi.Core.IOwner);
+
+                                _ServiceHost = new ServiceHost(this, new Uri(_OwnEP.FullPublishingAddress));
+                                Utility.WCFUtils.SetPublishingServiceHost(_ServiceHost);
+                                _ServiceHost.AddServiceEndpoint(contractType, wsHttpBin, _OwnEP.FullPublishingAddress);
+
+                                _ServiceHost.Open();
+                            }
+                            catch (Exception e)
+                            {
+                                UnRemoteSelf();
+                                throw e;
+                                //throw new Exception("Could not remote self.", e);
+                            }
+
+                            break;
+                            #endregion
+                        }
+                    case RemotingMechanism.WCF:
+                        {
+                            #region WCF Publish
+                            try
+                            {
+                                //create a new binding
+                                System.ServiceModel.Channels.Binding binding = Utility.WCFUtils.GetWCFBinding(_OwnEP);
+
+                                Type contractType = null;
+
+                                if (this is Alchemi.Core.IExecutor)
+                                    contractType = typeof(Alchemi.Core.IExecutor);
+                                else if (this is Alchemi.Core.IManager)
+                                    contractType = typeof(Alchemi.Core.IManager);
+                                else if (this is Alchemi.Core.IOwner)
+                                    contractType = typeof(Alchemi.Core.IOwner);
+
+                                _ServiceHost = new ServiceHost(this, new Uri(_OwnEP.FullPublishingAddress));
+                                Utility.WCFUtils.SetPublishingServiceHost(_ServiceHost);
+                                _ServiceHost.AddServiceEndpoint(contractType, binding, _OwnEP.FullPublishingAddress);
+
+                                _ServiceHost.Open();
+                            }
+                            catch (Exception e)
+                            {
+                                UnRemoteSelf();
+                                throw e;
+                                //throw new Exception("Could not remote self.", e);
+                            }
+
+                            break;
+                            #endregion
+                        }
                 }
             }
         } 
@@ -386,13 +697,30 @@ namespace Alchemi.Core
                 switch (_OwnEP.RemotingMechanism)
                 {
                     case RemotingMechanism.TcpBinary:
-                        try
                         {
-                            ChannelServices.UnregisterChannel(_Channel);
+                            try
+                            {
+                                ChannelServices.UnregisterChannel(_Channel);
+                            }
+                            catch { }
+                            RemotingServices.Disconnect(this);
+                            break;
                         }
-                        catch { }
-                        RemotingServices.Disconnect(this);
-                        break;
+                    case RemotingMechanism.WCFCustom:
+                    case RemotingMechanism.WCFTcp:
+                    case RemotingMechanism.WCFHttp:
+                    case RemotingMechanism.WCF:
+                        {
+                            try
+                            {
+                                if (_ServiceHost.State == CommunicationState.Opened)
+                                    _ServiceHost.Close();
+                                else
+                                    _ServiceHost.Abort();
+                            }
+                            catch { }
+                            break;
+                        }
                 }
                 logger.Debug("Unremoting self...done");
             }
