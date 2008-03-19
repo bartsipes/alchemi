@@ -102,7 +102,7 @@ namespace Alchemi.Core
 
 
         #region Property - RemotingMechanism
-        private RemotingMechanism _RemotingMechanism;
+        private RemotingMechanism _RemotingMechanism = RemotingMechanism.TcpBinary;
         /// <summary>
         /// Gets or sets the remoting mechanism used to connect to this node
         /// </summary>

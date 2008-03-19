@@ -116,6 +116,36 @@ namespace Alchemi.Core
         #endregion
 
 
+        #region Overriden Methods - Dispose
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                if (_ManagerEPRef != null)
+                {
+                    _ManagerEPRef.Dispose();
+                    _ManagerEPRef = null;
+                }
+                if (_ServiceHost != null)
+                {
+                    if (_ServiceHost.State == CommunicationState.Opened || _ServiceHost.State == CommunicationState.Opening)
+                        _ServiceHost.Close();
+                    if (_ServiceHost.State == CommunicationState.Faulted)
+                        _ServiceHost.Abort();
+                }
+            }
+        }
+        #endregion
+
 
         #region Property - Manager
         private IManager _Manager = null;

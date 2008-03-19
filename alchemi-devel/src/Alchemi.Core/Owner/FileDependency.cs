@@ -25,6 +25,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 
 using Alchemi.Core.Utility;
 
@@ -35,6 +36,9 @@ namespace Alchemi.Core.Owner
 	/// "File" Dependencies. A file dependency represents a single file on which the grid application depends for input.
 	/// </summary>
     [Serializable]
+    [DataContract]
+    [KnownType(typeof(Alchemi.Core.Owner.ModuleDependency))]
+    [KnownType(typeof(Alchemi.Core.Owner.EmbeddedFileDependency))]
     public abstract class FileDependency
     {
 

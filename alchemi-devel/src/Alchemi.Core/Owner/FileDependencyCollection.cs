@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.Serialization;
 
 using Alchemi.Core.Owner;
 
@@ -34,6 +35,11 @@ namespace Alchemi.Core.Owner
 	/// Represents a collection of FileDependencies
 	/// </summary>
     [Serializable]
+    [DataContract]
+    [System.ServiceModel.XmlSerializerFormat(Style = System.ServiceModel.OperationFormatStyle.Document, Use = System.ServiceModel.OperationFormatUse.Encoded)]
+    [KnownType(typeof(Alchemi.Core.Owner.ModuleDependency))]
+    [KnownType(typeof(Alchemi.Core.Owner.EmbeddedFileDependency))]
+    [KnownType(typeof(Alchemi.Core.Owner.FileDependency))]
     public class FileDependencyCollection : ReadOnlyCollectionBase
     {
 		/// <summary>

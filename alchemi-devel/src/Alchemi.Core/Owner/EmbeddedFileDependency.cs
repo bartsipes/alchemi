@@ -27,6 +27,7 @@ using System;
 using System.Reflection;
 using System.IO;
 using System.Collections;
+using System.Runtime.Serialization;
 
 using Alchemi.Core.Owner;
 using Alchemi.Core.Utility;
@@ -39,6 +40,8 @@ namespace Alchemi.Core.Owner
 	/// and provides concrete implementation of the methods to pack and unpack files using base64 encoding.
 	/// </summary>
     [Serializable]
+    [DataContract]
+    [KnownType(typeof(Alchemi.Core.Owner.ModuleDependency))]
     public class EmbeddedFileDependency : FileDependency
     {
 

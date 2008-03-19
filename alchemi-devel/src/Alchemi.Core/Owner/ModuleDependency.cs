@@ -26,6 +26,7 @@
 using System;
 using System.Reflection;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace Alchemi.Core.Owner
 {
@@ -33,6 +34,7 @@ namespace Alchemi.Core.Owner
 	/// Represents a dependency which is a .NET module
 	/// </summary>
     [Serializable]
+    [DataContract]
     public class ModuleDependency : EmbeddedFileDependency
     {
         /// <summary>

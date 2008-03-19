@@ -63,8 +63,8 @@ namespace Alchemi.Core.Owner
         /// <param name="password">The password.</param>
         public GConnection(string host, int port, string username, string password)
         {
-            _Host = host;
-            _Port = port;
+            RemoteEP.Host = host;
+            RemoteEP.Port = port;
             _Username = username;
             _Password = password;
         } 
@@ -73,27 +73,27 @@ namespace Alchemi.Core.Owner
 
 
         #region Property - Host
-        private string _Host = "localhost";
+        //private string _Host = "localhost"; //now in EndPoint property. Jure Subara
         /// <summary>
         /// Gets or sets the host name of the Alchemi manager
         /// </summary>
         public string Host
         {
-            get { return _Host; }
-            set { _Host = value; }
+            get { return RemoteEP.Host; }
+            set { RemoteEP.Host = value; }
         } 
         #endregion
 
 
         #region Property - Port
-        private int _Port = 9000;
+        //private int _Port = 9000; //now in EndPoint property. Jure Subara
         /// <summary>
         /// Gets or sets the port number of the Alchemi manager
         /// </summary>
         public int Port
         {
-            get { return _Port; }
-            set { _Port = value; }
+            get { return RemoteEP.Port; }
+            set { RemoteEP.Port = value; }
         } 
         #endregion
 
@@ -125,6 +125,7 @@ namespace Alchemi.Core.Owner
 
 
         #region Property - RemoteEP
+        private EndPoint _RemoteEP = null;
         /// <summary>
         /// Gets the EndPoint object associated with this GConnection.
         /// </summary>
@@ -132,7 +133,16 @@ namespace Alchemi.Core.Owner
         {
             get
             {
-                return new EndPoint(_Host, _Port, RemotingMechanism.TcpBinary);
+                //return new EndPoint(_Host, _Port, RemotingMechanism.TcpBinary); //needed to remove this if other remoting mechanism needs to be used
+                if (_RemoteEP == null)
+                    _RemoteEP = new EndPoint();
+
+                return _RemoteEP;
+            }
+
+            set
+            {
+                _RemoteEP = value;
             }
         } 
         #endregion
