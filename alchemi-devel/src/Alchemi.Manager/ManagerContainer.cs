@@ -30,12 +30,14 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
+using System.ServiceModel;
 using ThreadState = Alchemi.Core.Owner.ThreadState;
 
 using Alchemi.Core;
 using Alchemi.Core.Manager.Storage;
 using Alchemi.Manager.Storage;
 using Alchemi.Core.Utility;
+using Alchemi.Core.EndPointUtils;
 
 namespace Alchemi.Manager
 {
@@ -89,6 +91,8 @@ namespace Alchemi.Manager
 
 		private IChannel _Chnl;
 
+        private ServiceHost _sh;
+
 		private Thread _InitExecutorsThread;
 
         private WatchDog watchdog = null;
@@ -100,8 +104,9 @@ namespace Alchemi.Manager
 		/// This event is raised in response to the call to StartApplication, to notify the completion of the "StartApplication" call.
 		/// </summary>
 		public static event ManagerStartedEventHandler ManagerStartEvent;
-    
-		/// <summary>
+
+        #region Constructor
+        /// <summary>
 		/// Creates an instance of the ManagerContainer.
 		/// </summary>
 		public ManagerContainer()
@@ -109,12 +114,25 @@ namespace Alchemi.Manager
 			Started = false;
             dispatcher = new Dispatcher();
             watchdog = new WatchDog();
-		}
+        }
+        #endregion
 
-		/// <summary>
+        #region Method - Start
+        /// <summary>
+        /// Starts the Manager
+        /// </summary>
+        public void Start()
+        {
+            StartOld();
+            //StartNew();
+        }
+        #endregion
+
+        #region Method - StartOld
+        /// <summary>
 		/// Starts the Manager
 		/// </summary>
-        public void Start()
+        public void StartOld()
         {
             try
             {
@@ -240,8 +258,216 @@ namespace Alchemi.Manager
                 _Starting = false;
             }
         }
+        #endregion
 
-		/// <summary>
+        #region Method - StartNew
+        /// <summary>
+        /// Starts the Manager
+        /// </summary>
+        public void StartNew()
+        {
+
+            if (Started || _Starting)
+                return;
+
+            try
+            {
+
+                _Starting = true;
+
+                if (Config == null)
+                {
+                    ReadConfig();
+                }
+
+                //See if there is any remoting end poit. 
+                //There can be only one remoting end point.
+                //See if there are any WCF end point. Thre can be more WCF end points.
+                EndPointConfiguration remotingEpc = null;
+                bool areAnyWcfEps = false;
+
+                foreach (string key in Config.EndPoints.Keys)
+                {
+                    EndPointConfiguration epc = Config.EndPoints[key];
+                    if (epc.RemotingMechanism == RemotingMechanism.TcpBinary)
+                    {
+                        if (remotingEpc != null)
+                            throw new DoubleRemotingEndPointException("Cannot set two EndPoint where Rempting Mechanism is set to TcpBinary");
+
+                        remotingEpc = epc;
+                    }
+                    else
+                    {
+                        areAnyWcfEps = true;
+                    }
+                }
+
+                if (remotingEpc != null)
+                    StartTcpBinary(remotingEpc);
+
+                if (areAnyWcfEps)
+                    StartWCF();
+
+
+                logger.Debug("Configuring storage...");
+                ManagerStorageFactory.CreateManagerStorage(Config);
+                if (!ManagerStorageFactory.ManagerStorage().VerifyConnection())
+                {
+                    throw new Exception("Error connecting to manager storage. Please check manager log file for details.");
+                }
+
+                logger.Debug("Configuring internal shared class...");
+                InternalShared common = InternalShared.GetInstance(Config);
+
+                logger.Debug("Starting dispatcher thread");
+                dispatcher.Start();
+
+                logger.Info("Starting watchdog thread");
+                watchdog.Start();
+
+                //start a seperate thread to init-known executors, since this may take a while.
+                _InitExecutorsThread = new Thread(new ThreadStart(InitExecutors));
+                _InitExecutorsThread.Name = "InitExecutorsThread";
+                _InitExecutorsThread.Start();
+
+                Config.Serialize();
+
+                Started = true;
+
+                try
+                {
+                    if (ManagerStartEvent != null)
+                        ManagerStartEvent(this, new EventArgs());
+                }
+                catch { }
+
+            }
+            catch (Exception ex)
+            {
+                Stop();
+                logger.Error("Error Starting Manager Container", ex);
+                throw ex;
+            }
+            finally
+            {
+                _Starting = false;
+            }
+
+        }
+        #endregion
+
+        #region Method - StartTcpBinary
+        public void StartTcpBinary(EndPointConfiguration epc)
+        {
+
+            EndPoint ownEP = new EndPoint(epc.Port, RemotingMechanism.TcpBinary);
+
+            logger.Debug("Configuring remoting...");
+
+            RemotingConfiguration.Configure(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RemotingConfigFile), false);
+
+            //TODO: for hierarchical grids
+            //				RemoteEndPoint managerEP = null;
+            //				if (Config.Intermediate)
+            //				{
+            //					managerEP = new RemoteEndPoint(
+            //						Config.ManagerHost, 
+            //						Config.ManagerPort, 
+            //						RemotingMechanism.TcpBinary
+            //						);
+            //				}
+
+            logger.Debug("Registering tcp channel on port: " + ownEP.Port);
+
+            _Chnl = new TcpChannel(epc.Port);
+            ChannelServices.RegisterChannel(_Chnl, false);
+
+            //since this is a single call thing, thread safety isnt an issue
+
+            logger.Debug("Registering well known service type");
+
+            RemotingConfiguration.RegisterWellKnownServiceType(
+                typeof(GManager), "Alchemi_Node",
+                WellKnownObjectMode.SingleCall);
+
+            // TODO: hierarchical grids ignored until after v1.0.0
+            /*
+            _Dedicated = dedicated;
+            _Id = id;
+
+            if (Manager != null)
+            {
+                if (_Id == "")
+                {
+                    Log("Registering new executor ...");
+                    _Id = Manager.Executor_RegisterNewExecutor(null, new ExecutorInfo);
+                    Log("New ExecutorID = " + _Id);
+                }
+
+                try
+                {
+                    try
+                    {
+                        ConnectToManager();
+                    }
+                    catch (InvalidExecutorException)
+                    {
+                        Log("Invalid executor! Registering new executor ...");
+                        _Id = Manager.Executor_RegisterNewExecutor(null, new ExecutorInfo);
+                        Log("New ExecutorID = " + _Id);
+                        ConnectToManager();
+                    }
+                }
+                catch (ConnectBackException)
+                {
+                    Log("Couldn't connect as dedicated executor. Reverting to non-dedicated executor.");
+                    _Dedicated = false;
+                    ConnectToManager();
+                }
+            }
+            */
+
+        }
+        #endregion
+
+        #region Method - StartWCF
+        public void StartWCF()
+        {
+            logger.Debug("Configuring WCF...");
+
+            logger.Debug("Registering WCF as written in config file.");
+
+            _sh = new ServiceHost(typeof(GManager), new Uri[] { });
+            Alchemi.Core.Utility.WCFUtils.SetPublishingServiceHost(_sh);
+
+            foreach (string key in Config.EndPoints.Keys)
+            {
+                EndPointConfiguration epc = Config.EndPoints[key];
+                if (epc.RemotingMechanism != RemotingMechanism.TcpBinary)
+                {
+                    EndPoint ep = epc.GetEndPoint();
+                    logger.Debug(String.Format("Registering WCF end point {0}...", ep.ToString()));
+                    try
+                    {
+
+                        _sh.AddServiceEndpoint(typeof(IManager), Alchemi.Core.Utility.WCFUtils.GetWCFBinding(ep), ep.FullPublishingAddress);
+                        logger.Debug("Success.");
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Debug(String.Format("Failed Registering WCF end point {0} with exception {1}", ep.ToString(), ex.ToString()));
+                    }
+                }
+            }
+
+            _sh.Open();
+
+        }
+        #endregion
+
+        #region Method - ReadConfig
+        /// <summary>
 		/// Reads the Manager configuration from the Alchemi.Manager.config.xml file, 
 		/// <br /> or gets the default configuration, if there is an error reading the file.
 		/// </summary>
@@ -255,9 +481,11 @@ namespace Alchemi.Manager
 			{
                 Config = new Configuration();
 			}
-		}
+        }
+        #endregion
 
-		private void InitExecutors()
+        #region Methods - InitExecutors
+        private void InitExecutors()
 		{
 			try
 			{
@@ -269,13 +497,15 @@ namespace Alchemi.Manager
 			{
 				logger.Debug("Exception in InitExecutors: ", ex);
 			}
-		}
+        }
+        #endregion
 
         //----------------------------------------------------------------------------------------------- 
         // public methods
         //----------------------------------------------------------------------------------------------- 
 
-		/// <summary>
+        #region Method - Stop
+        /// <summary>
 		/// Stop the scheduler and watchdog threads, and shut down the manager.
 		/// </summary>
         public void Stop()
@@ -315,8 +545,10 @@ namespace Alchemi.Manager
                 _Stopping = false;
             }
         }
+        #endregion
 
-		private void Cleanup()
+        #region Method - Cleanup
+        private void Cleanup()
 		{
 			try
 			{
@@ -326,7 +558,8 @@ namespace Alchemi.Manager
 			{
 				logger.Debug("Clean up error : ",e);
 			}
-		}
+        }
+        #endregion
 
     }
 }

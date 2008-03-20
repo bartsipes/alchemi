@@ -59,7 +59,7 @@ namespace Alchemi.ManagerExec
 		private void InitializeComponent()
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( ManagerMainForm ) );
-            this.uiTabControl.SuspendLayout();
+            this.tabControl.SuspendLayout();
             this.uiNodeConfigurationGroupBox.SuspendLayout();
             this.uiAdvancedTabPage.SuspendLayout();
             this.uiStorageConfigurationGroupBox.SuspendLayout();
@@ -81,7 +81,7 @@ namespace Alchemi.ManagerExec
             this.ClientSize = new System.Drawing.Size( 458, 499 );
             this.Name = "ManagerMainForm";
             this.Load += new System.EventHandler( this.ManagerMainForm_Load );
-            this.uiTabControl.ResumeLayout( false );
+            this.tabControl.ResumeLayout( false );
             this.uiNodeConfigurationGroupBox.ResumeLayout( false );
             this.uiNodeConfigurationGroupBox.PerformLayout();
             this.uiAdvancedTabPage.ResumeLayout( false );

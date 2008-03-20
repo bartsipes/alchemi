@@ -38,6 +38,7 @@ using log4net;
 using Alchemi.Manager.Storage;
 using System.Collections;
 using Alchemi.Core.Utility;
+using Alchemi.Core.EndPointUtils;
 
 public class ManagerTemplateForm : Form
 {
@@ -65,7 +66,7 @@ public class ManagerTemplateForm : Form
     protected MenuItem uiManagerMenuItem;
     protected MenuItem uiHelpMenuItem;
 
-    protected TabControl uiTabControl;
+    protected TabControl tabControl;
     protected Label uiManagerHostLabel;
     protected Label uiOwnPortLabel;
     protected GroupBox uiNodeConfigurationGroupBox;
@@ -103,6 +104,8 @@ public class ManagerTemplateForm : Form
     protected GroupBox uiDatabaseFileGroupBox;
     private Button uiDatabaseFileButton;
     private TextBox uiDatabaseFileTextBox;
+    private TabPage tabEndPoints;
+    private EndPointManagerControl ucEndPoints;
     protected static readonly Logger logger = new Logger();
 
     public ManagerTemplateForm()
@@ -159,11 +162,14 @@ public class ManagerTemplateForm : Form
         this.uiHelpAboutMenuItem = new System.Windows.Forms.MenuItem();
         this.uiActionsGroupBox = new System.Windows.Forms.GroupBox();
         this.uiStatusBar = new System.Windows.Forms.StatusBar();
-        this.uiTabControl = new System.Windows.Forms.TabControl();
+        this.tabControl = new System.Windows.Forms.TabControl();
         this.uiSetupConnectionTabPage = new System.Windows.Forms.TabPage();
         this.uiAdvancedTabPage = new System.Windows.Forms.TabPage();
         this.uiSchedulerComboBox = new System.Windows.Forms.ComboBox();
         this.uiStorageConfigurationGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiDatabaseFileGroupBox = new System.Windows.Forms.GroupBox();
+        this.uiDatabaseFileButton = new System.Windows.Forms.Button();
+        this.uiDatabaseFileTextBox = new System.Windows.Forms.TextBox();
         this.uiDatabaseTypeLabel = new System.Windows.Forms.Label();
         this.uiDatabaseTypeComboBox = new System.Windows.Forms.ComboBox();
         this.uiDatabaseServerGroupBox = new System.Windows.Forms.GroupBox();
@@ -176,22 +182,22 @@ public class ManagerTemplateForm : Form
         this.uiDatabaseNameLabel = new System.Windows.Forms.Label();
         this.uiDatabaseUserTextBox = new System.Windows.Forms.TextBox();
         this.uiSchedulerLabel = new System.Windows.Forms.Label();
+        this.tabEndPoints = new System.Windows.Forms.TabPage();
+        this.ucEndPoints = new Alchemi.Core.EndPointUtils.EndPointManagerControl();
         this.uiProgressBar = new System.Windows.Forms.ProgressBar();
         this.uiLogMessagesTextBox = new System.Windows.Forms.TextBox();
         this.uiLogMessagesLabel = new System.Windows.Forms.Label();
         this.uiViewFullLogLinkLabel = new System.Windows.Forms.LinkLabel();
         this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-        this.uiDatabaseFileGroupBox = new System.Windows.Forms.GroupBox();
-        this.uiDatabaseFileButton = new System.Windows.Forms.Button();
-        this.uiDatabaseFileTextBox = new System.Windows.Forms.TextBox();
         this.uiNodeConfigurationGroupBox.SuspendLayout();
         this.uiActionsGroupBox.SuspendLayout();
-        this.uiTabControl.SuspendLayout();
+        this.tabControl.SuspendLayout();
         this.uiSetupConnectionTabPage.SuspendLayout();
         this.uiAdvancedTabPage.SuspendLayout();
         this.uiStorageConfigurationGroupBox.SuspendLayout();
-        this.uiDatabaseServerGroupBox.SuspendLayout();
         this.uiDatabaseFileGroupBox.SuspendLayout();
+        this.uiDatabaseServerGroupBox.SuspendLayout();
+        this.tabEndPoints.SuspendLayout();
         this.SuspendLayout();
         // 
         // uiManagerHostLabel
@@ -405,15 +411,16 @@ public class ManagerTemplateForm : Form
         this.uiStatusBar.Size = new System.Drawing.Size(461, 22);
         this.uiStatusBar.TabIndex = 10;
         // 
-        // uiTabControl
+        // tabControl
         // 
-        this.uiTabControl.Controls.Add(this.uiSetupConnectionTabPage);
-        this.uiTabControl.Controls.Add(this.uiAdvancedTabPage);
-        this.uiTabControl.Location = new System.Drawing.Point(10, 10);
-        this.uiTabControl.Name = "uiTabControl";
-        this.uiTabControl.SelectedIndex = 0;
-        this.uiTabControl.Size = new System.Drawing.Size(440, 289);
-        this.uiTabControl.TabIndex = 12;
+        this.tabControl.Controls.Add(this.uiSetupConnectionTabPage);
+        this.tabControl.Controls.Add(this.uiAdvancedTabPage);
+        this.tabControl.Controls.Add(this.tabEndPoints);
+        this.tabControl.Location = new System.Drawing.Point(10, 10);
+        this.tabControl.Name = "tabControl";
+        this.tabControl.SelectedIndex = 0;
+        this.tabControl.Size = new System.Drawing.Size(440, 289);
+        this.tabControl.TabIndex = 12;
         // 
         // uiSetupConnectionTabPage
         // 
@@ -461,6 +468,35 @@ public class ManagerTemplateForm : Form
         this.uiStorageConfigurationGroupBox.TabIndex = 33;
         this.uiStorageConfigurationGroupBox.TabStop = false;
         this.uiStorageConfigurationGroupBox.Text = "Storage Configuration";
+        // 
+        // uiDatabaseFileGroupBox
+        // 
+        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileButton);
+        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileTextBox);
+        this.uiDatabaseFileGroupBox.Location = new System.Drawing.Point(9, 40);
+        this.uiDatabaseFileGroupBox.Name = "uiDatabaseFileGroupBox";
+        this.uiDatabaseFileGroupBox.Size = new System.Drawing.Size(378, 63);
+        this.uiDatabaseFileGroupBox.TabIndex = 43;
+        this.uiDatabaseFileGroupBox.TabStop = false;
+        this.uiDatabaseFileGroupBox.Text = "Database File";
+        // 
+        // uiDatabaseFileButton
+        // 
+        this.uiDatabaseFileButton.Location = new System.Drawing.Point(330, 21);
+        this.uiDatabaseFileButton.Name = "uiDatabaseFileButton";
+        this.uiDatabaseFileButton.Size = new System.Drawing.Size(31, 23);
+        this.uiDatabaseFileButton.TabIndex = 3;
+        this.uiDatabaseFileButton.Text = "...";
+        this.uiDatabaseFileButton.UseVisualStyleBackColor = true;
+        this.uiDatabaseFileButton.Click += new System.EventHandler(this.uiDatabaseFileButton_Click);
+        // 
+        // uiDatabaseFileTextBox
+        // 
+        this.uiDatabaseFileTextBox.Enabled = false;
+        this.uiDatabaseFileTextBox.Location = new System.Drawing.Point(12, 21);
+        this.uiDatabaseFileTextBox.Name = "uiDatabaseFileTextBox";
+        this.uiDatabaseFileTextBox.Size = new System.Drawing.Size(312, 20);
+        this.uiDatabaseFileTextBox.TabIndex = 2;
         // 
         // uiDatabaseTypeLabel
         // 
@@ -580,6 +616,25 @@ public class ManagerTemplateForm : Form
         this.uiSchedulerLabel.Text = "Scheduler";
         this.uiSchedulerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
+        // tabEndPoints
+        // 
+        this.tabEndPoints.Controls.Add(this.ucEndPoints);
+        this.tabEndPoints.Location = new System.Drawing.Point(4, 22);
+        this.tabEndPoints.Name = "tabEndPoints";
+        this.tabEndPoints.Padding = new System.Windows.Forms.Padding(3);
+        this.tabEndPoints.Size = new System.Drawing.Size(432, 263);
+        this.tabEndPoints.TabIndex = 2;
+        this.tabEndPoints.Text = "End Points";
+        this.tabEndPoints.UseVisualStyleBackColor = true;
+        // 
+        // ucEndPoints
+        // 
+        this.ucEndPoints.EndPoints = null;
+        this.ucEndPoints.Location = new System.Drawing.Point(6, 6);
+        this.ucEndPoints.Name = "ucEndPoints";
+        this.ucEndPoints.Size = new System.Drawing.Size(420, 251);
+        this.ucEndPoints.TabIndex = 0;
+        // 
         // uiProgressBar
         // 
         this.uiProgressBar.Location = new System.Drawing.Point(23, 575);
@@ -627,35 +682,6 @@ public class ManagerTemplateForm : Form
         // 
         this.openFileDialog.DefaultExt = "db";
         // 
-        // uiDatabaseFileGroupBox
-        // 
-        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileButton);
-        this.uiDatabaseFileGroupBox.Controls.Add(this.uiDatabaseFileTextBox);
-        this.uiDatabaseFileGroupBox.Location = new System.Drawing.Point(9, 40);
-        this.uiDatabaseFileGroupBox.Name = "uiDatabaseFileGroupBox";
-        this.uiDatabaseFileGroupBox.Size = new System.Drawing.Size(378, 63);
-        this.uiDatabaseFileGroupBox.TabIndex = 43;
-        this.uiDatabaseFileGroupBox.TabStop = false;
-        this.uiDatabaseFileGroupBox.Text = "Database File";
-        // 
-        // uiDatabaseFileButton
-        // 
-        this.uiDatabaseFileButton.Location = new System.Drawing.Point(330, 21);
-        this.uiDatabaseFileButton.Name = "uiDatabaseFileButton";
-        this.uiDatabaseFileButton.Size = new System.Drawing.Size(31, 23);
-        this.uiDatabaseFileButton.TabIndex = 3;
-        this.uiDatabaseFileButton.Text = "...";
-        this.uiDatabaseFileButton.UseVisualStyleBackColor = true;
-        this.uiDatabaseFileButton.Click += new System.EventHandler(this.uiDatabaseFileButton_Click);
-        // 
-        // uiDatabaseFileTextBox
-        // 
-        this.uiDatabaseFileTextBox.Enabled = false;
-        this.uiDatabaseFileTextBox.Location = new System.Drawing.Point(12, 21);
-        this.uiDatabaseFileTextBox.Name = "uiDatabaseFileTextBox";
-        this.uiDatabaseFileTextBox.Size = new System.Drawing.Size(312, 20);
-        this.uiDatabaseFileTextBox.TabIndex = 2;
-        // 
         // ManagerTemplateForm
         // 
         this.AcceptButton = this.uiStartButton;
@@ -666,7 +692,7 @@ public class ManagerTemplateForm : Form
         this.Controls.Add(this.uiActionsGroupBox);
         this.Controls.Add(this.uiLogMessagesTextBox);
         this.Controls.Add(this.uiProgressBar);
-        this.Controls.Add(this.uiTabControl);
+        this.Controls.Add(this.tabControl);
         this.Controls.Add(this.uiStatusBar);
         this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
         this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -680,16 +706,17 @@ public class ManagerTemplateForm : Form
         this.uiNodeConfigurationGroupBox.ResumeLayout(false);
         this.uiNodeConfigurationGroupBox.PerformLayout();
         this.uiActionsGroupBox.ResumeLayout(false);
-        this.uiTabControl.ResumeLayout(false);
+        this.tabControl.ResumeLayout(false);
         this.uiSetupConnectionTabPage.ResumeLayout(false);
         this.uiAdvancedTabPage.ResumeLayout(false);
         this.uiAdvancedTabPage.PerformLayout();
         this.uiStorageConfigurationGroupBox.ResumeLayout(false);
         this.uiStorageConfigurationGroupBox.PerformLayout();
-        this.uiDatabaseServerGroupBox.ResumeLayout(false);
-        this.uiDatabaseServerGroupBox.PerformLayout();
         this.uiDatabaseFileGroupBox.ResumeLayout(false);
         this.uiDatabaseFileGroupBox.PerformLayout();
+        this.uiDatabaseServerGroupBox.ResumeLayout(false);
+        this.uiDatabaseServerGroupBox.PerformLayout();
+        this.tabEndPoints.ResumeLayout(false);
         this.ResumeLayout(false);
         this.PerformLayout();
 
@@ -909,6 +936,8 @@ public class ManagerTemplateForm : Form
         conf.Dedicated = uiDedicatedCheckBox.Checked;
         conf.Id = uiIdTextBox.Text;
 
+        conf.EndPoints = ucEndPoints.EndPoints;
+
         return conf;
     }
 
@@ -963,6 +992,8 @@ public class ManagerTemplateForm : Form
 
         uiProgressBar.Hide();
         uiProgressBar.Value = 0;
+
+        ucEndPoints.EndPoints = Config.EndPoints;
     }
 
     private void Restore()

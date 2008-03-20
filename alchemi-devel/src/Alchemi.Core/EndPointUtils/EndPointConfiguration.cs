@@ -88,6 +88,13 @@ namespace Alchemi.Core.EndPointUtils
         private string ConfigFile = "";
         [NonSerialized]
         private string ConfigFileName = ConfigFileNameDefault;
+
+        /// <summary>
+        /// used when in some lists.
+        /// </summary>
+        [NonSerialized]
+        [XmlIgnore]
+        public string FriendlyName = string.Empty;
         #endregion
 
         #region Methods
@@ -190,7 +197,10 @@ namespace Alchemi.Core.EndPointUtils
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("{0}By{1}On{2}", Host, Protocol, Port.ToString());
+            if (FriendlyName == string.Empty)
+                return String.Format("{0}By{1}On{2}", Host, Protocol, Port.ToString());
+            else
+                return FriendlyName;
         }
         #endregion
 

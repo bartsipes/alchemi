@@ -148,6 +148,12 @@
     <Compile Include="EndPointUtils\EndPointControl.Designer.cs">
       <DependentUpon>EndPointControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="EndPointUtils\EndPointManagerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EndPointUtils\EndPointManagerControl.Designer.cs">
+      <DependentUpon>EndPointManagerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -294,6 +300,10 @@
     </Compile>
     <Compile Include="WCFBinding.cs" />
     <Compile Include="WCFBindingSettingType.cs" />
+    <EmbeddedResource Include="EndPointUtils\EndPointManagerControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EndPointManagerControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GNode.resx">
       <DependentUpon>GNode.cs</DependentUpon>
       <SubType>Designer</SubType>

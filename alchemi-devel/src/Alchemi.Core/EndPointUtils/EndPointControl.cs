@@ -779,6 +779,9 @@ namespace Alchemi.Core.EndPointUtils
         #region lnkAdvanced_LinkClicked
         private void lnkAdvanced_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            if (!this.Enabled)
+                return;
+
             AdvancedEndPointDialog aepd = new AdvancedEndPointDialog();
             aepd.SelectedRemotingMechanism = SelectedRemotingMechanism;
             aepd.Protocol = Protocol;

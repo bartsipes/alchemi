@@ -47,7 +47,6 @@ namespace Alchemi.Core.EndPointUtils
             this.ucAdvancedEP.Name = "ucAdvancedEP";
             this.ucAdvancedEP.Port = 0;
             this.ucAdvancedEP.Protocol = "";
-            this.ucAdvancedEP.RemotingMechanisms = ((System.Collections.Generic.List<Alchemi.Core.RemotingMechanism>)(resources.GetObject("ucAdvancedEP.RemotingMechanisms")));
             this.ucAdvancedEP.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
             this.ucAdvancedEP.ServiceConfigurationName = "";
             this.ucAdvancedEP.Size = new System.Drawing.Size(419, 261);
