@@ -294,4 +294,172 @@ namespace Alchemi.Core
         {
         }
     }
+
+    /// <summary>
+    /// Represents an exception used to indicate that there was an error trying to deserialize the exception object sent from another node.
+    /// </summary>
+    [Serializable]
+    public class RemoteExceptionDeserializeException : Exception
+    {
+        /// <summary>
+        /// Creates an instance of the DoubleRemotingEndPointException class
+        /// </summary>
+        /// <param name="message">The message with more details.</param>
+        /// <param name="innerException">The exception holding the details of the desrialilization failure.</param>
+        public RemoteExceptionDeserializeException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Wraps the exception that ocurred on anothed alchemi node.
+    /// <remarks>This is needed to send exceptions betwen alchemi nodes when using WCF communication.</remarks>
+    /// </summary>
+    [Serializable]
+    public class RemoteException : Exception, ISerializable
+    {
+        private string InternalExceptionDescription = null;
+        //{
+        //    get
+        //    {
+        //        return (byte[])Data["InternalExceptionDescription"];
+        //    }
+        //    set
+        //    {
+        //        Data["InternalExceptionDescription"] = value;
+        //    }
+        //}
+        //public string Message
+        //{
+        //    get
+        //    {
+        //        return (string)Data["Message"];
+        //    }
+        //    set
+        //    {
+        //        Data["Message"] = value;
+        //    }
+        //}
+
+        #region Constructor
+        /// <summary>
+        /// Creates an instance of the RemoteException class
+        /// </summary>
+        /// <param name="message">The message with more details.</param>
+        /// <param name="innerException">The original exception.</param>
+        public RemoteException(string message, Exception innerException)
+            : base(message)
+        {            
+            Serialize(innerException);
+        }
+        /// <summary>
+        /// The empty contructor for serialization.
+        /// </summary>
+        public RemoteException(): base()
+        {
+        }
+        /// <summary>
+        /// Constructor for deserialization with WCF.
+        /// </summary>
+        /// <param name="info">SerializationInfo</param>
+        /// <param name="context">StreamingContext</param>
+        public RemoteException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            //info.GetValue("Additional", typeof(byte[]));
+            InternalExceptionDescription = info.GetString("Additional");
+        }
+        #endregion
+
+        #region Property - OriginalRemoteException
+        /// <summary>
+        /// The original exception that occured on a remote alchemi node.
+        /// </summary>
+        public Exception OriginalRemoteException
+        {
+            get
+            {
+                if (InternalExceptionDescription == null || InternalExceptionDescription == string.Empty)
+                    return new RemoteExceptionDeserializeException("No data of the original exception was sent.", null);
+                else
+                    return Deserialize();
+            }
+        }
+        #endregion
+
+        #region Method - Serialize
+        private void Serialize(Exception ex)
+        {
+            System.IO.MemoryStream ms = null;
+            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = null;
+
+            try
+            {
+                ms = new System.IO.MemoryStream();
+                bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+                bf.Serialize(ms, ex);
+                InternalExceptionDescription = Convert.ToBase64String(ms.ToArray());
+            }
+            finally
+            {
+                if (ms != null)
+                {
+                    ms.Close();
+                    ms.Dispose();
+                    ms = null;
+                }
+                if (bf != null)
+                {
+                    bf = null;
+                }
+            }
+        }
+        #endregion
+
+        #region Method - Deserialize
+        private Exception Deserialize()
+        {
+            System.IO.MemoryStream ms = null;
+            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter bf = null;
+
+            try
+            {
+                ms = new System.IO.MemoryStream(Convert.FromBase64String(InternalExceptionDescription));
+                bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                object o = bf.Deserialize(ms);
+                return o as Exception;
+            }
+            catch (Exception ex)
+            {
+                return new RemoteExceptionDeserializeException("Failed to receive remote exception.", ex);
+            }
+            finally
+            {
+                if (ms != null)
+                {
+                    ms.Close();
+                    ms.Dispose();
+                    ms = null;
+                }
+                if (bf != null)
+                {
+                    bf = null;
+                }
+            }
+        }
+        #endregion
+
+
+        #region ISerializable Members
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Additional", InternalExceptionDescription);
+        }
+
+        #endregion
+    }
 }

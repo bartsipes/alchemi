@@ -37,6 +37,7 @@ namespace Alchemi.Core
 	/// Defines the functions/services that need to be provided by a manager implementation
 	/// </summary>
     [ServiceContract]
+    [ServiceKnownType(typeof(RemoteException))]
     public interface IManager : IExecutor
     {
 		/// <summary>

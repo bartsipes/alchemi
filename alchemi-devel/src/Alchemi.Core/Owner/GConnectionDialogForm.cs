@@ -31,6 +31,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Owner
 {
@@ -63,31 +64,52 @@ namespace Alchemi.Core.Owner
         } 
         #endregion
 
+        #region Property - Role
+        private AlchemiRole _role = AlchemiRole.Owner;
+        /// <summary>
+        /// Gets or sets the role of the component that is connecting to manager.
+        /// </summary>
+        public AlchemiRole Role
+        {
+            get
+            {
+                return _role;
+            }
+
+            set
+            {
+                _role = value;
+            }
+        }
+        #endregion
+
 
         private void GConnectionDialogForm_Load(object sender, EventArgs e)
         {
-            ReadConfig();
+            ReadConfig(); 
         }
 
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            int port;
-            try
-            {
-                port = int.Parse(txtPort.Text);
-            }
-            catch (System.FormatException)
-            {
-                MessageBox.Show("Invalid name for 'Port' field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            //int port;
+            //try
+            //{
+            //    port = int.Parse(txtPort.Text);
+            //}
+            //catch (System.FormatException)
+            //{
+            //    MessageBox.Show("Invalid name for 'Port' field.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
 
             connection = new GConnection();
-            config.Host = connection.Host = txtHost.Text;
-            config.Port = connection.Port = port;
+            //config.Host = connection.Host = txtHost.Text;
+            //config.Port = connection.Port = port;
             config.Username = connection.Username = txtUsername.Text;
             config.Password = connection.Password = txtPassword.Text;
+            ucEndPointConfig.WriteEndPointConfiguration(config.EndPointConfig);
+            connection.RemoteEP = config.EndPointConfig.GetEndPoint();
             config.Write();
 
             IManager mgr;
@@ -95,7 +117,7 @@ namespace Alchemi.Core.Owner
 
             try
             {
-                mgrEpr = GNode.GetRemoteManagerRef(new EndPoint(connection.Host, connection.Port, RemotingMechanism.TcpBinary));
+                mgrEpr = GNode.GetRemoteManagerRef(connection.RemoteEP);
                 mgr = (IManager)mgrEpr.Instance;
             }
             catch (RemotingException)
@@ -126,11 +148,12 @@ namespace Alchemi.Core.Owner
 
         public void ReadConfig()
         {
-            config = GConnectionDialogFormConfig.Read(GConnectionDialogFormConfig.Default_Config_File);
-            txtHost.Text = config.Host;
-            txtPort.Text = config.Port.ToString();
+            config = GConnectionDialogFormConfig.Read(GConnectionDialogFormConfig.Default_Config_File, Role);
+            //txtHost.Text = config.Host;
+            //txtPort.Text = config.Port.ToString();
             txtUsername.Text = config.Username;
             txtPassword.Text = config.Password;
+            ucEndPointConfig.ReadEndPointConfiguration(config.EndPointConfig);
         }
     }
 }

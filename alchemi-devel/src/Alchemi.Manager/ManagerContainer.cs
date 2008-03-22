@@ -123,8 +123,8 @@ namespace Alchemi.Manager
         /// </summary>
         public void Start()
         {
-            StartOld();
-            //StartNew();
+            //StartOld();
+            StartNew();
         }
         #endregion
 

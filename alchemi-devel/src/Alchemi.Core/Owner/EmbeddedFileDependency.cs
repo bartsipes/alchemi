@@ -46,6 +46,7 @@ namespace Alchemi.Core.Owner
     {
 
         #region Property - Base64EncodedContents
+        [DataMember]
         private string _base64EncodedContents = String.Empty;
         /// <summary>
         /// Gets or sets the file contents in base64-encoded format

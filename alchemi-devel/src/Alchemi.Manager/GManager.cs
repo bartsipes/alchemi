@@ -468,7 +468,12 @@ namespace Alchemi.Manager
             ApplicationAuthorizationCheck(sc, ti.ApplicationId);
 
             logger.Debug("Getting exception for thread:" + ti.ThreadId);
-            return _Applications[ti.ApplicationId][ti.ThreadId].FailedThreadException;
+            Exception newEx = _Applications[ti.ApplicationId][ti.ThreadId].FailedThreadException;
+            if (newEx != null)
+                return new RemoteException(newEx.Message, newEx);
+            else
+                return null;
+            //return _Applications[ti.ApplicationId][ti.ThreadId].FailedThreadException;
         } 
         #endregion
 

@@ -47,6 +47,10 @@ namespace Alchemi.Core
 
         private string _Filename;
 
+        [NonSerialized]
+        [System.Xml.Serialization.XmlIgnore]
+        public Alchemi.Core.EndPointUtils.EndPointConfiguration EndPointConfig = null;
+
         /// <summary>
         /// Creates a new instance of the GConnectionDialogFormConfig class.
         /// </summary>
@@ -118,8 +122,9 @@ namespace Alchemi.Core
         /// Reads the config from a file
         /// </summary>
         /// <param name="filename">file to read from</param>
+        /// <param name="role">The role of the configured element.</param>
         /// <returns>Config object read</returns>
-        public static GConnectionDialogFormConfig Read(string filename)
+        public static GConnectionDialogFormConfig Read(string filename, AlchemiRole role)
         {
             string file = Utils.GetFilePath(filename, AlchemiRole.Owner, false);
             GConnectionDialogFormConfig c;
@@ -139,6 +144,7 @@ namespace Alchemi.Core
                         c = new GConnectionDialogFormConfig(file);
                     }
                 }
+                c.EndPointConfig = Alchemi.Core.EndPointUtils.EndPointConfiguration.GetConfiguration(role);
             }
             catch (Exception ex)
             {
@@ -163,6 +169,7 @@ namespace Alchemi.Core
                     bf.Serialize(s, this);
                     s.Close();
                 }
+                EndPointConfig.Slz();
             }
             catch
             {

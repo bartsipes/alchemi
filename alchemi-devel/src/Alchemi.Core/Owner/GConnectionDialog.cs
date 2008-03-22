@@ -73,5 +73,23 @@ namespace Alchemi.Core.Owner
                 return _form.Connection;
             }
         }
+
+        #region Property - Role
+        /// <summary>
+        /// Gets or sets the role of the component that is connecting to manager.
+        /// </summary>
+        public Alchemi.Core.Utility.AlchemiRole Role
+        {
+            get
+            {
+                return _form.Role;
+            }
+
+            set
+            {
+                _form.Role = value;
+            }
+        }
+        #endregion
     }
 }

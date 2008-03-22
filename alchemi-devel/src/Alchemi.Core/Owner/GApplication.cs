@@ -638,7 +638,12 @@ namespace Alchemi.Core.Owner
 							th.SetApplication(this);
 							// HACK: need to change this if the user is allowed to set the id
 							_Threads[th.Id] = th;
-							Exception ex = Manager.Owner_GetFailedThreadException(Credentials, new ThreadIdentifier(_Id, th.Id));
+                            //RemoteException rex = Manager.Owner_GetFailedThreadException(Credentials, new ThreadIdentifier(_Id, th.Id));
+                            //Exception ex = new Exception(rex.Message);
+                            Exception ex = Manager.Owner_GetFailedThreadException(Credentials, new ThreadIdentifier(_Id, th.Id));
+                            RemoteException rex = ex as RemoteException;
+                            if (rex != null)
+                                ex = rex.OriginalRemoteException;
                         
 							if (ex == null)
 							{

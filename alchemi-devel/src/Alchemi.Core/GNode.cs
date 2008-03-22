@@ -235,7 +235,7 @@ namespace Alchemi.Core
             if (_Connection != null)
             {
                 _Credentials = new SecurityCredentials(_Connection.Username, _Connection.Password);
-                _ManagerEP = new EndPoint(_Connection.Host, _Connection.Port, RemotingMechanism.TcpBinary);
+                _ManagerEP = _Connection.RemoteEP;
             }
             GetManagerRef();
             RemoteSelf();

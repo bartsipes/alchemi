@@ -751,6 +751,7 @@ namespace Alchemi.Console
 			try
 			{
 				GConnectionDialog gcd = new GConnectionDialog();
+                gcd.Role = Alchemi.Core.Utility.AlchemiRole.Admin;
 				if (gcd.ShowDialog() == DialogResult.OK)
 				{
 					console = new ConsoleNode(gcd.Connection);

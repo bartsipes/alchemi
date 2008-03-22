@@ -105,7 +105,7 @@ public class ManagerTemplateForm : Form
     private Button uiDatabaseFileButton;
     private TextBox uiDatabaseFileTextBox;
     private TabPage tabEndPoints;
-    private EndPointManagerControl ucEndPoints;
+    protected EndPointManagerControl ucEndPoints;
     protected static readonly Logger logger = new Logger();
 
     public ManagerTemplateForm()

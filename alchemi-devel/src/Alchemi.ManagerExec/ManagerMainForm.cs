@@ -234,6 +234,7 @@ namespace Alchemi.ManagerExec
 			uiStartButton.Enabled = false;
 			uiResetButton.Enabled = false;
 			uiStopButton.Enabled = false;
+            ucEndPoints.Enabled = false;
 
 			uiStatusBar.Text = "Starting Manager...";
 

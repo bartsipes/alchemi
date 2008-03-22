@@ -43,7 +43,8 @@ namespace Alchemi.Core.Owner
     {
 
         #region Property - FileName
-        private readonly string _fileName;
+        [DataMember]
+        private string _fileName;
         /// <summary>
         /// The filename of the FileDependency
         /// </summary>
