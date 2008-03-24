@@ -35,13 +35,13 @@ namespace Alchemi.Core.EndPointUtils
             while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
             {
 
-                reader.ReadStartElement("item");
+                reader.ReadStartElement("EndPointItem");
 
-                reader.ReadStartElement("key");
+                reader.ReadStartElement("Name");
                 string key = (string)keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
-                reader.ReadStartElement("value");
+                reader.ReadStartElement("Value");
                 EndPointConfiguration value = (EndPointConfiguration)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
@@ -63,13 +63,13 @@ namespace Alchemi.Core.EndPointUtils
 
             foreach (string key in this.Keys)
             {
-                writer.WriteStartElement("item");
+                writer.WriteStartElement("EndPointItem");
 
-                writer.WriteStartElement("key");
+                writer.WriteStartElement("Name");
                 keySerializer.Serialize(writer, key);
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("value");
+                writer.WriteStartElement("Value");
                 EndPointConfiguration value = this[key];
                 valueSerializer.Serialize(writer, value);
                 writer.WriteEndElement();

@@ -469,6 +469,11 @@ namespace Alchemi.Manager
 
             logger.Debug("Getting exception for thread:" + ti.ThreadId);
             Exception newEx = _Applications[ti.ApplicationId][ti.ThreadId].FailedThreadException;
+
+            //wrap the exception
+            if ( newEx != null && !(newEx is RemoteException))
+                newEx = new RemoteException(newEx.Message, newEx);
+
             if (newEx != null)
                 return new RemoteException(newEx.Message, newEx);
             else

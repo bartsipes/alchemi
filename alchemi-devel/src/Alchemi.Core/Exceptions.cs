@@ -319,28 +319,10 @@ namespace Alchemi.Core
     [Serializable]
     public class RemoteException : Exception, ISerializable
     {
-        private string InternalExceptionDescription = null;
-        //{
-        //    get
-        //    {
-        //        return (byte[])Data["InternalExceptionDescription"];
-        //    }
-        //    set
-        //    {
-        //        Data["InternalExceptionDescription"] = value;
-        //    }
-        //}
-        //public string Message
-        //{
-        //    get
-        //    {
-        //        return (string)Data["Message"];
-        //    }
-        //    set
-        //    {
-        //        Data["Message"] = value;
-        //    }
-        //}
+        /// <summary>
+        /// The original exception is stored here as a base64string.
+        /// </summary>
+        private string _InternalExceptionDescription = null;        
 
         #region Constructor
         /// <summary>
@@ -367,8 +349,7 @@ namespace Alchemi.Core
         public RemoteException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            //info.GetValue("Additional", typeof(byte[]));
-            InternalExceptionDescription = info.GetString("Additional");
+            _InternalExceptionDescription = info.GetString("Additional");
         }
         #endregion
 
@@ -380,7 +361,7 @@ namespace Alchemi.Core
         {
             get
             {
-                if (InternalExceptionDescription == null || InternalExceptionDescription == string.Empty)
+                if (_InternalExceptionDescription == null || _InternalExceptionDescription == string.Empty)
                     return new RemoteExceptionDeserializeException("No data of the original exception was sent.", null);
                 else
                     return Deserialize();
@@ -389,6 +370,10 @@ namespace Alchemi.Core
         #endregion
 
         #region Method - Serialize
+        /// <summary>
+        /// Stores an instance of Exception as a base64string to _InternalExceptionDescription variable.
+        /// </summary>
+        /// <param name="ex">The exception to store.</param>
         private void Serialize(Exception ex)
         {
             System.IO.MemoryStream ms = null;
@@ -400,7 +385,7 @@ namespace Alchemi.Core
                 bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 
                 bf.Serialize(ms, ex);
-                InternalExceptionDescription = Convert.ToBase64String(ms.ToArray());
+                _InternalExceptionDescription = Convert.ToBase64String(ms.ToArray());
             }
             finally
             {
@@ -419,6 +404,10 @@ namespace Alchemi.Core
         #endregion
 
         #region Method - Deserialize
+        /// <summary>
+        /// Returns an instance of the internal exception that is stored in the _InternalExceptionDescription variable.
+        /// </summary>
+        /// <returns></returns>
         private Exception Deserialize()
         {
             System.IO.MemoryStream ms = null;
@@ -426,7 +415,7 @@ namespace Alchemi.Core
 
             try
             {
-                ms = new System.IO.MemoryStream(Convert.FromBase64String(InternalExceptionDescription));
+                ms = new System.IO.MemoryStream(Convert.FromBase64String(_InternalExceptionDescription));
                 bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 object o = bf.Deserialize(ms);
                 return o as Exception;
@@ -457,7 +446,7 @@ namespace Alchemi.Core
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("Additional", InternalExceptionDescription);
+            info.AddValue("Additional", _InternalExceptionDescription);
         }
 
         #endregion

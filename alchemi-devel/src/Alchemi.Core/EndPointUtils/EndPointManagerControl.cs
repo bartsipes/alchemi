@@ -141,8 +141,8 @@ namespace Alchemi.Core.EndPointUtils
 
             Alchemi.Core.EndPointUtils.EndPointConfiguration epc = lbEndPointList.SelectedItem as Alchemi.Core.EndPointUtils.EndPointConfiguration;
 
-            if (epc != null && EndPoints.ContainsKey(epc.FriendlyName))
-                EndPoints.Remove(epc.FriendlyName);
+            if (epc != null && EndPoints.ContainsKey(epc.ToString()))
+                EndPoints.Remove(epc.ToString());
 
             RebindEndPointsList();
 
@@ -163,9 +163,10 @@ namespace Alchemi.Core.EndPointUtils
                 return;
 
             currentEndPointConfiuration = lbEndPointList.SelectedItem as Alchemi.Core.EndPointUtils.EndPointConfiguration;
-            currentEndPointPreviousName = currentEndPointConfiuration.FriendlyName;
+            currentEndPointPreviousName = currentEndPointConfiuration.ToString();
 
             ucEndPointConfig.ReadEndPointConfiguration(currentEndPointConfiuration);
+            txtEPName.Text = currentEndPointConfiuration.ToString();
 
             if (lbEndPointList.SelectedItem != null)
             {

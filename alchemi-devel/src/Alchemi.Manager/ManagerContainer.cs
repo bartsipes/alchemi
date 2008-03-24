@@ -533,8 +533,22 @@ namespace Alchemi.Manager
                 logger.Info("Cleaning up all apps...");
                 //Cleanup();
 
-                logger.Info("Unregistering the remoting channel...");
-                ChannelServices.UnregisterChannel(_Chnl);
+                if (_Chnl != null)
+                {
+                    logger.Info("Unregistering the remoting channel...");
+                    ChannelServices.UnregisterChannel(_Chnl);
+                }
+
+                if (_sh != null)
+                {
+                    if (_sh.State == CommunicationState.Opened)
+                        _sh.Close();
+
+                    if (_sh.State != CommunicationState.Closed)
+                        _sh.Abort();
+
+                    _sh = null;
+                }
 
                 Config.Serialize();
 

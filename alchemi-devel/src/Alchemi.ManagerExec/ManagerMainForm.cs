@@ -198,6 +198,7 @@ namespace Alchemi.ManagerExec
 				Log("Stopping Manager...");
 				uiStopButton.Enabled = false;
 				uiStartButton.Enabled = false;
+                ucEndPoints.Enabled = true;
 				try
 				{
 					_container.Stop();
