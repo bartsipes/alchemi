@@ -132,14 +132,16 @@ namespace Alchemi.Executor
             //TODO FIX RECONNECT PROPERLY.
 
             logger.Info("Connecting....");
-            EndPoint rep = new EndPoint(
-                _Config.ManagerHost,
-                _Config.ManagerPort,
-                RemotingMechanism.TcpBinary
-                );
+            //EndPoint rep = new EndPoint(
+            //    _Config.ManagerHost,
+            //    _Config.ManagerPort,
+            //    RemotingMechanism.TcpBinary
+            //    );
+            EndPoint rep = _Config.ManagerEndPoint.GetEndPoint();
 
             logger.Debug("Created remote-end-point");
-            EndPoint oep = new EndPoint(_Config.OwnPort, RemotingMechanism.TcpBinary);
+            //EndPoint oep = new EndPoint(_Config.OwnPort, RemotingMechanism.TcpBinary);
+            EndPoint oep = _Config.OwnEndPoint.GetEndPoint();
 
             logger.Debug("Created own-end-point");
             // connect to manager

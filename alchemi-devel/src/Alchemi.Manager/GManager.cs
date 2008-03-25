@@ -510,16 +510,28 @@ namespace Alchemi.Manager
         /// <param name="sc">security credentials to verify if the executor has permission to perform this operation 
         /// (i.e connect non-dedicated, which is associated with the ExecuteThread permission)</param>
         /// <param name="executorId">executor id</param>
-        public void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
+        /// Returns the exception that ocured.
+        public Exception Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
         {
-            logger.Debug("Executor called: ConnectNonDedicated");
-            AuthenticateUser(sc);
-            EnsurePermission(sc, Permission.ExecuteThread);
+            Exception ret = null;
 
-            _Executors[executorId].ConnectNonDedicated(executorEP);
+            try
+            {
+                logger.Debug("Executor called: ConnectNonDedicated");
+                AuthenticateUser(sc);
+                EnsurePermission(sc, Permission.ExecuteThread);
 
-            logger.Debug("Connected to executor non-dedicated: " + executorId);
-            _Executors[executorId].HeartbeatUpdate(new HeartbeatInfo(0, 0, 0));
+                _Executors[executorId].ConnectNonDedicated(executorEP);
+
+                logger.Debug("Connected to executor non-dedicated: " + executorId);
+                _Executors[executorId].HeartbeatUpdate(new HeartbeatInfo(0, 0, 0));
+            }
+            catch (Exception ex)
+            {
+                ret = new RemoteException(ex.Message, ex);
+            }
+
+            return ret;
         } 
         #endregion
 
@@ -533,22 +545,33 @@ namespace Alchemi.Manager
         /// (i.e connect dedicated, which is associated with the ExecuteThread permission)</param>
         /// <param name="executorId">executor id</param>
         /// <param name="executorEP">end point of the executor</param>
-        public void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
+        /// <returns>Returns the exception that ocured.</returns>
+        public Exception Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP)
         {
-            logger.Debug("Executor called: ConnectDedicated: Authenticate,EnsurePermission,Connect,Set DedicatedScheduler");
-            AuthenticateUser(sc);
-            EnsurePermission(sc, Permission.ExecuteThread);
-
+            Exception ret = null;
             try
             {
-                _Executors[executorId].ConnectDedicated(executorEP);
-                InternalShared.Instance.DedicatedSchedulerActive.Set();
+                logger.Debug("Executor called: ConnectDedicated: Authenticate,EnsurePermission,Connect,Set DedicatedScheduler");
+                AuthenticateUser(sc);
+                EnsurePermission(sc, Permission.ExecuteThread);
+
+                try
+                {
+                    _Executors[executorId].ConnectDedicated(executorEP);
+                    InternalShared.Instance.DedicatedSchedulerActive.Set();
+                }
+                catch (ExecutorCommException ece)
+                {
+                    logger.Error("Couldnt connect back to the supplied executor", ece);
+                    throw new ConnectBackException("Couldn't connect back to the supplied Executor", ece);
+                }
             }
-            catch (ExecutorCommException ece)
+            catch (Exception ex)
             {
-                logger.Error("Couldnt connect back to the supplied executor", ece);
-                throw new ConnectBackException("Couldn't connect back to the supplied Executor", ece);
+                ret = new RemoteException(ex.Message, ex);
             }
+
+            return ret;
         } 
         #endregion
 

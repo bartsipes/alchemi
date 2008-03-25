@@ -423,10 +423,12 @@ namespace Alchemi.ExecutorExec
 			bool connected = Started;
 
             txId.Text = Config.Id;
-			txMgrHost.Text = Config.ManagerHost;
-			txMgrPort.Text = Config.ManagerPort.ToString();
+            //txMgrHost.Text = Config.ManagerHost;
+            //txMgrPort.Text = Config.ManagerPort.ToString();
 
-			txOwnPort.Text = Config.OwnPort.ToString();
+            //txOwnPort.Text = Config.OwnPort.ToString();
+            ucManagerEndPoint.ReadEndPointConfiguration(Config.ManagerEndPoint);
+            ucOwnEndPoint.ReadEndPointConfiguration(Config.OwnEndPoint);
 			txUsername.Text = Config.Username;
 			txPassword.Text = Config.Password;
 			cbDedicated.Checked = Config.Dedicated;
@@ -435,11 +437,13 @@ namespace Alchemi.ExecutorExec
 			btReset.Enabled = !connected;
 			btDisconnect.Enabled = !btConnect.Enabled;
 
-			txMgrHost.Enabled = !connected;
-			txMgrPort.Enabled = !connected;
+            ucManagerEndPoint.Enabled = !connected;
+            ucOwnEndPoint.Enabled = !connected;
+            //txMgrHost.Enabled = !connected;
+            //txMgrPort.Enabled = !connected;
 			txUsername.Enabled = !connected;
 			txPassword.Enabled = !connected;
-			txOwnPort.Enabled = !connected;
+            //txOwnPort.Enabled = !connected;
 			cbDedicated.Enabled = !connected;
 
 			udHBInterval.Value = (decimal)Config.HeartBeatInterval;

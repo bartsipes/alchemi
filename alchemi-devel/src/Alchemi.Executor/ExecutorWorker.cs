@@ -160,7 +160,7 @@ namespace Alchemi.Executor.Sandbox
                 logger.Warn(string.Format("grid thread # {0} failed ({1})", _CurTi.UniqueId, e.GetType()), e);
                 try
                 {
-                    _Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, e);
+                    _Manager.Executor_SetFinishedThread(_Credentials, _CurTi, rawThread, new RemoteException(e.Message, e));
                 }
                 catch (Exception ex1)
                 {

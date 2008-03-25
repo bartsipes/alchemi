@@ -27,6 +27,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using Alchemi.Core.Utility;
+using Alchemi.Core.EndPointUtils;
 
 namespace Alchemi.Executor
 {
@@ -53,29 +54,27 @@ namespace Alchemi.Executor
         }
         #endregion
 
-        #region Property -ManagerHost
+        #region Property - ManagerEndPoint
+        private EndPointConfiguration _ManagerEndPoint = new EndPointConfiguration(AlchemiRole.Executor);
         /// <summary>
-		/// Host of the Manager
-		/// </summary>
-        private string _ManagerHost = "localhost";
-
-        public string ManagerHost
+        /// Configuration regarding manager end point.
+        /// </summary>
+        public EndPointConfiguration ManagerEndPoint
         {
-            get { return _ManagerHost; }
-            set { _ManagerHost = value; }
+            get { return _ManagerEndPoint; }
+            set { _ManagerEndPoint = value; }
         }
         #endregion
 
-        #region Property -ManagerPort
+        #region Property - OwnEndPoint
+        private EndPointConfiguration _OwnEndPoint = new EndPointConfiguration(AlchemiRole.Executor);
         /// <summary>
-		/// Port of the Manager
-		/// </summary>
-        private int _ManagerPort = 9000;
-
-        public int ManagerPort
+        /// Configuration regarding own end point.
+        /// </summary>
+        public EndPointConfiguration OwnEndPoint
         {
-            get { return _ManagerPort; }
-            set { _ManagerPort = value; }
+            get { return _OwnEndPoint; }
+            set { _OwnEndPoint = value; }
         }
         #endregion
 
@@ -89,19 +88,6 @@ namespace Alchemi.Executor
         {
             get { return _Dedicated; }
             set { _Dedicated = value; }
-        }
-        #endregion
-
-        #region Property -OwnPort
-        /// <summary>
-		/// Specifies the port on which the Executor listens for messages.
-		/// </summary>
-        private int _OwnPort = 9001;
-
-        public int OwnPort
-        {
-            get { return _OwnPort; }
-            set { _OwnPort = value; }
         }
         #endregion
 

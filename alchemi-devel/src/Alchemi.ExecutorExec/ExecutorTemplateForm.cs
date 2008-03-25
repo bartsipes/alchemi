@@ -52,13 +52,7 @@ using Timer = System.Windows.Forms.Timer;
         protected Button btReset;
         protected Button btDisconnect;
         protected GroupBox groupBox1;
-        protected Label label2;
-        protected Label label1;
-        protected TextBox txMgrPort;
-        protected TextBox txMgrHost;
         protected GroupBox groupBox2;
-        protected Label label3;
-        protected TextBox txOwnPort;
         protected CheckBox cbDedicated;
         protected Label label4;
         protected Button btConnect;
@@ -89,6 +83,8 @@ using Timer = System.Windows.Forms.Timer;
         protected Label label12;
         protected LinkLabel lnkViewLog;
         private CheckBox checkBox1;
+        protected Alchemi.Core.EndPointUtils.EndPointControl ucOwnEndPoint;
+        protected Alchemi.Core.EndPointUtils.EndPointControl ucManagerEndPoint;
 
 		protected static bool silentMode = true;
 
@@ -139,14 +135,10 @@ using Timer = System.Windows.Forms.Timer;
             this.btReset = new System.Windows.Forms.Button();
             this.btDisconnect = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txMgrPort = new System.Windows.Forms.TextBox();
-            this.txMgrHost = new System.Windows.Forms.TextBox();
+            this.ucManagerEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ucOwnEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
             this.txId = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txOwnPort = new System.Windows.Forms.TextBox();
             this.cbDedicated = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btConnect = new System.Windows.Forms.Button();
@@ -154,6 +146,7 @@ using Timer = System.Windows.Forms.Timer;
             this.btStopExec = new System.Windows.Forms.Button();
             this.btStartExec = new System.Windows.Forms.Button();
             this.tabOptions = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.udMaxRetry = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
@@ -167,7 +160,6 @@ using Timer = System.Windows.Forms.Timer;
             this.pbar = new System.Windows.Forms.ProgressBar();
             this.label12 = new System.Windows.Forms.Label();
             this.lnkViewLog = new System.Windows.Forms.LinkLabel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -291,16 +283,16 @@ using Timer = System.Windows.Forms.Timer;
             this.groupBox3.Controls.Add(this.txPassword);
             this.groupBox3.Controls.Add(this.txUsername);
             this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox3.Location = new System.Drawing.Point(96, 96);
+            this.groupBox3.Location = new System.Drawing.Point(4, 199);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(224, 72);
+            this.groupBox3.Size = new System.Drawing.Size(210, 72);
             this.groupBox3.TabIndex = 5;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Credentials";
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(120, 24);
+            this.label5.Location = new System.Drawing.Point(106, 24);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(64, 16);
             this.label5.TabIndex = 3;
@@ -316,17 +308,17 @@ using Timer = System.Windows.Forms.Timer;
             // 
             // txPassword
             // 
-            this.txPassword.Location = new System.Drawing.Point(120, 40);
+            this.txPassword.Location = new System.Drawing.Point(106, 40);
             this.txPassword.Name = "txPassword";
             this.txPassword.PasswordChar = '*';
-            this.txPassword.Size = new System.Drawing.Size(88, 20);
+            this.txPassword.Size = new System.Drawing.Size(84, 20);
             this.txPassword.TabIndex = 4;
             // 
             // txUsername
             // 
             this.txUsername.Location = new System.Drawing.Point(16, 40);
             this.txUsername.Name = "txUsername";
-            this.txUsername.Size = new System.Drawing.Size(88, 20);
+            this.txUsername.Size = new System.Drawing.Size(84, 20);
             this.txUsername.TabIndex = 3;
             // 
             // btReset
@@ -352,62 +344,66 @@ using Timer = System.Windows.Forms.Timer;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txMgrPort);
-            this.groupBox1.Controls.Add(this.txMgrHost);
+            this.groupBox1.Controls.Add(this.ucManagerEndPoint);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox1.Location = new System.Drawing.Point(96, 16);
+            this.groupBox1.Location = new System.Drawing.Point(4, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(224, 72);
+            this.groupBox1.Size = new System.Drawing.Size(210, 190);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Manager Node";
             // 
-            // label2
+            // ucManagerEndPoint
             // 
-            this.label2.Location = new System.Drawing.Point(144, 24);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 16);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Port";
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(16, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 16);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Host / IP Address";
-            // 
-            // txMgrPort
-            // 
-            this.txMgrPort.Location = new System.Drawing.Point(144, 40);
-            this.txMgrPort.Name = "txMgrPort";
-            this.txMgrPort.Size = new System.Drawing.Size(64, 20);
-            this.txMgrPort.TabIndex = 2;
-            // 
-            // txMgrHost
-            // 
-            this.txMgrHost.Location = new System.Drawing.Point(16, 40);
-            this.txMgrHost.Name = "txMgrHost";
-            this.txMgrHost.Size = new System.Drawing.Size(100, 20);
-            this.txMgrHost.TabIndex = 1;
+            this.ucManagerEndPoint.AddressPart = "";
+            this.ucManagerEndPoint.BindingConfigurationName = "";
+            this.ucManagerEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
+            this.ucManagerEndPoint.FixedAddressPart = false;
+            this.ucManagerEndPoint.FullAddress = "http://localhost:0/";
+            this.ucManagerEndPoint.Host = "localhost";
+            this.ucManagerEndPoint.HostNameForPublishing = "localhost";
+            this.ucManagerEndPoint.Location = new System.Drawing.Point(6, 19);
+            this.ucManagerEndPoint.Name = "ucManagerEndPoint";
+            this.ucManagerEndPoint.Port = 0;
+            this.ucManagerEndPoint.Protocol = "";
+            this.ucManagerEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
+            this.ucManagerEndPoint.ServiceConfigurationName = "";
+            this.ucManagerEndPoint.Size = new System.Drawing.Size(198, 165);
+            this.ucManagerEndPoint.TabIndex = 0;
+            this.ucManagerEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ucOwnEndPoint);
             this.groupBox2.Controls.Add(this.txId);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.txOwnPort);
             this.groupBox2.Controls.Add(this.cbDedicated);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox2.Location = new System.Drawing.Point(96, 176);
+            this.groupBox2.Location = new System.Drawing.Point(218, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(224, 112);
+            this.groupBox2.Size = new System.Drawing.Size(210, 268);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Own Node";
+            // 
+            // ucOwnEndPoint
+            // 
+            this.ucOwnEndPoint.AddressPart = "";
+            this.ucOwnEndPoint.BindingConfigurationName = "";
+            this.ucOwnEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
+            this.ucOwnEndPoint.FixedAddressPart = false;
+            this.ucOwnEndPoint.FullAddress = "http://localhost:0/";
+            this.ucOwnEndPoint.Host = "localhost";
+            this.ucOwnEndPoint.HostNameForPublishing = "localhost";
+            this.ucOwnEndPoint.Location = new System.Drawing.Point(9, 103);
+            this.ucOwnEndPoint.Name = "ucOwnEndPoint";
+            this.ucOwnEndPoint.Port = 0;
+            this.ucOwnEndPoint.Protocol = "";
+            this.ucOwnEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
+            this.ucOwnEndPoint.ServiceConfigurationName = "";
+            this.ucOwnEndPoint.Size = new System.Drawing.Size(195, 153);
+            this.ucOwnEndPoint.TabIndex = 13;
+            this.ucOwnEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
             // 
             // txId
             // 
@@ -415,33 +411,19 @@ using Timer = System.Windows.Forms.Timer;
             this.txId.Location = new System.Drawing.Point(16, 39);
             this.txId.Name = "txId";
             this.txId.ReadOnly = true;
-            this.txId.Size = new System.Drawing.Size(192, 20);
+            this.txId.Size = new System.Drawing.Size(188, 20);
             this.txId.TabIndex = 12;
             this.txId.TabStop = false;
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(144, 64);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 16);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Port";
-            // 
-            // txOwnPort
-            // 
-            this.txOwnPort.Location = new System.Drawing.Point(144, 80);
-            this.txOwnPort.Name = "txOwnPort";
-            this.txOwnPort.Size = new System.Drawing.Size(64, 20);
-            this.txOwnPort.TabIndex = 7;
             // 
             // cbDedicated
             // 
             this.cbDedicated.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cbDedicated.Location = new System.Drawing.Point(16, 72);
+            this.cbDedicated.Location = new System.Drawing.Point(16, 65);
             this.cbDedicated.Name = "cbDedicated";
             this.cbDedicated.Size = new System.Drawing.Size(88, 32);
             this.cbDedicated.TabIndex = 6;
             this.cbDedicated.Text = "Dedicated?";
+            this.cbDedicated.CheckedChanged += new System.EventHandler(this.cbDedicated_CheckedChanged);
             // 
             // label4
             // 
@@ -510,6 +492,19 @@ using Timer = System.Windows.Forms.Timer;
             this.tabOptions.Size = new System.Drawing.Size(432, 366);
             this.tabOptions.TabIndex = 2;
             this.tabOptions.Text = "Options";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(27, 184);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(299, 30);
+            this.checkBox1.TabIndex = 10;
+            this.checkBox1.Text = "Enforce secure sanboxed execution\r\n(Turn off this option to allow legacy applicat" +
+                "ions ie. GJobs)";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // label11
             // 
@@ -665,19 +660,6 @@ using Timer = System.Windows.Forms.Timer;
             this.lnkViewLog.Text = "( View full log ... )";
             this.lnkViewLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(27, 184);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(299, 30);
-            this.checkBox1.TabIndex = 10;
-            this.checkBox1.Text = "Enforce secure sanboxed execution\r\n(Turn off this option to allow legacy applicat" +
-                "ions ie. GJobs)";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // ExecutorTemplateForm
             // 
             this.AcceptButton = this.btConnect;
@@ -703,7 +685,6 @@ using Timer = System.Windows.Forms.Timer;
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabExecution.ResumeLayout(false);
@@ -745,6 +726,10 @@ using Timer = System.Windows.Forms.Timer;
 					Application.Exit();
 				}
 				*/
+
+                ucOwnEndPoint.RemoveRemotingMechanism(RemotingMechanism.WCFCustom);
+                ucOwnEndPoint.AddressPart = "Executor";
+                ucOwnEndPoint.FixedAddressPart = true;
 			}
 			catch {}
         }
@@ -763,9 +748,11 @@ using Timer = System.Windows.Forms.Timer;
 				Config = new Configuration();
 			}
 			// read config from ui controls
-			Config.ManagerHost = txMgrHost.Text;
-			Config.ManagerPort = int.Parse(txMgrPort.Text);
-			Config.OwnPort = int.Parse(txOwnPort.Text);
+            //Config.ManagerHost = txMgrHost.Text;
+            //Config.ManagerPort = int.Parse(txMgrPort.Text);
+            //Config.OwnPort = int.Parse(txOwnPort.Text);     
+            ucManagerEndPoint.WriteEndPointConfiguration(Config.ManagerEndPoint);
+            ucOwnEndPoint.WriteEndPointConfiguration(Config.OwnEndPoint);
 			Config.Dedicated = cbDedicated.Checked;
 			Config.HeartBeatInterval = (int)udHBInterval.Value;
 			Config.RetryConnect = chkRetryConnect.Checked;
@@ -901,6 +888,13 @@ using Timer = System.Windows.Forms.Timer;
 
         //-----------------------------------------------------------------------------------------------    
 
+        private void cbDedicated_CheckedChanged(object sender, EventArgs e)
+        {
+            ucOwnEndPoint.Enabled = cbDedicated.Checked;
+        }
+
+        //-----------------------------------------------------------------------------------------------
+
         private void ShowSplashScreen()
         {
             SplashScreen ss = new SplashScreen();
@@ -955,5 +949,6 @@ using Timer = System.Windows.Forms.Timer;
 		protected virtual void Exit(){}
 
 		#endregion
+
 
     }

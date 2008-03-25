@@ -222,8 +222,9 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <param name="executorEP"></param>
+        /// <returns>Returns the exception that ocured.</returns>
         [OperationContract]
-        void Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
+        Exception Executor_ConnectDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
 
         /// <summary>
         /// Connects an Executor to the Manager in non-dedicated mode.
@@ -232,8 +233,9 @@ namespace Alchemi.Core
         /// <param name="sc"></param>
         /// <param name="executorId"></param>
         /// <param name="executorEP"></param>
+        /// Returns the exception that ocured.
         [OperationContract]
-        void Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
+        Exception Executor_ConnectNonDedicatedExecutor(SecurityCredentials sc, string executorId, EndPoint executorEP);
 
         /// <summary>
         /// Disconnects an Executor from the Manager.

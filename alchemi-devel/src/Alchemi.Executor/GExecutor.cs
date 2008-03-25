@@ -57,6 +57,7 @@ namespace Alchemi.Executor
 	/// <summary>
 	/// The GExecutor class is an implementation of the IExecutor interface and represents an Executor node.
 	/// </summary>
+    [System.ServiceModel.ServiceBehavior(ConcurrencyMode = System.ServiceModel.ConcurrencyMode.Multiple, InstanceContextMode = System.ServiceModel.InstanceContextMode.Single)]
     public class GExecutor : GNode, IExecutor, IOwner
     {        
 		// Create a logger for use in this class
@@ -68,6 +69,8 @@ namespace Alchemi.Executor
         private NonDedicatedExecutorWorker _NDEWorker;
 
         internal IDictionary<string, GridAppDomain> _GridAppDomains;
+
+        private Exception _ConnectionException;
 
 
         #region Constructor
@@ -101,38 +104,9 @@ namespace Alchemi.Executor
             //handle exception since we want to connect to the manager 
             //even if it doesnt succeed the first time.
             //that is, we need to handle InvalidExecutor and ConnectBack Exceptions.
-            try
-            {
-                try
-                {
-                    ConnectToManager();
-                }
-                catch (InvalidExecutorException)
-                {
-                    logger.Info("Invalid executor! Registering new executor again...");
-
-                    _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
-
-                    logger.Info("New ExecutorID = " + _Id);
-                    ConnectToManager();
-                }
-            }
-            catch (ConnectBackException)
-            {
-                if (_AutoRevertToNDE)
-                {
-                    logger.Warn("Couldn't connect as dedicated executor. Reverting to non-dedicated executor. ConnectBackException");
-                    _Dedicated = false;
-                    ConnectToManager();
-                }
-            }
-
-            //for non-dedicated mode, the heart-beat thread will be started when execution is started
-            if (_Dedicated)
-            {
-                logger.Debug("Dedicated mode: starting heart-beat thread");
-                StartHeartBeat(HeartbeatWorker.DEFAULT_INTERVAL);
-            }
+            //WCF requires this to execute in another thread.
+            Thread t = new Thread(new ThreadStart(DoConnectThread));
+            t.Start();            
         }
         #endregion
 
@@ -504,21 +478,62 @@ namespace Alchemi.Executor
 
 
         #region Method - ConnectToManager
-        private void ConnectToManager()
+        private Exception ConnectToManager()
         {
+            Exception ret = null;
             if (_Dedicated)
             {
                 logger.Debug("Connecting to Manager dedicated...");
-                Manager.Executor_ConnectDedicatedExecutor(Credentials, _Id, OwnEP);
+                ret = Manager.Executor_ConnectDedicatedExecutor(Credentials, _Id, OwnEP);
+                
             }
             else
             {
                 logger.Debug("Connecting to Manager NON-dedicated...");
-                Manager.Executor_ConnectNonDedicatedExecutor(Credentials, _Id, OwnEP);
+                ret = Manager.Executor_ConnectNonDedicatedExecutor(Credentials, _Id, OwnEP);
             }
-        } 
+
+            if (ret != null && ret is RemoteException)
+                ret = (ret as RemoteException).OriginalRemoteException;
+
+            return ret;
+        }
         #endregion
 
+        #region Method - DoConnectThread
+        private void DoConnectThread()
+        {
+            Exception ex = ConnectToManager();
+
+            if (ex != null || ex is InvalidExecutorException)
+            {
+                logger.Info("Invalid executor! Registering new executor again...");
+
+                _Id = Manager.Executor_RegisterNewExecutor(Credentials, null, Info);
+
+                logger.Info("New ExecutorID = " + _Id);
+                ex = null;
+                ex = ConnectToManager();
+            }
+
+            if (ex != null || ex is ConnectBackException)
+            {
+                if (_AutoRevertToNDE)
+                {
+                    logger.Warn("Couldn't connect as dedicated executor. Reverting to non-dedicated executor. ConnectBackException");
+                    _Dedicated = false;
+                    ConnectToManager();
+                }
+            }
+
+            //for non-dedicated mode, the heart-beat thread will be started when execution is started
+            if (_Dedicated)
+            {
+                logger.Debug("Dedicated mode: starting heart-beat thread");
+                StartHeartBeat(HeartbeatWorker.DEFAULT_INTERVAL);
+            }
+        }
+        #endregion
 
         #region Method - RelinquishIncompleteThreads
         private void RelinquishIncompleteThreads()

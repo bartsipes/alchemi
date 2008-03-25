@@ -171,7 +171,8 @@
       <DependentUpon>GNode.cs</DependentUpon>
     </Compile>
     <Compile Include="ICrossPlatformManager.cs" />
-    <Compile Include="IExecutor.cs" />
+    <Compile Include="IExecutor.cs">
+    </Compile>
     <Compile Include="IManager.cs" />
     <Compile Include="IOwner.cs" />
     <Compile Include="LogEventArgs.cs" />
@@ -251,7 +252,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Owner\GApplicationBuffered.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Owner\GJob.cs">
       <SubType>Code</SubType>
