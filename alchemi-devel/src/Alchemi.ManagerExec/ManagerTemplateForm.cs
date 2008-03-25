@@ -47,7 +47,6 @@ public class ManagerTemplateForm : Form
     private IContainer components;
 
     protected Button uiStartButton;
-    protected TextBox uiOwnPortTextBox;
     protected TextBox uiManagerHostTextBox;
     protected TextBox uiManagerPortTextBox;
     protected TextBox uiIdTextBox;
@@ -68,7 +67,6 @@ public class ManagerTemplateForm : Form
 
     protected TabControl tabControl;
     protected Label uiManagerHostLabel;
-    protected Label uiOwnPortLabel;
     protected GroupBox uiNodeConfigurationGroupBox;
     protected Label uiIdLabel;
     protected Label uiManagerPortLabel;
@@ -139,9 +137,7 @@ public class ManagerTemplateForm : Form
         this.components = new System.ComponentModel.Container();
         System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ManagerTemplateForm));
         this.uiManagerHostLabel = new System.Windows.Forms.Label();
-        this.uiOwnPortLabel = new System.Windows.Forms.Label();
         this.uiManagerHostTextBox = new System.Windows.Forms.TextBox();
-        this.uiOwnPortTextBox = new System.Windows.Forms.TextBox();
         this.uiStartButton = new System.Windows.Forms.Button();
         this.uiNodeConfigurationGroupBox = new System.Windows.Forms.GroupBox();
         this.uiDedicatedCheckBox = new System.Windows.Forms.CheckBox();
@@ -203,36 +199,19 @@ public class ManagerTemplateForm : Form
         // uiManagerHostLabel
         // 
         this.uiManagerHostLabel.AutoSize = true;
-        this.uiManagerHostLabel.Location = new System.Drawing.Point(38, 131);
+        this.uiManagerHostLabel.Location = new System.Drawing.Point(38, 103);
         this.uiManagerHostLabel.Name = "uiManagerHostLabel";
         this.uiManagerHostLabel.Size = new System.Drawing.Size(74, 13);
         this.uiManagerHostLabel.TabIndex = 1;
         this.uiManagerHostLabel.Text = "Manager Host";
         this.uiManagerHostLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
         // 
-        // uiOwnPortLabel
-        // 
-        this.uiOwnPortLabel.AutoSize = true;
-        this.uiOwnPortLabel.Location = new System.Drawing.Point(61, 27);
-        this.uiOwnPortLabel.Name = "uiOwnPortLabel";
-        this.uiOwnPortLabel.Size = new System.Drawing.Size(51, 13);
-        this.uiOwnPortLabel.TabIndex = 2;
-        this.uiOwnPortLabel.Text = "Own Port";
-        this.uiOwnPortLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
         // uiManagerHostTextBox
         // 
-        this.uiManagerHostTextBox.Location = new System.Drawing.Point(120, 128);
+        this.uiManagerHostTextBox.Location = new System.Drawing.Point(120, 100);
         this.uiManagerHostTextBox.Name = "uiManagerHostTextBox";
         this.uiManagerHostTextBox.Size = new System.Drawing.Size(104, 20);
         this.uiManagerHostTextBox.TabIndex = 9;
-        // 
-        // uiOwnPortTextBox
-        // 
-        this.uiOwnPortTextBox.Location = new System.Drawing.Point(120, 24);
-        this.uiOwnPortTextBox.Name = "uiOwnPortTextBox";
-        this.uiOwnPortTextBox.Size = new System.Drawing.Size(104, 20);
-        this.uiOwnPortTextBox.TabIndex = 5;
         // 
         // uiStartButton
         // 
@@ -253,13 +232,11 @@ public class ManagerTemplateForm : Form
         this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerPortLabel);
         this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerPortTextBox);
         this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerHostLabel);
-        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiOwnPortLabel);
-        this.uiNodeConfigurationGroupBox.Controls.Add(this.uiOwnPortTextBox);
         this.uiNodeConfigurationGroupBox.Controls.Add(this.uiManagerHostTextBox);
         this.uiNodeConfigurationGroupBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
         this.uiNodeConfigurationGroupBox.Location = new System.Drawing.Point(8, 12);
         this.uiNodeConfigurationGroupBox.Name = "uiNodeConfigurationGroupBox";
-        this.uiNodeConfigurationGroupBox.Size = new System.Drawing.Size(416, 192);
+        this.uiNodeConfigurationGroupBox.Size = new System.Drawing.Size(416, 171);
         this.uiNodeConfigurationGroupBox.TabIndex = 6;
         this.uiNodeConfigurationGroupBox.TabStop = false;
         this.uiNodeConfigurationGroupBox.Text = "Node Configuration";
@@ -267,7 +244,7 @@ public class ManagerTemplateForm : Form
         // uiDedicatedCheckBox
         // 
         this.uiDedicatedCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.uiDedicatedCheckBox.Location = new System.Drawing.Point(120, 96);
+        this.uiDedicatedCheckBox.Location = new System.Drawing.Point(120, 68);
         this.uiDedicatedCheckBox.Name = "uiDedicatedCheckBox";
         this.uiDedicatedCheckBox.Size = new System.Drawing.Size(88, 24);
         this.uiDedicatedCheckBox.TabIndex = 8;
@@ -275,7 +252,7 @@ public class ManagerTemplateForm : Form
         // 
         // uiIdLabel
         // 
-        this.uiIdLabel.Location = new System.Drawing.Point(96, 72);
+        this.uiIdLabel.Location = new System.Drawing.Point(96, 44);
         this.uiIdLabel.Name = "uiIdLabel";
         this.uiIdLabel.Size = new System.Drawing.Size(16, 16);
         this.uiIdLabel.TabIndex = 12;
@@ -286,7 +263,7 @@ public class ManagerTemplateForm : Form
         // 
         this.uiIntermediateComboBox.Enabled = false;
         this.uiIntermediateComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-        this.uiIntermediateComboBox.Location = new System.Drawing.Point(120, 48);
+        this.uiIntermediateComboBox.Location = new System.Drawing.Point(120, 20);
         this.uiIntermediateComboBox.Name = "uiIntermediateComboBox";
         this.uiIntermediateComboBox.Size = new System.Drawing.Size(88, 24);
         this.uiIntermediateComboBox.TabIndex = 6;
@@ -296,7 +273,7 @@ public class ManagerTemplateForm : Form
         // uiIdTextBox
         // 
         this.uiIdTextBox.Enabled = false;
-        this.uiIdTextBox.Location = new System.Drawing.Point(120, 72);
+        this.uiIdTextBox.Location = new System.Drawing.Point(120, 44);
         this.uiIdTextBox.Name = "uiIdTextBox";
         this.uiIdTextBox.Size = new System.Drawing.Size(240, 20);
         this.uiIdTextBox.TabIndex = 7;
@@ -305,7 +282,7 @@ public class ManagerTemplateForm : Form
         // uiManagerPortLabel
         // 
         this.uiManagerPortLabel.AutoSize = true;
-        this.uiManagerPortLabel.Location = new System.Drawing.Point(41, 163);
+        this.uiManagerPortLabel.Location = new System.Drawing.Point(41, 135);
         this.uiManagerPortLabel.Name = "uiManagerPortLabel";
         this.uiManagerPortLabel.Size = new System.Drawing.Size(71, 13);
         this.uiManagerPortLabel.TabIndex = 6;
@@ -314,7 +291,7 @@ public class ManagerTemplateForm : Form
         // 
         // uiManagerPortTextBox
         // 
-        this.uiManagerPortTextBox.Location = new System.Drawing.Point(120, 160);
+        this.uiManagerPortTextBox.Location = new System.Drawing.Point(120, 132);
         this.uiManagerPortTextBox.Name = "uiManagerPortTextBox";
         this.uiManagerPortTextBox.Size = new System.Drawing.Size(104, 20);
         this.uiManagerPortTextBox.TabIndex = 10;
@@ -929,7 +906,7 @@ public class ManagerTemplateForm : Form
         conf.DbPassword = uiDatabasePasswordTextBox.Text;
         conf.DbName = uiDatabaseNameTextBox.Text;
 
-        conf.OwnPort = int.Parse(uiOwnPortTextBox.Text);
+        //conf.OwnPort = int.Parse(uiOwnPortTextBox.Text);
         conf.ManagerHost = uiManagerHostTextBox.Text;
         conf.ManagerPort = int.Parse(uiManagerPortTextBox.Text);
         conf.Intermediate = uiIntermediateComboBox.Checked;
@@ -955,7 +932,7 @@ public class ManagerTemplateForm : Form
         
         uiDatabaseTypeComboBox.SelectedValue = Config.DbType;
         
-        uiOwnPortTextBox.Text = Config.OwnPort.ToString();
+        //uiOwnPortTextBox.Text = Config.OwnPort.ToString();
         uiDedicatedCheckBox.Checked = Config.Dedicated;
         
         uiManagerHostTextBox.Text = Config.ManagerHost;
@@ -970,7 +947,7 @@ public class ManagerTemplateForm : Form
 
         uiStartButton.Enabled = !started;
         uiResetButton.Enabled = !started;
-        uiOwnPortTextBox.Enabled = !started;
+        //uiOwnPortTextBox.Enabled = !started;
 
         uiSchedulerComboBox.Enabled = !started;
         uiDatabaseTypeComboBox.Enabled = !started;

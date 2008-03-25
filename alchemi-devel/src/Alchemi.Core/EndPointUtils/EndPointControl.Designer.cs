@@ -43,6 +43,7 @@ namespace Alchemi.Core.EndPointUtils
             // 
             this.cbRemotingMechanism.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbRemotingMechanism.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbRemotingMechanism.FormattingEnabled = true;
             this.cbRemotingMechanism.Location = new System.Drawing.Point(3, 16);
             this.cbRemotingMechanism.Name = "cbRemotingMechanism";

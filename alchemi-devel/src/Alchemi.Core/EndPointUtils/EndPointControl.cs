@@ -809,6 +809,8 @@ namespace Alchemi.Core.EndPointUtils
                 BindingConfigurationName = aepd.BindingConfigurationName;
                 ServiceConfigurationName = aepd.ServiceConfigurationName;
                 HostNameForPublishing = aepd.HostNameForPublishing;
+                if (SelectedRemotingMechanism != RemotingMechanism.TcpBinary)
+                    SetFullAddressFromOther();
             }
 
             aepd.Dispose();

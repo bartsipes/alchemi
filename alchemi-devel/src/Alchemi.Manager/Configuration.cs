@@ -176,17 +176,6 @@ namespace Alchemi.Manager
             set { _ManagerPort = value; }
         }
 
-		/// <summary>
-		/// Port on which the Manager sends/recieves messages to/from the Executors.
-		/// </summary>
-        private int _OwnPort = 9000;
-
-        public int OwnPort
-        {
-            get { return _OwnPort; }
-            set { _OwnPort = value; }
-        }
-
         private Alchemi.Core.EndPointUtils.EndPointConfigurationCollection _EndPoints;
         /// <summary>
         /// Collection of end points on whitch the manager is published.

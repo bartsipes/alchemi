@@ -54,6 +54,7 @@ namespace Alchemi.Core.EndPointUtils
             // 
             // cbBinding
             // 
+            this.cbBinding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBinding.FormattingEnabled = true;
             this.cbBinding.Location = new System.Drawing.Point(3, 140);
             this.cbBinding.Name = "cbBinding";
@@ -116,6 +117,7 @@ namespace Alchemi.Core.EndPointUtils
             // 
             // cbProtocol
             // 
+            this.cbProtocol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbProtocol.FormattingEnabled = true;
             this.cbProtocol.Location = new System.Drawing.Point(3, 61);
             this.cbProtocol.MinimumSize = new System.Drawing.Size(10, 0);
@@ -183,6 +185,7 @@ namespace Alchemi.Core.EndPointUtils
             // 
             // cbBindingSettingsType
             // 
+            this.cbBindingSettingsType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBindingSettingsType.FormattingEnabled = true;
             this.cbBindingSettingsType.Items.AddRange(new object[] {
             "Default",

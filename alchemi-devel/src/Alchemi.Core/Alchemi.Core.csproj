@@ -252,6 +252,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Owner\GApplicationBuffered.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Owner\GJob.cs">
       <SubType>Code</SubType>
@@ -300,6 +301,14 @@
     </Compile>
     <Compile Include="WCFBinding.cs" />
     <Compile Include="WCFBindingSettingType.cs" />
+    <EmbeddedResource Include="EndPointUtils\AdvancedEndPointControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AdvancedEndPointControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EndPointUtils\EndPointControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EndPointControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EndPointUtils\EndPointManagerControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EndPointManagerControl.cs</DependentUpon>
