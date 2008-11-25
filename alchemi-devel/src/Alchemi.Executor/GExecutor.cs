@@ -199,17 +199,25 @@ namespace Alchemi.Executor
                         ManagementObject("win32_logicaldisk.deviceid='" +
                             Path.GetPathRoot(ExecutorUtil.BaseDirectory).Substring(0, 2) + "'");
                     disk.Get();
-
+                    // free disk space [bytes]
                     info.MaxDiskSpace = Convert.ToSingle(disk["FreeSpace"]);
                     disk.Dispose(); //needed?
 
-                    ManagementObject memory = new
-                       ManagementObject("Win32_PhysicalMemory");
-                    memory.Get();
-
-                    info.MaxMemory = Convert.ToSingle(memory["Capacity"]);
-                    memory.Dispose(); //needed?
-
+                    // the total available memory in the executor machine [bytes]
+                    ManagementClass mc = new ManagementClass("Win32_PhysicalMemory");
+                    ManagementObjectCollection col = mc.GetInstances();
+                    float maxMemory = 0.0f;
+                    foreach(ManagementObject mo in col)
+                    {
+                        foreach(PropertyData pd in mo.Properties)
+                        {
+                            if(pd.Name == "Capacity")
+                            {
+                                maxMemory += Convert.ToSingle(pd.Value);
+                            }
+                        }
+                    }
+                    info.MaxMemory = maxMemory;
 
                     //need to find a better way to do these things.
                     RegistryKey hklm = Registry.LocalMachine;
