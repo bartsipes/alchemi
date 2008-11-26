@@ -60,7 +60,7 @@ namespace Alchemi.ManagerService
 		private void InitializeComponent()
 		{
             this.uiSetupConnectionTabPage.SuspendLayout();
-            this.uiTabControl.SuspendLayout();
+            //this.uiTabControl.SuspendLayout();
             this.uiNodeConfigurationGroupBox.SuspendLayout();
             this.uiActionsGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -83,7 +83,7 @@ namespace Alchemi.ManagerService
             this.Name = "ManagerMainForm";
             this.Load += new System.EventHandler(this.ManagerMainForm_Load);
             this.uiSetupConnectionTabPage.ResumeLayout(false);
-            this.uiTabControl.ResumeLayout(false);
+            //this.uiTabControl.ResumeLayout(false);
             this.uiNodeConfigurationGroupBox.ResumeLayout(false);
             this.uiNodeConfigurationGroupBox.PerformLayout();
             this.uiActionsGroupBox.ResumeLayout(false);
