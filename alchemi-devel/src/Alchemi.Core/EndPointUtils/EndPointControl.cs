@@ -606,6 +606,7 @@ namespace Alchemi.Core.EndPointUtils
         /// <param name="epConf">EndPointConfiguration instance to read from.</param>
         public void ReadEndPointConfiguration(EndPointConfiguration epConf)
         {
+            if (epConf == null) epConf = new EndPointConfiguration();
             this.Host = epConf.Host;
             this.Port = epConf.Port;
             this.AddressPart = epConf.LocalAddressPart;

@@ -31,6 +31,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Alchemi.Core.EndPointUtils;
 using Alchemi.Core.Utility;
 
 namespace Alchemi.Core.Owner
@@ -108,9 +109,10 @@ namespace Alchemi.Core.Owner
             //config.Port = connection.Port = port;
             config.Username = connection.Username = txtUsername.Text;
             config.Password = connection.Password = txtPassword.Text;
+            if(config.EndPointConfig == null) config.EndPointConfig = new EndPointConfiguration();
             ucEndPointConfig.WriteEndPointConfiguration(config.EndPointConfig);
             connection.RemoteEP = config.EndPointConfig.GetEndPoint();
-            config.Write();
+            config.Write(Role);
 
             IManager mgr;
             EndPointReference mgrEpr = null;
@@ -148,6 +150,7 @@ namespace Alchemi.Core.Owner
 
         public void ReadConfig()
         {
+
             config = GConnectionDialogFormConfig.Read(GConnectionDialogFormConfig.Default_Config_File, Role);
             //txtHost.Text = config.Host;
             //txtPort.Text = config.Port.ToString();

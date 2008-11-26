@@ -19,8 +19,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Alchemi.ManagerExec</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Alchemi.ManagerExec.ManagerExec</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

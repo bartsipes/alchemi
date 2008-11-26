@@ -51,6 +51,9 @@ namespace Alchemi.Core
         [System.Xml.Serialization.XmlIgnore]
         public Alchemi.Core.EndPointUtils.EndPointConfiguration EndPointConfig = null;
 
+        public GConnectionDialogFormConfig()
+        {}
+
         /// <summary>
         /// Creates a new instance of the GConnectionDialogFormConfig class.
         /// </summary>
@@ -126,7 +129,7 @@ namespace Alchemi.Core
         /// <returns>Config object read</returns>
         public static GConnectionDialogFormConfig Read(string filename, AlchemiRole role)
         {
-            string file = Utils.GetFilePath(filename, AlchemiRole.Owner, false);
+            string file = Utils.GetFilePath(filename, role, false);
             GConnectionDialogFormConfig c;
             //handle missing file exception / serialization exception etc... and create a default config.
             try
@@ -158,9 +161,9 @@ namespace Alchemi.Core
         /// <summary>
         /// Write the config to file
         /// </summary>
-        public void Write()
+        public void Write(AlchemiRole aRole)
         {
-            string file = Utils.GetFilePath(Default_Config_File, AlchemiRole.Owner, true);
+            //string file = Utils.GetFilePath(Default_Config_File, AlchemiRole.Owner, true);
             try
             {
                 using (Stream s = new FileStream(_Filename, FileMode.Create))
@@ -169,9 +172,10 @@ namespace Alchemi.Core
                     bf.Serialize(s, this);
                     s.Close();
                 }
+                EndPointConfig.ResetEndPointFileName(aRole);
                 EndPointConfig.Slz();
             }
-            catch
+            catch(Exception ex)
             {
                 //ignore. if we have a call to "write" here again, we might end up in a 
                 //infinite loop!
