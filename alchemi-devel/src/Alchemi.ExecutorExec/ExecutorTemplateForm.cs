@@ -135,9 +135,7 @@ using Timer = System.Windows.Forms.Timer;
             this.btReset = new System.Windows.Forms.Button();
             this.btDisconnect = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ucManagerEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.ucOwnEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
             this.txId = new System.Windows.Forms.TextBox();
             this.cbDedicated = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -160,6 +158,8 @@ using Timer = System.Windows.Forms.Timer;
             this.pbar = new System.Windows.Forms.ProgressBar();
             this.label12 = new System.Windows.Forms.Label();
             this.lnkViewLog = new System.Windows.Forms.LinkLabel();
+            this.ucManagerEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
+            this.ucOwnEndPoint = new Alchemi.Core.EndPointUtils.EndPointControl();
             this.tabControl.SuspendLayout();
             this.tabConnection.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -188,7 +188,7 @@ using Timer = System.Windows.Forms.Timer;
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 541);
+            this.statusBar.Location = new System.Drawing.Point(0, 521);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(458, 22);
             this.statusBar.TabIndex = 2;
@@ -353,25 +353,6 @@ using Timer = System.Windows.Forms.Timer;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Manager Node";
             // 
-            // ucManagerEndPoint
-            // 
-            this.ucManagerEndPoint.AddressPart = "";
-            this.ucManagerEndPoint.BindingConfigurationName = "";
-            this.ucManagerEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
-            this.ucManagerEndPoint.FixedAddressPart = false;
-            this.ucManagerEndPoint.FullAddress = "http://localhost:0/";
-            this.ucManagerEndPoint.Host = "localhost";
-            this.ucManagerEndPoint.HostNameForPublishing = "localhost";
-            this.ucManagerEndPoint.Location = new System.Drawing.Point(6, 19);
-            this.ucManagerEndPoint.Name = "ucManagerEndPoint";
-            this.ucManagerEndPoint.Port = 0;
-            this.ucManagerEndPoint.Protocol = "";
-            this.ucManagerEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
-            this.ucManagerEndPoint.ServiceConfigurationName = "";
-            this.ucManagerEndPoint.Size = new System.Drawing.Size(198, 165);
-            this.ucManagerEndPoint.TabIndex = 0;
-            this.ucManagerEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.ucOwnEndPoint);
@@ -385,25 +366,6 @@ using Timer = System.Windows.Forms.Timer;
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Own Node";
-            // 
-            // ucOwnEndPoint
-            // 
-            this.ucOwnEndPoint.AddressPart = "";
-            this.ucOwnEndPoint.BindingConfigurationName = "";
-            this.ucOwnEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
-            this.ucOwnEndPoint.FixedAddressPart = false;
-            this.ucOwnEndPoint.FullAddress = "http://localhost:0/";
-            this.ucOwnEndPoint.Host = "localhost";
-            this.ucOwnEndPoint.HostNameForPublishing = "localhost";
-            this.ucOwnEndPoint.Location = new System.Drawing.Point(9, 103);
-            this.ucOwnEndPoint.Name = "ucOwnEndPoint";
-            this.ucOwnEndPoint.Port = 0;
-            this.ucOwnEndPoint.Protocol = "";
-            this.ucOwnEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
-            this.ucOwnEndPoint.ServiceConfigurationName = "";
-            this.ucOwnEndPoint.Size = new System.Drawing.Size(195, 153);
-            this.ucOwnEndPoint.TabIndex = 13;
-            this.ucOwnEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
             // 
             // txId
             // 
@@ -660,18 +622,55 @@ using Timer = System.Windows.Forms.Timer;
             this.lnkViewLog.Text = "( View full log ... )";
             this.lnkViewLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // ucManagerEndPoint
+            // 
+            this.ucManagerEndPoint.AddressPart = "";
+            this.ucManagerEndPoint.BindingConfigurationName = "";
+            this.ucManagerEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
+            this.ucManagerEndPoint.FixedAddressPart = false;
+            this.ucManagerEndPoint.FullAddress = "http://localhost:0/";
+            this.ucManagerEndPoint.Host = "localhost";
+            this.ucManagerEndPoint.HostNameForPublishing = "localhost";
+            this.ucManagerEndPoint.Location = new System.Drawing.Point(6, 19);
+            this.ucManagerEndPoint.Name = "ucManagerEndPoint";
+            this.ucManagerEndPoint.Port = 0;
+            this.ucManagerEndPoint.Protocol = "";
+            this.ucManagerEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
+            this.ucManagerEndPoint.ServiceConfigurationName = "";
+            this.ucManagerEndPoint.Size = new System.Drawing.Size(198, 165);
+            this.ucManagerEndPoint.TabIndex = 0;
+            this.ucManagerEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
+            // 
+            // ucOwnEndPoint
+            // 
+            this.ucOwnEndPoint.AddressPart = "";
+            this.ucOwnEndPoint.BindingConfigurationName = "";
+            this.ucOwnEndPoint.BindingSettingType = Alchemi.Core.WCFBindingSettingType.Default;
+            this.ucOwnEndPoint.FixedAddressPart = false;
+            this.ucOwnEndPoint.FullAddress = "http://localhost:0/";
+            this.ucOwnEndPoint.Host = "localhost";
+            this.ucOwnEndPoint.HostNameForPublishing = "localhost";
+            this.ucOwnEndPoint.Location = new System.Drawing.Point(9, 103);
+            this.ucOwnEndPoint.Name = "ucOwnEndPoint";
+            this.ucOwnEndPoint.Port = 0;
+            this.ucOwnEndPoint.Protocol = "";
+            this.ucOwnEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.WCF;
+            this.ucOwnEndPoint.ServiceConfigurationName = "";
+            this.ucOwnEndPoint.Size = new System.Drawing.Size(195, 153);
+            this.ucOwnEndPoint.TabIndex = 13;
+            this.ucOwnEndPoint.WCFBinding = Alchemi.Core.WCFBinding.None;
+            // 
             // ExecutorTemplateForm
             // 
             this.AcceptButton = this.btConnect;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.ClientSize = new System.Drawing.Size(458, 563);
+            this.ClientSize = new System.Drawing.Size(458, 543);
             this.Controls.Add(this.lnkViewLog);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.txLog);
             this.Controls.Add(this.pbar);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.tabControl);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Menu = this.MainMenu;

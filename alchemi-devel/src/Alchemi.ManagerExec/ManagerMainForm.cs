@@ -78,7 +78,7 @@ namespace Alchemi.ManagerExec
             // ManagerMainForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size( 5, 13 );
-            this.ClientSize = new System.Drawing.Size( 458, 499 );
+            this.ClientSize = new System.Drawing.Size( 458, 636 );
             this.Name = "ManagerMainForm";
             this.Load += new System.EventHandler( this.ManagerMainForm_Load );
             this.tabControl.ResumeLayout( false );
