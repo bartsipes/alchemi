@@ -88,19 +88,24 @@ namespace Alchemi.ExecutorExec
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 520);
+            this.statusBar.Location = new System.Drawing.Point(0, 460);
             // 
             // lnkViewLog
             // 
             this.lnkViewLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkViewLog_LinkClicked);
             // 
+            // ucOwnEndPoint
+            // 
+            this.ucOwnEndPoint.AddressPart = "Executor";
+            this.ucOwnEndPoint.FixedAddressPart = true;
+            this.ucOwnEndPoint.SelectedRemotingMechanism = Alchemi.Core.RemotingMechanism.TcpBinary;
+            // 
             // ExecutorMainForm
             // 
-            this.ClientSize = new System.Drawing.Size(458, 542);
+            this.ClientSize = new System.Drawing.Size(458, 482);
             this.Name = "ExecutorMainForm";
             this.Load += new System.EventHandler(this.ExecutorMainForm_Load);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -382,13 +387,13 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
-                //_container.
-                /*
+                _container.Executor.StartNonDedicatedExecuting(200);
+/*
 				foreach (GExecutor executor in _container.Executors)
 				{
 					executor.StartNonDedicatedExecuting(1000);
 				}
-                */
+  */              
 			}
 			catch (Exception ex)
 			{
@@ -402,6 +407,7 @@ namespace Alchemi.ExecutorExec
 		{
 			try
 			{
+                _container.Executor.StopNonDedicatedExecuting();
                 /*
 				foreach (GExecutor executor in _container.Executors)
 				{
@@ -462,8 +468,8 @@ namespace Alchemi.ExecutorExec
 				//executing = _container.Ex
 			}
 
-			btStartExec.Enabled = ((!Config.Dedicated) && (connected) && (!executing));
-			btStopExec.Enabled = ((!Config.Dedicated) && (connected) && (executing));
+			btStartExec.Enabled = ((!Config.Dedicated) && (connected) && (!_container.Executor.ExecutingNonDedicated));
+            btStopExec.Enabled = ((!Config.Dedicated) && (connected) && (_container.Executor.ExecutingNonDedicated));
 
 			string sbAppend = (Config.Dedicated? " (dedicated)" : " (non-dedicated)");
 			if ((connected && executing) || (connected && Config.Dedicated))

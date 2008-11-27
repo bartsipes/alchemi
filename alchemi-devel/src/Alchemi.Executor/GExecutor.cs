@@ -106,7 +106,8 @@ namespace Alchemi.Executor
             //that is, we need to handle InvalidExecutor and ConnectBack Exceptions.
             //WCF requires this to execute in another thread.
             Thread t = new Thread(new ThreadStart(DoConnectThread));
-            t.Start();            
+            t.Start();
+            t.Join();
         }
         #endregion
 

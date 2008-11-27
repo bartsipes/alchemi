@@ -49,6 +49,10 @@ namespace Alchemi.Executor
         }
 
         private GExecutor _Executor = null;
+	    public GExecutor Executor
+	    {
+            get { return _Executor; }
+	    }
 
         #region Constructor
         /// <summary>
@@ -147,6 +151,8 @@ namespace Alchemi.Executor
             // connect to manager
             _Executor = new GExecutor(rep, oep, _Config.Id, _Config.Dedicated, _Config.AutoRevertToNDE,
                 new SecurityCredentials(_Config.Username, _Config.Password), ExecutorUtil.BaseDirectory);
+
+
 
             _Config.ConnectVerified = true;
             _Config.Id = _Executor.Id;
@@ -398,8 +404,9 @@ namespace Alchemi.Executor
                 //bubble the event up
                 OnNonDedicatedExecutingStatusChanged();
             }
-            catch
+            catch(Exception ex)
             {
+                logger.Warn(" Error GExecutor_NonDedicatedExecutingStatusChanged ", ex);
             }
         } 
         #endregion
