@@ -383,7 +383,7 @@ public class ManagerTemplateForm : Form
         // 
         // uiStatusBar
         // 
-        this.uiStatusBar.Location = new System.Drawing.Point(0, 527);
+        this.uiStatusBar.Location = new System.Drawing.Point(0, 467);
         this.uiStatusBar.Name = "uiStatusBar";
         this.uiStatusBar.Size = new System.Drawing.Size(456, 22);
         this.uiStatusBar.TabIndex = 10;
@@ -663,7 +663,7 @@ public class ManagerTemplateForm : Form
         // 
         this.AcceptButton = this.uiStartButton;
         this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-        this.ClientSize = new System.Drawing.Size(456, 549);
+        this.ClientSize = new System.Drawing.Size(456, 489);
         this.Controls.Add(this.uiViewFullLogLinkLabel);
         this.Controls.Add(this.uiLogMessagesLabel);
         this.Controls.Add(this.uiActionsGroupBox);

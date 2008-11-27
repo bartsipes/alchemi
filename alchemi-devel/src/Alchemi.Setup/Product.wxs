@@ -61,6 +61,33 @@
         <Directory Id="INSTALLDIR" Name="Alchemi" LongName="Alchemi">
           <Directory Id="AlchemiBin" Name="bin" LongName="bin">
 
+            <Component Id="MysqlData" Guid="356FE615-FFC1-4746-B980-9436B5CB4A6F">
+              <File Id="Mysql.Data.dll"
+                    Name="MySql.dll"
+                    LongName="MySql.Data.dll"
+                    DiskId="1"
+                    Source="$(var.SolutionDir)\..\lib\MySql.Data.dll"
+                    Vital="no" />
+            </Component>
+
+            <Component Id="Db4objectsDb4o" Guid="5ABB5A1A-C01C-4b16-8C87-BB9B83A4A823">
+              <File Id="Db4objects.Db4o.dll"
+                    Name="Db4o.dll"
+                    LongName="Db4objects.Db4o.dll"
+                    DiskId="1"
+                    Source="$(var.SolutionDir)\..\lib\Db4objects.Db4o.dll"
+                    Vital="no" />
+            </Component>
+            
+            <Component Id="Npgsql" Guid="7FCA7484-BA22-4bd6-8C62-602363DD23C4">
+              <File Id="Npgsql.dll"
+                    Name="Npgsql.dll"
+                    LongName="Npgsql.dll"
+                    DiskId="1"
+                    Source="$(var.SolutionDir)\..\lib\Npgsql.dll"
+                    Vital="no" />
+            </Component>
+            
             <Component Id="Log4net" Guid="6C55E831-18B7-4140-84B0-4C72FB3F0250">
               <File Id="Log4net.dll"
                     Name="log4net.dll"
@@ -365,6 +392,10 @@
         <ComponentRef Id="Alchemi.ManagerExec" />
         <ComponentRef Id="Alchemi.DbSetup"/>
         <ComponentRef Id="ProgramMenuDirComponent" />
+        <ComponentRef Id="MysqlData" />
+        <ComponentRef Id="Db4objectsDb4o" />
+        <ComponentRef Id="Npgsql" />
+
       </Feature>
       <Feature Id ="ManagerService" 
                Title="Manager (Service)" 
@@ -379,6 +410,10 @@
         <ComponentRef Id="Alchemi.DbSetup"/>
         <ComponentRef Id="ProgramMenuDirComponent" />
         <ComponentRef Id="Alchemi.ManagerServiceController" />
+        <ComponentRef Id="MysqlData" />
+        <ComponentRef Id="Db4objectsDb4o" />
+        <ComponentRef Id="Npgsql" />
+
       </Feature>
       <Feature Id="SDK"
                Title="SDK"
